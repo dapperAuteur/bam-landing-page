@@ -101,6 +101,17 @@ export const blogPosts: BlogPost[] = [
     tags: ["Corvids", "Birds"],
     excerpt: "An AI-Enhanced Infographic for Indiana Species"
   },
+  {
+    slug: "making-sense-of-statistics",
+    title: "Making Sense of Statistics",
+    description: "A Guide to Understanding & Explaining Data",
+    publishDate: "2025-05-07",
+    readTime: "7 min read",
+    category: "Statistics",
+    featured: false,
+    tags: ["Statistics", "Math"],
+    excerpt: "Statistics help us describe data and draw inferences. These are the building blocks."
+  },
   // {
   //   slug: "centenarian-athletes-an-interactive-infographic-times",
   //   title: "Centenarian Athletes Times: An Interactive Infographic",

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mux/mux-player-react": "^3.5.1",
     "@vercel/analytics": "^1.5.0",
     "chart.js": "^4.5.0",
     "framer-motion": "^12.23.12",

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./../../../components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./../../../components/ui/accordion";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./../../../components/ui/table";
 import { BrainCircuit, Dna, Activity, Zap, ShieldCheck, Target, Brain, Bot, BookOpen, Clock, Users, Atom, GitCommitHorizontal } from 'lucide-react';
 
 // NOTE: To run this component, you'll need to have a Next.js 15 project set up
