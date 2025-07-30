@@ -1,35 +1,6 @@
-export default function ProjectHighlights() {
-  const projects = [
-    {
-      title: "Science Clickbait Decoder",
-      description: "RAG-based tool using Python FastAPI, Next.js, and MongoDB with Hugging Face SciBERT for natural language processing.",
-      type: "Open Source Project",
-      technologies: ["Python", "FastAPI", "Next.js", "MongoDB", "Hugging Face", "SciBERT"],
-      impact: "Helps users identify and decode misleading science headlines using AI"
-    },
-    {
-      title: "FDA Food Recall App",
-      description: "Application that tracks and alerts users about FDA food recalls with real-time data integration.",
-      type: "Consumer Safety Tool",
-      technologies: ["JavaScript", "API Integration", "Real-time Data", "Food Safety"],
-      impact: "Provides critical food safety information to consumers"
-    },
-    {
-      title: "FreeCodeCamp Curriculum Development",
-      description: "Developed project-based computer science curriculum focused on practical application with automated progress tracking.",
-      type: "Educational Content",
-      technologies: ["Curriculum Design", "JavaScript", "Full-Stack Development", "Education"],
-      impact: "Helped 100+ developers transition to tech careers"
-    },
-    {
-      title: "Automated Training Systems",
-      description: "Designed and implemented automated training and evaluation systems integrating multiple third-party services.",
-      type: "EdTech Platform",
-      technologies: ["LMS Integration", "Automation", "Training Systems", "Performance Tracking"],
-      impact: "13 consecutive months of efficiency improvements"
-    }
-  ]
+import { projects } from './../../lib/experienceData'
 
+export default function ProjectHighlights() {
   return (
     <section className="section-padding bg-white">
       <div className="container-max">
@@ -45,15 +16,33 @@ export default function ProjectHighlights() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {projects.map((project, index) => (
-            <div key={index} className="bg-gray-50 p-8 rounded-xl hover:shadow-lg transition-shadow">
-              <div className="mb-4">
-                <span className="inline-block bg-indigo-100 text-indigo-800 text-sm px-3 py-1 rounded-full font-medium">
+            <div key={index} className={`p-8 rounded-xl hover:shadow-lg transition-shadow ${
+              project.featured ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50'
+            }`}>
+              <div className="mb-4 flex items-center justify-between">
+                <span className={`inline-block text-sm px-3 py-1 rounded-full font-medium ${
+                  project.featured 
+                    ? 'bg-blue-100 text-blue-800' 
+                    : 'bg-gray-100 text-gray-800'
+                }`}>
                   {project.type}
                 </span>
+                {project.featured && (
+                  <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-bold">
+                    FEATURED
+                  </span>
+                )}
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
                 {project.title}
+                {project.link && (
+                  <a href={project.link} target="_blank" rel="noopener noreferrer" className="ml-2 text-blue-600 hover:text-blue-800">
+                    <svg className="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                )}
               </h3>
               
               <p className="text-gray-600 mb-6">
