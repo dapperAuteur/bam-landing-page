@@ -1,9 +1,24 @@
 export default function Services() {
   const services = [
     {
+      title: "Developer Advocacy",
+      description: "Expert developer relations, API documentation, community building, and technical content creation.",
+      features: ["Developer Relations Strategy", "API Documentation", "Technical Content Creation", "Community Management"]
+    },
+    {
+      title: "Technical Education",
+      description: "Curriculum development, training systems, and educational content for technical audiences.",
+      features: ["Curriculum Development", "Training Systems", "Technical Workshops", "Educational Content"]
+    },
+    {
       title: "Voice Over Services",
       description: "Professional narration for audiobooks, commercials, e-learning, and corporate content.",
       features: ["Audiobook Narration", "Commercial Voice Over", "E-Learning Content", "Corporate Training"]
+    },
+    {
+      title: "Brand Ambassador",
+      description: "Product demonstrations, event management, and audience engagement for technical products.",
+      features: ["Product Demonstrations", "Event Management", "Technical Presentations", "Community Engagement"]
     },
     {
       title: "Business Consulting",
@@ -25,12 +40,12 @@ export default function Services() {
             Services That Build Success
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Combining professional voice over artistry with strategic business consulting 
+            Combining developer advocacy, technical education, voice over artistry, and strategic business consulting 
             to help individuals and organizations achieve their goals.
           </p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <div key={index} className="bg-gray-50 p-8 rounded-xl hover:shadow-lg transition-shadow">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
