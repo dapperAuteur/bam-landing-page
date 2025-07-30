@@ -1,4 +1,4 @@
-import { projects } from './../../lib/experienceData'
+import { projects } from './../../lib/projectData'
 
 export default function ProjectHighlights() {
   return (

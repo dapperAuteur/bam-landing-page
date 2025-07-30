@@ -1,4 +1,4 @@
-import { skillCategories } from './../../lib/experienceData'
+import { skillCategories } from './../../lib/skillCategoryData'
 
 export default function TechnicalSkills() {
   return (
