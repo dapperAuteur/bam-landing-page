@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react';
 // Make sure to install lucide-react: npm install lucide-react
 import { Flame, Dumbbell, Zap, BrainCircuit, HeartPulse, Leaf, Fish, ShieldCheck, HelpCircle, X, Loader } from 'lucide-react';
