@@ -1,10 +1,10 @@
 import { Metadata } from 'next'
-import Hero from './../components/Hero'
-import Services from './../components/Services'
-import About from './../components/About'
-import Portfolio from './../components/Portfolio'
-import Contact from './../components/Contact'
-import Footer from './../components/Footer'
+import Hero from '../components/ui/Hero'
+import Services from '../components/ui/Services'
+import About from '../components/ui/About'
+import Portfolio from '../components/ui/Portfolio'
+import Contact from '../components/ui/Contact'
+import Footer from '../components/ui/Footer'
 
 export const metadata: Metadata = {
   title: 'Brand Anthony McDonald | Voice Over Artist & Business Consultant',
