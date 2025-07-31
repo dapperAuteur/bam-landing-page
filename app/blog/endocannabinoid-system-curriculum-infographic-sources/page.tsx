@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, ChevronUp, BookOpen, Brain, Heart, Dna, Users, ExternalLink, Info, Play, Pause } from 'lucide-react'
+import Link from 'next/link'
 
 // Citation interface for scientific references
 interface Citation {
@@ -583,9 +584,14 @@ const EndocannabinoidSystemCurriculum: React.FC = () => {
             researchers, and wellness practitioners seeking to integrate ECS knowledge into their practice.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <Link
+              href="https://ecs-specialization.betterbud.club"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
               Enroll in Certification Program
-            </button>
+            </Link>
             <button className="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
               Download Curriculum Guide
             </button>

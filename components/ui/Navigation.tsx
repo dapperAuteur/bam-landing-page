@@ -7,8 +7,8 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <nav className="bg-white shadow-lg fixed w-full z-50">
-      <div className="container-max">
+    <nav className="bg-white shadow-lg fixed w-full z-50 ">
+      <div className="mx-2 container-max">
         <div className="flex justify-between items-center py-4">
           <Link href="/" className="text-2xl font-bold text-blue-600">
             BAM
