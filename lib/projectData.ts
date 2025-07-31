@@ -58,8 +58,8 @@ export const projects: Project[] = [
   {
     title: "ElementaryMBA Dashboard",
     description: "Web app to show users a snapshot of their financial health and help them understand the impact of paying of loans early. Repo: https://github.com/dapperAuteur/temba-fin-dashboard.",
-    type: "Online Self-Paced Class",
-    technologies: ["LMS Integration", "Automation", "Curriculum Design", "Peer-Reviewed Research", "Collaborative Learning"],
+    type: "Financial Dashboard",
+    technologies: ["NextJS", "ChartJS", "MongoDB", "Prisma"],
     impact: "Compliment to Elementary MBA curriculum.",
     featured: true,
     link: "https://github.com/dapperAuteur/temba-fin-dashboard"
