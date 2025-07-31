@@ -1,6 +1,11 @@
 import React from 'react';
-import { IInfoCardProps } from "./../../../types/propTypes"
 
+interface IInfoCardProps {
+  icon: string;
+  title: string;
+  children: React.ReactNode;
+  colorClass: string;
+}
 
 // Helper component for Icons (using Font Awesome)
 const Icon = ({ className, fixedWidth = true }: { className: string, fixedWidth?: boolean }) => (
