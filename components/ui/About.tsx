@@ -9,12 +9,12 @@ export default function About() {
             </h2>
             <p className="text-lg text-gray-600 mb-6">
               I'm building something unique: the world's smallest conglomerate while training to become 
-              the world's fastest centenarian. This isn't just about longevity—it's about optimizing 
+              the world's fastest centenarian. This isn't just about longevity. It's about optimizing 
               every aspect of life and business for peak performance and sustainable success.
             </p>
             <p className="text-lg text-gray-600 mb-6">
-              With a background spanning developer relations, education, content creation, and health 
-              optimization, I bring a multidisciplinary approach to both voice over work and business consulting.
+              My background spans developer relations, education, content creation, and health 
+              optimization. I bring a multidisciplinary approach to both voiceover work and business consulting.
             </p>
             <div className="grid grid-cols-2 gap-6">
               <div>
@@ -23,11 +23,11 @@ export default function About() {
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 mb-2">Educational Content</h3>
-                <p className="text-gray-600">Courses in fitness, intervention design, and more</p>
+                <p className="text-gray-600">Courses in fitness, intervention design, financial literacy, and more</p>
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 mb-2">Technical Projects</h3>
-                <p className="text-gray-600">FDA Food Recall App, Science tools, and more</p>
+                <p className="text-gray-600">Flashlearn AI, Fitness Assessment App, Science tools, and more</p>
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 mb-2">Community Focus</h3>
@@ -42,7 +42,7 @@ export default function About() {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Years in Business</span>
-                <span className="font-bold text-blue-600">5+</span>
+                <span className="font-bold text-blue-600">25+</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Daily Content Creation</span>
@@ -50,7 +50,7 @@ export default function About() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Specializations</span>
-                <span className="font-bold text-blue-600">Voice Over + Business</span>
+                <span className="font-bold text-blue-600">Voiceover + Business</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Mission</span>

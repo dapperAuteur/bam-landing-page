@@ -7,15 +7,15 @@ export default function Hero() {
             Brand Anthony McDonald
           </h1>
           <p className="text-xl md:text-2xl mb-4 text-blue-100">
-            Voice Over Artist & Business Consultant
+            Voiceover Artist & Business Consultant
           </p>
           <p className="text-lg mb-8 text-blue-200 max-w-2xl mx-auto">
             Building the world's smallest conglomerate while training to be the world's fastest centenarian. 
-            Professional voice over services and strategic business consulting.
+            Professional voiceover services and strategic business consulting.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#contact" className="btn-primary bg-white text-blue-600 hover:bg-gray-100">
-              Get Voice Over Quote
+              Get Voiceover Quote
             </a>
             <a href="#services" className="btn-secondary bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600">
               View Services

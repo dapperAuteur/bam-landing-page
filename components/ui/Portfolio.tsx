@@ -3,12 +3,12 @@ export default function Portfolio() {
     {
       title: "Audiobook Narration",
       description: "Professional narration for educational and fiction content",
-      category: "Voice Over"
+      category: "Voiceover"
     },
     {
       title: "Corporate Training Videos",
-      description: "Voice over for e-learning and corporate training materials",
-      category: "Voice Over"
+      description: "Voiceover for e-learning and corporate training materials",
+      category: "Voiceover"
     },
     {
       title: "Daily Morning Show",
@@ -27,7 +27,7 @@ export default function Portfolio() {
     },
     {
       title: "Technical Project Development",
-      description: "FDA Food Recall App and Science Clickbait Decoder",
+      description: "Spaced Recall Flashcard AI App and Fitness Assessment App",
       category: "Technology"
     }
   ]
@@ -40,7 +40,7 @@ export default function Portfolio() {
             Portfolio & Projects
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            A showcase of voice over work, business consulting projects, and innovative solutions 
+            A showcase of voiceover work, business consulting projects, and innovative solutions 
             across multiple industries and disciplines.
           </p>
         </div>

@@ -11,9 +11,9 @@ export default function Services() {
       features: ["Curriculum Development", "Training Systems", "Technical Workshops", "Educational Content"]
     },
     {
-      title: "Voice Over Services",
+      title: "Voiceover Services",
       description: "Professional narration for audiobooks, commercials, e-learning, and corporate content.",
-      features: ["Audiobook Narration", "Commercial Voice Over", "E-Learning Content", "Corporate Training"]
+      features: ["Audiobook Narration", "Commercial Voiceover", "E-Learning Content", "Corporate Training"]
     },
     {
       title: "Brand Ambassador",
@@ -40,7 +40,7 @@ export default function Services() {
             Services That Build Success
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Combining developer advocacy, technical education, voice over artistry, and strategic business consulting 
+            Combining developer advocacy, technical education, voiceover artistry, and strategic business consulting 
             to help individuals and organizations achieve their goals.
           </p>
         </div>

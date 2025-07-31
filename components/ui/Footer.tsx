@@ -7,7 +7,7 @@ export default function Footer() {
             <h3 className="text-2xl font-bold mb-4">Brand Anthony McDonald</h3>
             <p className="text-gray-300 mb-4">
               Building the world's smallest conglomerate while training to be the world's fastest centenarian. 
-              Professional voice over services and strategic business consulting.
+              Professional voiceover services and strategic business consulting.
             </p>
             <p className="text-gray-400 text-sm">
               © 2025 Brand Anthony McDonald. All rights reserved.
@@ -17,7 +17,7 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-bold mb-4">Services</h4>
             <ul className="space-y-2 text-gray-300">
-              <li>Voice Over</li>
+              <li>Voiceover</li>
               <li>Business Consulting</li>
               <li>Content Creation</li>
               <li>Educational Courses</li>

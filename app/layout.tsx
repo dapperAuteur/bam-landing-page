@@ -7,8 +7,8 @@ import ConsoltoChat from "./../components/ConsoltoChat";
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Brand Anthony McDonald | Voice Over Artist & Business Consultant',
-  description: 'Professional voice over services and business consulting. Training to be the world\'s fastest centenarian.',
+  title: 'Brand Anthony McDonald | Voiceover Artist & Business Consultant',
+  description: 'Professional voiceover services and business consulting. Training to be the world\'s fastest centenarian.',
 }
 
 export default function RootLayout({
