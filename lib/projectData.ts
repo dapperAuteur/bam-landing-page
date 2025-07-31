@@ -38,6 +38,15 @@ export const projects: Project[] = [
     link: "https://ecs-specialization.betterbud.club"
   },
   {
+    title: "AwesomeWebStore.com",
+    description: "Online store for all official BAM merchandise. You may also watch all my live streams here.",
+    type: "Open Source Project",
+    technologies: ["Shopify", "Consolto", "Pabbly Connect", "Adilo Big Command"],
+    impact: "Helping BAM reach his goals.",
+    featured: true,
+    link: "https://l.awews.com/merch"
+  },
+  {
     title: "Science Clickbait Decoder",
     description: "RAG-based tool using Python FastAPI, Next.js, and MongoDB with Hugging Face SciBERT for natural language processing. Repo: https://github.com/dapperAuteur/kys-rag.",
     type: "Open Source Project",
