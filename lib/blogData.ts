@@ -2,17 +2,17 @@ import { BlogPost } from "./../types/types"
 
 // 🔥 BLOG POST REGISTRY - Add new blog posts here!
 export const blogPosts: BlogPost[] = [
-  {
-    slug: "a-homeland-shaped-by-the-river-of-the-south-wind",
-    title: "A Homeland Shaped by the River of the South Wind",
-    description: "An interactive exploration of Indigenous life along the Arkansas River, featuring the diverse nations that called this waterway home.",
-    publishDate: "2025-06-15",
-    readTime: "8 min read",
-    category: "History & Culture",
-    featured: false,
-    tags: ["Indigenous History", "Arkansas River", "Interactive Story", "Cultural Heritage"],
-    excerpt: "Discover the rich tapestry of Indigenous nations that thrived along the Arkansas River, from the Ute in the headwaters to the Quapaw at its confluence with the Mississippi. An immersive journey through time featuring AI-powered storytelling."
-  },
+  // {
+  //   slug: "a-homeland-shaped-by-the-river-of-the-south-wind",
+  //   title: "A Homeland Shaped by the River of the South Wind",
+  //   description: "An interactive exploration of Indigenous life along the Arkansas River, featuring the diverse nations that called this waterway home.",
+  //   publishDate: "2025-06-15",
+  //   readTime: "8 min read",
+  //   category: "History & Culture",
+  //   featured: false,
+  //   tags: ["Indigenous History", "Arkansas River", "Interactive Story", "Cultural Heritage"],
+  //   excerpt: "Discover the rich tapestry of Indigenous nations that thrived along the Arkansas River, from the Ute in the headwaters to the Quapaw at its confluence with the Mississippi. An immersive journey through time featuring AI-powered storytelling."
+  // },
   {
     slug: "bodys-gatekeeper",
     title: "The Body's Gatekeeper",
@@ -98,7 +98,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "5 min read",
     category: "Birds",
     featured: false,
-    tags: ["Corvids", "Birds"],
+    tags: ["Nature", "Birds", "Animals"],
     excerpt: "An AI-Enhanced Infographic for Indiana Species"
   },
   {
@@ -109,7 +109,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "7 min read",
     category: "Statistics",
     featured: false,
-    tags: ["Statistics", "Math"],
+    tags: ["Statistics", "Math", "Critical Thinking"],
     excerpt: "Statistics help us describe data and draw inferences. These are the building blocks."
   },
   {
@@ -131,7 +131,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "5 min read",
     category: "Science",
     featured: false,
-    tags: ["Scientific Study", "Critical Thinking"],
+    tags: ["Science", "Critical Thinking"],
     excerpt: "The design of a study determines the strength of its conclusions. Understanding the type is the first step to critical appraisal."
   },
   {
@@ -142,7 +142,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "5 min read",
     category: "Rituals",
     featured: false,
-    tags: ["Scientific Study", "Critical Thinking"],
+    tags: ["Culture", "Rituals"],
     excerpt: "An interactive infographic tracing a profound spiritual practice from its African origins to its enduring presence in the diaspora."
   },
   {
@@ -153,7 +153,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "5 min read",
     category: "Statistics",
     featured: false,
-    tags: ["Statistics", "Critical Thinking"],
+    tags: ["Statistics", "Critical Thinking", "Math"],
     excerpt: "Misinformation isn't always about fake data. Often, it's about presenting real data in a misleading way. Here are the most common traps."
   },
   // {

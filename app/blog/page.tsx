@@ -14,7 +14,7 @@ export default function BlogPage() {
   const recentPosts = blogPosts.slice(0, 26) // Show 26 most recent
 
   return (
-    <main className="min-h-screen bg-gray-50 pt-20">
+    <main className="min-h-screen bg-gray-50 pt-28">
       <BlogHeader />
       {featuredPosts.length > 0 && (
         <section className="section-padding bg-white">
