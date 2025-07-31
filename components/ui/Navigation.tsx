@@ -16,7 +16,7 @@ export default function Navigation() {
           
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8">
-            <Link href="#services" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/#services" className="text-gray-700 hover:text-blue-600 transition-colors">
               Services
             </Link>
             <Link href="/experience" className="text-gray-700 hover:text-blue-600 transition-colors">
@@ -25,13 +25,13 @@ export default function Navigation() {
             <Link href="/blog" className="text-gray-700 hover:text-blue-600 transition-colors">
               Blog
             </Link>
-            <Link href="#about" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/#about" className="text-gray-700 hover:text-blue-600 transition-colors">
               About
             </Link>
-            <Link href="#portfolio" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/#portfolio" className="text-gray-700 hover:text-blue-600 transition-colors">
               Portfolio
             </Link>
-            <Link href="#contact" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/#contact" className="text-gray-700 hover:text-blue-600 transition-colors">
               Contact
             </Link>
           </div>
@@ -50,7 +50,7 @@ export default function Navigation() {
         {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden py-4">
-            <Link href="#services" className="block py-2 text-gray-700 hover:text-blue-600">
+            <Link href="/#services" className="block py-2 text-gray-700 hover:text-blue-600">
               Services
             </Link>
             <Link href="/experience" className="block py-2 text-gray-700 hover:text-blue-600">
@@ -59,13 +59,13 @@ export default function Navigation() {
             <Link href="/blog" className="block py-2 text-gray-700 hover:text-blue-600">
               Blog
             </Link>
-            <Link href="#about" className="block py-2 text-gray-700 hover:text-blue-600">
+            <Link href="/#about" className="block py-2 text-gray-700 hover:text-blue-600">
               About
             </Link>
-            <Link href="#portfolio" className="block py-2 text-gray-700 hover:text-blue-600">
+            <Link href="/#portfolio" className="block py-2 text-gray-700 hover:text-blue-600">
               Portfolio
             </Link>
-            <Link href="#contact" className="block py-2 text-gray-700 hover:text-blue-600">
+            <Link href="/#contact" className="block py-2 text-gray-700 hover:text-blue-600">
               Contact
             </Link>
           </div>
