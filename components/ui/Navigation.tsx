@@ -22,6 +22,9 @@ export default function Navigation() {
             <Link href="/experience" className="text-gray-700 hover:text-blue-600 transition-colors">
               Experience
             </Link>
+            <Link href="/blog" className="text-gray-700 hover:text-blue-600 transition-colors">
+              Blog
+            </Link>
             <Link href="#about" className="text-gray-700 hover:text-blue-600 transition-colors">
               About
             </Link>
@@ -52,6 +55,9 @@ export default function Navigation() {
             </Link>
             <Link href="/experience" className="block py-2 text-gray-700 hover:text-blue-600">
               Experience
+            </Link>
+            <Link href="/blog" className="block py-2 text-gray-700 hover:text-blue-600">
+              Blog
             </Link>
             <Link href="#about" className="block py-2 text-gray-700 hover:text-blue-600">
               About

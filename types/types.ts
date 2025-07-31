@@ -1,8 +1,20 @@
+export interface BlogPost {
+  slug: string
+  title: string
+  description: string
+  publishDate: string
+  readTime: string
+  category: string
+  featured?: boolean
+  tags: string[]
+  excerpt: string
+}
+
 export interface Experience {
   id: number
   title: string
   company: string
-  period: string
+  period?: string
   type: string
   description: string
   achievements: string[]
