@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Users, Footprints, Building, Mountain, Sparkles, Wind, Waves, Ship } from 'lucide-react';
 
 // HELPER: Custom hook for scroll animations
-const useOnScreen = (options) => {
+const useOnScreen = (options: IntersectionObserverInit) => {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -32,7 +32,7 @@ const useOnScreen = (options) => {
 };
 
 // COMPONENT: Animated Section Wrapper
-const AnimatedSection = ({ children, className = '' }) => {
+const AnimatedSection = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => { // eslint-disable-line no-unused-vars
   const [ref, isVisible] = useOnScreen({ threshold: 0.2 });
   return (
     <section
@@ -140,15 +140,15 @@ const JourneySection = () => (
 // COMPONENT: Gemini API Powered AI Storyteller
 const AIStorytellerSection = () => {
     const [story, setStory] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState('');
 
-    const getStory = async (prompt) => {
+    const getStory = async (prompt: string) => {
         setIsLoading(true);
         setError('');
         setStory('');
 
-        try {
+    try { 
             let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
             const payload = { contents: chatHistory };
             const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
@@ -175,7 +175,7 @@ const AIStorytellerSection = () => {
             } else {
                 throw new Error("Unexpected response format from API.");
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
             setError(err.message || "An error occurred while fetching the story.");
         } finally {

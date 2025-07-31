@@ -112,6 +112,50 @@ export const blogPosts: BlogPost[] = [
     tags: ["Statistics", "Math"],
     excerpt: "Statistics help us describe data and draw inferences. These are the building blocks."
   },
+  {
+    slug: "lester-wright-sr-the-man-who-outran-time",
+    title: "Lester Wright Sr.: The Man Who Outran Time",
+    description: "The Man Who Outran Time",
+    publishDate: "2025-06-20",
+    readTime: "5 min read",
+    category: "Centenarian",
+    featured: false,
+    tags: ["Centenarian", "Athletics"],
+    excerpt: "Shattered the 100m world record for the M100 age group with a time of 26.34 seconds."
+  },
+  {
+    slug: "scientific-study-infographic",
+    title: "Understanding Scientific Studies",
+    description: "The design of a study determines the strength of its conclusions. Understanding the type is the first step to critical appraisal.",
+    publishDate: "2025-07-20",
+    readTime: "5 min read",
+    category: "Centenarian",
+    featured: false,
+    tags: ["Scientific Study", "Critical Thinking"],
+    excerpt: "The design of a study determines the strength of its conclusions. Understanding the type is the first step to critical appraisal."
+  },
+  {
+    slug: "sacred-act-of-burning-hair",
+    title: "The Sacred Act of Burning Hair",
+    description: "An interactive infographic tracing a profound spiritual practice from its African origins to its enduring presence in the diaspora.",
+    publishDate: "2025-03-29",
+    readTime: "5 min read",
+    category: "Centenarian",
+    featured: false,
+    tags: ["Scientific Study", "Critical Thinking"],
+    excerpt: "An interactive infographic tracing a profound spiritual practice from its African origins to its enduring presence in the diaspora."
+  },
+  {
+    slug: "skeptics-guide-to-statistics",
+    title: "skeptics-guide-to-statistics",
+    description: "How Data Can Be Misused & What to Look For. Misinformation isn't always about fake data. Often, it's about presenting real data in a misleading way. Here are the most common traps.",
+    publishDate: "2025-01-10",
+    readTime: "5 min read",
+    category: "Statistics",
+    featured: false,
+    tags: ["Statistics", "Critical Thinking"],
+    excerpt: "Misinformation isn't always about fake data. Often, it's about presenting real data in a misleading way. Here are the most common traps."
+  },
   // {
   //   slug: "centenarian-athletes-an-interactive-infographic-times",
   //   title: "Centenarian Athletes Times: An Interactive Infographic",

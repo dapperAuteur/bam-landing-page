@@ -1,26 +1,43 @@
 "use client"
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+// import { IInfoCardProps, IStatCardProps } from "./../../../types/propTypes";
 
+interface IInfoCardProps {
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}
+
+interface IStatCardProps {
+  value: string;
+  label: string;
+  color: string;
+}
 // --- Helper Components ---
 
-const Icon = ({ path, className = "w-6 h-6" }) => (
+// A reusable type for icon components that can be styled
+interface IIconProps {
+  className?: string;
+}
+
+const Icon = ({ path, className = "w-6 h-6" }: { path: string, className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
     <path d={path} />
   </svg>
 );
 
-const ArrowRightIcon = () => <Icon path="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" />;
-const BuildingLibraryIcon = () => <Icon path="M12 3L4 9v12h16V9l-8-6zm-2 14H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V7h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z" />;
-const FactoryIcon = () => <Icon path="M2 22v-6h2v4h16v-4h2v6H2zm18-8H4V4h16v10zM14 8h-4v2h4V8z" />;
-const TrainIcon = () => <Icon path="M12 2c-4.42 0-8 .5-8 4v10c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4zm-1.5 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM12 11H4V7h8v4z" />;
-const BriefcaseIcon = () => <Icon path="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z" />;
-const LightbulbIcon = () => <Icon path="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z" />;
+const ArrowRightIcon = ({ className }: IIconProps) => <Icon path="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" className={className} />;
+const BuildingLibraryIcon = ({ className }: IIconProps) => <Icon path="M12 3L4 9v12h16V9l-8-6zm-2 14H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V7h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z" className={className} />;
+const FactoryIcon = ({ className }: IIconProps) => <Icon path="M2 22v-6h2v4h16v-4h2v6H2zm18-8H4V4h16v10zM14 8h-4v2h4V8z" className={className} />;
+const TrainIcon = ({ className }: IIconProps) => <Icon path="M12 2c-4.42 0-8 .5-8 4v10c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4zm-1.5 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM12 11H4V7h8v4z" className={className} />;
+const BriefcaseIcon = ({ className }: IIconProps) => <Icon path="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z" className={className} />;
+const LightbulbIcon = ({ className }: IIconProps) => <Icon path="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z" className={className} />;
 
 // --- Gemini API Call ---
 // NOTE: This is a mocked API call for demonstration.
 // In a real environment, this would make a fetch request to the Gemini API.
-const callGeminiAPI = async (prompt) => {
+const callGeminiAPI = async (prompt: string) => {
     return new Promise(resolve => {
         setTimeout(() => {
             if (prompt.includes("Chicago")) {
@@ -57,7 +74,7 @@ const Header = () => (
     </header>
 );
 
-const Section = ({ title, icon, children }) => (
+const Section = ({ title, icon, children }: IInfoCardProps) => (
     <section className="mb-12 bg-white p-6 rounded-xl shadow-md border border-gray-200">
         <div className="flex items-center mb-4">
             <div className="bg-blue-600 text-white p-3 rounded-full mr-4">{icon}</div>
@@ -69,14 +86,20 @@ const Section = ({ title, icon, children }) => (
     </section>
 );
 
-const StatCard = ({ value, label, color }) => (
+const StatCard = ({ value, label, color }: IStatCardProps) => (
     <div className={`p-4 rounded-lg text-white text-center shadow-md ${color}`}>
         <p className="text-4xl font-bold">{value}</p>
         <p className="text-sm font-medium">{label}</p>
     </div>
 );
 
-const GeminiModal = ({ city, onClose, prompt }) => {
+interface IGeminiModalProps {
+    city: string;
+    onClose: () => void;
+    prompt: string;
+}
+
+const GeminiModal = ({ city, onClose, prompt }: IGeminiModalProps) => {
     const [content, setContent] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
@@ -84,7 +107,7 @@ const GeminiModal = ({ city, onClose, prompt }) => {
         const fetchContent = async () => {
             setIsLoading(true);
             try {
-                const response = await callGeminiAPI(prompt);
+                const response: any = await callGeminiAPI(prompt);
                 const text = await response.text();
                 setContent(text);
             } catch (error) {
@@ -116,7 +139,11 @@ const GeminiModal = ({ city, onClose, prompt }) => {
     );
 };
 
-const MigrationMap = ({ onCityClick }) => {
+interface IMigrationMapProps {
+    onCityClick: (city: string) => void;
+}
+
+const MigrationMap = ({ onCityClick }: IMigrationMapProps) => {
     const cities = [
         { name: 'New York', x: '82%', y: '28%' },
         { name: 'Chicago', x: '58%', y: '32%' },
@@ -200,7 +227,12 @@ const PopulationChart = () => {
     );
 }
 
-const LearnMoreButton = ({ topic, onLearnMore }) => (
+interface ILearnMoreButtonProps {
+    topic: string;
+    onLearnMore: (topic: string, prompt: string) => void;
+}
+
+const LearnMoreButton = ({ topic, onLearnMore }: ILearnMoreButtonProps) => (
     <button
         onClick={() => onLearnMore(topic, `Tell me more about the ${topic}.`)}
         className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform transform hover:scale-105"
@@ -213,21 +245,21 @@ const LearnMoreButton = ({ topic, onLearnMore }) => (
 // --- App Component ---
 
 export default function App() {
-    const [modalCity, setModalCity] = useState(null);
+    const [modalCity, setModalCity] = useState('');
     const [modalPrompt, setModalPrompt] = useState('');
 
-    const handleCityClick = useCallback((city) => {
+    const handleCityClick = useCallback((city: string) => {
         setModalPrompt(`What was the Great Migration experience like in ${city}?`);
         setModalCity(city);
     }, []);
     
-    const handleLearnMore = useCallback((topic, prompt) => {
+    const handleLearnMore = useCallback((topic: string, prompt: string) => {
         setModalPrompt(prompt);
         setModalCity(topic);
     }, []);
 
     const closeModal = useCallback(() => {
-        setModalCity(null);
+        setModalCity('');
         setModalPrompt('');
     }, []);
 

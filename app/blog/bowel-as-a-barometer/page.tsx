@@ -1,12 +1,14 @@
 import React from 'react';
+import { IInfoCardProps } from "./../../../types/propTypes"
+
 
 // Helper component for Icons (using Font Awesome)
-const Icon = ({ className, fixedWidth = true }) => (
+const Icon = ({ className, fixedWidth = true }: { className: string, fixedWidth?: boolean }) => (
   <i className={`${className} ${fixedWidth ? 'fa-fw' : ''}`}></i>
 );
 
 // Reusable Section Title Component
-const SectionTitle = ({ title, subtitle }) => (
+const SectionTitle = ({ title, subtitle }: { title: string, subtitle: string }) => (
   <div className="text-center mb-12">
     <h2 className="text-4xl md:text-5xl font-extrabold text-gray-800 dark:text-white mb-3">{title}</h2>
     <p className="text-lg text-gray-500 dark:text-gray-400 max-w-3xl mx-auto">{subtitle}</p>
@@ -15,7 +17,7 @@ const SectionTitle = ({ title, subtitle }) => (
 );
 
 // Reusable Info Card Component
-const InfoCard = ({ icon, title, children, colorClass = 'border-gray-300' }) => (
+const InfoCard = ({ icon, title, children, colorClass = 'border-gray-300' }: IInfoCardProps) => (
   <div className={`bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300 ease-in-out border-l-4 ${colorClass}`}>
     <div className="flex items-center mb-4">
       <div className={`text-3xl mr-4 ${colorClass.replace('border', 'text')}`}>

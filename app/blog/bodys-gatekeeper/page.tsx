@@ -1,10 +1,16 @@
 import React from 'react';
 
 // Helper component for Font Awesome Icons
-const Icon = ({ className }) => <i className={className}></i>;
+const Icon = ({ className }: { className: string }) => <i className={className} />;
 
+interface IInfoCardProps {
+  icon: string;
+  title: string;
+  children: React.ReactNode;
+  colorClass: string;
+}
 // Individual Info Card Component
-const InfoCard = ({ icon, title, children, colorClass }) => (
+const InfoCard = ({ icon, title, children, colorClass }: IInfoCardProps) => (
   <div className={`bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300 ease-in-out border-l-4 ${colorClass}`}>
     <div className="flex items-center mb-4">
       <div className={`text-3xl mr-4 ${colorClass.replace('border', 'text')}`}>
@@ -16,8 +22,12 @@ const InfoCard = ({ icon, title, children, colorClass }) => (
   </div>
 );
 
+interface SectionTitleProps {
+  title: string;
+  subtitle: string;
+}
 // Section Title Component
-const SectionTitle = ({ title, subtitle }) => (
+const SectionTitle = ({ title, subtitle }: SectionTitleProps) => (
     <div className="text-center mb-12">
         <h2 className="text-4xl md:text-5xl font-extrabold text-gray-800 dark:text-white mb-2">
             {title}
