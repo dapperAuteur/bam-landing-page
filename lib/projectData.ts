@@ -38,6 +38,24 @@ export const projects: Project[] = [
     link: "https://ecs-specialization.betterbud.club"
   },
   {
+    title: "Lighted Skin",
+    description: "Exploration of light interacting with melanated skin. A photography exhibition at the Phillip K. Smith III: Three Parallels exhibit at the Scottsdale Museum of Contemporary Art. Southern California artist Phillip K. Smith III creates a site-specific, commissioned work that highlights changes in perception as related to light, color, time, and space. I used the installation as the setting of my photography.",
+    type: "Photography",
+    technologies: ["Light", "Phillip K. Smith III: Three Parallels Architecture + Art", "Camera", "Human Models"],
+    impact: "Displaying the beauty of light and the human experience.",
+    // featured: true,
+    // link: "https://l.awews.com/merch"
+  },
+  {
+    title: "Wednesday Wednesday",
+    description: "Documenting live singer-songwriter performances at historic Crescent Ballroom in Phoenix, Arizona.",
+    type: "Video Documentary",
+    technologies: ["Live Music", "Video", "Storytelling", "Crescent Ballroom"],
+    impact: "Three years of documenting live music.",
+    // featured: true,
+    // link: "https://l.awews.com/merch"
+  },
+  {
     title: "AwesomeWebStore.com",
     description: "Online store for all official BAM merchandise. You may also watch all my live streams here.",
     type: "Open Source Project",
