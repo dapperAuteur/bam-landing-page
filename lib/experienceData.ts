@@ -34,20 +34,20 @@ export const experiences: Experience[] = [
   //   technologies: ["Postman", "LMS Platforms", "API Testing", "Documentation", "Training Systems"],
   //   featured: true
   // },
-  {
-    id: 3,
-    title: "Developer Relations Engineer",
-    company: "Dgraph",
-    type: "Developer Relations",
-    description: "Built community engagement and technical documentation while gathering user feedback for product improvements.",
-    achievements: [
-      "Created technical documentation and training materials",
-      "Engaged with user community through Slack and local meetups",
-      "Built and maintained sample applications and integrations",
-      "Reduced support queries by 50% through comprehensive documentation"
-    ],
-    technologies: ["GraphQL", "Documentation", "Community Management", "API Integration"]
-  },
+  // {
+  //   id: 3,
+  //   title: "Developer Relations Engineer",
+  //   company: "Dgraph",
+  //   type: "Developer Relations",
+  //   description: "Built community engagement and technical documentation while gathering user feedback for product improvements.",
+  //   achievements: [
+  //     "Created technical documentation and training materials",
+  //     "Engaged with user community through Slack and local meetups",
+  //     "Built and maintained sample applications and integrations",
+  //     "Reduced support queries by 50% through comprehensive documentation"
+  //   ],
+  //   technologies: ["GraphQL", "Documentation", "Community Management", "API Integration"]
+  // },
   {
     id: 4,
     title: "Community Leader & Technical Educator",
