@@ -47,6 +47,24 @@ export const projects: Project[] = [
     link: "https://l.awews.com/merch"
   },
   {
+    title: "Elementary MBA",
+    description: "Financial literacy curriculum designed to help students understand how and why businesses make decisions",
+    type: "Online Self-Paced Class",
+    technologies: ["LMS Integration", "Automation", "Curriculum Design", "Peer-Reviewed Research", "Collaborative Learning"],
+    impact: "Taught to over 100 3rd-5th graders with STEM and coding course work.",
+    featured: true,
+    link: "https://github.com/dapperAuteur/kys-rag"
+  },
+  {
+    title: "ElementaryMBA Dashboard",
+    description: "Web app to show users a snapshot of their financial health and help them understand the impact of paying of loans early. Repo: https://github.com/dapperAuteur/temba-fin-dashboard.",
+    type: "Online Self-Paced Class",
+    technologies: ["LMS Integration", "Automation", "Curriculum Design", "Peer-Reviewed Research", "Collaborative Learning"],
+    impact: "Compliment to Elementary MBA curriculum.",
+    featured: true,
+    link: "https://github.com/dapperAuteur/temba-fin-dashboard"
+  },
+  {
     title: "Science Clickbait Decoder",
     description: "RAG-based tool using Python FastAPI, Next.js, and MongoDB with Hugging Face SciBERT for natural language processing. Repo: https://github.com/dapperAuteur/kys-rag.",
     type: "Open Source Project",
