@@ -8,9 +8,9 @@ interface BlogPostWrapperProps {
 
 export default function BlogPostWrapper({ post, children }: BlogPostWrapperProps) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-28">
       {/* Navigation breadcrumb */}
-      <nav className="bg-white shadow-sm py-4 mt-20">
+      <nav className="bg-white shadow-sm py-4">
         <div className="container-max">
           <div className="flex items-center text-sm text-gray-600">
             <Link href="/" className="hover:text-blue-600">Home</Link>
