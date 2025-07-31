@@ -60,7 +60,7 @@ export default function ShareButton() {
 
   // Share via Web Share API (mobile devices)
   const shareNative = async () => {
-    if (navigator.share) {
+    if ('share' in navigator) {
       try {
         const screenshot = await captureScreenshot()
         const shareObject: any = {
@@ -188,7 +188,7 @@ export default function ShareButton() {
             {/* Share Options */}
             <div className="grid grid-cols-2 gap-3">
               {/* Native Share (if available) */}
-              {navigator.share && (
+              {'share' in navigator && (
                 <button
                   onClick={shareNative}
                   disabled={isCapturing}
