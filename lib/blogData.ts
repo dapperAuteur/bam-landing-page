@@ -79,24 +79,24 @@ export const blogPosts: BlogPost[] = [
     tags: ["US History", "World History", "USA", "African-American", "Harlem Renaissance", "Migration", "Refugees", "Jim Crow South", "History"],
     excerpt: "The Great Migration was a courageous act of agency by six million African Americans to escape the oppressive Jim Crow South. They fled a system of legal segregation, political disenfranchisement, economic exploitation through sharecropping, and the constant terror of racial violence. As one migrant wrote, they sought to go 'where a man is a man.'"
   },
-  {
-    slug: "free-spaced-repetition-scheduler",
-    title: "Free Spaced Repetition Scheduler (FSRS)",
-    description: "FSRS is a sophisticated algorithm based on the DSR (Difficulty, Stability, Retrievability) model of memory. It provides a powerful, data-driven method for creating highly personalized flashcard review schedules.",
-    publishDate: "2025-07-07",
-    readTime: "5 min read",
-    category: "Learning",
-    featured: true,
-    tags: ["Learning Cycle", "Learning Cycle"],
-    excerpt: "FSRS is a sophisticated algorithm based on the DSR (Difficulty, Stability, Retrievability) model of memory. It provides a powerful, data-driven method for creating highly personalized flashcard review schedules."
-  },
+  // {
+  //   slug: "free-spaced-repetition-scheduler",
+  //   title: "Free Spaced Repetition Scheduler (FSRS)",
+  //   description: "FSRS is a sophisticated algorithm based on the DSR (Difficulty, Stability, Retrievability) model of memory. It provides a powerful, data-driven method for creating highly personalized flashcard review schedules.",
+  //   publishDate: "2025-07-07",
+  //   readTime: "5 min read",
+  //   category: "Learning",
+  //   featured: true,
+  //   tags: ["Learning Cycle", "Learning Cycle"],
+  //   excerpt: "FSRS is a sophisticated algorithm based on the DSR (Difficulty, Stability, Retrievability) model of memory. It provides a powerful, data-driven method for creating highly personalized flashcard review schedules."
+  // },
   {
     slug: "interactive-indiana-corvid-species-analysis",
     title: "Interactive Corvid Analysis",
     description: "An AI-Enhanced Infographic for Indiana Species",
     publishDate: "2025-05-07",
     readTime: "5 min read",
-    category: "Corvids",
+    category: "Birds",
     featured: false,
     tags: ["Corvids", "Birds"],
     excerpt: "An AI-Enhanced Infographic for Indiana Species"
@@ -129,7 +129,7 @@ export const blogPosts: BlogPost[] = [
     description: "The design of a study determines the strength of its conclusions. Understanding the type is the first step to critical appraisal.",
     publishDate: "2025-07-20",
     readTime: "5 min read",
-    category: "Centenarian",
+    category: "Science",
     featured: false,
     tags: ["Scientific Study", "Critical Thinking"],
     excerpt: "The design of a study determines the strength of its conclusions. Understanding the type is the first step to critical appraisal."
@@ -140,14 +140,14 @@ export const blogPosts: BlogPost[] = [
     description: "An interactive infographic tracing a profound spiritual practice from its African origins to its enduring presence in the diaspora.",
     publishDate: "2025-03-29",
     readTime: "5 min read",
-    category: "Centenarian",
+    category: "Rituals",
     featured: false,
     tags: ["Scientific Study", "Critical Thinking"],
     excerpt: "An interactive infographic tracing a profound spiritual practice from its African origins to its enduring presence in the diaspora."
   },
   {
     slug: "skeptics-guide-to-statistics",
-    title: "skeptics-guide-to-statistics",
+    title: "The Skeptics Guide to Statistics",
     description: "How Data Can Be Misused & What to Look For. Misinformation isn't always about fake data. Often, it's about presenting real data in a misleading way. Here are the most common traps.",
     publishDate: "2025-01-10",
     readTime: "5 min read",
