@@ -16,7 +16,7 @@ export default function Services() {
       features: ["Audiobook Narration", "Commercial Voiceover", "E-Learning Content", "Corporate Training"]
     },
     {
-      title: "Brand Ambassador",
+      title: "Brand Ambassador Lead",
       description: "Product demonstrations, event management, and audience engagement for technical products.",
       features: ["Product Demonstrations", "Event Management", "Technical Presentations", "Community Engagement"]
     },
