@@ -216,7 +216,10 @@ export default function Contact() {
                     required
                   >
                     <option value="Voiceover Services">Voiceover Services</option>
+                    <option value="AI Consulting">AI Consulting</option>
                     <option value="Business Consulting">Business Consulting</option>
+                    <option value="Sports Photography">Sports Photography</option>
+                    <option value="Photography">Photography</option>
                     <option value="Content Creation">Content Creation</option>
                     <option value="Combination Project">Combination Project</option>
                   </select>
