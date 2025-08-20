@@ -121,8 +121,22 @@ const citations: Citation[] = [
   }
 ]
 
+interface CitationTooltipProps {
+  citationId: string;
+  children: React.ReactNode;
+  textColor?: string;
+  hoverTextColor?: string;
+  borderColor?: string;
+}
+
 // Component for individual citation display
-const CitationTooltip: React.FC<{ citationId: string; children: React.ReactNode }> = ({ citationId, children }) => {
+const CitationTooltip: React.FC<CitationTooltipProps> = ({ 
+  citationId, 
+  children,
+  textColor = 'text-blue-600',
+  hoverTextColor = 'hover:text-blue-800',
+  borderColor = 'border-blue-400'
+}) => {
   const [isVisible, setIsVisible] = useState(false)
   const citation = citations.find(c => c.id === citationId)
 
@@ -130,8 +144,8 @@ const CitationTooltip: React.FC<{ citationId: string; children: React.ReactNode 
 
   return (
     <span className="relative inline-block">
-      <span 
-        className="border-b border-blue-400 border-dotted cursor-help text-blue-600 hover:text-blue-800"
+      <span
+        className={`border-b ${borderColor} border-dotted cursor-help ${textColor} ${hoverTextColor}`}
         onMouseEnter={() => setIsVisible(true)}
         onMouseLeave={() => setIsVisible(false)}
       >
@@ -502,7 +516,12 @@ const EndocannabinoidSystemCurriculum: React.FC = () => {
             <div className="text-center">
               <h4 className="font-semibold mb-2">Pain Modulation</h4>
               <p className="text-sm opacity-90">
-                <CitationTooltip citationId="bie2018">
+                <CitationTooltip
+                  citationId="bie2018"
+                  textColor="text-yellow-400"
+                  borderColor="border-white"
+                  hoverTextColor="hover:text-gray-200"
+                >
                   CB2 receptors in peripheral tissues modulate inflammatory pain responses
                 </CitationTooltip>
               </p>
@@ -510,19 +529,29 @@ const EndocannabinoidSystemCurriculum: React.FC = () => {
             <div className="text-center">
               <h4 className="font-semibold mb-2">Mood Regulation</h4>
               <p className="text-sm opacity-90">
-                <CitationTooltip citationId="hillard2018">
+                <CitationTooltip
+                  citationId="hillard2018"
+                  textColor="text-yellow-400"
+                  borderColor="border-white"
+                  hoverTextColor="hover:text-gray-200"
+                >
                   Endocannabinoid signaling influences stress response and emotional processing
                 </CitationTooltip>
               </p>
             </div>
             <div className="text-center">
               <h4 className="font-semibold mb-2">Sleep-Wake Cycles</h4>
-              <p className="text-sm opacity-90">CB1 receptors in sleep-regulating brain regions control circadian rhythms</p>
+              <p className="text-sm opacity-90">CB1 receptors in sleep-regulating brain regions control circadian rhythms.</p>
             </div>
             <div className="text-center">
               <h4 className="font-semibold mb-2">Immune Function</h4>
               <p className="text-sm opacity-90">
-                <CitationTooltip citationId="munro1993">
+                <CitationTooltip
+                  citationId="munro1993"
+                  textColor="text-yellow-400"
+                  borderColor="border-white"
+                  hoverTextColor="hover:text-gray-200"
+                >
                   CB2 receptors throughout immune tissues regulate inflammatory responses
                 </CitationTooltip>
               </p>
