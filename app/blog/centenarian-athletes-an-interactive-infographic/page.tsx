@@ -7,7 +7,6 @@ interface IconProps {
 
 // --- Helper Icons (as SVG components) ---
 const TrophyIcon = ({ className }: IconProps) => {
-    console.log('typeof className :>> ', typeof className);
     return (
   <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
     <path d="M18.5 2h-13A2.5 2.5 0 003 4.5V9c0 4.42 3.58 8 8 8s8-3.58 8-8V4.5A2.5 2.5 0 0018.5 2zM11 15c-2.76 0-5-2.24-5-5h10c0 2.76-2.24 5-5 5z" /><path d="M11 18h2v3h-2z" /><path d="M10 21h4v2h-4z" />
@@ -40,14 +39,14 @@ const SparklesIcon = ({ className }: IconProps) => (
 );
 
 interface Athlete {
-      name: string;
-      age: number;
-      nationality: string;
-      achievement: string;
-      date: string;
-      location: string;
-      bio: string;
-      imageUrl: string;
+    name: string;
+    age: number;
+    nationality: string;
+    achievement: string;
+    date: string;
+    location: string;
+    bio: string;
+    imageUrl: string;
 }
 // --- Athlete Data ---
 const athletes: Athlete[] = [
@@ -114,41 +113,41 @@ const athletes: Athlete[] = [
 ];
 
 // --- Gemini API Caller ---
-async function generateTip(athlete: Athlete) {
-    const prompt = `Based on the inspiring story of ${athlete.name} (${athlete.age}), who achieved ${athlete.achievement} and whose life philosophy included themes of ${athlete.bio.includes('resilience') ? 'resilience' : 'dedication'}, generate a short, one-sentence motivational fitness tip.`;
+// async function generateTip(athlete: Athlete) {
+//     const prompt = `Based on the inspiring story of ${athlete.name} (${athlete.age}), who achieved ${athlete.achievement} and whose life philosophy included themes of ${athlete.bio.includes('resilience') ? 'resilience' : 'dedication'}, generate a short, one-sentence motivational fitness tip.`;
     
-    const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-    const payload = { contents: chatHistory };
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-        const apiKey = GEMINI_API_KEY; // API key will be automatically provided by the environment
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+//     const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+//     const payload = { contents: chatHistory };
+//     const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+//         const apiKey = GEMINI_API_KEY; // API key will be automatically provided by the environment
+//     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+//     try {
+//         const response = await fetch(apiUrl, {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify(payload)
+//         });
 
-        if (!response.ok) {
-            throw new Error(`API call failed with status: ${response.status}`);
-        }
+//         if (!response.ok) {
+//             throw new Error(`API call failed with status: ${response.status}`);
+//         }
 
-        const result = await response.json();
+        // const result = await response.json();
 
-        if (result.candidates && result.candidates.length > 0 &&
-            result.candidates[0].content && result.candidates[0].content.parts &&
-            result.candidates[0].content.parts.length > 0) {
-            return result.candidates[0].content.parts[0].text;
-        } else {
-            console.error("Unexpected response structure:", result);
-            return "Embrace every day as a new opportunity to move and be well.";
-        }
-    } catch (error) {
-        console.error("Error calling Gemini API:", error);
-        return "Start small, stay consistent, and celebrate every step of your journey.";
-    }
-}
+        // if (result.candidates && result.candidates.length > 0 &&
+        //     result.candidates[0].content && result.candidates[0].content.parts &&
+        //     result.candidates[0].content.parts.length > 0) {
+        //     return result.candidates[0].content.parts[0].text;
+        // } else {
+        //     console.error("Unexpected response structure:", result);
+        //     return "Embrace every day as a new opportunity to move and be well.";
+        // }
+    // } catch (error) {
+    //     console.error("Error calling Gemini API:", error);
+    //     return "Start small, stay consistent, and celebrate every step of your journey.";
+    // }
+// }
 
 
 // --- Main App Component ---
@@ -160,14 +159,40 @@ export default function App() {
     const handleGenerateTip = async (athleteName: string) => {
         setGeneratingTips(prev => ({ ...prev, [athleteName]: true }));
         const athlete = athletes.find(a => a.name === athleteName);
+        let tip = "";
         if (athlete) {
-            const tip = await generateTip(athlete);
+            // const tip = await generateTip(athlete);
+            // let tip = "";
+            // let name = athlete.name;
+            switch (athleteName) {
+                case "Lester Wright":
+                    tip = "Embrace the unwavering dedication of Lester Wright: find joy in movement, no matter the pace, and your consistent efforts will lead to remarkable achievements at any age."
+                    break;
+                case "Donald Pellmann":
+                    tip = "Channel your inner Pellmann: Dedicate a little time each day to movement and let consistency pave the way to a stronger, healthier you, no matter your age.";
+                    break;
+                case "Hidekichi Miyazaki":
+                    tip = "Embrace the challenge, dedicate yourself to the journey, and let age be a number, not a limit.";
+                    break;
+                case "Ida Keeling":
+                    tip = "Like Ida Keeling, turn life's challenges into your strength, one step at a time, and keep moving forward, no matter how small the step.";
+                    break;
+                case "Julia Hawkins":
+                    tip = "Channel your inner \"Hurricane\" Hawkins: Commit to daily movement, no matter how small, and watch dedication blossom into incredible strength and longevity.";
+                    break;
+                case "Stanisław Kowalski":
+                    tip = "Embrace dedication like Kowalski, and let consistency, not age, define your limits - push yourself a little further each day.";
+                    break;
+                default:
+                    break;
+            }
             setGeneratedTips(prev => ({ ...prev, [athleteName]: tip }));
         } else {
             console.error(`Athlete "${athleteName}" not found.`);
         }
-        // const tip = await generateTip(athlete);
-        // setGeneratedTips(prev => ({ ...prev, [athleteName]: tip }));
+        // tip = await generateTip("Lester Wright");
+        console.log('tip :>> ', tip);
+        setGeneratedTips(prev => ({ ...prev, [athleteName]: tip }));
         setGeneratingTips(prev => ({ ...prev, [athleteName]: false }));
     };
 
