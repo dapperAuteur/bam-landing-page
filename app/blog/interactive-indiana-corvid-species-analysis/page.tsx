@@ -21,8 +21,8 @@ interface Corvid {
   socialBehavior: string;
   vocalization: string;
   wingspan: number;
+  summary: string;
 }
-
 
 const corvidData = [
   {
@@ -37,6 +37,7 @@ const corvidData = [
     plumage: "Entirely black with a glossy, iridescent sheen.",
     vocalization: "Familiar 'caw-caw', clicks, rattles.",
     socialBehavior: "Highly social, forms large flocks and roosts.",
+    summary: "The adaptable American Crow, weighing around 450g, thrives in diverse habitats from woodlands to urban landscapes. Recognizable by its familiar \"caw-caw\" call and complex social behavior, these intelligent birds form large flocks and roosts, making them a common yet captivating sight.",
   },
   {
     species: "Blue Jay",
@@ -50,6 +51,7 @@ const corvidData = [
     plumage: "Bright blue crest and back, white face, black necklace.",
     vocalization: "Loud 'jay-jay', whistles, excellent mimic (e.g., hawks).",
     socialBehavior: "Social in family groups, bold, assertive, known for mobbing predators.",
+    summary: "The bold and boisterous Blue Jay is a familiar sight in woodlands and backyards, easily recognized by its loud \"jay-jay\" call and remarkable ability to mimic other birds, including hawks! This social corvid fiercely defends its territory, often mobbing predators in family groups, showcasing its assertive nature and clever intelligence.",
   },
   {
     species: "Fish Crow",
@@ -63,6 +65,7 @@ const corvidData = [
     plumage: "Entirely black, often slightly glossier than American Crow.",
     vocalization: "Distinctly nasal 'cah' or a two-note 'uh-uh'.",
     socialBehavior: "Gregarious, often in flocks, especially when foraging.",
+    summary: "The Fish Crow, a social bird of southern Indiana waterways, is easily identified by its unique, nasal \"cah\" call. Often found in flocks near rivers and lakes, this 300g crow distinguishes itself through its vocalizations and gregarious nature.",
   },
   {
     species: "Common Raven",
@@ -76,13 +79,26 @@ const corvidData = [
     plumage: "Entirely black, shaggy throat feathers (hackles), glossy.",
     vocalization: "Deep, resonant 'gronk-gronk', croaks, toots.",
     socialBehavior: "Often in pairs or family groups; complex social interactions.",
+    summary: "The Common Raven, a hefty bird of rugged landscapes, distinguishes itself with a deep, resonating call unlike any other corvid. Thriving in family groups, these intelligent birds display intricate social behavior and are increasingly spotted in forested bluffs.",
   },
 ];
 
 const myths = [
-    { id: 'omen', title: 'Corvids are omens of bad luck.' },
-    { id: 'talk', title: 'Splitting a crow\'s tongue helps it talk.' },
-    { id: 'intelligence', title: 'Corvids are unintelligent "bird brains".' }
+    {
+      id: 'omen',
+      title: 'Corvids are omens of bad luck.',
+      mythBuster: "Corvids' association with bad luck is a cultural superstition, not a reflection of their behavior or biology. These intelligent birds are actually beneficial to ecosystems, often cleaning up carrion and helping disperse seeds. Historically, their scavenging habits may have led to negative connotations associating them with death and disease, but scientifically, they are fascinating creatures contributing positively to their environments.",
+    },
+    {
+      id: 'talk',
+      title: 'Splitting a crow\'s tongue helps it talk.',
+      mythBuster: "The myth that splitting a crow's tongue allows it to talk is false; crows, like other birds, produce sound with a syrinx, not a tongue capable of forming human speech. While corvids are intelligent mimics and can learn to imitate sounds, including human words, this ability relies on their complex vocal apparatus and brainpower, not on a surgically altered tongue. The gruesome practice likely stemmed from a misunderstanding of how birds vocalize, coupled with a desire to exploit their intelligence for entertainment or profit."
+    },
+    {
+      id: 'intelligence',
+      title: 'Corvids are unintelligent "bird brains".',
+      mythBuster: "The myth of \"bird brains\" couldn't be further from the truth when it comes to corvids! These clever birds, including crows, ravens, and jays, possess remarkable intelligence, demonstrating problem-solving skills, tool use, and even self-awareness comparable to primates. Historically, their dark plumage and scavenging habits led to negative cultural associations, obscuring their actual cognitive abilities, but scientific studies now reveal them as some of the most intelligent animals on Earth."
+    }
 ];
 
 const App = () => {
@@ -147,52 +163,54 @@ const App = () => {
     setAiSummary('');
   };
 
-  const callGeminiAPI = async (prompt: string) => {
-      const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-      if (!GEMINI_API_KEY) {
-        console.error("apiKey undefined");
-        return;
+  // const callGeminiAPI = async (prompt: string) => {
+  //     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+  //     if (!GEMINI_API_KEY) {
+  //       console.error("apiKey undefined");
+  //       return;
 
-      }
-      const apiKey = GEMINI_API_KEY
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-      const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+  //     }
+  //     const apiKey = GEMINI_API_KEY
+  //     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+  //     const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
 
-      try {
-          const response = await fetch(url, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload),
-          });
+  //     try {
+  //         const response = await fetch(url, {
+  //             method: 'POST',
+  //             headers: { 'Content-Type': 'application/json' },
+  //             body: JSON.stringify(payload),
+  //         });
 
-          if (!response.ok) {
-              return `Error: API request failed with status ${response.status}.`;
-          }
+  //         if (!response.ok) {
+  //             return `Error: API request failed with status ${response.status}.`;
+  //         }
 
-          const result = await response.json();
-          if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
-              return result.candidates[0].content.parts[0].text;
-          } else {
-              return 'Could not generate a response. The AI model returned an unexpected format.';
-          }
-      } catch (error: unknown) {
-          console.error("Gemini API Error:", error);
-          return `An error occurred: ${(error as AppError).message}. Please check the console.`;
-      }
-  };
+  //         const result = await response.json();
+  //         if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+  //             return result.candidates[0].content.parts[0].text;
+  //         } else {
+  //             return 'Could not generate a response. The AI model returned an unexpected format.';
+  //         }
+  //     } catch (error: unknown) {
+  //         console.error("Gemini API Error:", error);
+  //         return `An error occurred: ${(error as AppError).message}. Please check the console.`;
+  //     }
+  // };
 
   const generateSummary = async () => {
     if (!selectedCorvid) return;
     setIsLoadingSummary(true);
     setAiSummary('');
+    console.log('selectedCorvid :>> ', selectedCorvid);
+    console.log('selectedCorvid.species :>> ', selectedCorvid.species);
 
-    const prompt = `Based on the following data for the corvid species "${selectedCorvid.species}", generate a concise, engaging summary (2-3 sentences) suitable for an infographic. Highlight its most distinctive characteristics.
-Data:
-- Mass: ${selectedCorvid.mass}g
-- Habitat: ${selectedCorvid.habitat}
-- Key Features: ${selectedCorvid.vocalization}, ${selectedCorvid.socialBehavior}.`;
+    // const prompt = `Based on the following data for the corvid species "${selectedCorvid.species}", generate a concise, engaging summary (2-3 sentences) suitable for an infographic. Highlight its most distinctive characteristics.
+    // Data:
+    // - Mass: ${selectedCorvid.mass}g
+    // - Habitat: ${selectedCorvid.habitat}
+    // - Key Features: ${selectedCorvid.vocalization}, ${selectedCorvid.socialBehavior}.`;
     
-    const summary = await callGeminiAPI(prompt);
+    const summary = selectedCorvid.summary // await callGeminiAPI(prompt);
     setAiSummary(summary);
     setIsLoadingSummary(false);
   };
@@ -200,10 +218,15 @@ Data:
   const debunkMyth = async (mythId: string, mythTitle: string) => {
       setIsLoadingMyth(mythId);
       setMythExplanations(prev => ({...prev, [mythId]: ''}));
+      console.log('mythId :>> ', mythId);
+      let myth = myths.find(m => m.id === mythId);
+      if (!myth) return;
+      console.log('myth :>> ', myth);
+      console.log('myth.mythBuster :>> ', myth.mythBuster);
 
-      const prompt = `Explain in a clear and engaging way why the following common myth about corvids is not true: "${mythTitle}". Focus on the scientific facts and cultural context. Keep it concise (3-4 sentences).`;
+      // const prompt = `Explain in a clear and engaging way why the following common myth about corvids is not true: "${mythTitle}". Focus on the scientific facts and cultural context. Keep it concise (3-4 sentences).`;
       
-      const explanation = await callGeminiAPI(prompt);
+      const explanation = myth.mythBuster // await callGeminiAPI(prompt);
       setMythExplanations(prev => ({...prev, [mythId]: explanation}));
       setIsLoadingMyth(null);
   };
