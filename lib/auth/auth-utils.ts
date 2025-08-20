@@ -6,8 +6,14 @@ import { ObjectId } from 'mongodb'
 import clientPromise from './../db/mongodb'
 import { User, AuthUser, SessionData } from './../../types/auth'
 
-// Auth configuration
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production'
+// Auth configuration - Type-safe JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is not set. Please add it to your .env.local file.')
+}
+// TypeScript now knows JWT_SECRET is definitely a string after the check
+const SECRET_KEY: string = JWT_SECRET
+
 const JWT_EXPIRES_IN = '7d' // 7 days
 const COOKIE_NAME = 'auth-token'
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 // 7 days in seconds
@@ -40,7 +46,7 @@ export function generateToken(user: AuthUser): string {
     expiresAt: Date.now() + (7 * 24 * 60 * 60 * 1000) // 7 days
   }
 
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
+  return jwt.sign(payload, SECRET_KEY, { expiresIn: JWT_EXPIRES_IN })
 }
 
 /**
@@ -48,7 +54,7 @@ export function generateToken(user: AuthUser): string {
  */
 export function verifyToken(token: string): SessionData | null {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as SessionData
+    const decoded = jwt.verify(token, SECRET_KEY) as SessionData
     
     // Check if token is expired
     if (decoded.expiresAt < Date.now()) {
@@ -230,23 +236,13 @@ export function withAuth(handler: (request: NextRequest, user: AuthUser) => Prom
  * Middleware helper to protect admin routes
  */
 export function withAdminAuth(handler: (request: NextRequest, user: AuthUser) => Promise<NextResponse>) {
-  return async (request: NextRequest): Promise<NextResponse> => {
-    const user = await getCurrentUser(request)
-    
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized', message: 'Please log in to access this resource' },
-        { status: 401 }
-      )
-    }
-
+  return withAuth(async (request, user) => {
     if (user.role !== 'admin') {
       return NextResponse.json(
         { error: 'Forbidden', message: 'Admin access required' },
         { status: 403 }
       )
     }
-
     return handler(request, user)
-  }
+  })
 }
