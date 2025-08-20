@@ -77,11 +77,11 @@ const DiaphragmaticBreathingInfographic = () => {
   const [modalContent, setModalContent] = useState<string>('');
   const [isModalLoading, setIsModalLoading] = useState<boolean>(false);
 
-  const [practiceGoals, setPracticeGoals] = useState<string[]>([]);
-  const [sessionDuration, setSessionDuration] = useState<string>('10');
-  const [generatedPlan, setGeneratedPlan] = useState<string>('');
-  const [isPlanLoading, setIsPlanLoading] = useState<boolean>(false);
-  const [planError, setPlanError] = useState<string>('');
+  // const [practiceGoals, setPracticeGoals] = useState<string[]>([]);
+  // const [sessionDuration, setSessionDuration] = useState<string>('10');
+  // const [generatedPlan, setGeneratedPlan] = useState<string>('');
+  // const [isPlanLoading, setIsPlanLoading] = useState<boolean>(false);
+  // const [planError, setPlanError] = useState<string>('');
 
   // const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
   // const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
