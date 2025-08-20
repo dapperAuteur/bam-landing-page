@@ -5,6 +5,7 @@ import Navigation from '../components/ui/Navigation'
 import { AuthProvider } from './../contexts/AuthContext'
 import ShareButton from '../components/share/ShareButton'
 import ConsoltoChat from "./../components/ConsoltoChat";
+import Footer from 'components/ui/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -27,6 +28,7 @@ export default function RootLayout({
           <Analytics />
           <ConsoltoChat />
           <ShareButton />
+          <Footer/>
         </body>
       </AuthProvider>
     </html>

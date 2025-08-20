@@ -4,7 +4,6 @@ import Services from '../components/ui/Services'
 import About from '../components/ui/About'
 import Portfolio from '../components/ui/Portfolio'
 import Contact from '../components/ui/Contact'
-import Footer from '../components/ui/Footer'
 
 export const metadata: Metadata = {
   title: 'Brand Anthony McDonald | Voiceover Artist & Business Consultant',
@@ -20,7 +19,6 @@ export default function Home() {
       <About />
       <Portfolio />
       <Contact />
-      <Footer />
     </main>
   )
 }
