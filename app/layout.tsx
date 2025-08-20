@@ -20,15 +20,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <AuthProvider>
+      <AuthProvider>
+        <body className={inter.className}>
           <Navigation />
           {children}
           <Analytics />
           <ConsoltoChat />
           <ShareButton />
-        </AuthProvider>
-      </body>
+        </body>
+      </AuthProvider>
     </html>
   )
 }
