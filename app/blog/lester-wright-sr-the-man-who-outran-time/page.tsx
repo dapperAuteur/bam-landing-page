@@ -87,71 +87,71 @@ const TimelineItem = ({ year, event, last = false }: { year: string, event: stri
 );
 
 export default function LesterWrightInfographic() {
-    const [question, setQuestion] = useState('');
-    const [answer, setAnswer] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
+    // const [question, setQuestion] = useState('');
+    // const [answer, setAnswer] = useState('');
+    // const [isLoading, setIsLoading] = useState(false);
+    // const [error, setError] = useState('');
 
-    const handleAskQuestion = async () => {
-        if (!question.trim()) {
-            setError('Please enter a question.');
-            return;
-        }
-        setIsLoading(true);
-        setError('');
-        setAnswer('');
+    // const handleAskQuestion = async () => {
+    //     if (!question.trim()) {
+    //         setError('Please enter a question.');
+    //         return;
+    //     }
+    //     setIsLoading(true);
+    //     setError('');
+    //     setAnswer('');
 
-        const prompt = `Based *only* on the following biography of Lester Wright, answer the user's question. If the answer is not in the text, say you don't have that information. Keep the answer concise and to the point.
+    //     const prompt = `Based *only* on the following biography of Lester Wright, answer the user's question. If the answer is not in the text, say you don't have that information. Keep the answer concise and to the point.
 
-        Biography:
-        ${biography}
+    //     Biography:
+    //     ${biography}
 
-        User's Question:
-        ${question}
+    //     User's Question:
+    //     ${question}
 
-        Answer:`;
+    //     Answer:`;
 
-        try {
-            const chatHistory = [];
-            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-            const payload = { contents: chatHistory };
-            const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-            const apiKey = GEMINI_API_KEY;
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        // try {
+        //     const chatHistory = [];
+        //     chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+        //     const payload = { contents: chatHistory };
+            // const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+            // const apiKey = GEMINI_API_KEY;
+            // const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+            // const response = await fetch(apiUrl, {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(payload)
+            // });
 
-            if (!response.ok) {
-                throw new Error(`API request failed with status ${response.status}`);
-            }
+            // if (!response.ok) {
+            //     throw new Error(`API request failed with status ${response.status}`);
+            // }
 
-            const result = await response.json();
+            // const result = await response.json();
             
-            if (result.candidates && result.candidates.length > 0 &&
-                result.candidates[0].content && result.candidates[0].content.parts &&
-                result.candidates[0].content.parts.length > 0) {
-              const text = result.candidates[0].content.parts[0].text;
-              setAnswer(text);
-            } else {
-                console.error("Unexpected API response structure:", result);
-                if (result.promptFeedback && result.promptFeedback.blockReason) {
-                    setError(`Your request was blocked. Reason: ${result.promptFeedback.blockReason}`);
-                } else {
-                    setError("Couldn't get an answer. The API returned an unexpected response.");
-                }
-            }
+    //         if (result.candidates && result.candidates.length > 0 &&
+    //             result.candidates[0].content && result.candidates[0].content.parts &&
+    //             result.candidates[0].content.parts.length > 0) {
+    //           const text = result.candidates[0].content.parts[0].text;
+    //           setAnswer(text);
+    //         } else {
+    //             console.error("Unexpected API response structure:", result);
+    //             if (result.promptFeedback && result.promptFeedback.blockReason) {
+    //                 setError(`Your request was blocked. Reason: ${result.promptFeedback.blockReason}`);
+    //             } else {
+    //                 setError("Couldn't get an answer. The API returned an unexpected response.");
+    //             }
+    //         }
 
-        } catch (err) {
-            console.error(err);
-            setError('An error occurred while fetching the answer. Please try again.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    //     } catch (err) {
+    //         console.error(err);
+    //         setError('An error occurred while fetching the answer. Please try again.');
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
     return (
         <div className="min-h-screen bg-gray-50 font-sans">
@@ -191,7 +191,7 @@ export default function LesterWrightInfographic() {
                     </section>
                     
                     {/* Gemini Interactive Section */}
-                    <section className="bg-white rounded-2xl shadow-xl p-6 md:p-10 border border-gray-200">
+                    {/* <section className="bg-white rounded-2xl shadow-xl p-6 md:p-10 border border-gray-200">
                         <div className="text-center">
                             <Zap className="mx-auto h-12 w-12 text-yellow-500" />
                             <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Ask Me Anything</h2>
@@ -233,11 +233,12 @@ export default function LesterWrightInfographic() {
                                 <p className="text-gray-800">{answer}</p>
                             </div>
                         )}
-                    </section>
+                    </section> */}
                 </main>
                 
                 <footer className="text-center mt-12 py-6 border-t">
-                    <p className="text-sm text-gray-500">An interactive infographic celebrating the inspiring life of Lester Wright Sr.</p>
+                    <p className="text-sm text-gray-500">An infographic celebrating the inspiring life of Lester Wright Sr.</p>
+                    {/* <p className="text-sm text-gray-500">An interactive infographic celebrating the inspiring life of Lester Wright Sr.</p> */}
                 </footer>
             </div>
         </div>
