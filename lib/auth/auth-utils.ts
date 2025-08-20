@@ -137,12 +137,13 @@ export function createLogoutCookie(): string {
 export async function authenticateUser(email: string, password: string): Promise<AuthUser | null> {
   try {
     const client = await clientPromise
-    const db = client.db()
+    const db = client.db('bam_portfolio')
     
     const user = await db.collection<User>('users').findOne({
       email: email.toLowerCase(),
       isActive: true
     })
+    console.log('user :>> ', user);
 
     if (!user) {
       return null

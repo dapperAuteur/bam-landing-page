@@ -68,7 +68,7 @@ async function createAdminUser() {
     console.log('📡 Connecting to MongoDB...')
     const client = new MongoClient(uri)
     await client.connect()
-    const db = client.db('bam_website')
+    const db = client.db('bam_portfolio')
     console.log('✅ Connected to MongoDB\n')
 
     // Get admin details
@@ -90,7 +90,9 @@ async function createAdminUser() {
     }
 
     const password = await questionHidden('🔒 Enter admin password (hidden): ')
+    
     const confirmPassword = await questionHidden('🔒 Confirm password (hidden): ')
+
 
     if (password !== confirmPassword) {
       console.error('❌ Passwords do not match')

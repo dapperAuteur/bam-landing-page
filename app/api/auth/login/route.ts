@@ -8,6 +8,8 @@ export async function POST(request: NextRequest) {
     const body: LoginRequest = await request.json()
     const { email, password } = body
 
+    console.log('email :>> ', email);
+
     // Validate input
     if (!email || !password) {
       return NextResponse.json({

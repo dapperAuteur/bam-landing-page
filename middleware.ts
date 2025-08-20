@@ -1,5 +1,6 @@
+// middleware.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyToken } from './lib/auth/auth-utils'
+import { validateTokenBasic } from './lib/auth/edge-auth-utils'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -23,16 +24,17 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  // Verify token
-  const sessionData = verifyToken(token)
+  // Basic token validation (structure and expiration only)
+  const { valid, isAdmin } = validateTokenBasic(token)
   
-  if (!sessionData || sessionData.role !== 'admin') {
+  if (!valid || !isAdmin) {
     // Redirect to login if invalid token or not admin
     const loginUrl = new URL('/admin/login', request.url)
     return NextResponse.redirect(loginUrl)
   }
 
   // Allow access for valid admin users
+  // Note: Full token verification (including signature) happens in components/API routes
   return NextResponse.next()
 }
 
