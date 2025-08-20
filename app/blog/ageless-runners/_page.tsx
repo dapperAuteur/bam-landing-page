@@ -115,7 +115,7 @@
 //   // For this self-contained component, we'll make the call directly.
 //   const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
 //   const payload = { contents: chatHistory };
-//   const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+//   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 //   const apiKey = GEMINI_API_KEY; // The environment will provide the API key
 //   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 

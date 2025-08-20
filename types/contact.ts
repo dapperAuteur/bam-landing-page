@@ -14,4 +14,17 @@ export interface ContactFormResponse {
   message: string
   id?: string
   error?: string
+  errors?: {
+    name?: string
+    email?: string
+    serviceType?: string
+    projectDetails?: string
+  }
+}
+
+export interface ContactSubmission extends ContactFormData {
+  _id?: string
+  submittedAt: Date
+  ipAddress?: string
+  userAgent?: string
 }

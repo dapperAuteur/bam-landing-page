@@ -55,7 +55,7 @@
 
 //     const chatHistory = [{ role: "user", parts: [{ text: fullPrompt }] }];
 //     const payload = { contents: chatHistory };
-//     const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+//     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 //     const apiKey = GEMINI_API_KEY;
 //     if (!GEMINI_API_KEY) {
 //       console.log("no api key");

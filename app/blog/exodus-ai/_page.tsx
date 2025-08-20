@@ -6,7 +6,7 @@
 // // IMPORTANT: Replace "YOUR_API_KEY_HERE" with your actual Gemini API key.
 // // In a Next.js app, you would load this from an environment variable.
 
-//             const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+//             const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 //             const apiKey = GEMINI_API_KEY;
 
 // // --- Helper Components ---
