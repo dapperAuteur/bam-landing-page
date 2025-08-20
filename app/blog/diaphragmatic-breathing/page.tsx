@@ -83,7 +83,7 @@ const DiaphragmaticBreathingInfographic = () => {
   const [isPlanLoading, setIsPlanLoading] = useState<boolean>(false);
   const [planError, setPlanError] = useState<string>('');
 
-  const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
   // const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
   // Function to call Gemini API
   const callGeminiAPI = async (prompt: string) => {

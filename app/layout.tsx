@@ -1,4 +1,5 @@
 import './globals.css'
+import { Analytics } from "@vercel/analytics/next"
 import { Inter } from 'next/font/google'
 import Navigation from '../components/ui/Navigation'
 import ShareButton from '../components/share/ShareButton'
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Navigation />
         {children}
+        <Analytics />
         <ConsoltoChat />
         <ShareButton />
       </body>

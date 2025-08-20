@@ -165,7 +165,7 @@ export default function ECSInfographic() {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
   const toggleModule = (moduleId: string) => {
     const newExpanded = new Set(expandedModules);
