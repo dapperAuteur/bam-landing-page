@@ -37,7 +37,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const login = async (email: string, password: string): Promise<LoginResponse> => {
-    console.log('email :>> ', email);
     
     try {
       const response = await fetch('/api/auth/login', {

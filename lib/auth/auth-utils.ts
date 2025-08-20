@@ -143,7 +143,6 @@ export async function authenticateUser(email: string, password: string): Promise
       email: email.toLowerCase(),
       isActive: true
     })
-    console.log('user :>> ', user);
 
     if (!user) {
       return null
