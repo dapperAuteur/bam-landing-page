@@ -41,9 +41,9 @@ export default function HoodooInfographic() {
     const [lore, setLore] = useState('');
     const [isLoreLoading, setIsLoreLoading] = useState(false);
 
-    const [intention, setIntention] = useState('');
-    const [inspiration, setInspiration] = useState('');
-    const [isInspirationLoading, setIsInspirationLoading] = useState(false);
+    // const [intention, setIntention] = useState('');
+    // const [inspiration, setInspiration] = useState('');
+    // const [isInspirationLoading, setIsInspirationLoading] = useState(false);
 
     // Data extracted from the source document
     const materiaMedica = [
@@ -109,58 +109,98 @@ export default function HoodooInfographic() {
     };
 
     // --- Gemini API Call Logic ---
-    async function callGeminiAPI(prompt: string) {
-        const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-        const apiKey = GEMINI_API_KEY; // API key is handled by the environment
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-        const payload = {
-            contents: [{ role: "user", parts: [{ text: prompt }] }],
-            generationConfig: {
-                temperature: 0.7,
-                topK: 40,
-                maxOutputTokens: 250,
-            }
-        };
+    // async function callGeminiAPI(prompt: string) {
+    //     console.log('prompt :>> ', prompt);
+    //     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    //     const apiKey = GEMINI_API_KEY; // API key is handled by the environment
+    //     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    //     const payload = {
+    //         contents: [{ role: "user", parts: [{ text: prompt }] }],
+    //         generationConfig: {
+    //             temperature: 0.7,
+    //             topK: 40,
+    //             maxOutputTokens: 250,
+    //         }
+    //     };
 
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (!response.ok) {
-                throw new Error(`API request failed with status ${response.status}`);
-            }
-            const result = await response.json();
-            if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
-                return result.candidates[0].content.parts[0].text;
-            } else {
-                return "Sorry, I couldn't retrieve that information. The response from the AI was not as expected.";
-            }
-        } catch (error: unknown) {
-            console.error('Error calling Gemini API:', error);
-            return `Sorry, there was an error connecting to the AI: ${(error as AppError).message}. Please try again later.`;
-        }
-    }
+    //     try {
+    //         const response = await fetch(apiUrl, {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify(payload)
+    //         });
+    //         if (!response.ok) {
+    //             throw new Error(`API request failed with status ${response.status}`);
+    //         }
+    //         const result = await response.json();
+    //         if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+    //             return result.candidates[0].content.parts[0].text;
+    //         } else {
+    //             return "Sorry, I couldn't retrieve that information. The response from the AI was not as expected.";
+    //         }
+    //     } catch (error: unknown) {
+    //         console.error('Error calling Gemini API:', error);
+    //         return `Sorry, there was an error connecting to the AI: ${(error as AppError).message}. Please try again later.`;
+    //     }
+    // }
 
     const handleGetLore = async (item: MateriaMedica) => {
+        const materiaMedicaName = item.name;
         setIsLoreLoading(true);
         setLore('');
-        const prompt = `You are a respectful assistant knowledgeable about folklore. Provide a short (2-3 sentences) folkloric insight or symbolic meaning for the Hoodoo curio "${item.name}", which is used for "${item.uses}". Frame the response as informative and respectful of Hoodoo as a closed, ancestral practice of the African Diaspora.`;
-        const resultText = await callGeminiAPI(prompt);
+        // const prompt = `You are a respectful assistant knowledgeable about folklore. Provide a short (2-3 sentences) folkloric insight or symbolic meaning for the Hoodoo curio "${item.name}", which is used for "${item.uses}". Frame the response as informative and respectful of Hoodoo as a closed, ancestral practice of the African Diaspora.`;
+        // const resultText = await callGeminiAPI(prompt);
+        let resultText = "";
+        switch (materiaMedicaName) {
+            case "High John the Conqueror Root":
+                resultText = "High John the Conqueror Root, a potent symbol within Hoodoo, is believed to embody resilience, triumph over adversity, and personal power. Said to hold the spirit of a legendary enslaved African prince, it empowers practitioners to overcome obstacles and achieve success while offering protection from negative forces."
+                break;
+            case "Five Finger Grass":
+                resultText = "Five Finger Grass, with its hand-like leaf structure, is understood in Hoodoo to represent the power and skill inherent in one's own hands. It is believed that by working with this herb, one can draw upon ancestral wisdom and manifest success in any endeavor requiring manual dexterity, craftsmanship, or practical application."
+                
+                break;
+            case "Graveyard Dirt":
+                resultText = "Graveyard dirt in Hoodoo is not merely soil; it represents the potent spiritual residue and power residing at the crossroads between worlds. As a potent component in workings, it facilitates communication with and harnessing of ancestral spirits, drawing upon their authority for protection, justice, or retribution within the context of Hoodoo's complex spiritual framework."
+                
+                break;
+            case "Red Brick Dust":
+                resultText = "Red Brick Dust, often sourced from old brick buildings, symbolizes the strength and resilience of a foundational structure. In Hoodoo, it's used to create protective barriers and disrupt harmful intentions by grounding and neutralizing negative energies, much like a brick wall repels unwanted intrusion."
+                
+                break;
+            case "Hyssop":
+                resultText = "Hyssop in Hoodoo is a powerful tool for spiritual cleansing, carrying the ability to wash away negativity and harmful influences clinging to a person or space. Rooted in ancestral knowledge, its use is often guided by intuition and tradition within the context of Hoodoo's sacred practices, clearing the path for positive energies to flow."
+                
+                break;
+            case "Patchouli Leaf":
+                resultText = "Patchouli leaf in Hoodoo tradition, often employed in love, money, and fertility workings, is believed to possess an earthy energy that connects to the root chakra and ancestral realm. Its use is rooted in attracting abundance and grounding intentions, facilitating growth and manifestation in these key areas of life."
+                
+                break;
+            case "Lodestone":
+                resultText = "Lodestones, also known as magnetite, are believed in Hoodoo to possess a powerful, inherent magnetism, echoing the natural forces that draw things together. By feeding and caring for a lodestone, practitioners work to amplify this natural magnetism, directing its energy to attract desired outcomes like love, prosperity, or favorable circumstances into their lives."
+                
+                break;
+            case "Devil's Shoestring":
+                resultText = "Devil's Shoestring, a root, is believed to entangle and trip up negative forces, particularly gossip and bad luck, preventing them from reaching the user. As a component in Hoodoo work, it's employed to secure one's path and create opportunities, drawing on the root's power to bind and control circumstances in the user's favor."
+                
+                break;
+        
+            default:
+                break;
+        }
+
         setLore(resultText);
         setIsLoreLoading(false);
     };
 
-    const handleGetInspiration = async () => {
-        if (!intention.trim()) return;
-        setIsInspirationLoading(true);
-        setInspiration('');
-        const prompt = `A user is looking for inspiration related to the intention: "${intention}". As a respectful AI, suggest a few symbolic concepts or correspondences from the conceptual framework of Hoodoo folk magic. Do not give spells or instructions. Focus on reflective inspiration (e.g., 'To represent this, one might reflect on elements that symbolize...' or 'Concepts of... might be relevant'). Keep it brief (2-4 sentences). Emphasize this is for personal reflection and that Hoodoo is a closed, ancestral practice of the African Diaspora.`;
-        const resultText = await callGeminiAPI(prompt);
-        setInspiration(resultText);
-        setIsInspirationLoading(false);
-    };
+    // const handleGetInspiration = async () => {
+    //     if (!intention.trim()) return;
+    //     setIsInspirationLoading(true);
+    //     setInspiration('');
+    //     const prompt = `A user is looking for inspiration related to the intention: "${intention}". As a respectful AI, suggest a few symbolic concepts or correspondences from the conceptual framework of Hoodoo folk magic. Do not give spells or instructions. Focus on reflective inspiration (e.g., 'To represent this, one might reflect on elements that symbolize...' or 'Concepts of... might be relevant'). Keep it brief (2-4 sentences). Emphasize this is for personal reflection and that Hoodoo is a closed, ancestral practice of the African Diaspora.`;
+    //     const resultText = await callGeminiAPI(prompt);
+    //     setInspiration(resultText);
+    //     setIsInspirationLoading(false);
+    // };
 
     const openModal = (item: MateriaMedica) => {
         // what are type of name and uses
@@ -223,7 +263,7 @@ export default function HoodooInfographic() {
 
                     <section id="toolkit" className="bg-white rounded-lg shadow-xl p-6 md:p-8">
                         <h2 className="text-3xl font-bold text-center mb-6 text-[#593C1F] font-serif">The Rootworker&apos;s Toolkit</h2>
-                        <p className="text-center max-w-3xl mx-auto mb-12">Hoodoo is a practical tradition using a rich *materia medica*. Click on an item below to learn more with AI-powered insights.</p>
+                        <p className="text-center max-w-3xl mx-auto mb-12">Hoodoo is a practical tradition using a rich *materia medica* (Latin for "medical material/substance"). Click on an item below to learn more with AI-powered insights.</p>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {materiaMedica.map(item => (
                                 <div key={item.name} onClick={() => openModal(item)} className="bg-gray-50 p-4 rounded-lg border border-gray-200 text-center cursor-pointer hover:shadow-md hover:border-[#A6763D] transition-all">
@@ -249,7 +289,7 @@ export default function HoodooInfographic() {
                         </div>
                     </section>
 
-                    <section id="inspiration" className="bg-white rounded-lg shadow-xl p-6 md:p-8">
+                    {/* <section id="inspiration" className="bg-white rounded-lg shadow-xl p-6 md:p-8">
                         <h2 className="text-3xl font-bold text-center mb-6 text-[#593C1F] font-serif">✨ Find Symbolic Inspiration</h2>
                         <p className="text-center max-w-2xl mx-auto mb-6">Curious about how Hoodoo concepts might relate to a situation? Describe an intention for AI-generated symbolic ideas. This is for reflection, not literal instruction.</p>
                         <div className="max-w-xl mx-auto">
@@ -265,7 +305,7 @@ export default function HoodooInfographic() {
                                 </div>
                             )}
                         </div>
-                    </section>
+                    </section> */}
                 </main>
 
                 <footer className="text-center mt-16 py-8 border-t-2 border-[#A6763D]">

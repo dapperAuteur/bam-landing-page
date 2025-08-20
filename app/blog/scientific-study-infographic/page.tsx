@@ -4,6 +4,10 @@ import { AppError } from './../../../types/errors';
 import React, { useState, useEffect, useCallback, type JSX } from 'react';
 import { BookOpen, FlaskConical, TestTube2, Users, MessageCircle, Lightbulb, BrainCircuit, ScanSearch, AlertTriangle, ArrowRight, Loader2 } from 'lucide-react';
 
+// const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+// const apiKey = GEMINI_API_KEY;
+// const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
 // Main App Component
 export default function App() {
   return (
@@ -108,7 +112,7 @@ const ScientificStudyInfographic = () => {
         <div className="lg:col-span-1 space-y-8">
 
           {/* AI Feature 1: Simplify The Science */}
-          <GeminiExplainFeature />
+          {/* <GeminiExplainFeature /> */}
 
           {/* AI Feature 2: Spot The Bias */}
           <GeminiBiasQuiz />
@@ -199,96 +203,93 @@ const Tip = ({ text }: { text: string }) => (
 
 // --- Gemini AI Feature 1: "Simplify The Science" ---
 
-const GeminiExplainFeature = () => {
-    const [inputText, setInputText] = useState('');
-    const [simplifiedText, setSimplifiedText] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
+// const GeminiExplainFeature = () => {
+//     const [inputText, setInputText] = useState('');
+//     const [simplifiedText, setSimplifiedText] = useState('');
+//     const [isLoading, setIsLoading] = useState(false);
+//     const [error, setError] = useState('');
 
-    const exampleText = "A randomized, double-blind, placebo-controlled trial involving 849 participants investigated the efficacy of a novel GLP-1 receptor agonist in mitigating atherosclerotic cardiovascular disease events. The primary endpoint, a composite of non-fatal myocardial infarction, non-fatal stroke, or cardiovascular death, showed a statistically significant hazard ratio of 0.79 (95% CI, 0.65-0.95; P=0.01).";
+//     const exampleText = "A randomized, double-blind, placebo-controlled trial involving 849 participants investigated the efficacy of a novel GLP-1 receptor agonist in mitigating atherosclerotic cardiovascular disease events. The primary endpoint, a composite of non-fatal myocardial infarction, non-fatal stroke, or cardiovascular death, showed a statistically significant hazard ratio of 0.79 (95% CI, 0.65-0.95; P=0.01).";
 
-    const handleSimplify = async () => {
-        if (!inputText.trim()) {
-            setError('Please enter some text to simplify.');
-            return;
-        }
-        setIsLoading(true);
-        setSimplifiedText('');
-        setError('');
+    // const handleSimplify = async () => {
+    //     if (!inputText.trim()) {
+    //         setError('Please enter some text to simplify.');
+    //         return;
+    //     }
+    //     setIsLoading(true);
+    //     setSimplifiedText('');
+    //     setError('');
 
-        const prompt = `You are a friendly and brilliant science communicator. Your goal is to make complex scientific text easy for anyone to understand. Do not be condescending. Explain the concepts simply, use analogies, and focus on the 'so what?'. Break down this text:\n\n---\n${inputText}\n---`;
+    //     const prompt = `You are a friendly and brilliant science communicator. Your goal is to make complex scientific text easy for anyone to understand. Do not be condescending. Explain the concepts simply, use analogies, and focus on the 'so what?'. Break down this text:\n\n---\n${inputText}\n---`;
 
-        try {
-            const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-            const payload = { contents: chatHistory };
-            const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-            const apiKey = GEMINI_API_KEY; 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    //     try {
+    //         const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+    //         const payload = { contents: chatHistory };
 
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+    //         const response = await fetch(apiUrl, {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify(payload)
+    //         });
 
-            if (!response.ok) {
-                throw new Error(`API error: ${response.statusText}`);
-            }
+    //         if (!response.ok) {
+    //             throw new Error(`API error: ${response.statusText}`);
+    //         }
 
-            const result = await response.json();
-             if (result.candidates && result.candidates.length > 0 &&
-                result.candidates[0].content && result.candidates[0].content.parts &&
-                result.candidates[0].content.parts.length > 0) {
-                 const text = result.candidates[0].content.parts[0].text;
-                 setSimplifiedText(text);
-            } else {
-                 throw new Error("Invalid response structure from API.");
-            }
-        } catch (e: unknown) {
-            setError((e as AppError).message || "An unknown error occurred.");
-            console.error(e);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    //         const result = await response.json();
+    //          if (result.candidates && result.candidates.length > 0 &&
+    //             result.candidates[0].content && result.candidates[0].content.parts &&
+    //             result.candidates[0].content.parts.length > 0) {
+    //              const text = result.candidates[0].content.parts[0].text;
+    //              setSimplifiedText(text);
+    //         } else {
+    //              throw new Error("Invalid response structure from API.");
+    //         }
+    //     } catch (e: unknown) {
+    //         setError((e as AppError).message || "An unknown error occurred.");
+    //         console.error(e);
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
-    return (
-        <Section title="Simplify The Science" icon={<BrainCircuit className="text-purple-500" />}>
-            <p className="text-slate-600 mb-4 text-sm">Paste a confusing snippet from a study below and let our AI-powered helper explain it in simple terms.</p>
-            <div className="space-y-4">
-                <textarea
-                    value={inputText}
-                    onChange={(e) => setInputText(e.target.value)}
-                    placeholder="Paste scientific text here..."
-                    className="w-full h-32 p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-purple-400 focus:outline-none transition"
-                />
-                <div className="flex items-center justify-between">
-                     <button
-                        onClick={() => setInputText(exampleText)}
-                        className="text-xs text-purple-600 hover:underline"
-                        >
-                        Use Example
-                    </button>
-                    <button
-                        onClick={handleSimplify}
-                        disabled={isLoading}
-                        className="flex items-center justify-center px-4 py-2 bg-purple-600 text-white font-semibold rounded-md hover:bg-purple-700 transition-colors disabled:bg-purple-300"
-                    >
-                        {isLoading ? <Loader2 className="animate-spin mr-2" /> : <BrainCircuit className="mr-2" size={18} />}
-                        Simplify
-                    </button>
-                </div>
-                 {error && <p className="text-red-500 text-sm">{error}</p>}
-                {simplifiedText && (
-                    <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg animate-fade-in">
-                        <h4 className="font-bold mb-2 text-purple-800">Simplified Explanation:</h4>
-                        <div className="prose prose-sm text-slate-700 whitespace-pre-wrap">{simplifiedText}</div>
-                    </div>
-                )}
-            </div>
-        </Section>
-    );
-};
+    // return (
+    //     <Section title="Simplify The Science" icon={<BrainCircuit className="text-purple-500" />}>
+    //         <p className="text-slate-600 mb-4 text-sm">Paste a confusing snippet from a study below and let our AI-powered helper explain it in simple terms.</p>
+    //         <div className="space-y-4">
+    //             <textarea
+    //                 value={inputText}
+    //                 onChange={(e) => setInputText(e.target.value)}
+    //                 placeholder="Paste scientific text here..."
+    //                 className="w-full h-32 p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-purple-400 focus:outline-none transition"
+    //             />
+    //             <div className="flex items-center justify-between">
+    //                  <button
+    //                     onClick={() => setInputText(exampleText)}
+    //                     className="text-xs text-purple-600 hover:underline"
+    //                     >
+    //                     Use Example
+    //                 </button>
+    //                 <button
+    //                     onClick={handleSimplify}
+    //                     disabled={isLoading}
+    //                     className="flex items-center justify-center px-4 py-2 bg-purple-600 text-white font-semibold rounded-md hover:bg-purple-700 transition-colors disabled:bg-purple-300"
+    //                 >
+    //                     {isLoading ? <Loader2 className="animate-spin mr-2" /> : <BrainCircuit className="mr-2" size={18} />}
+    //                     Simplify
+    //                 </button>
+    //             </div>
+    //              {error && <p className="text-red-500 text-sm">{error}</p>}
+    //             {simplifiedText && (
+    //                 <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg animate-fade-in">
+    //                     <h4 className="font-bold mb-2 text-purple-800">Simplified Explanation:</h4>
+    //                     <div className="prose prose-sm text-slate-700 whitespace-pre-wrap">{simplifiedText}</div>
+    //                 </div>
+    //             )}
+    //         </div>
+    //     </Section>
+    // );
+// };
 
 
 // --- Gemini AI Feature 2: "Spot The Bias" ---
@@ -297,22 +298,26 @@ const biasScenarios = [
     {
         id: 1,
         text: "A new study published by 'The Soda Council' finds that daily soda consumption is not linked to weight gain in adults. The study surveyed 5,000 people about their diets.",
-        correct_bias: "Conflict of Interest"
+        correct_bias: "Conflict of Interest",
+        explanation: "You're on the right track with thinking about potential problems with the study! However, in this scenario, **Conflict of Interest** is the more prominent and immediate concern than sample size (though sample size could *also* be a concern that needs investigation). \n\n Here's why: \n \n *   **Conflict of Interest Explained:** A conflict of interest exists when the entity conducting or funding the research has a vested interest in the outcome of the study. In this case, \"The Soda Council\" is likely an organization representing soda manufacturers. They would directly benefit from a study that concludes soda isn't linked to weight gain, as it could boost sales and improve public perception of their product. \n \n *   **Why it's Misleading:** The Soda Council's involvement casts doubt on the objectivity of the research. Their desire for a specific outcome (soda isn't bad) might influence the study's design, execution, analysis, or even the way the results are presented. It doesn't automatically mean the study is wrong, but it *does* mean we should be extra cautious. \n \n *   **What to Look For:** Always be wary of studies funded by organizations with a clear stake in the results. Ask yourself: \n \n*   Who funded the research? \n \n *   Could the funding source benefit from a particular outcome? \n \n*   Were the researchers independent of the funding source, or were they employees of the Soda Council? \n \n*   Has the study been replicated by independent researchers with no ties to the soda industry? \n \n*   Look for transparency: Does the study clearly declare the funding source and any potential conflicts of interest? \n \n While a small sample size *could* be a problem in some studies, the conflict of interest raises a more immediate red flag here. A study can *appear* well-designed (large sample size, etc.) but still be biased due to the influence of the funding source. Always consider the source!",
     },
     {
         id: 2,
         text: "After a local news story about shark attacks, a person claims, 'I'm never swimming in the ocean again! It's too dangerous!' despite statistics showing bee stings cause more deaths annually.",
-        correct_bias: "Availability Heuristic / Sensationalism"
+        correct_bias: "Availability Heuristic / Sensationalism",
+        explanation: "Okay, let's break down this scenario and the biases at play. \n \n You're *partially* on the right track with \"Correlation vs. Causation,\" but \"Availability Heuristic\" or \"Sensationalism\" is a more direct fit. Here's why: \n \n *   **Why your answer is close, but not quite:** While correlation and causation *could* be tangentially related (perhaps someone *mistakenly* infers that news reports *cause* fear), the core issue isn't about misinterpreting statistical relationships. It's about the outsized influence of recent, vivid information on decision-making. \n \n *   **The Primary Bias: Availability Heuristic (and Sensationalism):** The availability heuristic is a mental shortcut where people estimate the likelihood of an event based on how easily examples come to mind. In this case, the recent news story about shark attacks makes shark attacks readily available in the person's memory. Sensationalism in media (like focusing on dramatic shark attacks) amplifies this effect. \n \n *   **Why it's misleading:** Because the person is overestimating the risk of swimming in the ocean based on a recent, dramatic event, they're ignoring the actual statistical probability of shark attacks compared to other, less sensational dangers (like bee stings). Their decision is driven by fear fueled by readily available, but potentially unrepresentative, information. \n \n *   **What a Critical Reader Should Look For:** \n \n*   **Look beyond the headlines:** Don't let emotionally charged stories disproportionately influence your perception of risk. \n \n*   **Seek out reliable statistics:** Compare the reported risk with actual data on the probability of the event. What are the actual numbers of shark attack fatalities vs. bee sting fatalities? \n \n*   **Consider the source:** Is the news source known for sensationalism? Are they presenting a balanced view, or are they focusing on the most extreme cases? \n \n*   **Recognize your own biases:** Be aware that vivid, recent events will naturally be more memorable, and actively work to counter this bias by seeking objective information. \n \n In short, the person is letting a recent, sensationalized event (shark attack news) overshadow actual statistical data when making a decision. This is the essence of the availability heuristic.",
     },
     {
         id: 3,
         text: "A blog post reads: 'A study shows ice cream sales are linked to higher crime rates. Therefore, to reduce crime, we should ban ice cream.'",
-        correct_bias: "Correlation vs. Causation"
+        correct_bias: "Correlation vs. Causation",
+        explanation: "You're not quite on the right track with \"Conflict of Interest\" in this case. While conflicts of interest are important to consider in scientific studies, they don't directly apply to the *reasoning* presented in the blog post. \n \n The primary problem here is **Correlation vs. Causation**. \n \n Here's why: \n \n *   **The Problem:** The blog post assumes that because ice cream sales *correlate* with higher crime rates (meaning they happen at the same time or tend to increase together), ice cream sales *cause* the higher crime rates. This is a logical leap. \n \n *   **Why it's misleading:** Just because two things are related doesn't mean one causes the other. There could be a third, unmentioned factor (a \"lurking variable\") that influences both. For example, warmer weather might lead to both increased ice cream sales and increased crime (more people are outside, creating more opportunities for both buying ice cream and committing crimes). \n \n *   **What to look for:** A critical reader should ask: \n *   Is there evidence of a direct cause-and-effect relationship? \n *   Could a third factor be responsible for both trends? \n *   Did the study control for other variables that might influence crime rates? \n *   Is it possible the causation is reversed (maybe higher crime rates lead to people buying more ice cream as a comfort?)\n \n In short, don't assume that because two things are related, one *causes* the other. Look for stronger evidence of causation before drawing that conclusion.",
     },
     {
         id: 4,
         text: "A supplement ad states: 'In our study, users who took our 'MegaBrain' pill had a 200% increase in memory scores!' The study tested 10 people and the 'score' was how many items they remembered from a list of 3.",
-        correct_bias: "Small Sample Size / Misleading Percentages"
+        correct_bias: "Small Sample Size / Misleading Percentages",
+        explanation: "Okay, let's break down this scenario. \n \n While you're right to be skeptical (and thinking about correlation vs. causation is good!), the primary problem here isn't *necessarily* claiming the supplement *caused* the improvement, though that's definitely implied. The biggest issue is the **Small Sample Size / Misleading Percentages**. \n \n Here's why: \n \n *   **Small Sample Size:** Testing only 10 people is a ridiculously small sample size. With so few participants, individual variations can drastically skew the results. It's entirely possible that the 200% increase is due to chance or some other factor affecting a few individuals, rather than a real effect of the supplement. A larger sample size (e.g., hundreds of participants) would provide much more reliable data.\n *   **Misleading Percentages:** A 200% increase sounds impressive, but in this context, it's deceptive. Remembering items from a list of 3 is the metric. Someone going from remembering 1 item to remembering all 3 items would show a 200% increase. This sounds better than it is! Percentages can easily exaggerate small changes, especially when the baseline is very low.\n *   **How they relate:** A small sample size makes a percentage change much more volatile and susceptible to being misleading. \n \n **In short:** The ad uses a small study and a large percentage to create a false impression of the supplement's effectiveness. \n \n **What to look for as a critical reader:** \n \n 1.  **Sample Size:** Always check the number of participants in a study. Be wary of studies with very small sample sizes (anything under 30 should be viewed with significant skepticism, and ideally you want hundreds or thousands depending on the type of study). \n \n 2.  **Absolute Numbers:** Look beyond percentages. What were the actual scores or values before and after? Ask: \"What does that percentage *actually* mean in real numbers?\" \n \n 3.  **Consider the Baseline:** If someone's starting point is very low, even a small improvement can appear as a large percentage increase. \n \n 4.  **Source of the Study:** Was the study funded or conducted by the supplement company itself? This raises a red flag for potential bias. \n \n So, while correlation vs. causation is *related* because the ad implies the pill *caused* the increase, the more glaring issue is the weak evidence due to the small sample size and inflated percentage. Good job spotting potential problems, keep practicing!",
     }
 ];
 
@@ -323,40 +328,39 @@ const GeminiBiasQuiz = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const currentScenario = biasScenarios[currentQuestionIndex];
+    console.log('currentScenario.explanation :>> ', currentScenario.explanation);
 
     const fetchExplanation = useCallback(async () => {
         if (!userAnswer) return;
         setIsLoading(true);
         setExplanation('');
         
-        const prompt = `You are a helpful expert in research methods and logical fallacies. A user is learning to spot bias in scientific reporting.
+        // const prompt = `You are a helpful expert in research methods and logical fallacies. A user is learning to spot bias in scientific reporting.
         
-        The reported scenario is: "${currentScenario.text}"
-        The user guessed the bias is: "${userAnswer}"
-        The likely correct bias is: "${currentScenario.correct_bias}"
+        // The reported scenario is: "${currentScenario.text}"
+        // The user guessed the bias is: "${userAnswer}"
+        // The likely correct bias is: "${currentScenario.correct_bias}"
 
-        Please provide a concise and clear explanation. Start by confirming if the user's guess was on the right track or not. Then, explain what the primary bias or fallacy is in the scenario, why it's misleading, and what a critical reader should look for. Keep it simple and educational.`;
+        // Please provide a concise and clear explanation. Start by confirming if the user's guess was on the right track or not. Then, explain what the primary bias or fallacy is in the scenario, why it's misleading, and what a critical reader should look for. Keep it simple and educational.`;
 
         try {
-            const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-            const payload = { contents: chatHistory };
-            const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-            const apiKey = GEMINI_API_KEY;
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            // const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            // const payload = { contents: chatHistory };
 
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (!response.ok) throw new Error("API request failed");
-            const result = await response.json();
+            // const response = await fetch(apiUrl, {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(payload)
+            // });
+            // if (!response.ok) throw new Error("API request failed");
+            const result = currentScenario.explanation //await response.json();
+            setExplanation(result)
 
-            if (result.candidates && result.candidates.length > 0) {
-                setExplanation(result.candidates[0].content.parts[0].text);
-            } else {
-                 throw new Error("Invalid response structure from API.");
-            }
+            // if (result.candidates && result.candidates.length > 0) {
+            //     setExplanation(result.candidates[0].content.parts[0].text);
+            // } else {
+            //      throw new Error("Invalid response structure from API.");
+            // }
         } catch (e) {
             console.error(e);
             setExplanation("Sorry, I couldn't fetch an explanation right now.");

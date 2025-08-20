@@ -121,8 +121,22 @@ const citations: Citation[] = [
   }
 ]
 
+interface CitationTooltipProps {
+  citationId: string;
+  children: React.ReactNode;
+  textColor?: string;
+  hoverTextColor?: string;
+  borderColor?: string;
+}
+
 // Component for individual citation display
-const CitationTooltip: React.FC<{ citationId: string; children: React.ReactNode }> = ({ citationId, children }) => {
+const CitationTooltip: React.FC<CitationTooltipProps> = ({ 
+  citationId, 
+  children,
+  textColor = 'text-blue-600',
+  hoverTextColor = 'hover:text-blue-800',
+  borderColor = 'border-blue-400'
+}) => {
   const [isVisible, setIsVisible] = useState(false)
   const citation = citations.find(c => c.id === citationId)
 
@@ -130,8 +144,8 @@ const CitationTooltip: React.FC<{ citationId: string; children: React.ReactNode 
 
   return (
     <span className="relative inline-block">
-      <span 
-        className="border-b border-blue-400 border-dotted cursor-help text-blue-600 hover:text-blue-800"
+      <span
+        className={`border-b ${borderColor} border-dotted cursor-help ${textColor} ${hoverTextColor}`}
         onMouseEnter={() => setIsVisible(true)}
         onMouseLeave={() => setIsVisible(false)}
       >
@@ -274,7 +288,8 @@ const EndocannabinoidSystemCurriculum: React.FC = () => {
   const [selectedModule, setSelectedModule] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [showReferences, setShowReferences] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const modulesGridRef = useRef<HTMLDivElement>(null)
+  const moduleRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
   // Auto-play functionality for educational progression
   useEffect(() => {
@@ -282,7 +297,7 @@ const EndocannabinoidSystemCurriculum: React.FC = () => {
     if (isPlaying) {
       interval = setInterval(() => {
         setSelectedModule(prev => {
-          const currentIndex = modules.findIndex(m => m.id === prev)
+          const currentIndex = prev ? modules.findIndex(m => m.id === prev) : -1
           const nextIndex = (currentIndex + 1) % modules.length
           return modules[nextIndex].id
         })
@@ -291,8 +306,33 @@ const EndocannabinoidSystemCurriculum: React.FC = () => {
     return () => clearInterval(interval)
   }, [isPlaying])
 
+  // Effect to scroll to the active module during the tour
+  useEffect(() => {
+    if (isPlaying && selectedModule) {
+      const moduleElement = moduleRefs.current[selectedModule]
+      if (moduleElement) {
+        moduleElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        })
+      }
+    }
+  }, [selectedModule, isPlaying])
+
+  const handleToggleTour = () => {
+    if (isPlaying) {
+      setIsPlaying(false)
+    } else {
+      // Set the first module as active to begin the tour.
+      // This ensures the grid scrolls into view if it's not already.
+      setSelectedModule(modules[0].id)
+      setIsPlaying(true)
+      // The useEffect hook is now the single source of truth for scrolling.
+    }
+  }
+
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
@@ -322,7 +362,7 @@ const EndocannabinoidSystemCurriculum: React.FC = () => {
           {/* Control buttons */}
           <div className="flex justify-center items-center gap-4 mt-8">
             <button
-              onClick={() => setIsPlaying(!isPlaying)}
+              onClick={handleToggleTour}
               className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
@@ -427,17 +467,21 @@ const EndocannabinoidSystemCurriculum: React.FC = () => {
         </motion.div>
 
         {/* Interactive Module Grid */}
-        <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
+        <div ref={modulesGridRef} className="grid lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
           {modules.map((module, index) => (
             <motion.div
               key={module.id}
+              ref={el => { moduleRefs.current[module.id] = el }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className={`bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl ${
                 selectedModule === module.id ? 'ring-4 ring-blue-400' : ''
               }`}
-              onClick={() => setSelectedModule(selectedModule === module.id ? null : module.id)}
+              onClick={() => {
+                setSelectedModule(selectedModule === module.id ? null : module.id)
+                if (isPlaying) setIsPlaying(false)
+              }}
             >
               <div className={`${module.color} p-4 text-white`}>
                 <div className="flex items-center justify-between">
@@ -502,7 +546,12 @@ const EndocannabinoidSystemCurriculum: React.FC = () => {
             <div className="text-center">
               <h4 className="font-semibold mb-2">Pain Modulation</h4>
               <p className="text-sm opacity-90">
-                <CitationTooltip citationId="bie2018">
+                <CitationTooltip
+                  citationId="bie2018"
+                  textColor="text-white"
+                  borderColor="border-white"
+                  hoverTextColor="hover:text-gray-200"
+                >
                   CB2 receptors in peripheral tissues modulate inflammatory pain responses
                 </CitationTooltip>
               </p>
@@ -510,19 +559,29 @@ const EndocannabinoidSystemCurriculum: React.FC = () => {
             <div className="text-center">
               <h4 className="font-semibold mb-2">Mood Regulation</h4>
               <p className="text-sm opacity-90">
-                <CitationTooltip citationId="hillard2018">
+                <CitationTooltip
+                  citationId="hillard2018"
+                  textColor="text-white"
+                  borderColor="border-white"
+                  hoverTextColor="hover:text-gray-200"
+                >
                   Endocannabinoid signaling influences stress response and emotional processing
                 </CitationTooltip>
               </p>
             </div>
             <div className="text-center">
               <h4 className="font-semibold mb-2">Sleep-Wake Cycles</h4>
-              <p className="text-sm opacity-90">CB1 receptors in sleep-regulating brain regions control circadian rhythms</p>
+              <p className="text-sm opacity-90">CB1 receptors in sleep-regulating brain regions control circadian rhythms.</p>
             </div>
             <div className="text-center">
               <h4 className="font-semibold mb-2">Immune Function</h4>
               <p className="text-sm opacity-90">
-                <CitationTooltip citationId="munro1993">
+                <CitationTooltip
+                  citationId="munro1993"
+                  textColor="text-white"
+                  borderColor="border-white"
+                  hoverTextColor="hover:text-gray-200"
+                >
                   CB2 receptors throughout immune tissues regulate inflammatory responses
                 </CitationTooltip>
               </p>

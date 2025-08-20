@@ -77,24 +77,24 @@ const DiaphragmaticBreathingInfographic = () => {
   const [modalContent, setModalContent] = useState<string>('');
   const [isModalLoading, setIsModalLoading] = useState<boolean>(false);
 
-  const [practiceGoals, setPracticeGoals] = useState<string[]>([]);
-  const [sessionDuration, setSessionDuration] = useState<string>('10');
-  const [generatedPlan, setGeneratedPlan] = useState<string>('');
-  const [isPlanLoading, setIsPlanLoading] = useState<boolean>(false);
-  const [planError, setPlanError] = useState<string>('');
+  // const [practiceGoals, setPracticeGoals] = useState<string[]>([]);
+  // const [sessionDuration, setSessionDuration] = useState<string>('10');
+  // const [generatedPlan, setGeneratedPlan] = useState<string>('');
+  // const [isPlanLoading, setIsPlanLoading] = useState<boolean>(false);
+  // const [planError, setPlanError] = useState<string>('');
 
-  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+  // const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
   // const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
   // Function to call Gemini API
   const callGeminiAPI = async (prompt: string) => {
     // API key is handled by the environment, no need to add one here.
-    const apiKey = GEMINI_API_KEY;
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    // const apiKey = GEMINI_API_KEY;
+    // const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
     const payload = {
       contents: [{ role: "user", parts: [{ text: prompt }] }]
     };
 
-    const response = await fetch(apiUrl, {
+    const response = await fetch("apiUrl", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -120,49 +120,66 @@ const DiaphragmaticBreathingInfographic = () => {
     setIsModalOpen(true);
     setIsModalLoading(true);
     setModalContent('');
+    let explanation = "";
+    switch (benefitName) {
+      case "Stress & Anxiety Reduction":
+        explanation = "Diaphragmatic breathing, or belly breathing, helps reduce stress and anxiety by directly influencing your body's stress response. When you take slow, deep breaths using your diaphragm, you're essentially sending a \"calm down\" message to your nervous system. This type of breathing activates the parasympathetic nervous system, often referred to as the \"rest and digest\" system. This system works in opposition to the sympathetic nervous system, which triggers the \"fight or flight\" response during stressful situations. \n \nSpecifically, deep diaphragmatic breathing encourages more oxygen intake and better blood flow. As the diaphragm moves down during inhalation, it gently massages internal organs like the stomach and liver, which can aid digestion and reduce physical tension. The slower breathing rate also stimulates the vagus nerve, a major nerve connecting the brain to the body. Stimulating the vagus nerve helps lower heart rate, blood pressure, and muscle tension - all physiological indicators of stress. By consciously controlling your breath, you gain a powerful tool to override the body's automatic stress reaction and promote relaxation."
 
-    const prompt = `Explain in more detail how diaphragmatic breathing contributes to "${benefitName}". Focus on the physiological mechanisms in an easy-to-understand way for a general audience. Keep the explanation concise, around 2-3 paragraphs. Ensure the output is plain text.`;
+        break;
+      case "Enhanced Focus":
+        explanation = "Diaphragmatic breathing, or \"belly breathing,\" enhances focus primarily by influencing the autonomic nervous system. When you breathe deeply and slowly using your diaphragm, you stimulate the parasympathetic nervous system, often called the \"rest and digest\" system. This system actively counteracts the \"fight or flight\" response driven by the sympathetic nervous system, which can be easily triggered by stress and anxiety and ultimately distract from focus. Slow, deep breathing signals to your brain that you are safe and calm, helping to lower your heart rate and blood pressure. \n \nPhysiologically, deeper breaths increase oxygen intake and carbon dioxide expulsion more effectively. This improved gas exchange has a direct impact on brain function. With more oxygen delivered to the brain, neurons can fire more efficiently, leading to improved cognitive performance, clarity, and sustained attention. Reduced levels of carbon dioxide help balance brain pH, further optimizing neural activity. Essentially, by calming your body and optimizing brain oxygenation, diaphragmatic breathing provides the biological foundation for improved focus and mental clarity."
+
+        break;
+      case "Cardiovascular Health":
+          explanation = "Diaphragmatic breathing, often called belly breathing, positively impacts cardiovascular health primarily by improving blood flow and reducing stress on the heart. When you breathe deeply using your diaphragm, the large muscle at the base of your lungs, it creates a gentle massage effect on your internal organs, including the heart and major blood vessels in your abdomen. This massage increases venous return - the flow of blood back to the heart. More blood returning to the heart means the heart has more volume to pump out with each beat, increasing cardiac output. Think of it like filling a water balloon more fully before squeezing; you get a more powerful squirt. \n \nSimultaneously, diaphragmatic breathing activates the parasympathetic nervous system, your body's \"rest and digest\" system. This activation lowers heart rate and blood pressure, reducing the overall workload on the heart. Furthermore, deeper breathing increases oxygen levels in the blood, which is crucial for efficient cellular function and overall cardiovascular health. By reducing stress hormones and increasing oxygen supply, diaphragmatic breathing can help lower the risk of developing conditions like hypertension and heart disease over time. It’s a simple yet powerful technique for supporting a healthier cardiovascular system."
+          break;
+        case "Improved Respiratory Function":
+          explanation = "Diaphragmatic breathing, often called belly breathing, improves respiratory function by optimizing how you use your diaphragm, the primary muscle involved in breathing. When you breathe deeply using your diaphragm, it contracts and moves downwards. This creates more space in your chest cavity, allowing your lungs to expand more fully. More space means more air can be inhaled, increasing the amount of oxygen available to your body. Crucially, this deeper inhalation helps to fully inflate the lower parts of your lungs, which are often underutilized during shallow, chest-based breathing. This improved lung ventilation helps to clear out stale air and increases the overall efficiency of gas exchange – taking in oxygen and releasing carbon dioxide. \n \nThe benefits extend beyond simply getting more air. Diaphragmatic breathing strengthens the diaphragm muscle itself, making it more efficient at drawing air in and pushing it out. This reduces the reliance on secondary breathing muscles in your neck and shoulders, preventing strain and fatigue. By slowing down your breathing rate and deepening each breath, diaphragmatic breathing also activates the parasympathetic nervous system, promoting relaxation and reducing stress. This calming effect can further improve respiratory function by reducing tension in the airways and allowing for smoother, more effective breathing. In essence, it's like giving your lungs a workout and teaching your body to breathe more efficiently."
+          break;
+      case "Better Core Stability":
+        explanation = "Diaphragmatic breathing, or \"belly breathing,\" is a simple yet powerful technique that significantly improves core stability. The diaphragm, a large dome-shaped muscle at the base of your lungs, is the primary muscle responsible for breathing. When you inhale deeply, engaging the diaphragm, it contracts and moves downwards. This downward movement increases pressure within your abdomen (intra-abdominal pressure or IAP). This increased IAP acts like an internal weightlifting belt, providing support to your spine and surrounding core muscles. Imagine squeezing a balloon - the internal pressure makes it firmer and harder to bend. The same principle applies to your core. \n \nThis internal pressure increase stimulates and activates your deep core muscles, including the transverse abdominis (the deepest abdominal muscle that wraps around your torso like a corset), the multifidus (small muscles supporting the spine), and the pelvic floor muscles. These muscles work synergistically to stabilize your spine and pelvis, providing a solid foundation for movement. When these muscles are properly engaged through diaphragmatic breathing, you create a more stable and efficient base of support for activities like lifting, bending, and even just standing. Therefore, mastering diaphragmatic breathing effectively engages the entire core unit, contributing significantly to improved balance, posture, and reduced risk of injury."
+        break;
+      case "Promotes Healthy Aging":
+          explanation = "Diaphragmatic breathing, or belly breathing, is a simple technique with surprisingly profound effects on healthy aging. As we age, our breathing often becomes shallow and restricted, primarily using our chest muscles. This inefficient breathing pattern doesn't fully oxygenate our blood or effectively remove waste products, leading to fatigue and increased stress. Diaphragmatic breathing, on the other hand, utilizes the diaphragm, a large muscle at the base of the lungs, to draw air deep into the abdomen. This deep breathing maximizes oxygen intake, fueling our cells and tissues more effectively, crucial for maintaining energy levels and vitality as we get older. \n \nBeyond oxygenation, diaphragmatic breathing helps regulate our nervous system. It stimulates the vagus nerve, the main component of the parasympathetic nervous system, often called the \"rest and digest\" system. When this nerve is activated, it slows down our heart rate, lowers blood pressure, and reduces the production of stress hormones like cortisol. Chronic stress accelerates aging, so consistently reducing stress through diaphragmatic breathing can contribute to a healthier, more resilient body and mind. This contributes to better sleep, improved digestion, and a strengthened immune system, all essential components of successful aging."
+          break;
     
-    try {
-      const explanation = await callGeminiAPI(prompt);
-      setModalContent(explanation);
-    } catch (error: unknown) {
- setModalContent(`Sorry, we couldn't fetch more details at this time. Error: ${(error as AppError).message}`);
-    } finally {
-      setIsModalLoading(false);
+      default:
+        break;
     }
+    setModalContent(explanation);
+    setIsModalLoading(false);
   };
 
   // Handler for goal selection in the plan generator
-  const handleGoalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = event.target;
-    setPracticeGoals(prev => {
-      return checked ? [...prev, value] : prev.filter(goal => goal !== value)
-    }
-    );
-  };
+  // const handleGoalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { value, checked } = event.target;
+  //   setPracticeGoals(prev => {
+  //     return checked ? [...prev, value] : prev.filter(goal => goal !== value)
+  //   }
+  //   );
+  // };
 
   // Handler for the "Generate Plan" button
-  const handleGeneratePlan = async () => {
-    if (practiceGoals.length === 0) {
-      setPlanError("Please select at least one goal.");
-      return;
-    }
-    setPlanError('');
-    setIsPlanLoading(true);
-    setGeneratedPlan('');
+//   const handleGeneratePlan = async () => {
+//     if (practiceGoals.length === 0) {
+//       setPlanError("Please select at least one goal.");
+//       return;
+//     }
+//     setPlanError('');
+//     setIsPlanLoading(true);
+//     setGeneratedPlan('');
 
-    const prompt = `Create a 7-day diaphragmatic breathing practice plan for a beginner. The user's goals are: ${practiceGoals.join(', ')}. Each daily session should be approximately ${sessionDuration} minutes long. Suggest specific techniques (like Basic Ratio Breathing, 4-7-8 Breathing, or Box Breathing where appropriate) and structure for each day. Make the plan encouraging and easy to follow. Format the output with Markdown for bolding and lists.`;
+//     const prompt = `Create a 7-day diaphragmatic breathing practice plan for a beginner. The user's goals are: ${practiceGoals.join(', ')}. Each daily session should be approximately ${sessionDuration} minutes long. Suggest specific techniques (like Basic Ratio Breathing, 4-7-8 Breathing, or Box Breathing where appropriate) and structure for each day. Make the plan encouraging and easy to follow. Format the output with Markdown for bolding and lists.`;
 
-    try {
-      const plan = await callGeminiAPI(prompt);
-      setGeneratedPlan(plan);
-    } catch (error: unknown) {
- setPlanError(`Sorry, we couldn't generate your plan. Error: ${(error as AppError).message}`);
-    } finally {
-      setIsPlanLoading(false);
-    }
-  };
+//     try {
+//       const plan = await callGeminiAPI(prompt);
+//       setGeneratedPlan(plan);
+//     } catch (error: unknown) {
+//  setPlanError(`Sorry, we couldn't generate your plan. Error: ${(error as AppError).message}`);
+//     } finally {
+//       setIsPlanLoading(false);
+//     }
+//   };
 
   // Chart drawing logic
   useEffect(() => {
@@ -332,7 +349,7 @@ const DiaphragmaticBreathingInfographic = () => {
             </div>
           </InfoCard>
           
-          <SectionTitle>Personalized Practice Plan Generator</SectionTitle>
+          {/* <SectionTitle>Personalized Practice Plan Generator</SectionTitle>
           <InfoCard className="mb-20">
             <div className="grid md:grid-cols-2 gap-8">
                 <div>
@@ -368,7 +385,7 @@ const DiaphragmaticBreathingInfographic = () => {
                     <div className="text-gray-700 whitespace-pre-wrap">{generatedPlan}</div>
                 </div>
             )}
-          </InfoCard>
+          </InfoCard> */}
 
           <SectionTitle>How to Practice Effectively</SectionTitle>
           <InfoCard className="mb-20">

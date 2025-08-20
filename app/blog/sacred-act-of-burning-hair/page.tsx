@@ -76,10 +76,10 @@ const wrapLabel = (label: string, maxLength = 16) => {
 // --- The Main Component ---
 export default function HairBeliefsInfographic() {
     const [selectedCulture, setSelectedCulture] = useState('african_american_hoodoo');
-    const [question, setQuestion] = useState('');
-    const [geminiResponse, setGeminiResponse] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
+    // const [question, setQuestion] = useState('');
+    // const [geminiResponse, setGeminiResponse] = useState('');
+    // const [isLoading, setIsLoading] = useState(false);
+    // const [error, setError] = useState('');
 
     const chartContainer = useRef<HTMLCanvasElement | null>(null);
     const chartInstance = useRef<Chart | null>(null);
@@ -170,57 +170,57 @@ export default function HairBeliefsInfographic() {
 
     const handleCultureChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedCulture(e.target.value);
-        setQuestion('');
-        setGeminiResponse('');
-        setError('');
+        // setQuestion('');
+        // setGeminiResponse('');
+        // setError('');
     };
 
-    const handleAskGemini = async () => {
-        if (!question.trim()) {
-            setError("Please enter a question.");
-            return;
-        }
+    // const handleAskGemini = async () => {
+    //     if (!question.trim()) {
+    //         setError("Please enter a question.");
+    //         return;
+    //     }
 
-        setIsLoading(true);
-        setError('');
-        setGeminiResponse('');
+    //     setIsLoading(true);
+    //     setError('');
+    //     setGeminiResponse('');
 
-        const prompt = `Based on the following information about ${activeCultureData.name}'s beliefs regarding hair:\n\nBeliefs: ${activeCultureData.beliefs}\nReasons for Disposal: ${activeCultureData.reasons}\n\nPlease answer the user's question: "${question}"\n\nProvide a concise and informative answer, drawing upon the provided context and your general knowledge of related cultural practices.`;
+    //     const prompt = `Based on the following information about ${activeCultureData.name}'s beliefs regarding hair:\n\nBeliefs: ${activeCultureData.beliefs}\nReasons for Disposal: ${activeCultureData.reasons}\n\nPlease answer the user's question: "${question}"\n\nProvide a concise and informative answer, drawing upon the provided context and your general knowledge of related cultural practices.`;
 
-        const payload = {
-            contents: [{ role: "user", parts: [{ text: prompt }] }]
-        };
-        const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-        const apiKey = GEMINI_API_KEY; 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    //     const payload = {
+    //         contents: [{ role: "user", parts: [{ text: prompt }] }]
+    //     };
+    //     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    //     const apiKey = GEMINI_API_KEY; 
+    //     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+    //     try {
+    //         const response = await fetch(apiUrl, {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify(payload)
+    //         });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || `API request failed with status ${response.status}`);
-            }
+    //         if (!response.ok) {
+    //             const errorData = await response.json();
+    //             throw new Error(errorData.error?.message || `API request failed with status ${response.status}`);
+    //         }
 
-            const result = await response.json();
-            const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+    //         const result = await response.json();
+    //         const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
 
-            if (text) {
-                setGeminiResponse(text);
-            } else {
-                throw new Error("Received an unexpected response structure from the API.");
-            }
-        } catch (err: unknown) {
-            console.error("Gemini API Error:", err);
-            setError(`Sorry, an error occurred. ${(err as AppError).message}`);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    //         if (text) {
+    //             setGeminiResponse(text);
+    //         } else {
+    //             throw new Error("Received an unexpected response structure from the API.");
+    //         }
+    //     } catch (err: unknown) {
+    //         console.error("Gemini API Error:", err);
+    //         setError(`Sorry, an error occurred. ${(err as AppError).message}`);
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
 
     return (
@@ -306,7 +306,7 @@ export default function HairBeliefsInfographic() {
                                 <h4 className="font-bold text-xl mb-2 text-[#8B4513] font-serif">Primary Reason for Disposal</h4>
                                 <p className="text-gray-600">{activeCultureData.reasons}</p>
                             </div>
-                            <div className="bg-white p-6 rounded-lg shadow-lg">
+                            {/* <div className="bg-white p-6 rounded-lg shadow-lg">
                                 <h4 className="font-bold text-xl mb-3 text-[#8B4513] font-serif">✨ Ask Gemini for Deeper Insight</h4>
                                 <div className="mb-3">
                                     <input type="text" value={question} onChange={(e) => setQuestion(e.target.value)} className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500" placeholder="e.g., How does this relate to other rituals?" />
@@ -320,7 +320,7 @@ export default function HairBeliefsInfographic() {
                                         <p className="whitespace-pre-wrap font-medium">{geminiResponse}</p>
                                     </div>
                                 )}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </section>
