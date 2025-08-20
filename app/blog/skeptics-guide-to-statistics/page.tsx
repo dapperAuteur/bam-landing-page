@@ -83,8 +83,8 @@ const MisusedStatisticsInfographic = () => {
 
         {/* --- Gemini AI-Powered Sidebar --- */}
         <div className="lg:col-span-1 space-y-8">
-            <GeminiHeadlineDeconstructor />
-            <GeminiFlawQuiz />
+            {/* <GeminiHeadlineDeconstructor /> */}
+            {/* <GeminiFlawQuiz /> */}
         </div>
       </main>
     </div>
@@ -121,147 +121,167 @@ const ConceptCard = ({ title, description }: { title: string, description: strin
 );
 
 // --- Gemini AI Feature 1: "Headline Deconstructor" ---
-const GeminiHeadlineDeconstructor = () => {
-    const [headline, setHeadline] = useState("Miracle Veggie Cuts Cancer Risk by 50%!");
-    const [stat, setStat] = useState("Study finds relative risk reduction from 2 in 10,000 to 1 in 10,000 for a rare cancer.");
-    const [analysis, setAnalysis] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+// const GeminiHeadlineDeconstructor = () => {
+//     const [headline, setHeadline] = useState("Miracle Veggie Cuts Cancer Risk by 50%!");
+//     const [stat, setStat] = useState("Study finds relative risk reduction from 2 in 10,000 to 1 in 10,000 for a rare cancer.");
+//     const [analysis, setAnalysis] = useState<string>('');
+//     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const handleDeconstruct = async () => {
-        if (!headline.trim() || !stat.trim()) return;
-        setIsLoading(true);
-        setAnalysis('');
+//     const handleDeconstruct = async () => {
+//         if (!headline.trim() || !stat.trim()) return;
+//         setIsLoading(true);
+//         setAnalysis('');
 
-        const prompt = `Act as a sharp media literacy expert. Your job is to deconstruct how a news headline might be misinterpreting or sensationalizing a statistical finding.
+//         const prompt = `Act as a sharp media literacy expert. Your job is to deconstruct how a news headline might be misinterpreting or sensationalizing a statistical finding.
 
-        - Headline: "${headline}"
-        - The Actual Statistic: "${stat}"
+//         - Headline: "${headline}"
+//         - The Actual Statistic: "${stat}"
         
-        Analyze the language of the headline and compare it to the reality of the statistic. Explain the specific ways it might be misleading (e.g., using relative vs. absolute risk, oversimplification, loaded language). Provide a more accurate, sober headline.`;
+//         Analyze the language of the headline and compare it to the reality of the statistic. Explain the specific ways it might be misleading (e.g., using relative vs. absolute risk, oversimplification, loaded language). Provide a more accurate, sober headline.`;
 
-        try {
-            const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-            const payload = { contents: chatHistory };
-            const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-            const apiKey = GEMINI_API_KEY;
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-            if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
-            const result = await response.json();
-            if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
-                setAnalysis(result.candidates[0].content.parts[0].text);
-            } else { throw new Error("Invalid API response."); }
-        } catch (e) {
-            console.error(e);
-            setAnalysis("Sorry, an error occurred while analyzing.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
+//         try {
+//             const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+//             const payload = { contents: chatHistory };
+//             const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+//             const apiKey = GEMINI_API_KEY;
+//             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+//             const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+//             if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+//             const result = await response.json();
+//             if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
+//                 setAnalysis(result.candidates[0].content.parts[0].text);
+//             } else { throw new Error("Invalid API response."); }
+//         } catch (e) {
+//             console.error(e);
+//             setAnalysis("Sorry, an error occurred while analyzing.");
+//         } finally {
+//             setIsLoading(false);
+//         }
+//     };
 
-    return (
-        <Section title="Headline Deconstructor" icon={<BrainCircuit className="text-purple-500" />}>
-            <p className="text-slate-600 mb-4 text-sm">See how headlines can spin the truth. Enter a headline and the real stat to see the analysis.</p>
-            <div className="space-y-3">
-                <input type="text" value={headline} onChange={e => setHeadline(e.target.value)} className="w-full form-input" placeholder="Enter headline..."/>
-                <textarea value={stat} onChange={e => setStat(e.target.value)} className="w-full form-input h-20" placeholder="Enter the real statistic..."/>
-                <button onClick={handleDeconstruct} disabled={isLoading} className="w-full flex items-center justify-center px-4 py-2 bg-purple-600 text-white font-semibold rounded-md hover:bg-purple-700 transition disabled:bg-purple-300">
-                    {isLoading ? <Loader2 className="animate-spin mr-2" /> : <BrainCircuit className="mr-2" size={18} />}
-                    Deconstruct
-                </button>
-                {analysis && (
-                    <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg animate-fade-in">
-                        <h4 className="font-bold mb-1 text-purple-800">Analysis:</h4>
-                        <div className="prose prose-sm text-slate-700 whitespace-pre-wrap">{analysis}</div>
-                    </div>
-                )}
-            </div>
-        </Section>
-    );
-};
+    // return (
+    //     <Section title="Headline Deconstructor" icon={<BrainCircuit className="text-purple-500" />}>
+    //         <p className="text-slate-600 mb-4 text-sm">See how headlines can spin the truth. Enter a headline and the real stat to see the analysis.</p>
+    //         <div className="space-y-3">
+    //             <input type="text" value={headline} onChange={e => setHeadline(e.target.value)} className="w-full form-input" placeholder="Enter headline..."/>
+    //             <textarea value={stat} onChange={e => setStat(e.target.value)} className="w-full form-input h-20" placeholder="Enter the real statistic..."/>
+    //             <button onClick={handleDeconstruct} disabled={isLoading} className="w-full flex items-center justify-center px-4 py-2 bg-purple-600 text-white font-semibold rounded-md hover:bg-purple-700 transition disabled:bg-purple-300">
+    //                 {isLoading ? <Loader2 className="animate-spin mr-2" /> : <BrainCircuit className="mr-2" size={18} />}
+    //                 Deconstruct
+    //             </button>
+    //             {analysis && (
+    //                 <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg animate-fade-in">
+    //                     <h4 className="font-bold mb-1 text-purple-800">Analysis:</h4>
+    //                     <div className="prose prose-sm text-slate-700 whitespace-pre-wrap">{analysis}</div>
+    //                 </div>
+    //             )}
+    //         </div>
+    //     </Section>
+    // );
+// };
 
 
 // --- Gemini AI Feature 2: "Find the Flaw Quiz" ---
-const flawScenarios = [
-    { id: 1, text: "A study wants to know the average income in a city. They survey people at a luxury car dealership. The results show a very high average income.", correct_flaw: "Biased Sample" },
-    { id: 2, text: "A political poll of 20 people is used to declare that '55% of the country' supports a candidate.", correct_flaw: "Small Sample Size" },
-    { id: 3, text: "A company reports: '90% of dentists surveyed recommend our toothpaste!' They don't mention that they only surveyed 10 dentists who they have a relationship with.", correct_flaw: "Cherry-Picking / Biased Sample" },
-    { id: 4, text: "After a study shows people who drink red wine live longer, a website claims: 'Drinking red wine makes you live longer!'", correct_flaw: "Correlation vs. Causation" }
-];
+// const flawScenarios = [
+//     {
+//       id: 1,
+//       text: "A study wants to know the average income in a city. They survey people at a luxury car dealership. The results show a very high average income.",
+//       correct_flaw: "Biased Sample",
+//       explain: "",
+//     },
+//     {
+//       id: 2,
+//       text: "A political poll of 20 people is used to declare that '55% of the country' supports a candidate.",
+//       correct_flaw: "Small Sample Size",
+//       explain: "",
+//     },
+//     {
+//       id: 3,
+//       text: "A company reports: '90% of dentists surveyed recommend our toothpaste!' They don't mention that they only surveyed 10 dentists who they have a relationship with.",
+//       correct_flaw: "Cherry-Picking / Biased Sample",
+//       explain: "",
+//     },
+//     {
+//       id: 4,
+//       text: "After a study shows people who drink red wine live longer, a website claims: 'Drinking red wine makes you live longer!'",
+//       correct_flaw: "Correlation vs. Causation",
+//       explain: "",
+//     }
+// ];
 
-const GeminiFlawQuiz = () => {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [userGuess, setUserGuess] = useState<string | null>("");
-    const [explanation, setExplanation] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+// const GeminiFlawQuiz = () => {
+//     const [currentIndex, setCurrentIndex] = useState(0);
+//     const [userGuess, setUserGuess] = useState<string | null>("");
+//     const [explanation, setExplanation] = useState('');
+//     const [isLoading, setIsLoading] = useState(false);
 
-    const scenario = flawScenarios[currentIndex];
+//     const scenario = flawScenarios[currentIndex];
 
-    const fetchExplanation = useCallback(async (guess: string) => {
-        setIsLoading(true);
-        setExplanation('');
+//     const fetchExplanation = useCallback(async (guess: string) => {
+//         setIsLoading(true);
+//         setExplanation('');
         
-        const prompt = `You are an expert in research methodology. A user is learning to spot flaws in how data is collected or presented.
+//         const prompt = `You are an expert in research methodology. A user is learning to spot flaws in how data is collected or presented.
 
-        - The Scenario: "${scenario.text}"
-        - The User's Guess: "${guess}"
-        - The Correct Flaw: "${scenario.correct_flaw}"
+//         - The Scenario: "${scenario.text}"
+//         - The User's Guess: "${guess}"
+//         - The Correct Flaw: "${scenario.correct_flaw}"
         
-        Provide a concise explanation. First, state if the user's guess is correct or on the right track. Then, clearly explain the primary flaw in the scenario, why it's a problem, and what a critical thinker should ask.`;
+//         Provide a concise explanation. First, state if the user's guess is correct or on the right track. Then, clearly explain the primary flaw in the scenario, why it's a problem, and what a critical thinker should ask.`;
 
-        try {
-            const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-            const payload = { contents: chatHistory };
-            const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-            const apiKey = GEMINI_API_KEY;
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-            if (!response.ok) throw new Error("API request failed");
-            const result = await response.json();
-            if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
-                setExplanation(result.candidates[0].content.parts[0].text);
-            } else { throw new Error("Invalid API response."); }
-        } catch (e) {
-            console.error(e);
-            setExplanation("Sorry, I couldn't fetch an explanation right now.");
-        } finally {
-            setIsLoading(false);
-        }
-    }, [scenario]);
+//         try {
+//             const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+//             const payload = { contents: chatHistory };
+//             const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+//             const apiKey = GEMINI_API_KEY;
+//             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+//             const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+//             if (!response.ok) throw new Error("API request failed");
+//             const result = await response.json();
+//             if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
+//                 setExplanation(result.candidates[0].content.parts[0].text);
+//             } else { throw new Error("Invalid API response."); }
+//         } catch (e) {
+//             console.error(e);
+//             setExplanation("Sorry, I couldn't fetch an explanation right now.");
+//         } finally {
+//             setIsLoading(false);
+//         }
+//     }, [scenario]);
 
-    const handleGuess = (guess: string) => {
-        setUserGuess(guess);
-        fetchExplanation(guess);
-    }
+    // const handleGuess = (guess: string) => {
+    //     setUserGuess(guess);
+    //     fetchExplanation(guess);
+    // }
     
-    const handleNext = () => {
-        setUserGuess(null);
-        setExplanation('');
-        setCurrentIndex((prev) => (prev + 1) % flawScenarios.length);
-    };
+    // const handleNext = () => {
+    //     setUserGuess(null);
+    //     setExplanation('');
+    //     setCurrentIndex((prev) => (prev + 1) % flawScenarios.length);
+    // };
 
-    return (
-        <Section title="Find the Flaw" icon={<SearchX className="text-red-500" />}>
-            <p className="text-slate-600 mb-4 text-sm">Read the scenario and spot the statistical pitfall. Our AI helper will explain.</p>
-            <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-4">
-                <p className="italic text-slate-700">&quot;{scenario.text}&quot;</p>
-                {!userGuess ? (
-                    <div className="grid grid-cols-2 gap-2">
-                        <button onClick={() => handleGuess("Biased Sample")} className="quiz-btn">Biased Sample</button>
-                        <button onClick={() => handleGuess("Small Sample Size")} className="quiz-btn">Small Sample Size</button>
-                        <button onClick={() => handleGuess("Cherry-Picking")} className="quiz-btn">Cherry-Picking</button>
-                        <button onClick={() => handleGuess("Correlation vs. Causation")} className="quiz-btn">Correlation vs. Causation</button>
-                    </div>
-                ) : (
-                    <div>
-                        {isLoading && <div className="flex items-center text-slate-500"><Loader2 className="animate-spin mr-2" />Fetching explanation...</div>}
-                        {explanation && <div className="prose prose-sm text-slate-800 bg-green-50 p-3 rounded-md border border-green-200 animate-fade-in whitespace-pre-wrap">{explanation}</div>}
-                        <button onClick={handleNext} className="mt-4 flex items-center justify-center w-full px-4 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition">
-                            Next Flaw <ArrowRight className="ml-2" size={16}/>
-                        </button>
-                    </div>
-                )}
-            </div>
-        </Section>
-    );
-};
+    // return (
+    //     <Section title="Find the Flaw" icon={<SearchX className="text-red-500" />}>
+    //         <p className="text-slate-600 mb-4 text-sm">Read the scenario and spot the statistical pitfall. Our AI helper will explain.</p>
+    //         <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-4">
+    //             <p className="italic text-slate-700">&quot;{scenario.text}&quot;</p>
+    //             {!userGuess ? (
+    //                 <div className="grid grid-cols-2 gap-2">
+    //                     <button onClick={() => handleGuess("Biased Sample")} className="quiz-btn">Biased Sample</button>
+    //                     <button onClick={() => handleGuess("Small Sample Size")} className="quiz-btn">Small Sample Size</button>
+    //                     <button onClick={() => handleGuess("Cherry-Picking")} className="quiz-btn">Cherry-Picking</button>
+    //                     <button onClick={() => handleGuess("Correlation vs. Causation")} className="quiz-btn">Correlation vs. Causation</button>
+    //                 </div>
+    //             ) : (
+    //                 <div>
+    //                     {isLoading && <div className="flex items-center text-slate-500"><Loader2 className="animate-spin mr-2" />Fetching explanation...</div>}
+    //                     {explanation && <div className="prose prose-sm text-slate-800 bg-green-50 p-3 rounded-md border border-green-200 animate-fade-in whitespace-pre-wrap">{explanation}</div>}
+    //                     <button onClick={handleNext} className="mt-4 flex items-center justify-center w-full px-4 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition">
+    //                         Next Flaw <ArrowRight className="ml-2" size={16}/>
+    //                     </button>
+    //                 </div>
+    //             )}
+    //         </div>
+    //     </Section>
+    // );
+// };
