@@ -6,9 +6,9 @@ import Portfolio from '../components/ui/Portfolio'
 import Contact from '../components/ui/Contact'
 
 export const metadata: Metadata = {
-  title: 'Brand Anthony McDonald | Voiceover Artist & Business Consultant',
-  description: 'Professional voiceover services and business consulting. Training to be the world\'s fastest centenarian while building the world\'s smallest conglomerate.',
-  keywords: 'voiceover, business consulting, narrator, audiobook, commercial voice, brand anthony mcdonald',
+  title: 'Brand Anthony McDonald | Developer Relations & Business Consultant',
+  description: 'Developer Relations, voiceover services and business consulting. Training to be the world\'s fastest centenarian while building the world\'s smallest conglomerate.',
+  keywords: 'developer relations, voiceover, business consulting, narrator, audiobook, commercial voice, Brand Anthony McDonald',
 }
 
 export default function Home() {
