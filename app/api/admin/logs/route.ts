@@ -1,15 +1,41 @@
 // src/app/api/admin/logs/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import clientPromise from '../../../../lib/db/mongodb'
-import { BaseLogEntry, LogLevel } from './../../../../lib/logging/logger'
-import { ContactLog } from '../../../../lib/logging/contact-logger'
+
+// Server-side interfaces
+interface BaseLogEntry {
+  _id?: string
+  context: string
+  level: string
+  message: string
+  timestamp: Date
+  userId?: string
+  requestId?: string
+  metadata?: Record<string, any>
+  ipAddress?: string
+  userAgent?: string
+}
+
+interface ContactLog {
+  _id?: string
+  event: string
+  email?: string
+  serviceType?: string
+  ipAddress: string
+  userAgent: string
+  status: "success" | "failure" | "spam"
+  reason?: string
+  formData?: any
+  metadata?: Record<string, any>
+  timestamp: Date
+}
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const type = searchParams.get('type') || 'all' // all, contact, system
-    const level = searchParams.get('level') || 'all' // all, error, warning, info, debug
-    const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 500) // Max 500
+    const type = searchParams.get('type') || 'all'
+    const level = searchParams.get('level') || 'all'
+    const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 500)
     const page = parseInt(searchParams.get('page') || '1')
     const skip = (page - 1) * limit
 
@@ -35,7 +61,7 @@ export async function GET(request: NextRequest) {
       const systemQuery: any = {}
       
       // Filter by log level for system logs
-      if (level !== 'all' && Object.values(LogLevel).includes(level as LogLevel)) {
+      if (level !== 'all') {
         systemQuery.level = level
       }
 
@@ -64,9 +90,7 @@ export async function GET(request: NextRequest) {
         : Promise.resolve(0),
       type === 'all' || type === 'system'
         ? db.collection('system_logs').countDocuments(
-            level !== 'all' && Object.values(LogLevel).includes(level as LogLevel)
-              ? { level }
-              : {}
+            level !== 'all' ? { level } : {}
           )
         : Promise.resolve(0)
     ])

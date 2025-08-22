@@ -2,8 +2,34 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { BaseLogEntry, LogLevel, LogContext } from './../../../lib/logging/logger'
-import { ContactLog, ContactEventType } from '../../../lib/logging/contact-logger'
+
+// Client-side interfaces (no imports from server modules)
+interface BaseLogEntry {
+  _id?: string
+  context: string
+  level: string
+  message: string
+  timestamp: Date | string
+  userId?: string
+  requestId?: string
+  metadata?: Record<string, any>
+  ipAddress?: string
+  userAgent?: string
+}
+
+interface ContactLog {
+  _id?: string
+  event: string
+  email?: string
+  serviceType?: string
+  ipAddress: string
+  userAgent: string
+  status: "success" | "failure" | "spam"
+  reason?: string
+  formData?: any
+  metadata?: Record<string, any>
+  timestamp: Date | string
+}
 
 interface LogsViewerProps {
   logs: (BaseLogEntry | ContactLog)[]
@@ -22,25 +48,25 @@ const LogsViewer = ({ logs, loading }: LogsViewerProps) => {
   }
 
   const getLogIcon = (log: BaseLogEntry | ContactLog) => {
-    const isContactLog = 'event' in log
-    
-    if (isContactLog) {
-      switch (log.status) {
-        case 'success': return '✅'
-        case 'spam': return '⚠️'
-        case 'failure': return '❌'
-        default: return '📧'
-      }
-    }
-
-    switch (log.level) {
-      case LogLevel.ERROR: return '🚨'
-      case LogLevel.WARNING: return '⚠️'
-      case LogLevel.INFO: return 'ℹ️'
-      case LogLevel.DEBUG: return '🔍'
-      default: return '📝'
+  const isContactLog = 'event' in log
+  
+  if (isContactLog) {
+    switch (log.status) {
+      case 'success': return '✅'
+      case 'spam': return '⚠️'
+      case 'failure': return '❌'
+      default: return '📧'
     }
   }
+
+  switch (log.level) {
+    case 'error': return '🚨'
+    case 'warning': return '⚠️'
+    case 'info': return 'ℹ️'
+    case 'debug': return '🔍'
+    default: return '📝'
+  }
+}
 
   const getLogColor = (log: BaseLogEntry | ContactLog) => {
     const isContactLog = 'event' in log
@@ -55,10 +81,10 @@ const LogsViewer = ({ logs, loading }: LogsViewerProps) => {
     }
 
     switch (log.level) {
-      case LogLevel.ERROR: return 'text-red-600 bg-red-50'
-      case LogLevel.WARNING: return 'text-yellow-600 bg-yellow-50'
-      case LogLevel.INFO: return 'text-blue-600 bg-blue-50'
-      case LogLevel.DEBUG: return 'text-gray-600 bg-gray-50'
+      case 'error': return 'text-red-600 bg-red-50'
+      case 'warning': return 'text-yellow-600 bg-yellow-50'
+      case 'info': return 'text-blue-600 bg-blue-50'
+      case 'debug': return 'text-gray-600 bg-gray-50'
       default: return 'text-gray-600 bg-gray-50'
     }
   }
@@ -132,7 +158,7 @@ export default function AdminLogsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedType, setSelectedType] = useState<'all' | 'contact' | 'system'>('all')
-  const [selectedLevel, setSelectedLevel] = useState<'all' | LogLevel>('all')
+  const [selectedLevel, setSelectedLevel] = useState<'all' | string>('all')
   const [limit, setLimit] = useState(50)
 
   useEffect(() => {
@@ -206,14 +232,14 @@ export default function AdminLogsPage() {
             </label>
             <select
               value={selectedLevel}
-              onChange={(e) => setSelectedLevel(e.target.value as 'all' | LogLevel)}
+              onChange={(e) => setSelectedLevel(e.target.value)}
               className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
             >
               <option value="all">All Levels</option>
-              <option value={LogLevel.ERROR}>Errors</option>
-              <option value={LogLevel.WARNING}>Warnings</option>
-              <option value={LogLevel.INFO}>Info</option>
-              <option value={LogLevel.DEBUG}>Debug</option>
+              <option value="error">Errors</option>
+              <option value="warning">Warnings</option>
+              <option value="info">Info</option>
+              <option value="debug">Debug</option>
             </select>
           </div>
           

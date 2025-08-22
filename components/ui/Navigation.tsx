@@ -46,9 +46,15 @@ export default function Navigation() {
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
                 {isAdmin && (
-                  <Link href="/admin/contact" className="text-blue-600 hover:text-blue-800 font-medium">
-                    Admin
-                  </Link>
+                  <div>
+                    <Link href="/admin/contact" className="text-blue-600 hover:text-blue-800 font-medium">
+                      Contacts
+                    </Link>
+                    <span className="text-gray-600 text-sm">/</span>
+                    <Link href="/admin/logs" className="text-blue-600 hover:text-blue-800 font-medium">
+                      Logs
+                    </Link>
+                  </div>
                 )}
                 <span className="text-gray-600 text-sm">
                   {user?.name}
