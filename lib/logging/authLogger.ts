@@ -3,9 +3,9 @@
 import { NextRequest } from "next/server";
 import { Logger, LogContext, LogLevel } from "./logger";
 import { AnalyticsLogger } from "./logger";
-import clientPromise from "@/lib/db/mongodb";
-import { AuthEventType, AuthLog } from "@/models/AuthLog";
-import { getClientIp } from "@/lib/utils/utils";
+import clientPromise from "./../db/mongodb";
+import { AuthEventType, AuthLog } from "./../../models/AuthLog";
+import { getClientIp } from "./../utils/utils";
 
 /**
  * Log an authentication event to the database

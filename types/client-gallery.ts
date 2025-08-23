@@ -17,18 +17,21 @@ export interface ClientGallery {
 export interface ClientPhoto {
   id: string
   cloudinaryId?: string
-  originalUrl: string // Cloudinary URL
+  originalUrl: string
   thumbnailUrl: string
   title?: string
   description?: string
-  tags?: string[]
+  isFavorite?: boolean
+  comments?: Array<{
+    text: string;
+    timestamp: Date;
+    author?: string }>
   metadata?: {
-    width: number
-    height: number
-    format: string
-    size: number
-  }
-  uploadedAt: Date
+    width: number;
+    height: number;
+    format: string;
+    size: number }
+  uploadedAt: Date | string
 }
 
 export interface GallerySettings {

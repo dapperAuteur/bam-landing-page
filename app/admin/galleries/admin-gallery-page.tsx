@@ -16,20 +16,20 @@ export default function AdminGalleriesPage() {
   }, [])
 
   const handlePhotoUpload = async (galleryId: string, files: FileList) => {
-    setUploadingPhotos(true)
-    const formData = new FormData()
-    Array.from(files).forEach(file => formData.append('photos', file))
-    
-    try {
-      const response = await fetch(`/api/admin/galleries/${galleryId}/photos`, {
-        method: 'POST',
-        body: formData
-      })
-      if (response.ok) fetchGalleries()
-    } finally {
-      setUploadingPhotos(false)
-    }
+  setUploadingPhotos(true)
+  const formData = new FormData()
+  Array.from(files).forEach(file => formData.append('photos', file))
+  
+  try {
+    const response = await fetch(`/api/admin/galleries/${galleryId}/photos`, {
+      method: 'POST',
+      body: formData
+    })
+    if (response.ok) fetchGalleries()
+  } finally {
+    setUploadingPhotos(false)
   }
+}
 
   const fetchGalleries = async () => {
     try {
@@ -40,24 +40,6 @@ export default function AdminGalleriesPage() {
       console.error('Failed to fetch galleries:', error)
     } finally {
       setLoading(false)
-    }
-  }
-
-  // FIXED: handleDeletePhoto now properly receives both galleryId and photoId
-  const handleDeletePhoto = async (galleryId: string, photoId: string) => {
-    if (!confirm('Are you sure you want to delete this photo?')) return
-    
-    try {
-      const response = await fetch(`/api/admin/galleries/${galleryId}/photos/${photoId}`, { 
-        method: 'DELETE' 
-      })
-      if (response.ok) {
-        fetchGalleries()
-      } else {
-        console.error('Failed to delete photo')
-      }
-    } catch (error) {
-      console.error('Error deleting photo:', error)
     }
   }
 
@@ -245,6 +227,11 @@ export default function AdminGalleriesPage() {
     )
   }
 
+  const handleDeletePhoto = async (photoId: string) => {
+    await fetch(`/api/admin/galleries/${galleryId}/photos/${photoId}`, { method: 'DELETE' })
+    fetchGalleries()
+  }
+
   const handleCreateGallery = async (galleryData: Partial<ClientGallery>) => {
     try {
       const response = await fetch('/api/admin/galleries', {
@@ -341,7 +328,7 @@ export default function AdminGalleriesPage() {
                 <h3 className="text-lg font-semibold">{gallery.eventName}</h3>
                 <p className="text-gray-600">{gallery.clientName} • {gallery.clientEmail}</p>
                 <p className="text-sm text-gray-500">
-                  {new Date(gallery.eventDate).toLocaleDateString()} • {gallery.photos?.length || 0} photos
+                  {new Date(gallery.eventDate).toLocaleDateString()} • {gallery.photos.length} photos
                 </p>
                 <input
                   type="file"
@@ -353,7 +340,7 @@ export default function AdminGalleriesPage() {
                 />
                 <label
                   htmlFor={`upload-${gallery.galleryId}`}
-                  className="inline-block mt-2 px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 cursor-pointer"
+                  className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 cursor-pointer"
                 >
                   Upload Photos
                 </label>
@@ -374,38 +361,9 @@ export default function AdminGalleriesPage() {
                     </span>
                   )}
                 </div>
-
-                {/* FIXED: Photo management section */}
-                {gallery.photos && gallery.photos.length > 0 && (
-                  <div className="mt-4">
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Manage Photos</h4>
-                    <div className="grid grid-cols-6 gap-2">
-                      {gallery.photos.slice(0, 6).map((photo) => (
-                        <div key={photo.id} className="relative group">
-                          <img 
-                            src={photo.thumbnailUrl} 
-                            alt="Gallery photo" 
-                            className="w-full h-16 object-cover rounded"
-                          />
-                          <button
-                            onClick={() => handleDeletePhoto(gallery.galleryId, photo.id)}
-                            className="absolute top-0 right-0 bg-red-500 text-white text-xs p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                            title="Delete photo"
-                          >
-                            ×
-                          </button>
-                        </div>
-                      ))}
-                      {gallery.photos.length > 6 && (
-                        <div className="flex items-center justify-center bg-gray-100 rounded text-xs text-gray-500">
-                          +{gallery.photos.length - 6} more
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
               </div>
               <div className="flex space-x-2">
+                <button onClick={() => handleDeletePhoto(photo.id)}>Delete</button>
                 <button
                   onClick={() => window.open(`/client-gallery/${gallery.galleryId}`, '_blank')}
                   className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
