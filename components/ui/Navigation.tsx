@@ -54,6 +54,10 @@ export default function Navigation() {
                     <Link href="/admin/logs" className="text-blue-600 hover:text-blue-800 font-medium">
                       Logs
                     </Link>
+                    <span className="text-gray-600 text-sm">/</span>
+                    <Link href="/admin/galleries" className="text-blue-600 hover:text-blue-800 font-medium">
+                      Galleries
+                    </Link>
                   </div>
                 )}
                 <span className="text-gray-600 text-sm">
