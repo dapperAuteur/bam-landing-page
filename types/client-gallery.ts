@@ -16,6 +16,7 @@ export interface ClientGallery {
 
 export interface ClientPhoto {
   id: string
+  cloudinaryId?: string
   originalUrl: string // Cloudinary URL
   thumbnailUrl: string
   title?: string

@@ -6,6 +6,7 @@ import { ClientGallery, GallerySettings } from '../../../types/client-gallery'
 
 export default function AdminGalleriesPage() {
   const [galleries, setGalleries] = useState<ClientGallery[]>([])
+  const [uploadingPhotos, setUploadingPhotos] = useState(false)
   const [loading, setLoading] = useState(true)
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [editingGallery, setEditingGallery] = useState<ClientGallery | null>(null)
@@ -13,6 +14,22 @@ export default function AdminGalleriesPage() {
   useEffect(() => {
     fetchGalleries()
   }, [])
+
+  const handlePhotoUpload = async (galleryId: string, files: FileList) => {
+  setUploadingPhotos(true)
+  const formData = new FormData()
+  Array.from(files).forEach(file => formData.append('photos', file))
+  
+  try {
+    const response = await fetch(`/api/admin/galleries/${galleryId}/photos`, {
+      method: 'POST',
+      body: formData
+    })
+    if (response.ok) fetchGalleries()
+  } finally {
+    setUploadingPhotos(false)
+  }
+}
 
   const fetchGalleries = async () => {
     try {
@@ -191,7 +208,6 @@ export default function AdminGalleriesPage() {
             </label>
           </div>
         </div>
-
         <div className="flex justify-end space-x-3 pt-4">
           <button
             type="button"
@@ -309,6 +325,20 @@ export default function AdminGalleriesPage() {
                 <p className="text-sm text-gray-500">
                   {new Date(gallery.eventDate).toLocaleDateString()} • {gallery.photos.length} photos
                 </p>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={(e) => e.target.files && handlePhotoUpload(gallery.galleryId, e.target.files)}
+                  className="hidden"
+                  id={`upload-${gallery.galleryId}`}
+                />
+                <label
+                  htmlFor={`upload-${gallery.galleryId}`}
+                  className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 cursor-pointer"
+                >
+                  Upload Photos
+                </label>
                 <div className="mt-2 flex space-x-4 text-sm">
                   <span className={`px-2 py-1 rounded-full ${
                     gallery.settings.allowDownloads ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'

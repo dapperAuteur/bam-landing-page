@@ -49,6 +49,7 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
 
   const handleAccessCodeSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('accessCode :>> ', accessCode);
     try {
       const response = await fetch(`/api/client-gallery/${params.galleryId}/authenticate`, {
         method: 'POST',
@@ -71,7 +72,7 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
     if (!gallery?.settings.allowDownloads) return
     
     try {
-      const response = await fetch(`/api/client-gallery/${params.galleryId}/download/${photo.id}`, {
+      const response = await fetch(`/api/client-gallery/${params.galleryId}/download/${encodeURIComponent(photo.cloudinaryId || photo.id)}`, {
         method: 'POST'
       })
       
