@@ -14,12 +14,8 @@ export enum LogLevel {
 // Context types to organize logs
 export enum LogContext {
   AUTH = "auth",
-  FLASHCARD = "flashcard",
-  AI = "ai",
   USER = "user",
-  STUDY = "study",
-  SYSTEM = "system",
-  CONTACT = "contact"
+  SYSTEM = "system"
 }
 
 // Base log entry interface
@@ -31,8 +27,6 @@ export interface BaseLogEntry {
   userId?: string;
   requestId?: string; // Correlation ID
   metadata?: Record<string, any>;
-  ipAddress?: string;
-  userAgent?: string;
 }
 
 // Centralized Logger
@@ -46,7 +40,7 @@ export class Logger {
 
   // Generate a unique request ID
   private static generateRequestId(): string {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    return Math.random().toString(36).substring(2, 15);
   }
 
   // Core logging method
@@ -78,22 +72,19 @@ export class Logger {
     }
 
     // Extract client info if request is provided
-    let ipAddress: string | undefined;
-    let userAgent: string | undefined;
-    
     if (request) {
-      ipAddress = getClientIp(request);
-      userAgent = request.headers.get("user-agent") || "unknown";
-      metadata.ipAddress = ipAddress;
-      metadata.userAgent = userAgent;
+      metadata.ipAddress = getClientIp(request);
+      metadata.userAgent = request.headers.get("user-agent") || "unknown";
     }
 
-    // Sanitize metadata to prevent serialization errors
+    // Sanitize metadata to prevent serialization errors. This ensures that complex
+    // objects (like class instances) are converted to plain objects.
     try {
       metadata = JSON.parse(JSON.stringify(metadata));
     } catch (e) {
+      /* Ignore sanitization errors, proceed with original metadata */
       console.error("Failed to sanitize metadata:", e);
-      metadata = { sanitizationError: "Failed to serialize metadata" };
+      console.error("Original metadata:", metadata);
     }
 
     // Create log entry
@@ -104,9 +95,7 @@ export class Logger {
       timestamp: new Date(),
       userId,
       requestId,
-      metadata,
-      ipAddress,
-      userAgent
+      metadata
     };
 
     // Log to console if enabled
@@ -198,20 +187,9 @@ export class Logger {
 export class AnalyticsLogger {
   // Event types for analytics
   static EventType = {
-    AI_GENERATED: "ai_generated",
-    AI_PROMPT_SUBMITTED: "ai_prompt_submitted",
-    FLASHCARD_CREATED: "flashcard_created",
-    FLASHCARD_SET_SAVED: "flashcard_set_saved",
-    FLASHCARD_STUDIED: "flashcard_studied",
-    LIST_EXPORTED: "list_exported",
-    LIST_IMPORTED: "list_imported",
-    SHARED_FLASHCARDS_USED: "shared_flashcards_used",
-    SHARED_FLASHCARDS_VIEWED: "shared_flashcards_viewed",
+    USER_FORM_SUBMISSION: "user_form_submission",
     USER_LOGIN: "user_login",
-    USER_SIGNUP: "user_signup",
-    CONTACT_FORM_SUBMISSION: "contact_form_submission",
-    CONTACT_FORM_SUCCESS: "contact_form_success",
-    CONTACT_FORM_FAILURE: "contact_form_failure"
+    USER_SIGNUP: "user_signup"
   };
 
   // Record an analytics event
@@ -241,8 +219,8 @@ export class AnalyticsLogger {
     try {
       properties = JSON.parse(JSON.stringify(properties));
     } catch (e) {
-      console.error("Failed to sanitize analytics properties:", e);
-      properties = { sanitizationError: "Failed to serialize properties" };
+      /* Ignore sanitization errors */
+      console.error("Failed to sanitize metadata:", e);
     }
 
     // First log through the main logger for operational visibility
@@ -250,7 +228,7 @@ export class AnalyticsLogger {
     const requestId = await Logger.info(
       logContext,
       `Analytics event: ${eventType}`,
-      { userId, metadata: properties, request }
+      { userId, metadata: properties }
     );
 
     try {
@@ -273,7 +251,7 @@ export class AnalyticsLogger {
       await Logger.error(
         LogContext.SYSTEM,
         `Failed to store analytics event: ${eventType}`,
-        { metadata: { error: String(error), properties } }
+        { metadata: { error, properties } }
       );
       return null;
     }
@@ -281,30 +259,39 @@ export class AnalyticsLogger {
 
   // Map event types to log contexts
   private static getContextFromEventType(eventType: string): LogContext {
-    if (eventType.startsWith("flashcard_")) return LogContext.FLASHCARD;
-    if (eventType.startsWith("ai_")) return LogContext.AI;
     if (eventType.startsWith("user_")) return LogContext.USER;
-    if (eventType.startsWith("contact_")) return LogContext.CONTACT;
     return LogContext.SYSTEM;
   }
 
   // Specific tracking methods for common events
-  static async trackContactSubmission(
-    email: string,
-    serviceType: string,
-    success: boolean,
-    request?: NextRequest
-  ): Promise<string | null> {
-    const eventType = success ? this.EventType.CONTACT_FORM_SUCCESS : this.EventType.CONTACT_FORM_FAILURE;
-    
+  static async trackUserFormSubmission(userId: string, formData: any): Promise<string | null> {
     return this.trackEvent({
-      eventType,
+      userId,
+      eventType: this.EventType.USER_FORM_SUBMISSION,
       properties: {
-        email,
-        serviceType,
-        success
-      },
-      request
+        userEmail: formData.email
+      }
     });
   }
+
+  static async trackUserLogin(userId: string, formData: any): Promise<string | null> {
+    return this.trackEvent({
+      userId,
+      eventType: this.EventType.USER_LOGIN,
+      properties: {
+        userEmail: formData.email
+      }
+    });
+  }
+
+  static async trackUserSignUp(userId: string, formData: any): Promise<string | null> {
+    return this.trackEvent({
+      userId,
+      eventType: this.EventType.USER_SIGNUP,
+      properties: {
+        userEmail: formData.email
+      }
+    });
+  }
+
 }

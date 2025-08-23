@@ -21,7 +21,18 @@ export async function POST(
       return NextResponse.json({ error: 'Invalid access code' }, { status: 401 })
     }
     
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ 
+      success: true,
+      gallery: {
+        galleryId: gallery.galleryId,
+        eventName: gallery.eventName,
+        clientName: gallery.clientName,
+        eventDate: gallery.eventDate,
+        description: gallery.description,
+        photos: gallery.photos || [],
+        settings: gallery.settings
+      }
+    })
   } catch (error) {
     return NextResponse.json({ error: 'Authentication failed' }, { status: 500 })
   }

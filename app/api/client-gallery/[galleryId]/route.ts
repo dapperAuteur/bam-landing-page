@@ -1,7 +1,5 @@
-// src/app/api/client-gallery/[galleryId]/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import clientPromise from '../../../../lib/db/mongodb'
-import { ClientGallery, GalleryAccess } from '../../../../types/client-gallery'
 
 export async function GET(
   request: NextRequest,
@@ -11,7 +9,7 @@ export async function GET(
     const client = await clientPromise
     const db = client.db()
     
-    const gallery = await db.collection<ClientGallery>('client_galleries')
+    const gallery = await db.collection('client_galleries')
       .findOne({ galleryId: params.galleryId })
     
     if (!gallery) {
@@ -23,20 +21,17 @@ export async function GET(
       return NextResponse.json({ error: 'Gallery expired' }, { status: 410 })
     }
     
-    // Log access
-    const accessLog: GalleryAccess = {
-      galleryId: params.galleryId,
-      clientEmail: gallery.clientEmail,
-      accessedAt: new Date(),
-      ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
-      userAgent: request.headers.get('user-agent') || 'unknown',
-      downloadsCount: 0
-    }
-    
-    const { _id, ...accessData } = accessLog
-    await db.collection('gallery_access').insertOne(accessData)
-    
-    return NextResponse.json({ gallery })
+    return NextResponse.json({
+      gallery: {
+        galleryId: gallery.galleryId,
+        eventName: gallery.eventName,
+        clientName: gallery.clientName,
+        eventDate: gallery.eventDate,
+        description: gallery.description,
+        settings: gallery.settings,
+        photos: gallery.settings.requirePassword ? [] : gallery.photos || []
+      }
+    })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch gallery' }, { status: 500 })
   }
