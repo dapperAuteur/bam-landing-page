@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { PhotoIcon, RectangleGroupIcon, EyeIcon, SaveIcon } from '@heroicons/react/24/outline'
+import { PhotoIcon, RectangleGroupIcon, EyeIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline'
 import PhotoPicker from './../ui/PhotoPicker'
 import { Photo } from './../../types/photo'
 import { BlogPostDraft } from './../../types/types'
@@ -245,7 +245,7 @@ export default function BlogEditor({ postId, initialData }: BlogEditorProps) {
             disabled={saving}
             className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 flex items-center gap-2"
           >
-            <SaveIcon className="h-4 w-4" />
+            <CloudArrowUpIcon className="h-4 w-4" />
             {saving ? 'Saving...' : 'Save Draft'}
           </button>
           <button

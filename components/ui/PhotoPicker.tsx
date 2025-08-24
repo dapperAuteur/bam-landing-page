@@ -2,17 +2,23 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { MagnifyingGlassIcon, XMarkIcon, CheckIcon } from '@heroicons/react/24/outline'
-import { Photo } from '../../types/photo'
+import { 
+  MagnifyingGlassIcon, 
+  XMarkIcon, 
+  CheckIcon
+} from '@heroicons/react/24/outline'
+import { Photo } from './../../types/photo'
 
 interface PhotoPickerProps {
   isOpen: boolean
   onClose: () => void
-  onSelect: (photo: Photo) => void
+  onSelect?: (photo: Photo) => void
   onSelectMultiple?: (photos: Photo[]) => void
   allowMultiple?: boolean
   filterTags?: string[]
-  excludeGalleries?: boolean // Exclude photos that are only in client galleries
+  excludeGalleries?: boolean
+  title?: string
+  description?: string
 }
 
 export default function PhotoPicker({
@@ -22,7 +28,9 @@ export default function PhotoPicker({
   onSelectMultiple,
   allowMultiple = false,
   filterTags,
-  excludeGalleries = false
+  excludeGalleries = false,
+  title = 'Select Photos',
+  description = 'Choose photos from your library'
 }: PhotoPickerProps) {
   const [photos, setPhotos] = useState<Photo[]>([])
   const [loading, setLoading] = useState(false)
@@ -35,6 +43,7 @@ export default function PhotoPicker({
   useEffect(() => {
     if (isOpen) {
       fetchPhotos()
+      setSelectedPhotos([])
     }
   }, [isOpen, selectedCategory, filterTags, excludeGalleries])
 
@@ -52,9 +61,10 @@ export default function PhotoPicker({
       }
       
       if (excludeGalleries) {
-        // Only get photos that are in portfolio or blogs, not just client galleries
         params.append('portfolio', 'true')
       }
+
+      params.append('limit', '50')
 
       const response = await fetch(`/api/photos?${params}`)
       if (response.ok) {
@@ -75,7 +85,7 @@ export default function PhotoPicker({
     return (
       photo.title?.toLowerCase().includes(searchLower) ||
       photo.description?.toLowerCase().includes(searchLower) ||
-      photo.tags.some(tag => tag.toLowerCase().includes(searchLower))
+      photo.tags.some((tag: string) => tag.toLowerCase().includes(searchLower))
     )
   })
 
@@ -88,7 +98,7 @@ export default function PhotoPicker({
         setSelectedPhotos([...selectedPhotos, photo])
       }
     } else {
-      onSelect(photo)
+      onSelect?.(photo)
       onClose()
     }
   }
@@ -101,21 +111,6 @@ export default function PhotoPicker({
     }
   }
 
-  const markPhotoForBlogUse = async (photoId: string) => {
-    // Update photo to indicate it's used in blog
-    try {
-      const response = await fetch(`/api/photos/${photoId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          'usedIn.blogs': ['current-blog-post'] // This would be the actual blog post ID
-        })
-      })
-    } catch (error) {
-      console.error('Failed to update photo usage:', error)
-    }
-  }
-
   if (!isOpen) return null
 
   return (
@@ -124,10 +119,8 @@ export default function PhotoPicker({
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b">
           <div>
-            <h2 className="text-xl font-bold">Select Photos</h2>
-            <p className="text-sm text-gray-600">
-              {allowMultiple ? 'Select multiple photos' : 'Choose a photo'} from your library
-            </p>
+            <h2 className="text-xl font-bold">{title}</h2>
+            <p className="text-sm text-gray-600">{description}</p>
           </div>
           <button
             onClick={onClose}
@@ -144,7 +137,7 @@ export default function PhotoPicker({
               <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search photos by title, description, or tags..."
+                placeholder="Search photos..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md"
@@ -188,9 +181,7 @@ export default function PhotoPicker({
             </div>
           ) : filteredPhotos.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500">
-                {searchTerm ? 'No photos match your search' : 'No photos available'}
-              </p>
+              <p className="text-gray-500">No photos found</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -210,6 +201,7 @@ export default function PhotoPicker({
                       alt={photo.title || 'Photo'}
                       fill
                       className="object-cover"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
                     />
                     
                     {/* Selection indicator */}
@@ -230,32 +222,7 @@ export default function PhotoPicker({
                           {photo.title || 'Untitled'}
                         </h3>
                         <p className="text-xs text-gray-300">{photo.category}</p>
-                        {photo.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {photo.tags.slice(0, 3).map(tag => (
-                              <span 
-                                key={tag}
-                                className="text-xs bg-black/50 px-1 rounded"
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
                       </div>
-                    </div>
-
-                    {/* Usage indicators */}
-                    <div className="absolute top-2 left-2 flex gap-1">
-                      {photo.usedIn.portfolio && (
-                        <span className="bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded">P</span>
-                      )}
-                      {photo.usedIn.galleries.length > 0 && (
-                        <span className="bg-green-600 text-white text-xs px-1.5 py-0.5 rounded">G</span>
-                      )}
-                      {photo.usedIn.blogs.length > 0 && (
-                        <span className="bg-purple-600 text-white text-xs px-1.5 py-0.5 rounded">B</span>
-                      )}
                     </div>
                   </div>
                 )
