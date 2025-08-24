@@ -1,26 +1,27 @@
-import { Metadata } from 'next'
-import BlogHeader from './../../components/blog/BlogHeader'
-import BlogGrid from './../../components/blog/BlogGrid'
-import FeaturedPost from './../../components/blog/FeaturedPost'
-import { getFeaturedPosts, blogPosts } from '../../lib/blogData'
+// src/app/blog/page.tsx - UPDATED to use new data functions
+import { getAllBlogPosts, getFeaturedPosts } from '../../lib/blogData'
+import BlogHeader from '../../components/blog/BlogHeader'
+import BlogGrid from '../../components/blog/BlogGrid'
+import FeaturedPost from '../../components/blog/FeaturedPost'
 
-export const metadata: Metadata = {
-  title: 'Blog | Brand Anthony McDonald - Stories, Insights & Technical Explorations',
-  description: 'Explore stories spanning Indigenous history, technical innovations, business insights, and the journey to becoming the world\'s fastest centenarian.',
-}
+export default async function BlogPage() {
+  const [allPosts, featuredPosts] = await Promise.all([
+    getAllBlogPosts(), // Only published posts for public view
+    getFeaturedPosts()
+  ])
 
-export default function BlogPage() {
-  const featuredPosts = getFeaturedPosts()
-  const recentPosts = blogPosts.slice(0, 26) // Show 26 most recent
+  const regularPosts = allPosts.filter(post => !post.featured)
 
   return (
-    <main className="min-h-screen bg-gray-50 pt-28">
+    <div className="pt-16">
       <BlogHeader />
+      
+      {/* Featured Posts Section */}
       {featuredPosts.length > 0 && (
-        <section className="section-padding bg-white">
+        <section className="section-padding">
           <div className="container-max">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Featured Stories</h2>
-            <div className="grid lg:grid-cols-2 gap-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">Featured Stories</h2>
+            <div className="grid gap-8">
               {featuredPosts.map((post) => (
                 <FeaturedPost key={post.slug} post={post} />
               ))}
@@ -28,7 +29,9 @@ export default function BlogPage() {
           </div>
         </section>
       )}
-      <BlogGrid posts={recentPosts} />
-    </main>
+
+      {/* All Posts Grid */}
+      <BlogGrid posts={regularPosts} />
+    </div>
   )
 }

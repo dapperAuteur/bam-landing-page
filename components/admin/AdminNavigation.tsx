@@ -2,6 +2,35 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+// import { 
+//   HomeIcon, 
+//   PhotoIcon, 
+//   DocumentTextIcon, 
+//   CogIcon,
+//   Bars3Icon,
+//   XMarkIcon,
+//   FolderIcon
+// } from '@heroicons/react/24/outline'
+import { useState } from 'react'
+
+// const navigation = [
+//   { name: 'Dashboard', href: '/admin', icon: HomeIcon },
+//   { name: 'Photo Library', href: '/admin/photos', icon: PhotoIcon },
+//   { name: 'Client Galleries', href: '/admin/galleries', icon: FolderIcon },
+//   { name: 'Logs Viewer', href: '/admin/logs', icon: DocumentTextIcon },
+//   { name: 'Settings', href: '/admin/settings', icon: CogIcon },
+// ]
+// Update src/components/admin/AdminNavigation.tsx to include blog management
+const navigation = [
+  { name: 'Dashboard', href: '/admin', icon: HomeIcon },
+  { name: 'Photo Library', href: '/admin/photos', icon: PhotoIcon },
+  { name: 'Client Galleries', href: '/admin/galleries', icon: FolderIcon },
+  { name: 'Blog Posts', href: '/admin/blog', icon: DocumentTextIcon }, // NEW
+  { name: 'Logs Viewer', href: '/admin/logs', icon: ClipboardDocumentListIcon },
+  { name: 'Settings', href: '/admin/settings', icon: CogIcon },
+]
+
+// Add the import for the new icon
 import { 
   HomeIcon, 
   PhotoIcon, 
@@ -9,18 +38,9 @@ import {
   CogIcon,
   Bars3Icon,
   XMarkIcon,
-  FolderIcon
+  FolderIcon,
+  ClipboardDocumentListIcon // NEW
 } from '@heroicons/react/24/outline'
-import { useState } from 'react'
-
-const navigation = [
-  { name: 'Dashboard', href: '/admin', icon: HomeIcon },
-  { name: 'Photo Library', href: '/admin/photos', icon: PhotoIcon },
-  { name: 'Client Galleries', href: '/admin/galleries', icon: FolderIcon },
-  { name: 'Logs Viewer', href: '/admin/logs', icon: DocumentTextIcon },
-  { name: 'Settings', href: '/admin/settings', icon: CogIcon },
-]
-
 export default function AdminNavigation() {
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)

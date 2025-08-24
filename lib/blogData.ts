@@ -11,7 +11,8 @@ export const blogPosts: BlogPost[] = [
   //   category: "History & Culture",
   //   featured: false,
   //   tags: ["Indigenous History", "Arkansas River", "Interactive Story", "Cultural Heritage"],
-  //   excerpt: "Discover the rich tapestry of Indigenous nations that thrived along the Arkansas River, from the Ute in the headwaters to the Quapaw at its confluence with the Mississippi. An immersive journey through time featuring AI-powered storytelling."
+  //   excerpt: "Discover the rich tapestry of Indigenous nations that thrived along the Arkansas River, from the Ute in the headwaters to the Quapaw at its confluence with the Mississippi. An immersive journey through time featuring AI-powered storytelling.",
+    // contentSource: 'static'
   // },
   {
     slug: "bodys-gatekeeper",
@@ -22,7 +23,8 @@ export const blogPosts: BlogPost[] = [
     category: "Biology",
     featured: false,
     tags: ["Human Anatomy", "Health & Wellness", "Digestive System"],
-    excerpt: "A Visual Guide to Understanding Bowel Control: Gas vs. Stool. The Anatomy of Continence Meet the key players responsible for keeping you in control."
+    excerpt: "A Visual Guide to Understanding Bowel Control: Gas vs. Stool. The Anatomy of Continence Meet the key players responsible for keeping you in control.",
+    contentSource: 'static'
   },
   {
     slug: "centenarian-athletes-an-interactive-infographic",
@@ -33,7 +35,8 @@ export const blogPosts: BlogPost[] = [
     category: "Athletics",
     featured: false,
     tags: ["Athletes", "Sports", "Athletics", "Longevity"],
-    excerpt: "Ageless Wonders. Discover the incredible stories of centenarian athletes who defy the limits of age."
+    excerpt: "Ageless Wonders. Discover the incredible stories of centenarian athletes who defy the limits of age.",
+    contentSource: 'static'
   },
   {
     slug: "diaphragmatic-breathing",
@@ -44,7 +47,8 @@ export const blogPosts: BlogPost[] = [
     category: "Voiceover",
     featured: true,
     tags: ["Breathing", "Voiceover", "Health", "Longevity"],
-    excerpt: "Unlock health, longevity, and vocal excellence by mastering your body's most fundamental rhythm."
+    excerpt: "Unlock health, longevity, and vocal excellence by mastering your body's most fundamental rhythm.",
+    contentSource: 'static'
   },
   {
     slug: "endocannabinoid-system-curriculum-infographic-sources",
@@ -55,7 +59,8 @@ export const blogPosts: BlogPost[] = [
     category: "Endocannabinoid System",
     featured: true,
     tags: ["Science", "Endocannabinoid System", "Health", "Longevity", "Fitness", "Educatoin", "Neurology"],
-    excerpt: "This curriculum provides evidence-based education on the endocannabinoid system, designed for healthcare professionals, researchers, and wellness practitioners seeking to integrate ECS knowledge into their practice."
+    excerpt: "This curriculum provides evidence-based education on the endocannabinoid system, designed for healthcare professionals, researchers, and wellness practitioners seeking to integrate ECS knowledge into their practice.",
+    contentSource: 'static'
   },
   {
     slug: "enduring-power-of-hoodoo",
@@ -66,7 +71,8 @@ export const blogPosts: BlogPost[] = [
     category: "Spirituality",
     featured: true,
     tags: ["Spirituality", "Africa", "USA", "African-American", "Rootwork", "Conjure", "Hoodoo", "Tradition", "History"],
-    excerpt: "Hoodoo, also known as Rootwork or Conjure, is an African-American spiritual tradition focused on personal empowerment and achieving tangible results in everyday life. It is a system of folk magic, not an organized religion."
+    excerpt: "Hoodoo, also known as Rootwork or Conjure, is an African-American spiritual tradition focused on personal empowerment and achieving tangible results in everyday life. It is a system of folk magic, not an organized religion.",
+    contentSource: 'static'
   },
   {
     slug: "exodus",
@@ -77,7 +83,8 @@ export const blogPosts: BlogPost[] = [
     category: "US History",
     featured: false,
     tags: ["US History", "World History", "USA", "African-American", "Harlem Renaissance", "Migration", "Refugees", "Jim Crow South", "History"],
-    excerpt: "The Great Migration was a courageous act of agency by six million African Americans to escape the oppressive Jim Crow South. They fled a system of legal segregation, political disenfranchisement, economic exploitation through sharecropping, and the constant terror of racial violence. As one migrant wrote, they sought to go 'where a man is a man.'"
+    excerpt: "The Great Migration was a courageous act of agency by six million African Americans to escape the oppressive Jim Crow South. They fled a system of legal segregation, political disenfranchisement, economic exploitation through sharecropping, and the constant terror of racial violence. As one migrant wrote, they sought to go 'where a man is a man.'",
+    contentSource: 'static'
   },
   // {
   //   slug: "free-spaced-repetition-scheduler",
@@ -88,7 +95,8 @@ export const blogPosts: BlogPost[] = [
   //   category: "Learning",
   //   featured: true,
   //   tags: ["Learning Cycle", "Learning Cycle"],
-  //   excerpt: "FSRS is a sophisticated algorithm based on the DSR (Difficulty, Stability, Retrievability) model of memory. It provides a powerful, data-driven method for creating highly personalized flashcard review schedules."
+  //   excerpt: "FSRS is a sophisticated algorithm based on the DSR (Difficulty, Stability, Retrievability) model of memory. It provides a powerful, data-driven method for creating highly personalized flashcard review schedules.",
+    // contentSource: 'static'
   // },
   {
     slug: "interactive-indiana-corvid-species-analysis",
@@ -99,7 +107,8 @@ export const blogPosts: BlogPost[] = [
     category: "Birds",
     featured: false,
     tags: ["Nature", "Birds", "Animals"],
-    excerpt: "An AI-Enhanced Infographic for Indiana Species"
+    excerpt: "An AI-Enhanced Infographic for Indiana Species",
+    contentSource: 'static'
   },
   {
     slug: "making-sense-of-statistics",
@@ -110,7 +119,8 @@ export const blogPosts: BlogPost[] = [
     category: "Statistics",
     featured: false,
     tags: ["Statistics", "Math", "Critical Thinking"],
-    excerpt: "Statistics help us describe data and draw inferences. These are the building blocks."
+    excerpt: "Statistics help us describe data and draw inferences. These are the building blocks.",
+    contentSource: 'static'
   },
   {
     slug: "lester-wright-sr-the-man-who-outran-time",
@@ -121,7 +131,8 @@ export const blogPosts: BlogPost[] = [
     category: "Centenarian",
     featured: false,
     tags: ["Centenarian", "Athletics"],
-    excerpt: "Shattered the 100m world record for the M100 age group with a time of 26.34 seconds."
+    excerpt: "Shattered the 100m world record for the M100 age group with a time of 26.34 seconds.",
+    contentSource: 'static'
   },
   {
     slug: "scientific-study-infographic",
@@ -132,7 +143,8 @@ export const blogPosts: BlogPost[] = [
     category: "Science",
     featured: false,
     tags: ["Science", "Critical Thinking"],
-    excerpt: "The design of a study determines the strength of its conclusions. Understanding the type is the first step to critical appraisal."
+    excerpt: "The design of a study determines the strength of its conclusions. Understanding the type is the first step to critical appraisal.",
+    contentSource: 'static'
   },
   {
     slug: "sacred-act-of-burning-hair",
@@ -143,7 +155,8 @@ export const blogPosts: BlogPost[] = [
     category: "Rituals",
     featured: false,
     tags: ["Culture", "Rituals"],
-    excerpt: "An interactive infographic tracing a profound spiritual practice from its African origins to its enduring presence in the diaspora."
+    excerpt: "An interactive infographic tracing a profound spiritual practice from its African origins to its enduring presence in the diaspora.",
+    contentSource: 'static'
   },
   {
     slug: "skeptics-guide-to-statistics",
@@ -154,7 +167,8 @@ export const blogPosts: BlogPost[] = [
     category: "Statistics",
     featured: false,
     tags: ["Statistics", "Critical Thinking", "Math"],
-    excerpt: "Misinformation isn't always about fake data. Often, it's about presenting real data in a misleading way. Here are the most common traps."
+    excerpt: "Misinformation isn't always about fake data. Often, it's about presenting real data in a misleading way. Here are the most common traps.",
+    contentSource: 'static'
   },
   // {
   //   slug: "centenarian-athletes-an-interactive-infographic-times",
@@ -165,7 +179,8 @@ export const blogPosts: BlogPost[] = [
   //   category: "Athletics",
   //   featured: false,
   //   tags: ["Athletes", "Sports", "Athletics", "Longevity"],
-  //   excerpt: "Ageless Wonders. Discover the incredible stories of centenarian athletes who defy the limits of age."
+  //   excerpt: "Ageless Wonders. Discover the incredible stories of centenarian athletes who defy the limits of age.",
+    // contentSource: 'static'
   // },
   // {
   //   slug: "bowel-as-a-barometer",
@@ -176,7 +191,8 @@ export const blogPosts: BlogPost[] = [
   //   category: "Biology",
   //   featured: false,
   //   tags: ["Human Anatomy", "Health & Wellness", "Digestive System"],
-  //   excerpt: "The Gut-Health Bridge. Your bowel habits shape the trillions of microbes in your gut, which in turn influence your entire body."
+  //   excerpt: "The Gut-Health Bridge. Your bowel habits shape the trillions of microbes in your gut, which in turn influence your entire body.",
+    // contentSource: 'static'
   // }
 
   // 🔥 TO ADD A NEW BLOG POST:
@@ -186,8 +202,110 @@ export const blogPosts: BlogPost[] = [
   // 4. The blog listing will automatically pick it up!
 ]
 
-// Helper functions
-export const getFeaturedPosts = () => blogPosts.filter(post => post.featured)
-export const getPostsByCategory = (category: string) => blogPosts.filter(post => post.category === category)
-export const getAllCategories = () => Array.from(new Set(blogPosts.map(post => post.category)))
-export const getPostBySlug = (slug: string) => blogPosts.find(post => post.slug === slug)
+// NEW: Enhanced functions that merge static and CMS posts
+export async function getAllBlogPosts(includeUnpublished = false): Promise<BlogPost[]> {
+  try {
+    // Fetch CMS posts
+    const response = await fetch(`/api/blog?status=${includeUnpublished ? 'all' : 'published'}`, {
+      // Add cache control if needed
+      cache: 'no-store' // or 'force-cache' with revalidation
+    })
+    
+    let cmsPosts: BlogPost[] = []
+    if (response.ok) {
+      const data = await response.json()
+      cmsPosts = data.posts || []
+    }
+
+    // Combine with static posts
+    const allPosts = [
+      ...cmsPosts,
+      ...blogPosts.map(post => ({
+        ...post,
+        status: 'published' as const
+      }))
+    ]
+
+    // Sort by publish date (newest first)
+    return allPosts.sort((a, b) => 
+      new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
+    )
+  } catch (error) {
+    console.error('Failed to fetch blog posts:', error)
+    // Fallback to static posts only
+    return blogPosts.map(post => ({
+      ...post,
+      status: 'published' as const
+    }))
+  }
+}
+
+// Enhanced helper functions
+export const getFeaturedPosts = async (): Promise<BlogPost[]> => {
+  const allPosts = await getAllBlogPosts()
+  return allPosts.filter(post => post.featured)
+}
+
+export const getPostsByCategory = async (category: string): Promise<BlogPost[]> => {
+  const allPosts = await getAllBlogPosts()
+  return allPosts.filter(post => post.category === category)
+}
+
+export const getAllCategories = async (): Promise<string[]> => {
+  const allPosts = await getAllBlogPosts()
+  return Array.from(new Set(allPosts.map(post => post.category)))
+}
+
+// Updated to check both static and CMS posts
+export const getPostBySlug = async (slug: string): Promise<BlogPost | null> => {
+  // First check static posts
+  const staticPost = blogPosts.find(post => post.slug === slug)
+  if (staticPost) {
+    return { ...staticPost, status: 'published' as const }
+  }
+
+  // Then check CMS posts
+  try {
+    const response = await fetch(`/api/blog/${slug}`)
+    if (response.ok) {
+      const data = await response.json()
+      return data.post
+    }
+  } catch (error) {
+    console.error('Failed to fetch CMS post:', error)
+  }
+
+  return null
+}
+
+// NEW: Get posts with photos for admin interface
+export const getPostsWithPhotos = async (): Promise<BlogPost[]> => {
+  const allPosts = await getAllBlogPosts(true) // Include unpublished for admin
+  return allPosts.filter(post => 
+    post.photoIds && post.photoIds.length > 0 || post.featuredImage
+  )
+}
+
+// NEW: Get usage statistics
+export const getBlogStats = async () => {
+  const allPosts = await getAllBlogPosts(true)
+  
+  return {
+    total: allPosts.length,
+    published: allPosts.filter(p => p.status === 'published').length,
+    drafts: allPosts.filter(p => p.status === 'draft').length,
+    static: allPosts.filter(p => p.contentSource === 'static').length,
+    cms: allPosts.filter(p => p.contentSource === 'cms').length,
+    withPhotos: allPosts.filter(p => p.photoIds?.length || p.featuredImage).length,
+    categories: await getAllCategories()
+  }
+}
+
+// Synchronous versions for existing compatibility (only static posts)
+export const getFeaturedPostsSync = () => blogPosts.filter(post => post.featured)
+export const getPostsByCategorySync = (category: string) => blogPosts.filter(post => post.category === category)
+export const getAllCategoriesSync = () => Array.from(new Set(blogPosts.map(post => post.category)))
+export const getPostBySlugSync = (slug: string) => blogPosts.find(post => post.slug === slug)
+
+// Export static posts for backward compatibility
+export { blogPosts as staticBlogPosts }

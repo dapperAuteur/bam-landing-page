@@ -1,5 +1,7 @@
+// src/components/blog/BlogGrid.tsx - UPDATED
 import Link from 'next/link'
-import { BlogPost } from './../../types/types'
+import Image from 'next/image'
+import { BlogPost } from '../../types/types'
 
 interface BlogGridProps {
   posts: BlogPost[]
@@ -32,6 +34,25 @@ function BlogCard({ post }: { post: BlogPost }) {
   return (
     <Link href={`/blog/${post.slug}`} className="group">
       <article className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group-hover:scale-[1.02]">
+        {/* NEW: Featured image support */}
+        {post.featuredImage && (
+          <div className="aspect-video relative overflow-hidden">
+            <Image
+              src={post.featuredImage.thumbnailUrl}
+              alt={post.featuredImage.alt || post.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+            {/* Photo indicator for posts with additional photos */}
+            {post.photoIds && post.photoIds.length > 1 && (
+              <div className="absolute top-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
+                +{post.photoIds.length - 1} photos
+              </div>
+            )}
+          </div>
+        )}
+        
         <div className="p-6">
           <div className="flex items-center gap-2 mb-3">
             <span className="bg-purple-100 text-purple-800 text-sm px-3 py-1 rounded-full font-medium">
@@ -40,6 +61,12 @@ function BlogCard({ post }: { post: BlogPost }) {
             {post.featured && (
               <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-bold">
                 FEATURED
+              </span>
+            )}
+            {/* NEW: Content source indicator for admin */}
+            {post.contentSource === 'cms' && (
+              <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                CMS
               </span>
             )}
           </div>
@@ -60,7 +87,18 @@ function BlogCard({ post }: { post: BlogPost }) {
                 year: 'numeric'
               })}
             </time>
-            <span>{post.readTime}</span>
+            <div className="flex items-center gap-3">
+              <span>{post.readTime}</span>
+              {/* NEW: Photo count indicator */}
+              {post.photoIds && post.photoIds.length > 0 && (
+                <span className="flex items-center gap-1 text-blue-600">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                  </svg>
+                  {post.photoIds.length}
+                </span>
+              )}
+            </div>
           </div>
           
           <div className="flex flex-wrap gap-1">
