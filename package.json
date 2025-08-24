@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@heroicons/react": "^2.2.0",
     "@mux/mux-player-react": "^3.5.1",
     "@radix-ui/react-accordion": "^1.2.11",
     "@types/archiver": "^6.0.3",
@@ -23,6 +24,7 @@
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.7.0",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^17.2.1",
     "framer-motion": "^12.23.12",
     "html2canvas": "^1.4.1",
