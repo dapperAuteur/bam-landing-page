@@ -48,3 +48,8 @@ export interface AuthContextType {
   logout: () => Promise<void>
   checkSession: () => Promise<void>
 }
+
+export interface SessionResponse {
+  authenticated: boolean
+  user?: AuthUser
+}

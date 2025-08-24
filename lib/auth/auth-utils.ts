@@ -149,6 +149,9 @@ export async function authenticateUser(email: string, password: string): Promise
       email: email.toLowerCase(),
       isActive: true
     })
+    if (user) {
+      const isValidPassword = await verifyPassword(password, user.passwordHash)
+    }
 
     if (!user) {
       return null
