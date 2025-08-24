@@ -42,3 +42,5 @@ next-env.d.ts
 
 scripts/create-admin.js
 scripts/migrate-photos.ts
+
+scripts/_migrate-photos.ts
