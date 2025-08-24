@@ -15,7 +15,7 @@ export async function POST(
 ) {
   try {
     const client = await clientPromise
-    const db = client.db()
+    const db = client.db('bam_portfolio')
     
     // Find the gallery and photo
     const gallery = await db.collection('client_galleries').findOne({

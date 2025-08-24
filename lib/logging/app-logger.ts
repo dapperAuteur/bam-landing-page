@@ -136,7 +136,7 @@ export class Logger {
   private static async logToDatabase(logEntry: BaseLogEntry): Promise<string> {
     try {
       const client = await clientPromise;
-      const db = client.db();
+      const db = client.db('bam_portfolio');
       const result = await db.collection("system_logs").insertOne(logEntry);
       return result.insertedId.toString();
     } catch (error) {

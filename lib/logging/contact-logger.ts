@@ -44,7 +44,7 @@ export interface ContactLog {
 async function logToMongoDB(logEntry: ContactLog): Promise<string> {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db('bam_portfolio');
     const contactLogsCollection = db.collection<ContactLog>("contact_logs");
     const result = await contactLogsCollection.insertOne(logEntry);
     return result.insertedId.toString();
@@ -128,7 +128,7 @@ export async function checkForSpam(
 ): Promise<{ isSpam: boolean; reason?: string; confidence: number }> {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db('bam_portfolio');
     const contactLogsCollection = db.collection<ContactLog>("contact_logs");
     
     // Look back 24 hours
@@ -211,7 +211,7 @@ export async function checkRateLimit(
 ): Promise<{ isLimited: boolean; reason?: string; nextAllowedTime?: Date }> {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db('bam_portfolio');
     const contactLogsCollection = db.collection<ContactLog>("contact_logs");
     
     // Rate limits
@@ -283,7 +283,7 @@ export async function checkRateLimit(
 export async function getRecentContactSubmissions(limit: number = 50): Promise<ContactLog[]> {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db('bam_portfolio');
     const contactLogsCollection = db.collection<ContactLog>("contact_logs");
     
     const logs = await contactLogsCollection
@@ -322,7 +322,7 @@ export async function getContactStats(days: number = 30): Promise<{
 }> {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db('bam_portfolio');
     const contactLogsCollection = db.collection<ContactLog>("contact_logs");
     
     const lookbackTime = new Date(Date.now() - days * 24 * 60 * 60 * 1000);

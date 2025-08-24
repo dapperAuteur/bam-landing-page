@@ -63,7 +63,7 @@ export async function logAuthEvent({
     }
 
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db('bam_portfolio');
     
     // Get client information
     const ipAddress = getClientIp(request);
@@ -103,7 +103,7 @@ export async function checkSuspiciousActivity(
 ): Promise<{ suspicious: boolean; reason?: string }> {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db('bam_portfolio');
     const authLogsCollection = db.collection<AuthLog>("auth_logs");
     
     // Look back 24 hours
@@ -170,7 +170,7 @@ export async function checkSuspiciousActivity(
 export async function getUserAuthLogs(userId: string, limit: number = 20): Promise<AuthLog[]> {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db('bam_portfolio');
     const authLogsCollection = db.collection<AuthLog>("auth_logs");
     
     const logs = await authLogsCollection
@@ -192,7 +192,7 @@ export async function getUserAuthLogs(userId: string, limit: number = 20): Promi
 export async function getRecentFailedLogins(limit: number = 20): Promise<AuthLog[]> {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db('bam_portfolio');
     const authLogsCollection = db.collection<AuthLog>("auth_logs");
     
     const logs = await authLogsCollection
@@ -214,7 +214,7 @@ export async function getRecentFailedLogins(limit: number = 20): Promise<AuthLog
 export async function getSuspiciousActivityLogs(limit: number = 20): Promise<AuthLog[]> {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db('bam_portfolio');
     const authLogsCollection = db.collection<AuthLog>("auth_logs");
     
     const logs = await authLogsCollection

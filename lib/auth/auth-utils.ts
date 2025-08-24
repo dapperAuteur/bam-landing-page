@@ -85,7 +85,7 @@ export async function getCurrentUser(request: NextRequest): Promise<AuthUser | n
 
     // Verify user still exists and is active
     const client = await clientPromise
-    const db = client.db()
+    const db = client.db('bam_portfolio')
     const user = await db.collection<User>('users').findOne({
       _id: new ObjectId(sessionData.userId),
       isActive: true
@@ -144,14 +144,11 @@ export async function authenticateUser(email: string, password: string): Promise
   try {
     const client = await clientPromise
     const db = client.db('bam_portfolio')
-    
+
     const user = await db.collection<User>('users').findOne({
       email: email.toLowerCase(),
       isActive: true
     })
-    if (user) {
-      const isValidPassword = await verifyPassword(password, user.passwordHash)
-    }
 
     if (!user) {
       return null
@@ -186,7 +183,7 @@ export async function authenticateUser(email: string, password: string): Promise
 export async function createAdminUser(email: string, password: string, name: string): Promise<User | null> {
   try {
     const client = await clientPromise
-    const db = client.db()
+    const db = client.db('bam_portfolio')
     
     // Check if user already exists
     const existingUser = await db.collection<User>('users').findOne({ email: email.toLowerCase() })

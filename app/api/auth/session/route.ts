@@ -14,16 +14,15 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({
-      authenticated: true,
-      user
+      authenticated: !!user,
+      user: user || undefined
     })
 
   } catch (error) {
     console.error('Session check error:', error)
     return NextResponse.json({
       authenticated: false,
-      user: null,
-      error: 'Internal server error'
-    }, { status: 500 })
+      user: undefined
+    })
   }
 }
