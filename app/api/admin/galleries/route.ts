@@ -6,7 +6,7 @@ import { ClientGallery } from '../../../../types/client-gallery'
 export async function GET() {
   try {
     const client = await clientPromise
-    const db = client.db()
+    const db = client.db('bam_portfolio')
     
     const galleries = await db.collection<ClientGallery>('client_galleries')
       .find({})
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
     const client = await clientPromise
-    const db = client.db()
+    const db = client.db('bam_portfolio')
     
     const galleryId = `${data.clientName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`
     

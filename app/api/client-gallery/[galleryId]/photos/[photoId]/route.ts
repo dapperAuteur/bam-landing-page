@@ -9,7 +9,7 @@ export async function POST(
   try {
     const { action, comment, isFavorite } = await request.json()
     const client = await clientPromise
-    const db = client.db()
+    const db = client.db('bam_portfolio')
     
     if (action === 'comment' && comment) {
       // FIXED: Use type assertion for MongoDB operation

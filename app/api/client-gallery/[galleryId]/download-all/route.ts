@@ -4,7 +4,7 @@ import clientPromise from './../../../../../lib/db/mongodb'
 
 export async function POST(request: NextRequest, { params }: { params: { galleryId: string } }) {
   const client = await clientPromise
-  const db = client.db()
+  const db = client.db('bam_portfolio')
   const gallery = await db.collection('client_galleries').findOne({ galleryId: params.galleryId })
   
   if (!gallery?.settings.allowDownloads) {

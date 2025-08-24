@@ -23,7 +23,7 @@ export async function POST(
     }
     
     const client = await clientPromise
-    const db = client.db()
+    const db = client.db('bam_portfolio')
     
     const uploadPromises = files.map(async (file) => {
       const buffer = Buffer.from(await file.arrayBuffer())
@@ -71,7 +71,7 @@ export async function PUT(
   try {
     const data = await request.json()
     const client = await clientPromise
-    const db = client.db()
+    const db = client.db('bam_portfolio')
     
     const { _id, ...updateData } = data
     await db.collection('client_galleries').updateOne(

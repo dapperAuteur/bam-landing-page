@@ -9,7 +9,7 @@ export async function PUT(
   try {
     const data = await request.json()
     const client = await clientPromise
-    const db = client.db()
+    const db = client.db('bam_portfolio')
     
     const { _id, ...updateData } = data
     await db.collection('client_galleries').updateOne(
@@ -25,7 +25,7 @@ export async function PUT(
 
 export async function DELETE(request: NextRequest, { params }: { params: { galleryId: string } }) {
   const client = await clientPromise
-  const db = client.db()
+  const db = client.db('bam_portfolio')
   
   // Delete from database
   await db.collection('client_galleries').deleteOne({ galleryId: params.galleryId })

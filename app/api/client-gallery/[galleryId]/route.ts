@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const client = await clientPromise
-    const db = client.db()
+    const db = client.db('bam_portfolio')
     
     const gallery = await db.collection('client_galleries')
       .findOne({ galleryId: params.galleryId })
