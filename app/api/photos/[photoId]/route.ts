@@ -81,11 +81,11 @@ export async function DELETE(
       return NextResponse.json({ error: 'Photo not found' }, { status: 404 })
     }
     
-    // Remove photo from all galleries that reference it
+    // FIXED: Remove photo from all galleries that reference it with proper type assertion
     await db.collection('client_galleries').updateMany(
       { photoIds: params.photoId },
       { 
-        $pull: { photoIds: params.photoId },
+        $pull: { photoIds: params.photoId } as any,
         $set: { updatedAt: new Date() }
       }
     )
