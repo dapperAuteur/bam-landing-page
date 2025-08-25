@@ -13,7 +13,7 @@ export async function POST(
     console.log('Files received:', files.length)
     for (const file of files) {
       console.log('File:', file.name, 'Size:', file.size)
-      if (file.size > 10 * 1024 * 1024) {
+      if (file.size > 20 * 1024 * 1024) {
         return NextResponse.json({ error: `File ${file.name} too large` }, { status: 400 })
       }
     }
