@@ -42,8 +42,8 @@ export default function CorvidEbookDownload() {
               </p>
               
               <a 
-                href="/corvids-of-fishers-educational-marketing-ebook.html"
-                download="Corvids-of-Fishers-Educational-Series.html"
+                href="/ebook/Corvids-of-Fishers-Educational-Series.pdf"
+                download="Corvids-of-Fishers-Educational-Series.pdf"
                 className="inline-flex items-center bg-gradient-to-r from-blue-600 to-green-600 text-white font-bold py-4 px-8 rounded-lg hover:from-blue-700 hover:to-green-700 transition-all duration-300 text-lg"
               >
                 <Download className="w-6 h-6 mr-3" />
@@ -113,7 +113,7 @@ export default function CorvidEbookDownload() {
               Questions about implementation or custom content creation?
             </p>
             <p className="text-gray-700">
-              Contact us at <a href="mailto:a@awews.com" className="text-blue-600 underline hover:text-blue-700">a@awews.com</a> or 
+              Contact us at <a href="mailto:contact@brandanthonymcdonald.com" className="text-blue-600 underline hover:text-blue-700">contact@brandanthonymcdonald.com</a> or 
               <span className="text-blue-600"> (602) 456-9335</span>
             </p>
             <p className="text-sm text-gray-500 mt-4">
