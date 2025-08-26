@@ -2,6 +2,28 @@ import { BlogPost } from "./../types/types"
 
 // 🔥 BLOG POST REGISTRY - Add new blog posts here!
 export const blogPosts: BlogPost[] = [
+  {
+    slug: "corvids-of-fishers-educational-series",
+    title: "Corvids of Fishers: Educational Series",
+    description: "Planet Earth-Style Mini-Documentaries + Standards-Aligned Activities. Bringing wildlife intelligence into your classroom through local corvid (bird) stories",
+    publishDate: "2025-08-15",
+    readTime: "8 min read",
+    category: "Education",
+    featured: true,
+    tags: ["Corvids", "Birds", "Education", "Fishers", "Indiana", "Science", "Geist Reseviour", "Documentary", "K-5"],
+    excerpt: "10 episodes featuring corvids (birds) in Fishers, Indiana with Planet Earth-style narration. Activities meet Indiana Science Standards with cross-curricular connections."
+  },
+  {
+    slug: "eastern-cottontail-educational-projects",
+    title: "Eastern Cottontail Educational Projects",
+    description: "PBS-Style Mini-Documentaries + Standards-Aligned Activities. Bringing wildlife into your classroom through local rabbits stories",
+    publishDate: "2025-08-20",
+    readTime: "8 min read",
+    category: "Education",
+    featured: true,
+    tags: ["Rabbits", "Education", "Fishers", "Indiana", "Science", "Geist Reseviour", "Documentary", "K-5"],
+    excerpt: "Ready to Bring Wildlife Learning to Your Classroom? Connect your students with local wildlife through engaging, standards-aligned projects"
+  },
   // {
   //   slug: "a-homeland-shaped-by-the-river-of-the-south-wind",
   //   title: "A Homeland Shaped by the River of the South Wind",
