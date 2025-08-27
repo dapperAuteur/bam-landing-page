@@ -45,16 +45,22 @@ export default function EducationDashboard() {
     try {
       setLoading(true)
       
-      // In a real implementation, you'd create these API endpoints
-      // For now, this shows the structure needed
+      const adminKey = process.env.NEXT_PUBLIC_ADMIN_API_KEY || 'your_admin_key_here'
+      
       const [statsResponse, submissionsResponse] = await Promise.all([
         fetch('/api/admin/education/stats', {
-          headers: { 'Authorization': `Bearer ${process.env.ADMIN_API_KEY}` }
+          headers: { 'Authorization': `Bearer ${adminKey}` }
         }),
         fetch('/api/admin/education/submissions', {
-          headers: { 'Authorization': `Bearer ${process.env.ADMIN_API_KEY}` }
+          headers: { 'Authorization': `Bearer ${adminKey}` }
         })
       ])
+
+      console.log('API Response Status:', { 
+        stats: statsResponse.status, 
+        submissions: submissionsResponse.status,
+        adminKey: adminKey
+      })
 
       if (!statsResponse.ok || !submissionsResponse.ok) {
         throw new Error('Failed to fetch education data')
@@ -67,36 +73,7 @@ export default function EducationDashboard() {
       setSubmissions(submissionsData.submissions || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data')
-      // Mock data for development
-      setStats({
-        totalSubmissions: 45,
-        newSubmissions: 12,
-        customRequests: 8,
-        topFormTypes: [
-          { formType: 'corvids-education', count: 35 },
-          { formType: 'bobcats-education', count: 10 }
-        ],
-        recentSubmissions: []
-      })
-      setSubmissions([
-        {
-          _id: '1',
-          name: 'Sarah Johnson',
-          email: 'sarah.johnson@school.edu',
-          country: 'United States',
-          state: 'Indiana',
-          schoolName: 'Fishers Elementary',
-          schoolDistrict: 'Hamilton Southeastern',
-          city: 'Fishers',
-          gradesTeaching: ['K', '1', '2'],
-          customCreationRequest: true,
-          formType: 'corvids-education',
-          submittedAt: '2025-01-20T10:30:00Z',
-          status: 'new',
-          ipAddress: '192.168.1.1',
-          userAgent: 'Mozilla/5.0...'
-        }
-      ])
+      console.error('Education dashboard error:', err)
     } finally {
       setLoading(false)
     }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MongoClient } from 'mongodb'
-import { Logger, LogContext } from './../../../../lib/logging/logger'
-import { EducationSubmission } from './../../../../types/education'
+import { Logger, LogContext } from '../../../../../lib/logging/logger'
+import { EducationSubmission } from '../../../../../types/education'
 
 let client: MongoClient
 

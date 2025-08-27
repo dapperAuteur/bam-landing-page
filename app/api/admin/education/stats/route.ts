@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MongoClient } from 'mongodb'
-import { Logger, LogContext } from './../../../../lib/logging/logger'
+import { Logger, LogContext } from '../../../../../lib/logging/logger'
 
 // MongoDB connection
 let client: MongoClient
+let adminKey: string | undefined
+let token: string;
 
 async function connectToDatabase() {
+
   if (!client) {
     const uri = process.env.MONGODB_URI
     if (!uri) {
@@ -21,11 +24,13 @@ async function connectToDatabase() {
 // Admin authentication
 function validateAdminAuth(request: NextRequest): boolean {
   const authHeader = request.headers.get('authorization')
-  const adminKey = process.env.ADMIN_API_KEY
+  // const adminKey = process.env.ADMIN_API_KEY
+  adminKey = process.env.ADMIN_API_KEY
   
   if (!adminKey || !authHeader) return false
   
-  const token = authHeader.replace('Bearer ', '')
+  // const token = authHeader.replace('Bearer ', '')
+  token = authHeader.replace('Bearer ', '')
   return token === adminKey
 }
 
@@ -33,6 +38,14 @@ export async function GET(request: NextRequest) {
   try {
     // Validate admin authentication
     if (!validateAdminAuth(request)) {
+      await Logger.error(LogContext.SYSTEM, 'Admin education stats error', {
+      request,
+      metadata: {
+        error: String("Unauthorized"),
+        adminKey: adminKey,
+        token: token
+      }
+    })
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
