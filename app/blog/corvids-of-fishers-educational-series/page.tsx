@@ -1,6 +1,8 @@
 "use client"
 
 import React, { useState } from 'react';
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
 
 interface Activity {
   title: string;
@@ -21,7 +23,7 @@ interface GradeContent {
   activities: Activity[];
 }
 
-const grades = ['K', '1', '2', '3', '4', '5'] as const;
+const grades = ['K', '1st', '2nd', '3rd', '4th', '5th'] as const;
 type GradeTab = typeof grades[number];
 
 const educationalContent: Record<GradeTab, GradeContent> = {
@@ -55,7 +57,7 @@ const educationalContent: Record<GradeTab, GradeContent> = {
         }
       ]
     },
-    '1': {
+    '1st': {
       standard: 'K.Interdependent Relationships in Ecosystems (continued)',
       episodes: ['The Imitator', 'The Mob Rules'],
       activities: [
@@ -85,7 +87,7 @@ const educationalContent: Record<GradeTab, GradeContent> = {
         }
       ]
     },
-    '2': {
+    '2nd': {
       standard: '2.Life Science - Patterns of animal survival needs',
       episodes: ['The Generational Memory', 'The Weather Prophets'],
       activities: [
@@ -115,7 +117,7 @@ const educationalContent: Record<GradeTab, GradeContent> = {
         }
       ]
     },
-    '3': {
+    '3rd': {
       standard: '3.Ecosystems - Environmental impacts on organisms',
       episodes: ['The Tool Users', 'The Urban Adapters'],
       activities: [
@@ -145,7 +147,7 @@ const educationalContent: Record<GradeTab, GradeContent> = {
         }
       ]
     },
-    '4': {
+    '4th': {
       standard: '3.Ecosystems (continued) & 5.Ecosystems foundation',
       episodes: ['The Night Shift', 'The Future Flock'],
       activities: [
@@ -175,7 +177,7 @@ const educationalContent: Record<GradeTab, GradeContent> = {
         }
       ]
     },
-    '5': {
+    '5th': {
       standard: '5.Ecosystems - Matter and energy flow',
       episodes: ['All episodes for comprehensive understanding'],
       activities: [
@@ -207,300 +209,441 @@ const educationalContent: Record<GradeTab, GradeContent> = {
     }
 };
 
-const CorvidEducationMarketing = () => {
-  const [activeTab, setActiveTab] = useState<GradeTab>('K');
+// Form component that uses reCAPTCHA
+const EducationRequestForm = () => {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    country: '',
+    state: '',
     schoolName: '',
-    gradeTeaching: '',
     schoolDistrict: '',
     city: '',
-    state: '',
+    gradesTeaching: [] as string[],
     customCreationRequest: false
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<string | null>(null);
+  const [isError, setIsError] = useState(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
   };
 
-  const handleSubmit = () => {
-    if (!formData.name || !formData.email || !formData.schoolName || !formData.gradeTeaching || !formData.schoolDistrict || !formData.city || !formData.state) {
-      alert('Please fill in all required fields.');
+  const handleGradeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      gradesTeaching: checked 
+        ? [...prev.gradesTeaching, value]
+        : prev.gradesTeaching.filter(grade => grade !== value)
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitMessage(null);
+    setIsError(false);
+
+    if (!executeRecaptcha) {
+      setSubmitMessage("reCAPTCHA is not ready. Please try again in a moment.");
+      setIsError(true);
       return;
     }
-    console.log('Form submitted:', formData);
-    alert('Thank you for your interest! We will contact you soon with complete curriculum access.');
+
+    // Basic validation
+    const requiredFields = ['name', 'email', 'country', 'state', 'schoolName', 'schoolDistrict', 'city'];
+    for (const field of requiredFields) {
+      if (!formData[field as keyof typeof formData]) {
+        setSubmitMessage(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`);
+        setIsError(true);
+        return;
+      }
+    }
+
+    if (formData.gradesTeaching.length === 0) {
+      setSubmitMessage("Please select at least one grade level.");
+      setIsError(true);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const token = await executeRecaptcha('submit');
+
+      const response = await fetch('/api/education', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          formType: 'corvids-education',
+          token
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'An error occurred.');
+      }
+
+      // Redirect to download page
+      window.location.href = '/education/corvids-ebook-download';
+
+    } catch (error: any) {
+      console.error("Submission failed:", error);
+      setSubmitMessage(error.message);
+      setIsError(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-  const currentContent = educationalContent[activeTab];
+
+  if (isSubmitted) {
+    return (
+      <div className="bg-white rounded-2xl shadow-2xl p-8 text-center">
+        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <CheckCircle className="w-10 h-10 text-green-600" />
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 mb-4">Request Submitted!</h3>
+        <p className="text-gray-600 mb-6">
+          Redirecting you to the download page...
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          Corvids of Fishers: Educational Series
-        </h1>
-        <p className="text-xl text-gray-600 mb-2">
-          Planet Earth-Style Mini-Documentaries + Standards-Aligned Activities
-        </p>
-        <p className="text-lg text-gray-500">
-          Bringing wildlife intelligence into your classroom through local corvid stories
-        </p>
-      </div>
+    <div className="bg-gradient-to-r from-blue-50 to-green-50 p-8 rounded-lg">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Get Complete Curriculum Access</h2>
+      <p className="text-gray-600 mb-6">
+        Request full access to all documentary episodes, detailed lesson plans, assessment rubrics, 
+        and printable materials. Custom wildlife content available for your local community!
+      </p>
+      
+      <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Full Name *
+          </label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            placeholder="Enter your full name"
+            required
+          />
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Email Address *
+          </label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            placeholder="teacher@school.edu"
+            required
+          />
+        </div>
 
-      {/* Features Overview */}
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-blue-50 p-6 rounded-lg">
-          <h3 className="font-bold text-lg text-blue-800 mb-3">🎬 Documentary Series</h3>
-          <p className="text-gray-700">10 episodes featuring corvids in Fishers, Indiana with Planet Earth-style narration</p>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Country *
+          </label>
+          <input
+            type="text"
+            name="country"
+            value={formData.country}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            placeholder="United States"
+            required
+          />
         </div>
-        <div className="bg-green-50 p-6 rounded-lg">
-          <h3 className="font-bold text-lg text-green-800 mb-3">📚 Standards-Aligned</h3>
-          <p className="text-gray-700">Activities meet Indiana Science Standards with cross-curricular connections</p>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            State *
+          </label>
+          <input
+            type="text"
+            name="state"
+            value={formData.state}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            placeholder="Indiana"
+            required
+          />
         </div>
-        <div className="bg-purple-50 p-6 rounded-lg">
-          <h3 className="font-bold text-lg text-purple-800 mb-3">🏫 Ready to Implement</h3>
-          <p className="text-gray-700">Complete materials lists, rubrics, and implementation notes included</p>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            School Name *
+          </label>
+          <input
+            type="text"
+            name="schoolName"
+            value={formData.schoolName}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            placeholder="Your Elementary School"
+            required
+          />
         </div>
-      </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            School District *
+          </label>
+          <input
+            type="text"
+            name="schoolDistrict"
+            value={formData.schoolDistrict}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            placeholder="Hamilton Southeastern Schools"
+            required
+          />
+        </div>
+        
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            City *
+          </label>
+          <input
+            type="text"
+            name="city"
+            value={formData.city}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            placeholder="Fishers"
+            required
+          />
+        </div>
 
-      {/* Grade Level Tabs */}
-      <div className="mb-6">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            Grade(s) Teaching * (Select all that apply)
+          </label>
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
             {grades.map((grade) => (
-              <button
-                key={grade}
-                onClick={() => setActiveTab(grade)}
-                className={`py-2 px-4 border-b-2 font-medium text-sm ${
-                  activeTab === grade
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                Grade {grade}
-              </button>
+              <label key={grade} className="flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                <input
+                  type="checkbox"
+                  value={grade}
+                  checked={formData.gradesTeaching.includes(grade)}
+                  onChange={handleGradeChange}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <span className="text-sm text-gray-700">
+                  {grade === 'K' ? 'Kindergarten' : `${grade} Grade`}
+                </span>
+              </label>
             ))}
-          </nav>
+          </div>
+        </div>
+        
+        <div className="md:col-span-2">
+          <label className="flex items-center bg-yellow-50 p-3 rounded-md">
+            <input
+              type="checkbox"
+              name="customCreationRequest"
+              checked={formData.customCreationRequest}
+              onChange={handleInputChange}
+              className="mr-3 h-4 w-4 text-blue-600"
+            />
+            <span className="text-sm text-gray-700 font-medium">
+              I'm interested in custom "Nature in My Community" content for our local area
+            </span>
+          </label>
+          <p className="text-xs text-gray-500 mt-1 ml-7">
+            We can create documentaries about wildlife in your specific region with locally-aligned activities
+          </p>
+        </div>
+
+        {isError && submitMessage && (
+          <div className="md:col-span-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md flex items-center">
+            <AlertTriangle className="h-5 w-5 mr-3" />
+            <span>{submitMessage}</span>
+          </div>
+        )}
+        
+        <div className="md:col-span-2">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-gradient-to-r from-blue-600 to-green-600 text-white py-3 px-6 rounded-md hover:from-blue-700 hover:to-green-700 transition duration-300 font-medium text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? 'Submitting...' : 'Request Complete Curriculum Access'}
+          </button>
+          
+          <p className="text-xs text-gray-500 text-center mt-3">
+            This site is protected by reCAPTCHA and the Google
+            <a href="https://policies.google.com/privacy" className="underline hover:text-blue-600"> Privacy Policy </a> and
+            <a href="https://policies.google.com/terms" className="underline hover:text-blue-600"> Terms of Service </a> apply.
+          </p>
+        </div>
+      </form>
+      
+      <div className="mt-6 text-center">
+        <p className="text-sm text-gray-500">
+          Join 500+ educators already using wildlife documentaries to inspire young scientists
+        </p>
+      </div>
+    </div>
+  );
+};
+
+const CorvidEducationMarketing = () => {
+  const [activeTab, setActiveTab] = useState<GradeTab>('K');
+  const currentContent = educationalContent[activeTab];
+
+  // Get reCAPTCHA site key from environment
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+  if (!recaptchaSiteKey) {
+    return (
+      <div className="max-w-6xl mx-auto p-6 bg-white">
+        <div className="text-center p-8 bg-red-50 rounded-lg">
+          <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-red-700">Configuration Error</h2>
+          <p className="text-red-600 mt-2">reCAPTCHA is not configured. Please check environment variables.</p>
         </div>
       </div>
+    );
+  }
 
-      {/* Grade Content */}
-      <div className="mb-8">
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Grade {activeTab} Activities</h2>
-          <p className="text-gray-600 mb-2">
-            <strong>Science Standard:</strong> {currentContent.standard}
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={recaptchaSiteKey}>
+      <div className="max-w-6xl mx-auto p-6 bg-white">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            Corvids of Fishers: Educational Series
+          </h1>
+          <p className="text-xl text-gray-600 mb-2">
+            Planet Earth-Style Mini-Documentaries + Standards-Aligned Activities
           </p>
-          <p className="text-gray-600">
-            <strong>Featured Episodes:</strong> {currentContent.episodes.join(', ')}
+          <p className="text-lg text-gray-500">
+            Bringing wildlife intelligence into your classroom through local corvid stories
           </p>
         </div>
 
-        {/* Activities */}
-        <div className="space-y-8">
-          {currentContent.activities.map((activity, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-6 shadow-sm">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">{activity.title}</h3>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-semibold text-gray-700 mb-2">📝 Description</h4>
-                  <p className="text-gray-600 mb-4">{activity.description}</p>
-                  
-                  <h4 className="font-semibold text-gray-700 mb-2">🎯 Implementation Notes</h4>
-                  <p className="text-gray-600 mb-4">{activity.implementation}</p>
-                  
-                  <h4 className="font-semibold text-gray-700 mb-2">📊 Assessment Rubric</h4>
-                  <p className="text-gray-600">{activity.assessment}</p>
-                </div>
+        {/* Features Overview */}
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-blue-50 p-6 rounded-lg">
+            <h3 className="font-bold text-lg text-blue-800 mb-3">Documentary Series</h3>
+            <p className="text-gray-700">10 episodes featuring corvids in Fishers, Indiana with Planet Earth-style narration</p>
+          </div>
+          <div className="bg-green-50 p-6 rounded-lg">
+            <h3 className="font-bold text-lg text-green-800 mb-3">Standards-Aligned</h3>
+            <p className="text-gray-700">Activities meet Indiana Science Standards with cross-curricular connections</p>
+          </div>
+          <div className="bg-purple-50 p-6 rounded-lg">
+            <h3 className="font-bold text-lg text-purple-800 mb-3">Ready to Implement</h3>
+            <p className="text-gray-700">Complete materials lists, rubrics, and implementation notes included</p>
+          </div>
+        </div>
+
+        {/* Grade Level Tabs */}
+        <div className="mb-6">
+          <div className="border-b border-gray-200">
+            <nav className="-mb-px flex space-x-8">
+              {grades.map((grade) => (
+                <button
+                  key={grade}
+                  onClick={() => setActiveTab(grade)}
+                  className={`py-2 px-4 border-b-2 font-medium text-sm ${
+                    activeTab === grade
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  Grade {grade}
+                </button>
+              ))}
+            </nav>
+          </div>
+        </div>
+
+        {/* Grade Content */}
+        <div className="mb-8">
+          <div className="bg-gray-50 p-4 rounded-lg mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Grade {activeTab} Activities</h2>
+            <p className="text-gray-600 mb-2">
+              <strong>Science Standard:</strong> {currentContent.standard}
+            </p>
+            <p className="text-gray-600">
+              <strong>Featured Episodes:</strong> {currentContent.episodes.join(', ')}
+            </p>
+          </div>
+
+          {/* Activities */}
+          <div className="space-y-8">
+            {currentContent.activities.map((activity, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg p-6 shadow-sm">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">{activity.title}</h3>
                 
-                <div>
-                  <h4 className="font-semibold text-gray-700 mb-2">🛠️ Materials Needed</h4>
-                  <ul className="list-disc list-inside text-gray-600 mb-4">
-                    {activity.materials.map((material, i) => (
-                      <li key={i}>{material}</li>
-                    ))}
-                  </ul>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-semibold text-gray-700 mb-2">📝 Description</h4>
+                    <p className="text-gray-600 mb-4">{activity.description}</p>
+                    
+                    <h4 className="font-semibold text-gray-700 mb-2">🎯 Implementation Notes</h4>
+                    <p className="text-gray-600 mb-4">{activity.implementation}</p>
+                    
+                    <h4 className="font-semibold text-gray-700 mb-2">📊 Assessment Rubric</h4>
+                    <p className="text-gray-600">{activity.assessment}</p>
+                  </div>
                   
-                  <h4 className="font-semibold text-gray-700 mb-2">🌐 Cross-Curricular Extensions</h4>
-                  <div className="space-y-2">
-                    <div className="bg-blue-50 p-2 rounded">
-                      <span className="font-medium text-blue-700">📊 Math:</span>
-                      <span className="text-gray-700 ml-2">{activity.crossCurricular.math}</span>
-                    </div>
-                    <div className="bg-green-50 p-2 rounded">
-                      <span className="font-medium text-green-700">📚 ELA:</span>
-                      <span className="text-gray-700 ml-2">{activity.crossCurricular.ela}</span>
-                    </div>
-                    <div className="bg-purple-50 p-2 rounded">
-                      <span className="font-medium text-purple-700">🌍 Social Studies:</span>
-                      <span className="text-gray-700 ml-2">{activity.crossCurricular.socialStudies}</span>
+                  <div>
+                    <h4 className="font-semibold text-gray-700 mb-2">🛠️ Materials Needed</h4>
+                    <ul className="list-disc list-inside text-gray-600 mb-4">
+                      {activity.materials.map((material, i) => (
+                        <li key={i}>{material}</li>
+                      ))}
+                    </ul>
+                    
+                    <h4 className="font-semibold text-gray-700 mb-2">🌐 Cross-Curricular Extensions</h4>
+                    <div className="space-y-2">
+                      <div className="bg-blue-50 p-2 rounded">
+                        <span className="font-medium text-blue-700">📊 Math:</span>
+                        <span className="text-gray-700 ml-2">{activity.crossCurricular.math}</span>
+                      </div>
+                      <div className="bg-green-50 p-2 rounded">
+                        <span className="font-medium text-green-700">📚 ELA:</span>
+                        <span className="text-gray-700 ml-2">{activity.crossCurricular.ela}</span>
+                      </div>
+                      <div className="bg-purple-50 p-2 rounded">
+                        <span className="font-medium text-purple-700">🌍 Social Studies:</span>
+                        <span className="text-gray-700 ml-2">{activity.crossCurricular.socialStudies}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Contact Section */}
-      <div className="bg-gradient-to-r from-blue-50 to-green-50 p-8 rounded-lg">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Get Complete Curriculum Access</h2>
-        <p className="text-gray-600 mb-6">
-          Request full access to all documentary episodes, detailed lesson plans, assessment rubrics, 
-          and printable materials. Custom wildlife content available for your local community!
-        </p>
-        
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name *
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter your full name"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address *
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="teacher@school.edu"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              School Name *
-            </label>
-            <input
-              type="text"
-              name="schoolName"
-              value={formData.schoolName}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Your Elementary School"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Grade(s) Teaching *
-            </label>
-            <select
-              name="gradeTeaching"
-              value={formData.gradeTeaching}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select grade level</option>
-              <option value="K">Kindergarten</option>
-              <option value="1">1st Grade</option>
-              <option value="2">2nd Grade</option>
-              <option value="3">3rd Grade</option>
-              <option value="4">4th Grade</option>
-              <option value="5">5th Grade</option>
-              <option value="Multiple">Multiple Grades</option>
-              <option value="Administrator">Administrator</option>
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              School District *
-            </label>
-            <input
-              type="text"
-              name="schoolDistrict"
-              value={formData.schoolDistrict}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Hamilton Southeastern Schools"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              City *
-            </label>
-            <input
-              type="text"
-              name="city"
-              value={formData.city}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Fishers"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              State *
-            </label>
-            <input
-              type="text"
-              name="state"
-              value={formData.state}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Indiana"
-            />
-          </div>
-          
-          <div className="md:col-span-2">
-            <label className="flex items-center bg-yellow-50 p-3 rounded-md">
-              <input
-                type="checkbox"
-                name="customCreationRequest"
-                checked={formData.customCreationRequest}
-                onChange={handleInputChange}
-                className="mr-3 h-4 w-4 text-blue-600"
-              />
-              <span className="text-sm text-gray-700 font-medium">
-                🌟 I'm interested in custom "Nature in My Community" content for our local area
-              </span>
-            </label>
-            <p className="text-xs text-gray-500 mt-1 ml-7">
-              We can create documentaries about wildlife in your specific region with locally-aligned activities
-            </p>
-          </div>
-          
-          <div className="md:col-span-2">
-            <button
-              onClick={handleSubmit}
-              className="w-full bg-gradient-to-r from-blue-600 to-green-600 text-white py-3 px-6 rounded-md hover:from-blue-700 hover:to-green-700 transition duration-300 font-medium text-lg"
-            >
-              🚀 Request Complete Curriculum Access
-            </button>
-          </div>
-        </div>
-        
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-500">
-            Join 500+ educators already using wildlife documentaries to inspire young scientists
-          </p>
-        </div>
+        {/* Contact Section with Updated Form */}
+        <EducationRequestForm />
       </div>
-    </div>
+    </GoogleReCaptchaProvider>
   );
 };
 
