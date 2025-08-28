@@ -83,7 +83,7 @@ function validateFormData(data: EducationFormData): { isValid: boolean; errors: 
     errors.gradesTeaching = 'Please select at least one grade level'
   }
 
-  const validGrades = ['K', '1', '2', '3', '4', '5']
+  const validGrades = ['K', '1st', '2nd', '3rd', '4th', '5th']
   if (data.gradesTeaching && data.gradesTeaching.some(grade => !validGrades.includes(grade))) {
     errors.gradesTeaching = 'Invalid grade level selected'
   }
