@@ -1,9 +1,45 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, FC, ChangeEvent, FormEvent } from 'react';
 import { ChevronDownIcon, ChevronUpIcon, PlayIcon, BookOpenIcon, GlobeAltIcon, BanknotesIcon, PencilIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 
-const EpisodeData = {
+interface SubjectDetails {
+  geography: string;
+  socialStudies: string;
+  economics: string;
+  ela: string;
+}
+
+interface Episode {
+  title: string;
+  subtitle: string;
+  description: string;
+  subjects: SubjectDetails;
+}
+
+type EpisodeDataMap = {
+  [key: string]: Episode;
+};
+
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  country: string;
+  state: string;
+  city: string;
+  schoolName: string;
+  schoolDistrict: string;
+  roleInEducation: string[];
+  gradesWorking: string[];
+  subjectInterests: string[];
+  topicInterests: string[];
+  customContentInterest: boolean;
+  howDidYouHear: string;
+  additionalQuestions: string;
+}
+
+const EpisodeData: EpisodeDataMap = {
   coffee: {
     title: "Stories in Every Cup",
     subtitle: "Coffee's Journey from Ethiopia to Your Morning Routine", 
@@ -85,8 +121,8 @@ const EpisodeData = {
 
 const LearnWitUSLandingV1 = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [activeEpisode, setActiveEpisode] = useState(null);
-  const [formData, setFormData] = useState({
+  const [activeEpisode, setActiveEpisode] = useState<string | null>(null);
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     phone: '',
@@ -107,18 +143,20 @@ const LearnWitUSLandingV1 = () => {
   const [submitMessage, setSubmitMessage] = useState('');
   const [isError, setIsError] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
     
     if (type === 'checkbox') {
+      const { checked } = e.target as HTMLInputElement;
       if (name === 'customContentInterest') {
         setFormData(prev => ({ ...prev, [name]: checked }));
-      } else {
+      } else if (['roleInEducation', 'gradesWorking', 'subjectInterests', 'topicInterests'].includes(name)) {
+        const key = name as keyof Pick<FormData, 'roleInEducation' | 'gradesWorking' | 'subjectInterests' | 'topicInterests'>;
         setFormData(prev => ({
           ...prev,
-          [name]: checked 
-            ? [...prev[name], value]
-            : prev[name].filter(item => item !== value)
+          [key]: checked 
+            ? [...prev[key], value]
+            : prev[key].filter(item => item !== value)
         }));
       }
     } else {
@@ -126,7 +164,7 @@ const LearnWitUSLandingV1 = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (!formData.name || !formData.email || !formData.schoolName) {
@@ -162,7 +200,7 @@ const LearnWitUSLandingV1 = () => {
         howDidYouHear: '', additionalQuestions: ''
       });
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Submission failed:", error);
       setSubmitMessage(error.message);
       setIsError(true);
@@ -171,7 +209,15 @@ const LearnWitUSLandingV1 = () => {
     }
   };
 
-  const TabButton = ({ tabName, label, icon: Icon, isActive, onClick }) => (
+  interface TabButtonProps {
+    tabName: string;
+    label: string;
+    icon: React.ElementType;
+    isActive: boolean;
+    onClick: () => void;
+  }
+
+  const TabButton: FC<TabButtonProps> = ({ tabName, label, icon: Icon, isActive, onClick }) => (
     <button
       onClick={onClick}
       className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all ${
@@ -185,7 +231,14 @@ const LearnWitUSLandingV1 = () => {
     </button>
   );
 
-  const EpisodeCard = ({ episodeKey, episode, isActive, onClick }) => (
+  interface EpisodeCardProps {
+    episodeKey: string;
+    episode: Episode;
+    isActive: boolean;
+    onClick: () => void;
+  }
+
+  const EpisodeCard: FC<EpisodeCardProps> = ({ episodeKey, episode, isActive, onClick }) => (
     <div className={`border rounded-lg transition-all cursor-pointer ${
       isActive ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white hover:border-gray-300'
     }`}>
@@ -457,14 +510,12 @@ const LearnWitUSLandingV1 = () => {
               <p className="text-xl text-gray-600">Get pilot access to Learn.WitUS.Online educational series</p>
             </div>
 
-            <div className="bg-white p-8 rounded-xl shadow-lg space-y-6">
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg space-y-6">
               {submitMessage && (
                 <div className={`p-4 rounded-lg ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
                   {submitMessage}
                 </div>
               )}
-
-              {/* Basic Information */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
@@ -525,7 +576,6 @@ const LearnWitUSLandingV1 = () => {
                 </div>
               </div>
 
-              {/* School Information */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">School Name *</label>
@@ -551,7 +601,6 @@ const LearnWitUSLandingV1 = () => {
                 </div>
               </div>
 
-              {/* Role in Education */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Role in Education (select all that apply)</label>
                 <div className="grid md:grid-cols-4 gap-2">
@@ -571,7 +620,6 @@ const LearnWitUSLandingV1 = () => {
                 </div>
               </div>
 
-              {/* Grades Working With */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Grades You Work With</label>
                 <div className="grid grid-cols-7 gap-2">
@@ -591,7 +639,6 @@ const LearnWitUSLandingV1 = () => {
                 </div>
               </div>
 
-              {/* Subject Interests */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Subject Interests</label>
                 <div className="grid md:grid-cols-5 gap-2">
@@ -611,7 +658,6 @@ const LearnWitUSLandingV1 = () => {
                 </div>
               </div>
 
-              {/* Topic Interests */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Episode Topics of Interest</label>
                 <div className="grid md:grid-cols-4 gap-2">
@@ -631,7 +677,6 @@ const LearnWitUSLandingV1 = () => {
                 </div>
               </div>
 
-              {/* Custom Content Interest */}
               <div className="bg-blue-50 p-4 rounded-lg">
                 <label className="flex items-start space-x-3">
                   <input
@@ -650,7 +695,6 @@ const LearnWitUSLandingV1 = () => {
                 </label>
               </div>
 
-              {/* Additional Information */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">How did you hear about Learn.WitUS.Online?</label>
                 <select
@@ -682,13 +726,13 @@ const LearnWitUSLandingV1 = () => {
               </div>
 
               <button
-                onClick={handleSubmit}
+                type="submit"
                 disabled={isSubmitting}
                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isSubmitting ? 'Submitting...' : 'Request Curriculum Access'}
               </button>
-            </div>
+            </form>
           </div>
         )}
       </div>

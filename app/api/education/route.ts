@@ -1,13 +1,22 @@
+// src/app/api/education/route.ts - Updated to handle all form types
+
 import { NextRequest, NextResponse } from 'next/server'
 import { MongoClient, Db } from 'mongodb'
-import { EducationFormData, EducationFormResponse, EducationSubmission } from '../../../types/education'
+import { 
+  EducationFormData, 
+  EducationFormResponse, 
+  EducationSubmission,
+  CorvidEducationFormData,
+  LearnWitUSV1FormData,
+  LearnWitUSV2FormData
+} from '../../../types/education'
 import { 
   logEducationEvent, 
   checkForEducationSpam, 
   checkEducationRateLimit, 
   EducationEventType 
 } from '../../../lib/logging/education-logger'
-import { Logger, LogContext, LogLevel } from './../../../lib/logging/logger'
+import { Logger, LogContext } from './../../../lib/logging/logger'
 import { getClientIp } from '../../../lib/utils/utils'
 
 // MongoDB connection
@@ -28,17 +37,17 @@ async function connectToDatabase() {
   return db
 }
 
-// Email validation function
+// Email validation
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return emailRegex.test(email)
 }
 
-// Form validation function
+// Enhanced form validation for all form types
 function validateFormData(data: EducationFormData): { isValid: boolean; errors: any } {
   const errors: any = {}
 
-  // Name validation
+  // Common validation for all forms
   if (!data.name || data.name.trim().length < 2) {
     errors.name = 'Name must be at least 2 characters long'
   }
@@ -46,46 +55,55 @@ function validateFormData(data: EducationFormData): { isValid: boolean; errors: 
     errors.name = 'Name cannot exceed 100 characters'
   }
 
-  // Email validation
   if (!data.email || data.email.trim().length === 0) {
     errors.email = 'Email is required'
   } else if (!isValidEmail(data.email.trim())) {
     errors.email = 'Please enter a valid email address'
   }
 
-  // School name validation
-  if (!data.schoolName || data.schoolName.trim().length < 2) {
-    errors.schoolName = 'School name is required'
-  }
+  // Form-specific validation
+  switch (data.formType) {
+    case 'corvids-education':
+      const corvidData = data as CorvidEducationFormData
+      if (!corvidData.schoolName || corvidData.schoolName.trim().length < 2) {
+        errors.schoolName = 'School name is required'
+      }
+      if (!corvidData.schoolDistrict || corvidData.schoolDistrict.trim().length < 2) {
+        errors.schoolDistrict = 'School district is required'
+      }
+      if (!corvidData.city || corvidData.city.trim().length < 2) {
+        errors.city = 'City is required'
+      }
+      if (!corvidData.state || corvidData.state.trim().length < 2) {
+        errors.state = 'State is required'
+      }
+      if (!corvidData.country || corvidData.country.trim().length < 2) {
+        errors.country = 'Country is required'
+      }
+      if (!corvidData.gradesTeaching || corvidData.gradesTeaching.length === 0) {
+        errors.gradesTeaching = 'Please select at least one grade level'
+      }
+      break
 
-  // School district validation
-  if (!data.schoolDistrict || data.schoolDistrict.trim().length < 2) {
-    errors.schoolDistrict = 'School district is required'
-  }
+    case 'learn-witus-v1':
+      const v1Data = data as LearnWitUSV1FormData
+      if (!v1Data.schoolName || v1Data.schoolName.trim().length < 2) {
+        errors.schoolName = 'School name is required'
+      }
+      if (v1Data.roleInEducation && v1Data.roleInEducation.length === 0) {
+        errors.roleInEducation = 'Please select at least one role'
+      }
+      break
 
-  // City validation
-  if (!data.city || data.city.trim().length < 2) {
-    errors.city = 'City is required'
-  }
-
-  // State validation
-  if (!data.state || data.state.trim().length < 2) {
-    errors.state = 'State is required'
-  }
-
-  // Country validation
-  if (!data.country || data.country.trim().length < 2) {
-    errors.country = 'Country is required'
-  }
-
-  // Grades teaching validation
-  if (!data.gradesTeaching || data.gradesTeaching.length === 0) {
-    errors.gradesTeaching = 'Please select at least one grade level'
-  }
-
-  const validGrades = ['K', '1st', '2nd', '3rd', '4th', '5th']
-  if (data.gradesTeaching && data.gradesTeaching.some(grade => !validGrades.includes(grade))) {
-    errors.gradesTeaching = 'Invalid grade level selected'
+    case 'learn-witus-v2':
+      const v2Data = data as LearnWitUSV2FormData
+      if (!v2Data.organization || v2Data.organization.trim().length < 2) {
+        errors.organization = 'Organization is required'
+      }
+      if (!v2Data.primaryInterest || v2Data.primaryInterest.trim().length === 0) {
+        errors.primaryInterest = 'Please select your primary interest'
+      }
+      break
   }
 
   return {
@@ -148,56 +166,96 @@ export async function POST(request: NextRequest) {
       } as EducationFormResponse, { status: 400 })
     }
     
-    // Verify reCAPTCHA first
+    // Verify reCAPTCHA first (if token provided)
     const { token, ...formFields } = body
-    if (!token) {
-      await logEducationEvent({
-        request,
-        event: EducationEventType.FORM_VALIDATION_ERROR,
-        status: "failure",
-        reason: "reCAPTCHA token missing",
-        metadata: { durationMs: Date.now() - startTime }
-      })
+    if (token) {
+      const recaptchaResult = await verifyRecaptcha(token)
+      if (!recaptchaResult.success || (recaptchaResult.score && recaptchaResult.score < 0.5)) {
+        await logEducationEvent({
+          request,
+          event: EducationEventType.SPAM_DETECTED,
+          status: "spam",
+          reason: "reCAPTCHA verification failed",
+          metadata: { 
+            recaptchaScore: recaptchaResult.score,
+            durationMs: Date.now() - startTime
+          }
+        })
 
-      return NextResponse.json({
-        success: false,
-        message: 'reCAPTCHA verification required. Please try again.'
-      } as EducationFormResponse, { status: 400 })
-    }
-
-    const recaptchaResult = await verifyRecaptcha(token)
-    if (!recaptchaResult.success || (recaptchaResult.score && recaptchaResult.score < 0.5)) {
-      await logEducationEvent({
-        request,
-        event: EducationEventType.SPAM_DETECTED,
-        status: "spam",
-        reason: "reCAPTCHA verification failed",
-        metadata: { 
-          recaptchaScore: recaptchaResult.score,
-          durationMs: Date.now() - startTime
-        }
-      })
-
-      return NextResponse.json({
-        success: false,
-        message: 'Security verification failed. Please try again.'
-      } as EducationFormResponse, { status: 403 })
+        return NextResponse.json({
+          success: false,
+          message: 'Security verification failed. Please try again.'
+        } as EducationFormResponse, { status: 403 })
+      }
     }
     
-    // Extract and sanitize form data
-    const formData: EducationFormData = {
-      name: sanitizeInput(formFields.name || ''),
-      email: sanitizeInput(formFields.email || '').toLowerCase(),
-      country: sanitizeInput(formFields.country || ''),
-      state: sanitizeInput(formFields.state || ''),
-      schoolName: sanitizeInput(formFields.schoolName || ''),
-      schoolDistrict: sanitizeInput(formFields.schoolDistrict || ''),
-      city: sanitizeInput(formFields.city || ''),
-      gradesTeaching: Array.isArray(formFields.gradesTeaching) ? formFields.gradesTeaching : [],
-      customCreationRequest: Boolean(formFields.customCreationRequest),
-      formType: sanitizeInput(formFields.formType || 'corvids-education'),
-      submittedAt: new Date(),
-      status: 'new'
+    // Extract and sanitize form data based on form type
+    const formType = sanitizeInput(formFields.formType || 'corvids-education')
+    let formData: EducationFormData
+
+    switch (formType) {
+      case 'corvids-education':
+        formData = {
+          name: sanitizeInput(formFields.name || ''),
+          email: sanitizeInput(formFields.email || '').toLowerCase(),
+          country: sanitizeInput(formFields.country || ''),
+          state: sanitizeInput(formFields.state || ''),
+          city: sanitizeInput(formFields.city || ''),
+          schoolName: sanitizeInput(formFields.schoolName || ''),
+          schoolDistrict: sanitizeInput(formFields.schoolDistrict || ''),
+          gradesTeaching: Array.isArray(formFields.gradesTeaching) ? formFields.gradesTeaching : [],
+          customCreationRequest: Boolean(formFields.customCreationRequest),
+          formType: 'corvids-education'
+        } as CorvidEducationFormData
+        break
+
+      case 'learn-witus-v1':
+        formData = {
+          name: sanitizeInput(formFields.name || ''),
+          email: sanitizeInput(formFields.email || '').toLowerCase(),
+          phone: formFields.phone ? sanitizeInput(formFields.phone) : undefined,
+          country: formFields.country ? sanitizeInput(formFields.country) : undefined,
+          state: formFields.state ? sanitizeInput(formFields.state) : undefined,
+          city: formFields.city ? sanitizeInput(formFields.city) : undefined,
+          schoolName: formFields.schoolName ? sanitizeInput(formFields.schoolName) : undefined,
+          schoolDistrict: formFields.schoolDistrict ? sanitizeInput(formFields.schoolDistrict) : undefined,
+          roleInEducation: Array.isArray(formFields.roleInEducation) ? formFields.roleInEducation : [],
+          gradesWorking: Array.isArray(formFields.gradesWorking) ? formFields.gradesWorking : [],
+          subjectInterests: Array.isArray(formFields.subjectInterests) ? formFields.subjectInterests : [],
+          topicInterests: Array.isArray(formFields.topicInterests) ? formFields.topicInterests : [],
+          customContentInterest: Boolean(formFields.customContentInterest),
+          howDidYouHear: formFields.howDidYouHear ? sanitizeInput(formFields.howDidYouHear) : undefined,
+          additionalQuestions: formFields.additionalQuestions ? sanitizeInput(formFields.additionalQuestions) : undefined,
+          formType: 'learn-witus-v1'
+        } as LearnWitUSV1FormData
+        break
+
+      case 'learn-witus-v2':
+        formData = {
+          name: sanitizeInput(formFields.name || ''),
+          email: sanitizeInput(formFields.email || '').toLowerCase(),
+          phone: formFields.phone ? sanitizeInput(formFields.phone) : undefined,
+          organization: sanitizeInput(formFields.organization || ''),
+          position: formFields.position ? sanitizeInput(formFields.position) : undefined,
+          location: formFields.location ? sanitizeInput(formFields.location) : undefined,
+          roleInEducation: Array.isArray(formFields.roleInEducation) ? formFields.roleInEducation : [],
+          gradesWorking: Array.isArray(formFields.gradesWorking) ? formFields.gradesWorking : [],
+          subjectInterests: Array.isArray(formFields.subjectInterests) ? formFields.subjectInterests : [],
+          topicInterests: Array.isArray(formFields.topicInterests) ? formFields.topicInterests : [],
+          primaryInterest: sanitizeInput(formFields.primaryInterest || ''),
+          timeline: formFields.timeline ? sanitizeInput(formFields.timeline) : undefined,
+          customContentInterest: Boolean(formFields.customContentInterest),
+          mediaInquiry: Boolean(formFields.mediaInquiry),
+          additionalQuestions: formFields.additionalQuestions ? sanitizeInput(formFields.additionalQuestions) : undefined,
+          formType: 'learn-witus-v2'
+        } as LearnWitUSV2FormData
+        break
+
+      default:
+        return NextResponse.json({
+          success: false,
+          message: 'Invalid form type specified.'
+        } as EducationFormResponse, { status: 400 })
     }
 
     // Check rate limiting
@@ -267,7 +325,7 @@ export async function POST(request: NextRequest) {
       // Return success to user (don't reveal spam detection)
       return NextResponse.json({
         success: true,
-        message: 'Thank you for your interest! Please check your email for download instructions.'
+        message: 'Thank you for your interest! Please check your email for more information.'
       } as EducationFormResponse)
     }
 
@@ -275,10 +333,11 @@ export async function POST(request: NextRequest) {
     const database = await connectToDatabase()
     const collection = database.collection<EducationSubmission>('education_submissions')
 
-    // Prepare submission data
+    // Prepare submission data for database
     const submission: EducationSubmission = {
       ...formData,
       submittedAt: new Date(),
+      status: 'new',
       ipAddress,
       userAgent: request.headers.get('user-agent') || 'unknown'
     }
@@ -297,8 +356,7 @@ export async function POST(request: NextRequest) {
         formData,
         metadata: { 
           submissionId: result.insertedId.toString(),
-          durationMs: Date.now() - startTime,
-          gradesCount: formData.gradesTeaching.length
+          durationMs: Date.now() - startTime
         }
       })
 
@@ -311,9 +369,24 @@ export async function POST(request: NextRequest) {
         }
       })
 
+      // Custom success messages based on form type
+      let successMessage = 'Thank you for your interest! We\'ll be in touch soon.'
+      
+      switch (formData.formType) {
+        case 'corvids-education':
+          successMessage = 'Thank you for your interest! Redirecting to download page...'
+          break
+        case 'learn-witus-v1':
+          successMessage = 'Thank you! We\'ll be in touch with access information soon.'
+          break
+        case 'learn-witus-v2':
+          successMessage = 'Thank you! We\'ll connect with you soon with more information.'
+          break
+      }
+
       return NextResponse.json({
         success: true,
-        message: 'Thank you for your interest! Redirecting to download page...',
+        message: successMessage,
         id: result.insertedId.toString()
       } as EducationFormResponse)
     } else {
