@@ -2,14 +2,19 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useAuth } from './../../contexts/AuthContext'
+// import { useAuth } from './../../contexts/AuthContext'
+import { signOut, useSession } from 'next-auth/react'
+import { authOptions } from '@/lib/auth/authOptions'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
-  const { user, isAuthenticated, isAdmin, logout } = useAuth()
+  // const { user, isAuthenticated, isAdmin, logout } = useAuth()
+  const {data: session } = useSession();
+  // console.log('session :>> ', session);
+
 
   const handleLogout = async () => {
-    await logout()
+    await signOut()
     setIsOpen(false)
   }
 
@@ -43,9 +48,9 @@ export default function Navigation() {
             </Link>
             
             {/* Auth Buttons */}
-            {isAuthenticated ? (
+            {session ? (
               <div className="flex items-center space-x-4">
-                {isAdmin && (
+                {session && (
                   <div>
                     <Link href="/admin/contact" className="text-blue-600 hover:text-blue-800 font-medium">
                       Contacts
@@ -61,7 +66,7 @@ export default function Navigation() {
                   </div>
                 )}
                 <span className="text-gray-600 text-sm">
-                  {user?.name}
+                  {session?.user?.name}
                 </span>
                 <button
                   onClick={handleLogout}
@@ -72,7 +77,7 @@ export default function Navigation() {
               </div>
             ) : (
               <Link
-                href="/admin/login"
+                href="/login"
                 className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 transition-colors"
               >
                 Login
@@ -115,12 +120,12 @@ export default function Navigation() {
             
             {/* Mobile Auth */}
             <div className="pt-2 border-t border-gray-200">
-              {isAuthenticated ? (
+              {session ? (
                 <>
                   <div className="py-2 text-gray-600 text-sm">
-                    Welcome, {user?.name}
+                    Welcome, {session?.user?.name}
                   </div>
-                  {isAdmin && (
+                  {session && (
                     <Link 
                       href="/admin/contact" 
                       className="block py-2 text-blue-600 hover:text-blue-800 font-medium"
@@ -138,7 +143,7 @@ export default function Navigation() {
                 </>
               ) : (
                 <Link
-                  href="/admin/login"
+                  href="/login"
                   className="block py-2 text-blue-600 hover:text-blue-800 font-medium"
                   onClick={() => setIsOpen(false)}
                 >

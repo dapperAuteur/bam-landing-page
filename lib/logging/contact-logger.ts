@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest } from "next/server";
 import clientPromise from "./../db/mongodb";
-import { getClientIp } from "./../utils/utils";
+import { getClientIp } from "@/lib/utils/client";
 import { ContactFormData } from "./../../types/contact";
 
 // Since you already have a logger.ts file, we'll create a simplified version

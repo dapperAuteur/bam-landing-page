@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest } from "next/server";
 import clientPromise from "./../db/mongodb";
-import { getClientIp } from "./../utils/utils";
+import { getClientIp } from "@/lib/utils/client";
 import { EducationFormData } from "./../../types/education";
 
 export enum EducationEventType {
@@ -111,8 +111,8 @@ export async function logEducationEvent({
         state: formData.state,
         country: formData.country,
         formType: formData.formType,
-        gradesTeachingCount: formData.gradesTeaching?.length,
-        customCreationRequest: formData.customCreationRequest
+        gradesTeachingCount: (formData as any).gradesTeaching?.length,
+        customCreationRequest: (formData as any).customCreationRequest
       } : undefined,
       metadata,
       timestamp: new Date(),
@@ -191,7 +191,7 @@ export async function checkForEducationSpam(
     }
 
     // Check for unrealistic grade combinations
-    if (formData.gradesTeaching.length > 4) {
+    if ("gradesTeaching" in formData && formData.gradesTeaching.length > 4) {
       spamScore += 0.2;
       reasons.push("Unusual grade combination");
     }

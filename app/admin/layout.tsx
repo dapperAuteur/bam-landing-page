@@ -2,52 +2,56 @@
 
 import { useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAuth } from './../../contexts/AuthContext'
+// import { useAuth } from './../../contexts/AuthContext'
+import { signOut, useSession } from 'next-auth/react'
+import { authOptions } from '@/lib/auth/authOptions'
+
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const { isAuthenticated, isAdmin, isLoading, logout } = useAuth()
+  // const { isAuthenticated, isAdmin, isLoading, logout } = useAuth()
+  const { data: session } = useSession();
   const router = useRouter()
   const pathname = usePathname()
 
   useEffect(() => {
     // Skip authentication check for login page
-    if (pathname === '/admin/login') {
+    if (pathname === '/login') {
       return
     }
 
     // If not loading and not authenticated, redirect to login
-    if (!isLoading && !isAuthenticated) {
-      router.push('/admin/login')
+    if ( !session) {
+      router.push('/login')
       return
     }
 
     // If authenticated but not admin, redirect to home
-    if (!isLoading && isAuthenticated && !isAdmin) {
+    if ( session && !session) {
       router.push('/')
       return
     }
-  }, [isAuthenticated, isAdmin, isLoading, router, pathname])
+  }, [session, session, router, pathname])
 
   // Show loading spinner while checking authentication
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    )
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+  //       <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+  //     </div>
+  //   )
+  // }
 
   // Show login page if on login route
-  if (pathname === '/admin/login') {
+  if (pathname === '/login') {
     return children
   }
 
   // Show unauthorized if not authenticated or not admin
-  if (!isAuthenticated || !isAdmin) {
+  if (!session || !session) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -108,7 +112,7 @@ export default function AdminLayout({
                   Welcome, Admin
                 </span>
                 <button
-                  onClick={logout}
+                  // onClick={signOut()}
                   className="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700"
                 >
                   Logout

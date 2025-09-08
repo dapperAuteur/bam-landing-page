@@ -1,7 +1,7 @@
 // src/lib/logging/app-logger.ts
 import { NextRequest } from "next/server";
 import clientPromise from "../db/mongodb";
-import { getClientIp } from "../utils/utils";
+import { getClientIp } from "@/lib/utils/client";
 
 export enum LogLevel {
   DEBUG = "debug",
