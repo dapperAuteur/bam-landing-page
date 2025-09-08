@@ -10,7 +10,7 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   // const { user, isAuthenticated, isAdmin, logout } = useAuth()
   const {data: session } = useSession();
-  console.log('session :>> ', session);
+  // console.log('session :>> ', session);
 
 
   const handleLogout = async () => {

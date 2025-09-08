@@ -5,9 +5,9 @@ import { twMerge } from "tailwind-merge"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth/authOptions"
 
-// export function cn(...inputs: ClassValue[]) {
-//   return twMerge(clsx(inputs))
-// }
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
 export async function getCurrentUser() {
   const session = await getServerSession(authOptions)

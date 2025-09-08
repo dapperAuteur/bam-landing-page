@@ -1,10 +1,10 @@
 import { NextRequest } from 'next/server'
-import { clsx, type ClassValue } from "clsx"
+// import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
+// export function cn(...inputs: ClassValue[]) {
+//   return twMerge(clsx(inputs))
+// }
 
 // All your other utility functions EXCEPT the auth ones
 export function getClientIp(request: NextRequest): string {
