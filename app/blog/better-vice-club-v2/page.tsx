@@ -1,20 +1,47 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { PlayCircleIcon, AcademicCapIcon, GlobeAltIcon, ChatBubbleLeftRightIcon, NewspaperIcon, PhoneIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 
+interface Episode {
+  title: string;
+  description: string;
+  keyLearning: string;
+  stats: string;
+}
+
+type EpisodeKey = 'coffee' | 'tea' | 'chocolate' | 'sugar';
+
+type EpisodeMap = {
+  [key in EpisodeKey]: Episode;
+};
+
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  organization: string;
+  position: string;
+  roleInEducation: string[];
+  gradesWorking: string[];
+  topicInterests: string[];
+  primaryInterest: string;
+  timeline: string;
+  customContentInterest: boolean;
+  mediaInquiry: boolean;
+  additionalQuestions: string;
+}
+
 const LearnWitUSLandingV2 = () => {
-  const [selectedEpisode, setSelectedEpisode] = useState('coffee');
-  const [formData, setFormData] = useState({
+  const [selectedEpisode, setSelectedEpisode] = useState<EpisodeKey>('coffee');
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     phone: '',
     organization: '',
     position: '',
-    location: '',
     roleInEducation: [],
     gradesWorking: [],
-    subjectInterests: [],
     topicInterests: [],
     primaryInterest: '',
     timeline: '',
@@ -22,11 +49,12 @@ const LearnWitUSLandingV2 = () => {
     mediaInquiry: false,
     additionalQuestions: ''
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const [isError, setIsError] = useState(false);
 
-  const episodes = {
+  const episodes: EpisodeMap = {
     coffee: {
       title: "Stories in Every Cup",
       description: "Coffee's global journey from Ethiopian highlands to student morning routines",
@@ -53,26 +81,29 @@ const LearnWitUSLandingV2 = () => {
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
     
     if (type === 'checkbox') {
+      const { checked } = e.target as HTMLInputElement;
+      const key = name as keyof FormData;
+
       if (['customContentInterest', 'mediaInquiry'].includes(name)) {
-        setFormData(prev => ({ ...prev, [name]: checked }));
-      } else {
-        setFormData(prev => ({
-          ...prev,
-          [name]: checked 
-            ? [...prev[name], value]
-            : prev[name].filter(item => item !== value)
-        }));
+        setFormData(prev => ({ ...prev, [key]: checked }));
+      } else if (['roleInEducation', 'gradesWorking', 'topicInterests'].includes(name)) {
+        const listKey = key as 'roleInEducation' | 'gradesWorking' | 'topicInterests';
+        const currentValues = formData[listKey];
+        const newValues = checked
+          ? [...currentValues, value]
+          : currentValues.filter(item => item !== value);
+        setFormData(prev => ({ ...prev, [listKey]: newValues }));
       }
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (!formData.name || !formData.email || !formData.organization) {
@@ -102,14 +133,14 @@ const LearnWitUSLandingV2 = () => {
       setSubmitMessage("Thank you! We'll connect with you soon with more information.");
       setIsError(false);
       setFormData({
-        name: '', email: '', phone: '', organization: '', position: '', location: '',
-        roleInEducation: [], gradesWorking: [], subjectInterests: [], topicInterests: [],
+        name: '', email: '', phone: '', organization: '', position: '',
+        roleInEducation: [], gradesWorking: [], topicInterests: [],
         primaryInterest: '', timeline: '', customContentInterest: false, 
         mediaInquiry: false, additionalQuestions: ''
       });
 
-    } catch (error) {
-      console.error("Submission failed:", error);
+    } catch (error: any) {
+      console.error("Submission failed:", error.message);
       setSubmitMessage(error.message);
       setIsError(true);
     } finally {
@@ -153,14 +184,14 @@ const LearnWitUSLandingV2 = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button 
-                  onClick={() => document.getElementById('preview').scrollIntoView({behavior: 'smooth'})}
+                  onClick={() => document.getElementById('preview')?.scrollIntoView({behavior: 'smooth'})}
                   className="bg-white text-blue-900 px-6 py-3 rounded-lg font-semibold flex items-center space-x-2 hover:bg-blue-50 transition-colors"
                 >
                   <PlayCircleIcon className="w-5 h-5" />
                   <span>Preview Content</span>
                 </button>
                 <button 
-                  onClick={() => document.getElementById('connect').scrollIntoView({behavior: 'smooth'})}
+                  onClick={() => document.getElementById('connect')?.scrollIntoView({behavior: 'smooth'})}
                   className="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition-colors"
                 >
                   Request Information
@@ -245,7 +276,7 @@ const LearnWitUSLandingV2 = () => {
                 {Object.entries(episodes).map(([key, episode]) => (
                   <button
                     key={key}
-                    onClick={() => setSelectedEpisode(key)}
+                    onClick={() => setSelectedEpisode(key as EpisodeKey)}
                     className={`w-full text-left p-4 rounded-lg transition-all ${
                       selectedEpisode === key 
                         ? 'bg-blue-600 text-white shadow-lg' 
@@ -407,13 +438,13 @@ const LearnWitUSLandingV2 = () => {
             <p className="text-xl text-gray-600">Media inquiries, partnership opportunities, and curriculum access requests</p>
           </div>
           
-          <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-8">
+          <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-xl shadow-lg p-8">
             {submitMessage && (
               <div className={`p-4 rounded-lg mb-6 ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
                 {submitMessage}
               </div>
             )}
-            
+
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
@@ -624,13 +655,13 @@ const LearnWitUSLandingV2 = () => {
             </div>
             
             <button
-              onClick={handleSubmit}
+              type="submit"
               disabled={isSubmitting}
               className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isSubmitting ? 'Submitting...' : 'Connect with Learn.WitUS.Online'}
             </button>
-          </div>
+          </form>
         </div>
       </div>
 
