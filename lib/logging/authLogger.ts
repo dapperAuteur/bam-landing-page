@@ -5,7 +5,7 @@ import { Logger, LogContext, LogLevel } from "./logger";
 import { AnalyticsLogger } from "./logger";
 import clientPromise from "./../db/mongodb";
 import { AuthEventType, AuthLog } from "./../../models/AuthLog";
-import { getClientIp } from "./../utils/utils";
+import { getClientIp } from "@/lib/utils/client";
 
 /**
  * Log an authentication event to the database

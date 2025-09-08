@@ -17,7 +17,7 @@ import {
   EducationEventType 
 } from '../../../lib/logging/education-logger'
 import { Logger, LogContext } from './../../../lib/logging/logger'
-import { getClientIp } from '../../../lib/utils/utils'
+import { getClientIp } from '@/lib/utils/client'
 
 // MongoDB connection
 let client: MongoClient

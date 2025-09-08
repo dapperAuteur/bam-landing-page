@@ -9,7 +9,7 @@ import {
   ContactEventType 
 } from '../../../lib/logging/contact-logger'
 import { Logger, LogContext, LogLevel } from './../../../lib/logging/logger'
-import { getClientIp } from '../../../lib/utils/utils'
+import { getClientIp } from '@/lib/utils/client'
 
 // MongoDB connection
 let client: MongoClient
