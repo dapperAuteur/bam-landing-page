@@ -2,7 +2,7 @@ import './globals.css'
 import { Analytics } from "@vercel/analytics/next"
 import { Inter } from 'next/font/google'
 import Navigation from '../components/ui/Navigation'
-import { AuthProvider } from './../contexts/AuthContext'
+import {Providers} from "@/components/providers/SessionProvider"
 import ShareButton from '../components/share/ShareButton'
 import ConsoltoChat from "./../components/ConsoltoChat";
 import Footer from 'components/ui/Footer'
@@ -19,9 +19,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // Add to your API route temporarily
+console.log('MongoDB URI:', process.env.MONGODB_URI?.substring(0, 20) + '...')
   return (
     <html lang="en">
-      <AuthProvider>
+      <Providers>
         <body className={inter.className}>
           <Navigation />
           {children}
@@ -30,7 +32,7 @@ export default function RootLayout({
           <ShareButton />
           <Footer/>
         </body>
-      </AuthProvider>
+      </Providers>
     </html>
   )
 }

@@ -21,6 +21,7 @@ export enum AuthEventType {
   // New event types for security alerts
   LOGIN_FROM_NEW_LOCATION = "login_from_new_location",
   MFA_DISABLED = "mfa_disabled",
+  SESSION_CHECK = "SESSION_CHECK",
 }
 
 /**

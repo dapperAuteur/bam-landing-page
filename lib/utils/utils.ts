@@ -3,8 +3,7 @@ import { NextRequest } from 'next/server'
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { getServerSession } from "next-auth/next"
-// import { authOptions } from "@/lib/auth/authOptions"
-import { authOptions } from '@/lib/auth/authOptions'
+import { authOptions } from "@/lib/auth/authOptions"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
