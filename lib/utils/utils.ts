@@ -14,21 +14,21 @@ export async function getCurrentUser() {
   return session?.user
 }
 
-export async function requireAuth() {
-  const user = await getCurrentUser()
-  if (!user) {
-    throw new Error("Authentication required")
-  }
-  return user
-}
+// export async function requireAuth() {
+//   const user = await getCurrentUser()
+//   if (!user) {
+//     throw new Error("Authentication required")
+//   }
+//   return user
+// }
 
-export async function requireAdmin() {
-  const user = await requireAuth()
-  if (user.role !== 'admin') {
-    throw new Error("Admin access required")
-  }
-  return user
-}
+// export async function requireAdmin() {
+//   const user = await requireAuth()
+//   if (user.role !== 'admin') {
+//     throw new Error("Admin access required")
+//   }
+//   return user
+// }
 
 // For API route protection
 export function validateAdminAuth(request: NextRequest): boolean {
@@ -45,38 +45,38 @@ export function validateAdminAuth(request: NextRequest): boolean {
  * Extract client IP address from NextRequest
  * Handles various proxy headers and edge cases
  */
-export function getClientIp(request: NextRequest): string {
-  // Check forwarded headers first (for proxies, load balancers, CDNs)
-  const forwardedFor = request.headers.get('x-forwarded-for')
-  if (forwardedFor) {
-    // x-forwarded-for can contain multiple IPs, take the first one
-    return forwardedFor.split(',')[0].trim()
-  }
+// export function getClientIp(request: NextRequest): string {
+//   // Check forwarded headers first (for proxies, load balancers, CDNs)
+//   const forwardedFor = request.headers.get('x-forwarded-for')
+//   if (forwardedFor) {
+//     // x-forwarded-for can contain multiple IPs, take the first one
+//     return forwardedFor.split(',')[0].trim()
+//   }
 
-  // Check other common proxy headers
-  const realIp = request.headers.get('x-real-ip')
-  if (realIp) return realIp
+//   // Check other common proxy headers
+//   const realIp = request.headers.get('x-real-ip')
+//   if (realIp) return realIp
 
-  const cfConnectingIp = request.headers.get('cf-connecting-ip') // Cloudflare
-  if (cfConnectingIp) return cfConnectingIp
+//   const cfConnectingIp = request.headers.get('cf-connecting-ip') // Cloudflare
+//   if (cfConnectingIp) return cfConnectingIp
 
-  const fastlyClientIp = request.headers.get('fastly-client-ip') // Fastly
-  if (fastlyClientIp) return fastlyClientIp
+//   const fastlyClientIp = request.headers.get('fastly-client-ip') // Fastly
+//   if (fastlyClientIp) return fastlyClientIp
 
-  // Fallback to direct connection (when not behind proxy)
-  if (request.ip) return request.ip
+//   // Fallback to direct connection (when not behind proxy)
+//   if (request.ip) return request.ip
 
-  // Final fallback
-  return 'unknown'
-}
+//   // Final fallback
+//   return 'unknown'
+// }
 
-/**
- * Validate email format
- */
-export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return emailRegex.test(email.trim())
-}
+// /**
+//  * Validate email format
+//  */
+// export function isValidEmail(email: string): boolean {
+//   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+//   return emailRegex.test(email.trim())
+// }
 
 /**
  * Sanitize string input to prevent XSS

@@ -6,5 +6,18 @@ export async function getCurrentUser() {
   return session?.user
 }
 
-export async function requireAuth() { /* ... */ }
-export async function requireAdmin() { /* ... */ }
+export async function requireAuth() {
+  const user = await getCurrentUser()
+  if (!user) {
+    throw new Error("Authentication required")
+  }
+  return user
+}
+
+export async function requireAdmin() {
+  const user = await requireAuth()
+  if (user.role !== 'admin') {
+    throw new Error("Admin access required")
+  }
+  return user
+}
