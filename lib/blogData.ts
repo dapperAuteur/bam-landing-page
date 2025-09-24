@@ -101,6 +101,17 @@ export const blogPosts: BlogPost[] = [
     tags: ["US History", "World History", "USA", "African-American", "Harlem Renaissance", "Migration", "Refugees", "Jim Crow South", "History"],
     excerpt: "The Great Migration was a courageous act of agency by six million African Americans to escape the oppressive Jim Crow South. They fled a system of legal segregation, political disenfranchisement, economic exploitation through sharecropping, and the constant terror of racial violence. As one migrant wrote, they sought to go 'where a man is a man.'"
   },
+  {
+    slug: "from-rabbit-holes-to-rabbit-holes-part-1",
+    title: "From Rabbit Holes to Rabbit Holes: Part 1 - The Shuffle That Broke Everything",
+    description: "A developer's journey from mindless scrolling to meaningful problem-solving, starting with a simple shuffle feature that exposed a major architectural flaw.",
+    publishDate: "2024-07-26",
+    readTime: "6 min read",
+    category: "Software Development",
+    featured: true,
+    tags: ["React", "State Management", "Architecture", "Debugging", "Next.js", "TypeScript"],
+    excerpt: "I was spending hours perfecting my ability to mindlessly scroll. I decided to redirect that rabbit hole energy somewhere more productive. It started with what I thought was a simple feature: randomizing study cards."
+  },
   // {
   //   slug: "free-spaced-repetition-scheduler",
   //   title: "Free Spaced Repetition Scheduler (FSRS)",
