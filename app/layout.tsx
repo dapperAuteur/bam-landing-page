@@ -23,11 +23,11 @@ export default function RootLayout({
 console.log('MongoDB URI:', process.env.MONGODB_URI?.substring(0, 20) + '...')
   return (
     <html lang="en">
+      <Analytics />
       <Providers>
         <body className={inter.className}>
           <Navigation />
           {children}
-          <Analytics />
           <ConsoltoChat />
           <ShareButton />
           <Footer/>
