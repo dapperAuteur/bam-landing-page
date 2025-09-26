@@ -108,8 +108,7 @@ export default function BlogPost() {
   return (
     <article className="prose prose-lg mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-4">
-        From Rabbit Holes to Rabbit Holes: Part 1 - The Shuffle That Broke Everything
-      </h1>
+        From Rabbit Holes to Rabbit Holes:</h1> <h1 className="text-3xl font-bold mb-4">Part 1 - The Shuffle That Broke Everything</h1>
       <p className="text-lg italic text-gray-600">
         A developer's journey from mindless scrolling to meaningful problem-solving
       </p>
@@ -169,7 +168,7 @@ export default function BlogPost() {
 
       <p>I captured a video of the bug in action:</p>
 
-      <p>*[Video would show: Study session starts → Cards are shuffled → Screen refreshes → Back to setup with original card order]*</p>
+      <p>*[Video comig soon: Study session starts → Cards are shuffled → Screen refreshes → Back to setup with original card order]*</p>
 
       <p>This wasn't just annoying—it was breaking the core user experience. But the real problem was deeper than the bug itself. This "simple" shuffle feature had exposed a critical flaw in my app's architecture.</p>
 
