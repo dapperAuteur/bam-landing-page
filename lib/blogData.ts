@@ -3,6 +3,28 @@ import { BlogPost } from "./../types/types"
 // 🔥 BLOG POST REGISTRY - Add new blog posts here!
 export const blogPosts: BlogPost[] = [
   {
+    slug: "rabbit-holes-to-rabbit-holes-technical",
+    title: "Rabbit Holes → Business Value: Technical Series",
+    description: "Series preview of a developer's journey from mindless scrolling to meaningful problem-solving, starting with a simple shuffle feature that exposed a major architectural flaw.",
+    publishDate: "2025-09-20",
+    readTime: "3 min read",
+    category: "Software Development",
+    featured: true,
+    tags: ["React", "State Management", "Architecture", "Debugging", "Next.js", "TypeScript"],
+    excerpt: "Systematic approach to architectural evolution and business-focused development"
+  },
+  {
+    slug: "rabbit-holes-to-rabbit-holes-part-01-technical",
+    title: "Rabbit Holes to Rabbit Holes: Part 1 - The Shuffle That Broke Everything",
+    description: "A developer's journey from mindless scrolling to meaningful problem-solving, starting with a simple shuffle feature that exposed a major architectural flaw.",
+    publishDate: "2025-09-24",
+    readTime: "6 min read",
+    category: "Software Development",
+    featured: true,
+    tags: ["React", "State Management", "Architecture", "Debugging", "Next.js", "TypeScript"],
+    excerpt: "I was spending hours perfecting my ability to mindlessly scroll. I decided to redirect that rabbit hole energy somewhere more productive. It started with what I thought was a simple feature: randomizing study cards."
+  },
+  {
     slug: "corvids-of-fishers-educational-series",
     title: "Corvids of Fishers: Educational Series",
     description: "Planet Earth-Style Mini-Documentaries + Standards-Aligned Activities. Bringing wildlife intelligence into your classroom through local corvid (bird) stories",

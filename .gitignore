@@ -41,3 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 scripts/create-admin.js
+
+scripts/create-admin-manual.js
