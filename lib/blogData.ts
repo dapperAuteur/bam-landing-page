@@ -3,7 +3,18 @@ import { BlogPost } from "./../types/types"
 // 🔥 BLOG POST REGISTRY - Add new blog posts here!
 export const blogPosts: BlogPost[] = [
   {
-    slug: "rabbit-holes-to-rabbit-holes-part-01",
+    slug: "rabbit-holes-to-rabbit-holes-technical",
+    title: "Rabbit Holes → Business Value: Technical Series",
+    description: "Series preview of a developer's journey from mindless scrolling to meaningful problem-solving, starting with a simple shuffle feature that exposed a major architectural flaw.",
+    publishDate: "2025-09-20",
+    readTime: "3 min read",
+    category: "Software Development",
+    featured: true,
+    tags: ["React", "State Management", "Architecture", "Debugging", "Next.js", "TypeScript"],
+    excerpt: "Systematic approach to architectural evolution and business-focused development"
+  },
+  {
+    slug: "rabbit-holes-to-rabbit-holes-part-01-technical",
     title: "Rabbit Holes to Rabbit Holes: Part 1 - The Shuffle That Broke Everything",
     description: "A developer's journey from mindless scrolling to meaningful problem-solving, starting with a simple shuffle feature that exposed a major architectural flaw.",
     publishDate: "2025-09-24",
