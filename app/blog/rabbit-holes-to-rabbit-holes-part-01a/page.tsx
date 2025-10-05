@@ -2,12 +2,24 @@
 import { Suspense } from 'react';
 import { CodeBlock } from '@/components/ui/CodeBlock';
 import { VideoPlaceholder } from '@/components/ui/VideoPlaceholder';
+import { 
+  SeriesTableOfContents, 
+  PartNavigation, 
+  SeriesProgress,
+  SeriesBreadcrumb,
+  FloatingSeriesNav 
+} from '@/components/blog/SeriesNavigation';
 
 export default function RabbitHolePart1() {
   return (
     <article className="max-w-4xl mx-auto px-4 py-12 space-y-12">
       {/* Header Section */}
       <header className="text-center space-y-6">
+        <SeriesTableOfContents currentPart={1}  className="sticky top-4" />
+        <SeriesProgress currentPart={1} className="mt-4" />
+        <PartNavigation currentPart={1} className="mt-12" />
+        <SeriesBreadcrumb currentPart={1} className="mb-8" />
+        <FloatingSeriesNav currentPart={1} />
         <div className="space-y-2">
           <p className="text-sm font-semibold text-blue-600 uppercase tracking-wide">
             From Rabbit Holes to Rabbit Holes: Part 1

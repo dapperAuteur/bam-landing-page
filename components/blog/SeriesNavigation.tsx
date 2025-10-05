@@ -29,7 +29,7 @@ export const SeriesTableOfContents = ({
     {
       id: 1,
       title: "The Shuffle That Broke Everything",
-      href: "/blog/rabbit-holes-part-1",
+      href: "/blog/rabbit-holes-to-rabbit-holes-part-01",
       color: "red",
       skills: ["Context API", "Architecture"],
       readTime: "8 min"
@@ -37,7 +37,7 @@ export const SeriesTableOfContents = ({
     {
       id: 2,
       title: "When Fixing One Bug Reveals Another", 
-      href: "/blog/rabbit-holes-part-2",
+      href: "/blog/rabbit-holes-to-rabbit-holes-part-02",
       color: "orange",
       skills: ["Race Conditions", "Lifecycle"],
       readTime: "12 min"
@@ -45,7 +45,7 @@ export const SeriesTableOfContents = ({
     {
       id: 3,
       title: "The Session That Wouldn't Die",
-      href: "/blog/rabbit-holes-part-3",
+      href: "/blog/rabbit-holes-to-rabbit-holes-part-03",
       color: "purple", 
       skills: ["State Machines", "Edge Cases"],
       readTime: "10 min"
@@ -53,7 +53,7 @@ export const SeriesTableOfContents = ({
     {
       id: 4,
       title: "Racing Conditions and User Experience Gold",
-      href: "/blog/rabbit-holes-part-4",
+      href: "/blog/rabbit-holes-to-rabbit-holes-part-04-",
       color: "amber",
       skills: ["UX Innovation", "Constraints"],
       readTime: "15 min"
@@ -61,7 +61,7 @@ export const SeriesTableOfContents = ({
     {
       id: 5,
       title: "Building Features Like a Business",
-      href: "/blog/rabbit-holes-part-5", 
+      href: "/blog/rabbit-holes-to-rabbit-holes-part-05-", 
       color: "green",
       skills: ["Business Strategy", "Growth"],
       readTime: "22 min"
@@ -154,11 +154,11 @@ export const PartNavigation = ({
   className?: string; 
 }) => {
   const parts = [
-    { id: 1, title: "The Shuffle That Broke Everything", href: "/blog/rabbit-holes-part-1" },
-    { id: 2, title: "When Fixing One Bug Reveals Another", href: "/blog/rabbit-holes-part-2" },
-    { id: 3, title: "The Session That Wouldn't Die", href: "/blog/rabbit-holes-part-3" },
-    { id: 4, title: "Racing Conditions and User Experience Gold", href: "/blog/rabbit-holes-part-4" },
-    { id: 5, title: "Building Features Like a Business", href: "/blog/rabbit-holes-part-5" }
+    { id: 1, title: "The Shuffle That Broke Everything", href: "/blog/rabbit-holes-to-rabbit-holes-part-01" },
+    { id: 2, title: "When Fixing One Bug Reveals Another", href: "/blog/rabbit-holes-to-rabbit-holes-part-02" },
+    { id: 3, title: "The Session That Wouldn't Die", href: "/blog/rabbit-holes-to-rabbit-holes-part-03" },
+    { id: 4, title: "Racing Conditions and User Experience Gold", href: "/blog/rabbit-holes-to-rabbit-holes-part-04" },
+    { id: 5, title: "Building Features Like a Business", href: "/blog/rabbit-holes-to-rabbit-holes-part-05" }
   ];
 
   const prevPart = parts.find(p => p.id === currentPart - 1);
