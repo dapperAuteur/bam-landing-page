@@ -14,6 +14,17 @@ export const blogPosts: BlogPost[] = [
     excerpt: "Systematic approach to architectural evolution and business-focused development"
   },
   {
+    slug: "elementary-mba-cross-curricular-9-12",
+    title: "Revolutionary Cross-Curricular Education",
+    description: "Connecting everyday purchases to world trade and history.",
+    publishDate: "2025-09-20",
+    readTime: "9 min read",
+    category: "Education",
+    featured: true,
+    tags: ["High School", "Geography", "Economics", "Social Studies", "ELA", "Cross-Curricular", "Education"],
+    excerpt: "Transform everyday student experiences into comprehensive lessons spanning Geography, Social Studies, Economics, and ELA. Connect coffee shops to Ethiopian highlands, chocolate bars to Maya ceremonies, and tea breaks to Chinese traditions."
+  },
+  {
     slug: "rabbit-holes-to-rabbit-holes-part-01-technical",
     title: "Rabbit Holes to Rabbit Holes: Part 1 - The Shuffle That Broke Everything",
     description: "A developer's journey from mindless scrolling to meaningful problem-solving, starting with a simple shuffle feature that exposed a major architectural flaw.",
