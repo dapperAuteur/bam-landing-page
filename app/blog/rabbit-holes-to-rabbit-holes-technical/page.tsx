@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { VideoPlaceholder } from '@/components/ui/VideoPlaceholder';
 import { AudioPlayer } from '@/components/ui/AudioPlayer';
 import { CodeBlock } from '@/components/ui/CodeBlock';
+import Link from 'next/link';
 
 interface TabsProps {
   activeTab: string;
@@ -72,7 +73,7 @@ export default function RabbitHolesLandingTechnical() {
       </header>
 
       {/* Live Demo Section */}
-      <section className="bg-gray-900 rounded-lg p-6 mb-12">
+      {/* <section className="bg-gray-900 rounded-lg p-6 mb-12">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
             <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
@@ -97,10 +98,10 @@ export default function RabbitHolesLandingTechnical() {
           description="From architectural debt to business value through systematic development"
           darkMode={true}
         />
-      </section>
+      </section> */}
 
       {/* Audio Deep Dive */}
-      <section className="bg-gray-900 rounded-lg p-6 mb-12">
+      {/* <section className="bg-gray-900 rounded-lg p-6 mb-12">
         <div className="flex items-center mb-4">
           <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
           <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
@@ -113,7 +114,7 @@ export default function RabbitHolesLandingTechnical() {
           duration="12:34"
           darkMode={true}
         />
-      </section>
+      </section> */}
 
       {/* Technical Tabs */}
       <TechnicalTabs activeTab={activeTab} onTabChange={setActiveTab} />
@@ -137,7 +138,7 @@ export default function RabbitHolesLandingTechnical() {
                   subtitle: "Context API Implementation",
                   techStack: "React, Context API",
                   complexity: "Beginner",
-                  href: "/blog/rabbit-holes-part-1"
+                  href: "/blog/rabbit-holes-to-rabbit-holes-part-01-technical"
                 },
                 {
                   id: 2, 
@@ -145,7 +146,7 @@ export default function RabbitHolesLandingTechnical() {
                   subtitle: "Component Lifecycle",
                   techStack: "React, Debugging",
                   complexity: "Intermediate",
-                  href: "/blog/rabbit-holes-part-2"
+                  href: "blog/rabbit-holes-to-rabbit-holes-part-02-technical"
                 },
                 {
                   id: 3,
@@ -153,7 +154,7 @@ export default function RabbitHolesLandingTechnical() {
                   subtitle: "Edge Case Elimination", 
                   techStack: "State Design",
                   complexity: "Intermediate",
-                  href: "/blog/rabbit-holes-part-3"
+                  href: "blog/rabbit-holes-to-rabbit-holes-part-03-technical"
                 },
                 {
                   id: 4,
@@ -161,7 +162,7 @@ export default function RabbitHolesLandingTechnical() {
                   subtitle: "Constraint-Driven Design",
                   techStack: "UX, Psychology",
                   complexity: "Advanced",
-                  href: "/blog/rabbit-holes-part-4"
+                  href: "blog/rabbit-holes-to-rabbit-holes-part-04-technical"
                 },
                 {
                   id: 5,
@@ -169,7 +170,7 @@ export default function RabbitHolesLandingTechnical() {
                   subtitle: "Growth Engineering",
                   techStack: "Auth, Analytics",
                   complexity: "Advanced",
-                  href: "/blog/rabbit-holes-part-5"
+                  href: "blog/rabbit-holes-to-rabbit-holes-part-05-technical"
                 }
               ].map((part) => (
                 <div key={part.id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
@@ -215,37 +216,59 @@ export default function RabbitHolesLandingTechnical() {
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-red-500 rounded-full mr-4"></div>
                   <div>
-                    <div className="text-white font-semibold">Part 1: Component ownership chaos</div>
-                    <div className="text-gray-400 text-sm">Shuffle bug → Context API → Clean architecture</div>
+                    <Link
+                      href="/blog/rabbit-holes-to-rabbit-holes-part-01-technical"
+                      >
+                      <div className="text-white font-semibold">
+                          Part 1: Component ownership chaos
+                      </div>
+                      <div className="text-gray-400 text-sm">Shuffle bug → Context API → Clean architecture</div>
+                    </Link>
                   </div>
                 </div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-orange-500 rounded-full mr-4"></div>
-                  <div>
-                    <div className="text-white font-semibold">Part 2: Race condition mastery</div>
-                    <div className="text-gray-400 text-sm">Component lifecycle → State lifting → Coordination</div>
-                  </div>
+                  <Link
+                    href="/blog/rabbit-holes-to-rabbit-holes-part-02-technical"
+                    >
+                    <div>
+                      <div className="text-white font-semibold">Part 2: Race condition mastery</div>
+                      <div className="text-gray-400 text-sm">Component lifecycle → State lifting → Coordination</div>
+                    </div>
+                  </Link>
                 </div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-purple-500 rounded-full mr-4"></div>
-                  <div>
-                    <div className="text-white font-semibold">Part 3: State machine architecture</div>
-                    <div className="text-gray-400 text-sm">Edge cases → Explicit states → Bulletproof apps</div>
-                  </div>
+                  <Link
+                    href="/blog/rabbit-holes-to-rabbit-holes-part-03-technical"
+                    >
+                    <div>
+                      <div className="text-white font-semibold">Part 3: State machine architecture</div>
+                      <div className="text-gray-400 text-sm">Edge cases → Explicit states → Bulletproof apps</div>
+                    </div>
+                  </Link>
                 </div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-amber-500 rounded-full mr-4"></div>
                   <div>
-                    <div className="text-white font-semibold">Part 4: Constraint-driven innovation</div>
-                    <div className="text-gray-400 text-sm">Technical limits → UX features → User value</div>
+                    <Link
+                      href="/blog/rabbit-holes-to-rabbit-holes-part-04-technical"
+                      >
+                      <div className="text-white font-semibold">Part 4: Constraint-driven innovation</div>
+                      <div className="text-gray-400 text-sm">Technical limits → UX features → User value</div>
+                    </Link>
                   </div>
                 </div>
                 <div className="flex items-center">
                   <div className="w-4 h-4 bg-green-500 rounded-full mr-4"></div>
-                  <div>
-                    <div className="text-white font-semibold">Part 5: Business-focused development</div>
-                    <div className="text-gray-400 text-sm">Auth boundaries → Growth engineering → Sustainable value</div>
-                  </div>
+                  <Link
+                    href="/blog/rabbit-holes-to-rabbit-holes-part-05-technical"
+                    >
+                    <div>
+                      <div className="text-white font-semibold">Part 5: Business-focused development</div>
+                      <div className="text-gray-400 text-sm">Auth boundaries → Growth engineering → Sustainable value</div>
+                    </div>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -628,23 +651,29 @@ export async function POST(request) {
           <div className="bg-gray-800 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-green-400 mb-3">Technical Foundation</h3>
             <p className="text-gray-300 text-sm mb-4">Start with architecture and debugging fundamentals</p>
-            <a href="/blog/rabbit-holes-part-1" className="text-green-400 font-mono text-sm hover:text-green-300">
+            <Link
+              href="/blog/rabbit-holes-to-rabbit-holes-part-01-technical"
+              className="text-green-400 font-mono text-sm hover:text-green-300">
               → Begin with Part 1
-            </a>
+            </Link>
           </div>
           <div className="bg-gray-800 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-purple-400 mb-3">UX Engineering</h3>
             <p className="text-gray-300 text-sm mb-4">Jump to constraint-driven design and innovation</p>
-            <a href="/blog/rabbit-holes-part-4" className="text-purple-400 font-mono text-sm hover:text-purple-300">
+            <Link
+              href="/blog/rabbit-holes-to-rabbit-holes-part-04-technical"
+              className="text-purple-400 font-mono text-sm hover:text-purple-300">
               → Jump to Part 4
-            </a>
+            </Link>
           </div>
           <div className="bg-gray-800 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-blue-400 mb-3">Business Focus</h3>
             <p className="text-gray-300 text-sm mb-4">Focus on growth engineering and monetization</p>
-            <a href="/blog/rabbit-holes-part-5" className="text-blue-400 font-mono text-sm hover:text-blue-300">
+            <Link
+              href="/blog/rabbit-holes-to-rabbit-holes-part-05-technical"
+              className="text-blue-400 font-mono text-sm hover:text-blue-300">
               → Start with Part 5
-            </a>
+            </Link>
           </div>
         </div>
       </section>

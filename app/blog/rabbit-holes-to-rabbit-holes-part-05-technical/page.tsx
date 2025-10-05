@@ -1249,6 +1249,14 @@ export default function RabbitHolePart5Technical() {
             {/* <button className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
               Subscribe for Updates
             </button> */}
+            <Link 
+              href="https://i.witus.online/flashlearnai-b" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors text-sm"
+            >
+              Try Live Demo
+            </Link>
             <Link
               href={'/blog/rabbit-holes-to-rabbit-holes-part-01-technical'}
               className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold bg-green-500 hover:bg-green-50 transition-colors">

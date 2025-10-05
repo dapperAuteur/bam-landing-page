@@ -79,20 +79,20 @@ export default function RabbitHolePart3Technical() {
             <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
             <span className="text-gray-400 font-mono text-sm ml-4">production-demo</span>
           </div>
-          <a 
+          <Link 
             href="https://i.witus.online/flashlearnai-b" 
             target="_blank" 
             rel="noopener noreferrer"
             className="bg-purple-600 text-white px-4 py-2 rounded text-sm font-semibold hover:bg-purple-700 transition-colors"
           >
             Launch App →
-          </a>
+          </Link>
         </div>
-        <VideoPlaceholder 
+        {/* <VideoPlaceholder 
           title="State Machine Architecture Demo"
           description="Production walkthrough showing bulletproof state transitions and edge case handling"
           darkMode
-        />
+        /> */}
       </section>
 
       {/* Audio Discussion */}
@@ -859,6 +859,11 @@ const logStateTransition = (from, to, trigger, metadata = {}) => {
             Part 3 of 5 - Rabbit Holes Series
           </div>
           <div className="flex space-x-4">
+            <Link
+              href={'/blog/rabbit-holes-to-rabbit-holes-part-02-technical'}
+              className="bg-orange-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-orange-700 transition-colors">
+              Prev: Context API Success → Race Condition Discovery
+            </Link>
             <Link 
               href="https://i.witus.online/flashlearnai-b" 
               target="_blank" 

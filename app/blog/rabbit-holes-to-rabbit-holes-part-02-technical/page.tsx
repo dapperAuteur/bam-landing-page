@@ -160,10 +160,10 @@ export default function RabbitHolePart2Technical() {
               </div>
             </div>
 
-            <VideoPlaceholder 
+            {/* <VideoPlaceholder 
               title="Race Condition Frame-by-Frame Analysis"
               description="Slow-motion capture showing exact timing of state updates and renders"
-            />
+            /> */}
           </div>
         )}
 
@@ -673,6 +673,19 @@ export default function StudyCard({
           <div className="text-sm text-gray-500">
             Part 2 of 5 - Rabbit Holes Series
           </div>
+          <Link
+            href={'/blog/rabbit-holes-to-rabbit-holes-part-01-technical'}
+            className="bg-orange-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors">
+            Prev: Shuffle Feature → Architecture Overhaul
+          </Link>
+          <Link 
+            href="https://i.witus.online/flashlearnai-b" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="bg-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors text-sm"
+          >
+            Try Live Demo
+          </Link>
           <Link
             href={'/blog/rabbit-holes-to-rabbit-holes-part-03-technical'}
             className="bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors">

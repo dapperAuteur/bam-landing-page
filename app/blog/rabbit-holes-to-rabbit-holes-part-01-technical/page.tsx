@@ -6,6 +6,7 @@ import { CodeBlock } from '@/components/ui/CodeBlock';
 import { VideoPlaceholder } from '@/components/ui/VideoPlaceholder';
 import { SeriesProgress } from '@/components/blog/SeriesNavigation';
 import Link from 'next/link';
+import { AudioPlayer } from '@/components/ui/AudioPlayer';
 
 interface TabsProps {
   activeTab: string;
@@ -69,7 +70,7 @@ export default function RabbitHolePart1Technical() {
       </header>
 
       {/* Video Section */}
-      <section className="bg-gray-900 rounded-lg p-6 mb-12">
+      {/* <section className="bg-gray-900 rounded-lg p-6 mb-12">
         <div className="flex items-center mb-4">
           <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
           <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
@@ -81,7 +82,23 @@ export default function RabbitHolePart1Technical() {
           description="Terminal recording showing shuffle → refresh → original order bug"
           darkMode
         />
-      </section>
+      </section> */}
+
+      {/* Audio Discussion */}
+            <section className="bg-gray-900 rounded-lg p-6 mb-12">
+              <div className="flex items-center mb-4">
+                <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                <span className="text-gray-400 font-mono text-sm ml-4">technical-discussion.mp3</span>
+              </div>
+              <AudioPlayer 
+                title="React Race Conditions: Technical Deep Dive"
+                description="Component lifecycle timing, useEffect dependency arrays, and state lifting patterns"
+                duration="15:47"
+                darkMode
+              />
+            </section>
 
       {/* Technical Navigation */}
       <TechnicalTabs activeTab={activeTab} onTabChange={setActiveTab} />
@@ -117,12 +134,13 @@ export default function RabbitHolePart1Technical() {
                   <CodeBlock
                     language="javascript"
                     code={`// Problematic architecture
-StudySession (parent)
-├── manages session state
-└── StudySessionSetup (child)
-    ├── fetches flashcard data
-    ├── owns shuffle logic
-    └── gets unmounted on session start`}
+                      StudySession (parent)
+                      ├── manages session state
+                      └── StudySessionSetup (child)
+                          ├── fetches flashcard data
+                          ├── owns shuffle logic
+                          └── gets unmounted on session start`
+                        }
                   />
                 </div>
               </div>
@@ -144,20 +162,21 @@ StudySession (parent)
               <CodeBlock
                 language="javascript"
                 code={`// Component lifecycle causing data loss
-1. StudySessionSetup.componentDidMount()
-   └── fetchFlashcards() ✓
-   └── shuffleArray(cards) ✓
+                  1. StudySessionSetup.componentDidMount()
+                    └── fetchFlashcards() ✓
+                    └── shuffleArray(cards) ✓
 
-2. User.clickStart()
-   └── onStartSession(sessionId, shuffledCards) ✓
+                  2. User.clickStart()
+                    └── onStartSession(sessionId, shuffledCards) ✓
 
-3. StudySession.setState({ sessionId })
-   └── StudySession.render() 
-   └── StudySessionSetup.componentWillUnmount() ✗
-   
-4. StudySession.remount(StudySessionSetup)
-   └── StudySessionSetup.componentDidMount()
-   └── fetchFlashcards() // Fresh, unshuffled data ✗`}
+                  3. StudySession.setState({ sessionId })
+                    └── StudySession.render() 
+                    └── StudySessionSetup.componentWillUnmount() ✗
+                    
+                  4. StudySession.remount(StudySessionSetup)
+                    └── StudySessionSetup.componentDidMount()
+                    └── fetchFlashcards() // Fresh, unshuffled data ✗`
+                }
                 darkMode
               />
             </div>
@@ -184,11 +203,11 @@ StudySession (parent)
                 <CodeBlock
                   language="javascript"
                   code={`// Move data fetching to parent
-StudySession
-├── fetchFlashcards() ✓
-├── shuffleArray() ✓
-└── StudySessionSetup
-    └── receives shuffled props`}
+                    StudySession
+                    ├── fetchFlashcards() ✓
+                    ├── shuffleArray() ✓
+                    └── StudySessionSetup
+                        └── receives shuffled props`}
                 />
                 <div className="mt-4 space-y-2 text-sm">
                   <div className="text-green-600">✓ React best practices</div>
@@ -207,11 +226,12 @@ StudySession
                 <CodeBlock
                   language="javascript"
                   code={`// New container component
-StudyContainer
-├── fetchFlashcards() ✓
-├── shuffleArray() ✓
-├── StudySessionSetup
-└── StudySession`}
+                    StudyContainer
+                    ├── fetchFlashcards() ✓
+                    ├── shuffleArray() ✓
+                    ├── StudySessionSetup
+                    └── StudySession`
+                  }
                 />
                 <div className="mt-4 space-y-2 text-sm">
                   <div className="text-green-600">✓ Separation of concerns</div>
@@ -230,12 +250,13 @@ StudyContainer
                 <CodeBlock
                   language="javascript"
                   code={`// Centralized state management
-StudySessionContext
-├── Global state ✓
-├── Business logic ✓
-└── Components
-    ├── StudySessionSetup
-    └── StudySession`}
+                    StudySessionContext
+                    ├── Global state ✓
+                    ├── Business logic ✓
+                    └── Components
+                        ├── StudySessionSetup
+                        └── StudySession`
+                  }
                 />
                 <div className="mt-4 space-y-2 text-sm">
                   <div className="text-green-600">✓ Single source of truth</div>
@@ -304,23 +325,24 @@ StudySessionContext
                 <CodeBlock
                   language="typescript"
                   code={`// /src/contexts/StudySessionContext.tsx
-interface StudySessionState {
-  // Session Status
-  sessionId: string | null;
-  isLoading: boolean;
-  isComplete: boolean;
-  error: string | null;
+                    interface StudySessionState {
+                      // Session Status
+                      sessionId: string | null;
+                      isLoading: boolean;
+                      isComplete: boolean;
+                      error: string | null;
 
-  // Session Data
-  flashcards: Flashcard[];
-  currentIndex: number;
-  cardResults: CardResult[];
+                      // Session Data
+                      flashcards: Flashcard[];
+                      currentIndex: number;
+                      cardResults: CardResult[];
 
-  // Actions
-  startSession: (listId: string) => Promise<void>;
-  recordCardResult: (isCorrect: boolean) => Promise<void>;
-  resetSession: () => void;
-}`}
+                      // Actions
+                      startSession: (listId: string) => Promise<void>;
+                      recordCardResult: (isCorrect: boolean) => Promise<void>;
+                      resetSession: () => void;
+                    }`
+                  }
                 />
               </div>
 
@@ -329,30 +351,31 @@ interface StudySessionState {
                 <CodeBlock
                   language="typescript"
                   code={`export const StudySessionProvider = ({ children }) => {
-  const [sessionId, setSessionId] = useState(null);
-  const [flashcards, setFlashcards] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isComplete, setIsComplete] = useState(false);
+                    const [sessionId, setSessionId] = useState(null);
+                    const [flashcards, setFlashcards] = useState([]);
+                    const [currentIndex, setCurrentIndex] = useState(0);
+                    const [isComplete, setIsComplete] = useState(false);
 
-  const startSession = useCallback(async (listId) => {
-    const data = await fetchSessionData(listId);
-    const shuffledCards = shuffleArray(data.flashcards);
-    
-    // Atomic state update
-    setSessionId(data.sessionId);
-    setFlashcards(shuffledCards);
-    setCurrentIndex(0);
-    setIsComplete(false);
-  }, []);
+                    const startSession = useCallback(async (listId) => {
+                      const data = await fetchSessionData(listId);
+                      const shuffledCards = shuffleArray(data.flashcards);
+                      
+                      // Atomic state update
+                      setSessionId(data.sessionId);
+                      setFlashcards(shuffledCards);
+                      setCurrentIndex(0);
+                      setIsComplete(false);
+                    }, []);
 
-  return (
-    <StudySessionContext.Provider value={{
-      sessionId, flashcards, startSession
-    }}>
-      {children}
-    </StudySessionContext.Provider>
-  );
-};`}
+                    return (
+                      <StudySessionContext.Provider value={{
+                        sessionId, flashcards, startSession
+                      }}>
+                        {children}
+                      </StudySessionContext.Provider>
+                    );
+                  };`
+                }
                 />
               </div>
             </div>
@@ -365,20 +388,21 @@ interface StudySessionState {
                   <CodeBlock
                     language="javascript"
                     code={`// StudySessionSetup.tsx - BEFORE
-export default function StudySessionSetup({ onStartSession }) {
-  const [flashcards, setFlashcards] = useState([]);
-  
-  useEffect(() => {
-    fetchFlashcards().then(setFlashcards);
-  }, []);
+                      export default function StudySessionSetup({ onStartSession }) {
+                        const [flashcards, setFlashcards] = useState([]);
+                        
+                        useEffect(() => {
+                          fetchFlashcards().then(setFlashcards);
+                        }, []);
 
-  const handleStart = () => {
-    const shuffled = shuffleArray(flashcards);
-    onStartSession(sessionId, shuffled); // Prop drilling
-  };
+                        const handleStart = () => {
+                          const shuffled = shuffleArray(flashcards);
+                          onStartSession(sessionId, shuffled); // Prop drilling
+                        };
 
-  return <button onClick={handleStart}>Start</button>;
-}`}
+                        return <button onClick={handleStart}>Start</button>;
+                      }`
+                    }
                   />
                 </div>
 
@@ -387,23 +411,24 @@ export default function StudySessionSetup({ onStartSession }) {
                   <CodeBlock
                     language="javascript"
                     code={`// StudySessionSetup.tsx - AFTER  
-export default function StudySessionSetup() {
-  const { startSession, isLoading } = useStudySession();
+                      export default function StudySessionSetup() {
+                        const { startSession, isLoading } = useStudySession();
 
-  const handleStart = async () => {
-    await startSession(selectedListId);
-    // Context handles everything else
-  };
+                        const handleStart = async () => {
+                          await startSession(selectedListId);
+                          // Context handles everything else
+                        };
 
-  return (
-    <button 
-      onClick={handleStart} 
-      disabled={isLoading}
-    >
-      {isLoading ? 'Starting...' : 'Start Studying'}
-    </button>
-  );
-}`}
+                        return (
+                          <button 
+                            onClick={handleStart} 
+                            disabled={isLoading}
+                          >
+                            {isLoading ? 'Starting...' : 'Start Studying'}
+                          </button>
+                        );
+                      }`
+                    }
                   />
                 </div>
               </div>
@@ -524,6 +549,19 @@ export default function StudySessionSetup() {
           <div className="text-sm text-gray-500">
             Part 1 of 5 - Rabbit Holes Series
           </div>
+          <Link
+            href={'/rabbit-holes-to-rabbit-holes-technical'}
+            className="bg-green-600 text-white px-1 py-1 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+            Rabbit Holes → Business Value: Technical Series
+          </Link>
+          <Link 
+            href="https://i.witus.online/flashlearnai-b" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="bg-purple-600 text-white px-1 py-1 rounded-lg font-medium hover:bg-purple-700 transition-colors text-sm"
+          >
+            Try Live Demo
+          </Link>
           <Link
             href={'/blog/rabbit-holes-to-rabbit-holes-part-02-technical'}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">

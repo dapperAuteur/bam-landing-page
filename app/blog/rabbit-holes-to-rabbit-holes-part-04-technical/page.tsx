@@ -969,9 +969,14 @@ const StudySessionProvider = ({ children }) => {
       <footer className="mt-16 pt-8 border-t border-gray-200">
         <div className="flex justify-between items-center">
           <div className="text-sm text-gray-500">
-            Part 3 of 5 - Rabbit Holes Series
+            Part 4 of 5 - Rabbit Holes Series
           </div>
           <div className="flex space-x-4">
+            <Link
+              href={'/blog/rabbit-holes-to-rabbit-holes-part-03-technical'}
+              className="bg-orange-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-orange-700 transition-colors">
+              Prev: Race Condition Fix → Session Persistence Edge Case
+            </Link>
             <Link 
               href="https://i.witus.online/flashlearnai-b" 
               target="_blank" 
