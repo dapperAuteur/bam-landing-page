@@ -81,21 +81,21 @@ export default function RabbitHolePart4Technical() {
           </div>
           <div className="flex items-center space-x-4">
             <span className="text-green-400 font-mono text-sm">✓ Race condition eliminated</span>
-            <a 
+            <Link 
               href="https://i.witus.online/flashlearnai-b"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700"
             >
               Live Demo →
-            </a>
+            </Link>
           </div>
         </div>
-        <VideoPlaceholder 
+        {/* <VideoPlaceholder 
           title="Feedback Screen Architecture Demo"
           description="Real-time demonstration of constraint-driven UX innovation"
           darkMode={true}
-        />
+        /> */}
       </section>
 
       {/* Audio Deep Dive */}

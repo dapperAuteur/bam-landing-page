@@ -81,21 +81,21 @@ export default function RabbitHolePart5Technical() {
           </div>
           <div className="flex items-center space-x-4">
             <span className="text-green-400 font-mono text-sm">✓ 23% conversion increase</span>
-            <a 
+            <Link 
               href="https://i.witus.online/flashlearnai-b"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700"
             >
               Live Demo →
-            </a>
+            </Link>
           </div>
         </div>
-        <VideoPlaceholder 
+        {/* <VideoPlaceholder 
           title="Authentication-Driven Growth Demo"
           description="Real-time demonstration of feature gating for user conversion optimization"
           darkMode={true}
-        />
+        /> */}
       </section>
 
       {/* Audio Deep Dive */}
