@@ -3,7 +3,7 @@ import { BlogPost } from "./../types/types"
 // 🔥 BLOG POST REGISTRY - Add new blog posts here!
 export const blogPosts: BlogPost[] = [
   {
-    slug: "rabbit-holes-to-rabbit-holes-technical",
+    slug: "rabbit-holes-to-rabbit-holes/technical",
     title: "Rabbit Holes → Business Value: Technical Series",
     description: "Series preview of a developer's journey from mindless scrolling to meaningful problem-solving, starting with a simple shuffle feature that exposed a major architectural flaw.",
     publishDate: "2025-09-20",
@@ -17,7 +17,7 @@ export const blogPosts: BlogPost[] = [
     slug: "elementary-mba-cross-curricular-9-12",
     title: "Revolutionary Cross-Curricular Education",
     description: "Connecting everyday purchases to world trade and history.",
-    publishDate: "2025-09-20",
+    publishDate: "2025-09-10",
     readTime: "9 min read",
     category: "Education",
     featured: true,
