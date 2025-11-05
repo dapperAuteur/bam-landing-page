@@ -25,7 +25,7 @@ export const blogPosts: BlogPost[] = [
     excerpt: "Transform everyday student experiences into comprehensive lessons spanning Geography, Social Studies, Economics, and ELA. Connect coffee shops to Ethiopian highlands, chocolate bars to Maya ceremonies, and tea breaks to Chinese traditions."
   },
   {
-    slug: "rabbit-holes-to-rabbit-holes-part-01-technical",
+    slug: "rabbit-holes-to-rabbit-holes/technical/part-01",
     title: "Rabbit Holes to Rabbit Holes: Part 1 - The Shuffle That Broke Everything",
     description: "A developer's journey from mindless scrolling to meaningful problem-solving, starting with a simple shuffle feature that exposed a major architectural flaw.",
     publishDate: "2025-09-24",
