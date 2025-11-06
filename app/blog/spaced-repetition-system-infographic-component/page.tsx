@@ -3,10 +3,6 @@
 import React, { useState, useEffect, ElementType } from 'react';
 import { BrainCircuit, Milestone, BarChart3, GitBranch, Bot, Network, Lightbulb, CheckCircle, XCircle, ChevronRight, Loader } from 'lucide-react';
 
-
-const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-const apiKey = GEMINI_API_KEY;
-
 const INFOGRAPHIC = {
   "title": "The Next Generation of Learning: ML-Powered Spaced Retrieval",
   "subtitle": "Leveraging Cognitive Science and AI to Master Memory",
