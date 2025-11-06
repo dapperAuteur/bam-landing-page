@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, JSX } from 'react';
-import { AppError } from '../../../types/errors';
+import { AppError } from '../../../../types/errors';
 import { BarChart3, Calculator, Percent, MessageSquareQuote, Lightbulb, BrainCircuit, Loader2, Info } from 'lucide-react';
 
 // Main App Component
