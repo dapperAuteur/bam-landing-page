@@ -20,7 +20,6 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   // Add to your API route temporarily
-console.log('MongoDB URI:', process.env.MONGODB_URI?.substring(0, 20) + '...')
   return (
     <html lang="en">
       <Analytics />
