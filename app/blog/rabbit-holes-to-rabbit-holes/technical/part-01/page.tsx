@@ -550,7 +550,7 @@ export default function RabbitHolePart1Technical() {
             Part 1 of 5 - Rabbit Holes Series
           </div>
           <Link
-            href={'/rabbit-holes-to-rabbit-holes-technical'}
+            href={'/blog/rabbit-holes-to-rabbit-holes-technical'}
             className="bg-green-600 text-white px-1 py-1 rounded-lg font-medium hover:bg-blue-700 transition-colors">
             Rabbit Holes → Business Value: Technical Series
           </Link>
