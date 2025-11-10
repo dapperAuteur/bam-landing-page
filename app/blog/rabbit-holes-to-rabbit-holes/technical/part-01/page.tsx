@@ -7,6 +7,7 @@ import { VideoPlaceholder } from '@/components/ui/VideoPlaceholder';
 import { SeriesProgress } from '@/components/blog/SeriesNavigation';
 import Link from 'next/link';
 import { AudioPlayer } from '@/components/ui/AudioPlayer';
+import Script from 'next/script';
 
 interface TabsProps {
   activeTab: string;
@@ -92,12 +93,52 @@ export default function RabbitHolePart1Technical() {
                 <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
                 <span className="text-gray-400 font-mono text-sm ml-4">technical-discussion.mp3</span>
               </div>
-              <AudioPlayer 
+              {/* <AudioPlayer 
                 title="React Race Conditions: Technical Deep Dive"
                 description="Component lifecycle timing, useEffect dependency arrays, and state lifting patterns"
                 duration="15:47"
                 darkMode
-              />
+              /> */}
+              {/* <script type="text/javascript" src="https://cdn.bigcommand.com/dynamic-embed/js/inline.js" async ></script><div class="motion_popover"  data-id='lW5sbBXm' data-play-type='' style="width: 100%; height: 100%; padding-top: 56.25%; position: relative;" data-type='thumbnail'></div> */}
+              {/* <div 
+                className="motion_popover"  
+                data-id='lW5sbBXm' 
+                data-play-type='' 
+                style={{
+                  width: '100%', 
+                  height: '100%', 
+                  paddingTop: '56.25%', 
+                  position: 'relative'
+                }} 
+                data-type='thumbnail'
+                >
+              </div>
+              <section className="bg-gray-900 rounded-lg p-6 mb-12">
+                <div className="flex items-center mb-4">
+                  <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                  <span className="text-gray-400 font-mono text-sm ml-4">technical-discussion.mp3</span>
+                </div>
+                
+                <Script 
+                  src="https://cdn.bigcommand.com/dynamic-embed/js/inline.js" 
+                  strategy="lazyOnload"
+                />
+                
+                <div 
+                  className="motion_popover"  
+                  data-id='lW5sbBXm' 
+                  data-play-type='' 
+                  style={{
+                    width: '100%', 
+                    height: '100%', 
+                    paddingTop: '56.25%', 
+                    position: 'relative'
+                  }} 
+                  data-type='thumbnail'
+                />
+              </section> */}
             </section>
 
       {/* Technical Navigation */}
@@ -550,7 +591,7 @@ export default function RabbitHolePart1Technical() {
             Part 1 of 5 - Rabbit Holes Series
           </div>
           <Link
-            href={'/blog/rabbit-holes-to-rabbit-holes-technical'}
+            href={'/blog/rabbit-holes-to-rabbit-holes/technical'}
             className="bg-green-600 text-white px-1 py-1 rounded-lg font-medium hover:bg-blue-700 transition-colors">
             Rabbit Holes → Business Value: Technical Series
           </Link>
