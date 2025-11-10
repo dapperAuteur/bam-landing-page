@@ -1,6 +1,6 @@
 "use client";
 
-import { AppError } from './../../../types/errors';
+import { AppError } from './../../../../types/errors';
 import React, { useState, useEffect, useCallback, type JSX } from 'react';
 import { BookOpen, FlaskConical, TestTube2, Users, MessageCircle, Lightbulb, BrainCircuit, ScanSearch, AlertTriangle, ArrowRight, Loader2 } from 'lucide-react';
 
