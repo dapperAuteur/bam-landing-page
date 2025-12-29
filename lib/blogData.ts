@@ -3,6 +3,50 @@ import { BlogPost } from "./../types/types"
 // 🔥 BLOG POST REGISTRY - Add new blog posts here!
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-i-track-every-step-toward-100",
+    title: "Why I Track Every Step Toward 100",
+    description: "How discovering 4 simple metrics changed my path to becoming the world's fastest centenarian. How they can transform your health too.",
+    publishDate: "2025-12-29",
+    readTime: "4 min read",
+    category: "Health & Longevity",
+    featured: true,
+    tags: ["Health Metrics", "Wearable Technology", "Longevity", "Data Analytics", "Personal Training"],
+    excerpt: "Six years of study led me to one truth: the data your body produces daily holds the key to extraordinary aging. Here's what I learned."
+  },
+  // {
+  //   slug: "the-intensity-minutes-that-changed-everything",
+  //   title: "The Intensity Minutes That Changed Everything",
+  //   description: "Understanding the single metric that predicts 50% mortality reduction—and how to optimize it for your body.",
+  //   publishDate: "2025-01-20",
+  //   readTime: "7 min read",
+  //   category: "Health & Longevity",
+  //   featured: true,
+  //   tags: ["Fitness Data", "Intensity Minutes", "Heart Rate", "Exercise Science", "Longevity"],
+  //   excerpt: "Most people track steps. Elite athletes track something far more powerful. Here's the metric that separates average health from exceptional longevity."
+  // },
+  // {
+  //   slug: "building-a-health-dashboard-for-the-next-70-years",
+  //   title: "Building a Health Dashboard for the Next 70 Years",
+  //   description: "The complete system for transforming health data into daily decisions—designed to keep my community active and present for decades.",
+  //   publishDate: "2025-01-27",
+  //   readTime: "8 min read",
+  //   category: "Health & Longevity",
+  //   featured: true,
+  //   tags: ["Data Analytics", "Health Dashboard", "Fitness Technology", "Longevity Science", "Course Launch"],
+  //   excerpt: "I built this course because I want the people I love to be there when I break the centenarian speed record. Here's the complete roadmap."
+  // },
+  // {
+  //   slug: "body-dashboard-fitness-metrics-series-part-1",
+  //   title: "Your Body’s Dashboard: Part 1 of 3",
+  //   description: "Learn a simple way to read your body’s numbers so you can make clearer everyday choices.",
+  //   publishDate: "2026-01-05",
+  //   readTime: "5 min read",
+  //   category: "Health & Data",
+  //   featured: true,
+  //   tags: ["Health", "Fitness", "Data", "Wearables", "Longevity"],
+  //   excerpt: "Most people never learn how to read their body’s “dashboard.” This post shows a simple, three‑step way to use your own health numbers."
+  // },
+  {
     slug: "rabbit-holes-to-rabbit-holes/technical",
     title: "Rabbit Holes → Business Value: Technical Series",
     description: "Series preview of a developer's journey from mindless scrolling to meaningful problem-solving, starting with a simple shuffle feature that exposed a major architectural flaw.",
