@@ -45,7 +45,11 @@ export default function EducationDashboard() {
     try {
       setLoading(true)
       
-      const adminKey = process.env.NEXT_PUBLIC_ADMIN_API_KEY || 'your_admin_key_here'
+      const adminKey = process.env.NEXT_PUBLIC_ADMIN_API_KEY
+
+      if (!adminKey) {
+        throw new Error('Configuration Error: NEXT_PUBLIC_ADMIN_API_KEY is missing in environment variables.')
+      }
       
       const [statsResponse, submissionsResponse] = await Promise.all([
         fetch('/api/admin/education/stats', {
@@ -56,10 +60,9 @@ export default function EducationDashboard() {
         })
       ])
 
-      console.log('API Response Status:', { 
-        stats: statsResponse.status, 
-        submissions: submissionsResponse.status,
-        adminKey: adminKey
+      console.log('API Response Status:', {
+        stats: statsResponse.status,
+        submissions: submissionsResponse.status
       })
 
       if (!statsResponse.ok || !submissionsResponse.ok) {
@@ -81,11 +84,13 @@ export default function EducationDashboard() {
 
   const updateSubmissionStatus = async (id: string, newStatus: string) => {
     try {
+      const adminKey = process.env.NEXT_PUBLIC_ADMIN_API_KEY
+      
       await fetch(`/api/admin/education/submissions/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.ADMIN_API_KEY}`
+          'Authorization': `Bearer ${adminKey}`
         },
         body: JSON.stringify({ status: newStatus })
       })
