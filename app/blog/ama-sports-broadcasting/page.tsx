@@ -16,6 +16,50 @@ import {
 } from 'lucide-react';
 
 export default function GuestSpeakerPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    profession: '',
+    expertise: '',
+    availability: '',
+    message: ''
+  });
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [statusMessage, setStatusMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('submitting');
+    
+    try {
+      const res = await fetch('/api/guest-speaker', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      
+      const data = await res.json();
+      
+      if (data.success) {
+        setStatus('success');
+        setStatusMessage(data.message);
+      } else {
+        setStatus('error');
+        setStatusMessage(data.message);
+      }
+    } catch (error) {
+      setStatus('error');
+      setStatusMessage('An unexpected error occurred. Please try again.');
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-red-600 selection:text-white">
       
@@ -176,60 +220,120 @@ export default function GuestSpeakerPage() {
             </p>
           </div>
 
-          <form className="bg-white border border-gray-200 p-8 rounded-2xl shadow-xl space-y-6">
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Name</label>
-                <input type="text" placeholder="Jane Doe" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400" />
+          {status === 'success' ? (
+            <div className="bg-green-50 border border-green-200 p-8 rounded-2xl text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="text-green-600" size={32} />
               </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email</label>
-                <input type="email" placeholder="jane@network.com" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400" />
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Profession / Title</label>
-                <input type="text" placeholder="e.g. Technical Director" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Area of Expertise</label>
-                <input type="text" placeholder="e.g. Audio Engineering, On-Air" className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400" />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                Availability <span className="text-gray-400 normal-case ml-2">(Mon/Tue/Thu/Fri @ 1:53-2:28 PM)</span>
-              </label>
-              <textarea 
-                rows={2} 
-                placeholder="I am generally available on Fridays in February. Tuesdays also work..." 
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400"
-              ></textarea>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Introduction / Message</label>
-              <textarea 
-                rows={4} 
-                placeholder="Tell us a bit about yourself or what you'd like to share with the students." 
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400"
-              ></textarea>
-            </div>
-
-            <div className="pt-4">
-              <button type="submit" className="w-full bg-black text-white font-bold text-lg py-4 rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 shadow-lg">
-                <Send size={20} /> Send Interest
-              </button>
-              <p className="text-center text-gray-400 text-sm mt-4">
-                Note: This form expresses interest. We will email you to finalize the booking.
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Interest Received!</h3>
+              <p className="text-gray-600">
+                {statusMessage}
               </p>
             </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="bg-white border border-gray-200 p-8 rounded-2xl shadow-xl space-y-6">
+            
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Name</label>
+                  <input 
+                    type="text" 
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Jane Doe" 
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400" 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email</label>
+                  <input 
+                    type="email" 
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="jane@network.com" 
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400" 
+                  />
+                </div>
+              </div>
 
-          </form>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Profession / Title</label>
+                  <input 
+                    type="text" 
+                    name="profession"
+                    required
+                    value={formData.profession}
+                    onChange={handleChange}
+                    placeholder="e.g. Technical Director" 
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400" 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Area of Expertise</label>
+                  <input 
+                    type="text" 
+                    name="expertise"
+                    required
+                    value={formData.expertise}
+                    onChange={handleChange}
+                    placeholder="e.g. Audio Engineering, On-Air" 
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400" 
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  Availability <span className="text-gray-400 normal-case ml-2">(Mon/Tue/Thu/Fri @ 1:53-2:28 PM)</span>
+                </label>
+                <textarea 
+                  name="availability"
+                  value={formData.availability}
+                  onChange={handleChange}
+                  rows={2} 
+                  placeholder="I am generally available on Fridays in February. Tuesdays also work..." 
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400"
+                ></textarea>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Introduction / Message</label>
+                <textarea 
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={4} 
+                  placeholder="Tell us a bit about yourself or what you'd like to share with the students." 
+                  className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400"
+                ></textarea>
+              </div>
+
+              {status === 'error' && (
+                <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg text-sm">
+                  {statusMessage}
+                </div>
+              )}
+
+              <div className="pt-4">
+                <button 
+                  type="submit" 
+                  disabled={status === 'submitting'}
+                  className="w-full bg-black text-white font-bold text-lg py-4 rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {status === 'submitting' ? 'Sending...' : <><Send size={20} /> Send Interest</>}
+                </button>
+                <p className="text-center text-gray-400 text-sm mt-4">
+                  Note: This form expresses interest. We will email you to finalize the booking.
+                </p>
+              </div>
+
+            </form>
+          )}
         </div>
       </section>
 
