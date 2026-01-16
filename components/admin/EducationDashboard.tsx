@@ -111,7 +111,7 @@ export default function EducationDashboard() {
         sub.city,
         sub.state,
         sub.country,
-        sub.gradesTeaching.join(';'),
+        sub.gradesTeaching?.join(';') || '',
         sub.formType,
         sub.customCreationRequest ? 'Yes' : 'No',
         new Date(sub.submittedAt).toLocaleDateString(),
@@ -276,7 +276,7 @@ export default function EducationDashboard() {
                       </div>
                       <div className="text-sm text-gray-500">{submission.email}</div>
                       <div className="text-xs text-gray-400">
-                        Grades: {submission.gradesTeaching.join(', ')}
+                        Grades: {submission.gradesTeaching?.join(', ') || 'N/A'}
                       </div>
                     </div>
                   </div>
@@ -361,7 +361,7 @@ export default function EducationDashboard() {
               <div><strong>School:</strong> {selectedSubmission.schoolName}</div>
               <div><strong>District:</strong> {selectedSubmission.schoolDistrict}</div>
               <div><strong>Location:</strong> {selectedSubmission.city}, {selectedSubmission.state}, {selectedSubmission.country}</div>
-              <div><strong>Grades Teaching:</strong> {selectedSubmission.gradesTeaching.join(', ')}</div>
+              <div><strong>Grades Teaching:</strong> {selectedSubmission.gradesTeaching?.join(', ') || 'N/A'}</div>
               <div><strong>Form Type:</strong> {selectedSubmission.formType}</div>
               <div><strong>Custom Content Request:</strong> {selectedSubmission.customCreationRequest ? 'Yes' : 'No'}</div>
               <div><strong>Submitted:</strong> {new Date(selectedSubmission.submittedAt).toLocaleString()}</div>
