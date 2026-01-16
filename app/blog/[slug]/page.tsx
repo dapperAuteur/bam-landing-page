@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { getPostBySlug } from '../../../lib/blogData'
 import BlogPostWrapper from './../../../components/blog/BlogPostWrapper'
-
+// slug
 interface BlogPostPageProps {
   params: {
     slug: string
