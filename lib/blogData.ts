@@ -47,6 +47,17 @@ export const blogPosts: BlogPost[] = [
   //   excerpt: "Most people never learn how to read their body’s “dashboard.” This post shows a simple, three‑step way to use your own health numbers."
   // },
   {
+    slug: "ama-sports-broadcasting",
+    title: "Pass the Torch: Inspire the Next Generation",
+    description: "A call to action for sports media professionals: Share your journey with high school students in a 35-minute virtual AMA and shape the future of broadcasting.",
+    publishDate: "2026-01-16",
+    readTime: "2 min read",
+    category: "Community & Mentorship",
+    featured: true,
+    tags: ["Sports Broadcasting", "Mentorship", "Education", "Volunteering", "Career Development"],
+    excerpt: "35 minutes. Virtual. Massive Impact. Join the roster of industry professionals helping 5A high school students bridge the gap between technical skills and a professional career."
+  },
+  {
     slug: "rabbit-holes-to-rabbit-holes/technical",
     title: "Rabbit Holes → Business Value: Technical Series",
     description: "Series preview of a developer's journey from mindless scrolling to meaningful problem-solving, starting with a simple shuffle feature that exposed a major architectural flaw.",
