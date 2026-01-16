@@ -14,7 +14,6 @@ import {
   Send,
   Radio
 } from 'lucide-react';
-import { Logger, LogContext } from '../../../lib/logging/logger';
 
 export default function GuestSpeakerPage() {
   const [formData, setFormData] = useState({
@@ -31,7 +30,7 @@ export default function GuestSpeakerPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('submitting');
-    await Logger.info(LogContext.SYSTEM, 'Submitting guest speaker form', { formData });
+    console.log('Submitting guest speaker form:', formData);
     
     try {
       const res = await fetch('/api/guest-speaker', {
@@ -41,7 +40,7 @@ export default function GuestSpeakerPage() {
       });
       
       const data = await res.json();
-      await Logger.info(LogContext.SYSTEM, 'Guest speaker API response', { data });
+      console.log('Guest speaker API response:', data);
       
       if (data.success) {
         setStatus('success');
@@ -49,10 +48,10 @@ export default function GuestSpeakerPage() {
       } else {
         setStatus('error');
         setStatusMessage(data.message);
-        await Logger.error(LogContext.SYSTEM, 'Guest speaker submission failed', { message: data.message });
+        console.error('Guest speaker submission failed:', data.message);
       }
     } catch (error) {
-      await Logger.error(LogContext.SYSTEM, 'Guest speaker submission error', { error });
+      console.error('Guest speaker submission error:', error);
       setStatus('error');
       setStatusMessage('An unexpected error occurred. Please try again.');
     }
