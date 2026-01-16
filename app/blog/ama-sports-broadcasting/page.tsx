@@ -30,6 +30,7 @@ export default function GuestSpeakerPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('submitting');
+    console.log('Submitting guest speaker form:', formData);
     
     try {
       const res = await fetch('/api/guest-speaker', {
@@ -39,6 +40,7 @@ export default function GuestSpeakerPage() {
       });
       
       const data = await res.json();
+      console.log('Guest speaker API response:', data);
       
       if (data.success) {
         setStatus('success');
@@ -46,8 +48,10 @@ export default function GuestSpeakerPage() {
       } else {
         setStatus('error');
         setStatusMessage(data.message);
+        console.error('Guest speaker submission failed:', data.message);
       }
     } catch (error) {
+      console.error('Guest speaker submission error:', error);
       setStatus('error');
       setStatusMessage('An unexpected error occurred. Please try again.');
     }
