@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import { BookOpen, Zap, Trophy, Heart, Brain, Clock, User, BarChart2 } from 'lucide-react';
+import { YouTubeEmbed } from '@/components/blog/YouTubeEmbed';
 
 // interface Color {
 //     bg: string;
@@ -163,6 +164,11 @@ export default function LesterWrightInfographic() {
                 </header>
 
                 <main className="space-y-12">
+
+                    <div className="mt-8 max-w-2xl mx-auto">
+                        <h3 className="text-xl font-bold text-center mb-4 text-gray-700">Watch the Historic Run</h3>
+                        <YouTubeEmbed videoId="1fphTXZXI-w" title="Lester Wright Sr. runs 100m at Penn Relays" />
+                    </div>
                     {/* Key Highlights Section */}
                     <section>
                         <h2 className="text-3xl font-bold text-center mb-8 text-gray-700">Life at a Glance</h2>
