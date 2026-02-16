@@ -13,6 +13,17 @@ export const blogPosts: BlogPost[] = [
     tags: ["Health Metrics", "Wearable Technology", "Longevity", "Data Analytics", "Personal Training"],
     excerpt: "Six years of study led me to one truth: the data your body produces daily holds the key to extraordinary aging. Here's what I learned."
   },
+  {
+    slug: "workouts/stable-explosiveness-lphc-protocol", // "lphc-centenarian-protocol",
+    title: "The LPHC Protocol: Engineering the 100-Year Sprinter",
+    description: "A strategic, time-compressed workout regimen focusing on the Lumbo-Pelvic-Hip Complex (LPHC) to maximize speed, stability, and longevity. Tools do not create results; strategy does.",
+    publishDate: "2026-02-16",
+    readTime: "7 min read",
+    category: "Performance",
+    featured: true,
+    tags: ["Longevity", "Sprinting", "NASM", "Biohacking", "LPHC"],
+    excerpt: "The 'Core' is a myth. The LPHC is the reality. Discover the modular 15/30/45-minute protocols designed to build the structural integrity required for a sub-17 second 100m dash at age 100."
+  },
   // {
   //   slug: "the-intensity-minutes-that-changed-everything",
   //   title: "The Intensity Minutes That Changed Everything",
