@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import clientPromise from '@/lib/db/mongodb'
 import { createClientSession } from '@/lib/auth/client-auth'
+import { trackPortalView } from '@/lib/analytics/portal-analytics'
 
 export async function POST(
   request: NextRequest,
@@ -37,6 +38,9 @@ export async function POST(
         }
       )
     }
+
+    // Track analytics (non-blocking)
+    trackPortalView(params.projectId, project.clientEmail || '', request).catch(() => {})
 
     const { accessCode: _, _id, ...safeProject } = project
 

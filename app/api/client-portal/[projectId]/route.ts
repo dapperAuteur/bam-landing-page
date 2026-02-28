@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import clientPromise from '@/lib/db/mongodb'
 import { validateClientSession } from '@/lib/auth/client-auth'
+import { trackPortalView } from '@/lib/analytics/portal-analytics'
 
 export async function GET(
   request: NextRequest,
@@ -61,6 +62,9 @@ export async function GET(
         }
       )
     }
+
+    // Track analytics (non-blocking)
+    trackPortalView(params.projectId, project.clientEmail || '', request).catch(() => {})
 
     return NextResponse.json({ project: sanitizeProject(project), authenticated: true })
   } catch (error) {

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import clientPromise from '@/lib/db/mongodb'
 import { validateClientSession } from '@/lib/auth/client-auth'
+import { trackProposalResponse } from '@/lib/analytics/portal-analytics'
+import { sendApprovalNotificationEmail } from '@/lib/email/email-service'
 import type { ProposalStatus } from '@/types/client-portal'
 
 const ALLOWED_CLIENT_STATUSES: ProposalStatus[] = ['approved', 'rejected', 'revised']
@@ -46,6 +48,15 @@ export async function POST(
         } as any
       }
     )
+
+    // Track analytics and send email notification (non-blocking)
+    trackProposalResponse(params.projectId, status, changedBy, note).catch(() => {})
+    sendApprovalNotificationEmail(
+      project.projectName,
+      project.clientName,
+      status,
+      note
+    ).catch(() => {})
 
     return NextResponse.json({ success: true, status })
   } catch (error) {

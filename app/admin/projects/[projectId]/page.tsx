@@ -73,6 +73,9 @@ export default function AdminProjectEditorPage({ params }: { params: { projectId
           <p className="text-gray-600">{project.clientName} &bull; {project.clientEmail}</p>
         </div>
         <div className="flex gap-2">
+          <a href={`/admin/projects/${project.projectId}/analytics`} className="px-4 py-2 bg-green-100 text-green-700 rounded-md hover:bg-green-200">
+            Analytics
+          </a>
           <a href={`/portal/${project.projectId}`} target="_blank" className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
             Preview Portal
           </a>

@@ -23,10 +23,23 @@ const STATUS_COLORS: Record<ProposalStatus, string> = {
   revised: 'bg-purple-100 text-purple-800'
 }
 
+const STATUS_ORDER: ProposalStatus[] = ['draft', 'sent', 'viewed', 'approved', 'rejected', 'revised']
+
+const STATUS_ICONS: Record<ProposalStatus, string> = {
+  draft: '---',
+  sent: '>>>',
+  viewed: '(o)',
+  approved: '[+]',
+  rejected: '[x]',
+  revised: '[~]'
+}
+
 export default function AdminProjectsPage() {
   const [projects, setProjects] = useState<ClientProject[]>([])
   const [loading, setLoading] = useState(true)
   const [showCreateForm, setShowCreateForm] = useState(false)
+  const [filterStatus, setFilterStatus] = useState<ProposalStatus | 'all'>('all')
+  const [sendingId, setSendingId] = useState<string | null>(null)
 
   useEffect(() => { fetchProjects() }, [])
 
@@ -69,6 +82,7 @@ export default function AdminProjectsPage() {
   }
 
   const handleStatusUpdate = async (projectId: string, status: ProposalStatus) => {
+    if (status === 'sent') setSendingId(projectId)
     try {
       await fetch(`/api/admin/projects/${projectId}/status`, {
         method: 'PUT',
@@ -78,8 +92,14 @@ export default function AdminProjectsPage() {
       fetchProjects()
     } catch (error) {
       console.error('Failed to update status:', error)
+    } finally {
+      setSendingId(null)
     }
   }
+
+  const filteredProjects = filterStatus === 'all'
+    ? projects
+    : projects.filter(p => p.status === filterStatus)
 
   if (loading) return <div className="p-6">Loading projects...</div>
 
@@ -108,87 +128,157 @@ export default function AdminProjectsPage() {
         </div>
       )}
 
-      {/* Status Pipeline */}
-      <div className="flex gap-2 text-sm">
-        {(['draft', 'sent', 'viewed', 'approved', 'rejected'] as ProposalStatus[]).map(status => {
-          const count = projects.filter(p => p.status === status).length
+      {/* Status Pipeline - clickable filter */}
+      <div className="bg-white rounded-lg shadow p-4">
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setFilterStatus('all')}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              filterStatus === 'all' ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            All ({projects.length})
+          </button>
+          {STATUS_ORDER.map((status, i) => {
+            const count = projects.filter(p => p.status === status).length
+            return (
+              <div key={status} className="flex items-center">
+                {i > 0 && <span className="text-gray-300 mx-1">&rarr;</span>}
+                <button
+                  onClick={() => setFilterStatus(status)}
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    filterStatus === status
+                      ? STATUS_COLORS[status]
+                      : count > 0
+                        ? 'text-gray-600 hover:bg-gray-100'
+                        : 'text-gray-300'
+                  }`}
+                >
+                  <span className="font-mono text-xs mr-1">{STATUS_ICONS[status]}</span>
+                  {status.charAt(0).toUpperCase() + status.slice(1)} ({count})
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Projects List */}
+      <div className="grid gap-4">
+        {filteredProjects.map((project) => {
+          const lastStatusChange = project.statusHistory?.[project.statusHistory.length - 1]
           return (
-            <span key={status} className={`px-3 py-1 rounded-full ${STATUS_COLORS[status]}`}>
-              {status.charAt(0).toUpperCase() + status.slice(1)}: {count}
-            </span>
+            <div key={project.projectId} className="bg-white rounded-lg shadow p-5 hover:shadow-md transition-shadow">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-1">
+                    <h3 className="text-lg font-semibold">{project.projectName}</h3>
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[project.status]}`}>
+                      {project.status}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">
+                      {SERVICE_LABELS[project.serviceCategory] || project.serviceCategory}
+                    </span>
+                  </div>
+                  <p className="text-gray-600">{project.clientName} &bull; {project.clientEmail}</p>
+                  {project.description && (
+                    <p className="text-sm text-gray-500 mt-1 line-clamp-2">{project.description}</p>
+                  )}
+                  <div className="flex items-center gap-4 mt-2">
+                    <p className="text-xs text-gray-400">
+                      Created {new Date(project.createdAt).toLocaleDateString()}
+                      {project.media?.length > 0 && ` · ${project.media.length} media files`}
+                    </p>
+                    {lastStatusChange && (
+                      <p className="text-xs text-gray-400">
+                        Last update: {new Date(lastStatusChange.changedAt).toLocaleDateString()} by {lastStatusChange.changedBy}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Status Actions */}
+                  <div className="flex gap-2 mt-3">
+                    {project.status === 'draft' && (
+                      <button
+                        onClick={() => handleStatusUpdate(project.projectId, 'sent')}
+                        disabled={sendingId === project.projectId}
+                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-300"
+                      >
+                        {sendingId === project.projectId ? 'Sending...' : 'Send to Client'}
+                      </button>
+                    )}
+                    {project.status === 'revised' && (
+                      <button
+                        onClick={() => handleStatusUpdate(project.projectId, 'sent')}
+                        disabled={sendingId === project.projectId}
+                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-300"
+                      >
+                        {sendingId === project.projectId ? 'Resending...' : 'Resend to Client'}
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Status History Preview */}
+                  {project.statusHistory && project.statusHistory.length > 1 && (
+                    <div className="flex items-center gap-1 mt-2">
+                      <span className="text-xs text-gray-400">History:</span>
+                      {project.statusHistory.slice(-5).map((sh: any, i: number) => (
+                        <span key={i} className={`text-xs px-1.5 py-0.5 rounded ${STATUS_COLORS[sh.status as ProposalStatus] || 'bg-gray-100 text-gray-600'}`}>
+                          {sh.status}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-1 ml-4">
+                  <a
+                    href={`/admin/projects/${project.projectId}/analytics`}
+                    className="px-3 py-1 text-sm text-center bg-green-100 text-green-700 rounded hover:bg-green-200"
+                  >
+                    Analytics
+                  </a>
+                  <button
+                    onClick={() => window.open(`/portal/${project.projectId}`, '_blank')}
+                    className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                  >
+                    Preview
+                  </button>
+                  <a
+                    href={`/admin/projects/${project.projectId}`}
+                    className="px-3 py-1 text-sm text-center bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                  >
+                    Edit
+                  </a>
+                  <button
+                    onClick={() => handleDelete(project.projectId)}
+                    className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
           )
         })}
       </div>
 
-      {/* Projects List */}
-      <div className="grid gap-6">
-        {projects.map((project) => (
-          <div key={project.projectId} className="bg-white rounded-lg shadow p-6">
-            <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-1">
-                  <h3 className="text-lg font-semibold">{project.projectName}</h3>
-                  <span className={`px-2 py-0.5 rounded-full text-xs ${STATUS_COLORS[project.status]}`}>
-                    {project.status}
-                  </span>
-                  <span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">
-                    {SERVICE_LABELS[project.serviceCategory] || project.serviceCategory}
-                  </span>
-                </div>
-                <p className="text-gray-600">{project.clientName} &bull; {project.clientEmail}</p>
-                {project.description && (
-                  <p className="text-sm text-gray-500 mt-1">{project.description}</p>
-                )}
-                <p className="text-xs text-gray-400 mt-2">
-                  Created {new Date(project.createdAt).toLocaleDateString()}
-                  {project.media?.length > 0 && ` • ${project.media.length} media files`}
-                </p>
-
-                {/* Status Actions */}
-                {project.status === 'draft' && (
-                  <button
-                    onClick={() => handleStatusUpdate(project.projectId, 'sent')}
-                    className="mt-3 px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
-                  >
-                    Mark as Sent
-                  </button>
-                )}
-              </div>
-
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => window.open(`/portal/${project.projectId}`, '_blank')}
-                  className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-                >
-                  Preview
-                </button>
-                <a
-                  href={`/admin/projects/${project.projectId}`}
-                  className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
-                >
-                  Edit
-                </a>
-                <button
-                  onClick={() => handleDelete(project.projectId)}
-                  className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {projects.length === 0 && (
+      {filteredProjects.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500">No projects created yet.</p>
-          <button
-            onClick={() => setShowCreateForm(true)}
-            className="mt-2 text-blue-600 hover:text-blue-700"
-          >
-            Create your first project
-          </button>
+          <p className="text-gray-500">
+            {projects.length === 0
+              ? 'No projects created yet.'
+              : `No projects with status "${filterStatus}".`
+            }
+          </p>
+          {projects.length === 0 && (
+            <button
+              onClick={() => setShowCreateForm(true)}
+              className="mt-2 text-blue-600 hover:text-blue-700"
+            >
+              Create your first project
+            </button>
+          )}
         </div>
       )}
     </div>
