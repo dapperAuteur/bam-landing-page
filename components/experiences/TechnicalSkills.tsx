@@ -1,6 +1,7 @@
-import { skillCategories } from './../../lib/skillCategoryData'
+import { SkillCategory } from '@/types/types'
+import { skillCategories as defaultSkillCategories } from './../../lib/skillCategoryData'
 
-export default function TechnicalSkills() {
+export default function TechnicalSkills({ skillCategories = defaultSkillCategories }: { skillCategories?: SkillCategory[] }) {
   return (
     <section className="section-padding bg-gray-50">
       <div className="container-max">

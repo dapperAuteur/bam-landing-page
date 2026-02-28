@@ -88,3 +88,39 @@ export const experiences: Experience[] = [
 // Helper functions for filtering and displaying data
 export const getFeaturedExperiences = () => experiences.filter(exp => exp.featured)
 export const getExperiencesByType = (type: string) => experiences.filter(exp => exp.type === type)
+
+// Async helper — merges DB overrides with hardcoded data (server components/API routes only)
+export async function getExperiencesWithOverrides(): Promise<(Experience & { hidden?: boolean; displayOrder?: number })[]> {
+  try {
+    const clientPromise = (await import('./db/mongodb')).default
+    const client = await clientPromise
+    const db = client.db('bam_portfolio')
+    const overrides = await db.collection('content_metadata').find({ type: 'experience' }).toArray()
+    const overrideMap = new Map(overrides.map(o => [o.contentId, o]))
+
+    return experiences
+      .map(exp => {
+        const override = overrideMap.get(`experience-${exp.id}`)
+        if (!override) return { ...exp, hidden: false, displayOrder: 999 }
+
+        const ovr = override.overrides || {}
+        return {
+          ...exp,
+          ...(ovr.title ? { title: override.title } : {}),
+          ...(ovr.description ? { description: override.data?.description || override.description } : {}),
+          ...(ovr.featured ? { featured: override.featured } : {}),
+          ...(ovr.data ? {
+            company: override.data?.company || exp.company,
+            type: override.data?.type || exp.type,
+            technologies: override.data?.technologies || exp.technologies,
+          } : {}),
+          hidden: override.hidden || false,
+          displayOrder: override.displayOrder ?? 999,
+        }
+      })
+      .filter(e => !e.hidden)
+      .sort((a, b) => (a.displayOrder || 999) - (b.displayOrder || 999))
+  } catch {
+    return experiences.map(e => ({ ...e, hidden: false, displayOrder: 999 }))
+  }
+}

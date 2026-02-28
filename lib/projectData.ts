@@ -113,3 +113,40 @@ export const projects: Project[] = [
 
 // Helper functions for filtering and displaying data
 export const getFeaturedProjects = () => projects.filter(proj => proj.featured)
+
+// Async helper — merges DB overrides with hardcoded data (server components/API routes only)
+export async function getProjectsWithOverrides(): Promise<(Project & { hidden?: boolean; displayOrder?: number })[]> {
+  try {
+    const clientPromise = (await import('./db/mongodb')).default
+    const client = await clientPromise
+    const db = client.db('bam_portfolio')
+    const overrides = await db.collection('content_metadata').find({ type: 'project' }).toArray()
+    const overrideMap = new Map(overrides.map(o => [o.contentId, o]))
+
+    return projects
+      .map((project, i) => {
+        const override = overrideMap.get(`project-${i}`)
+        if (!override) return { ...project, hidden: false, displayOrder: 999 }
+
+        const ovr = override.overrides || {}
+        return {
+          ...project,
+          ...(ovr.title ? { title: override.title } : {}),
+          ...(ovr.description ? { description: override.data?.description || override.description } : {}),
+          ...(ovr.featured ? { featured: override.featured } : {}),
+          ...(ovr.data ? {
+            type: override.data?.type || project.type,
+            technologies: override.data?.technologies || project.technologies,
+            impact: override.data?.impact || project.impact,
+            link: override.data?.link || project.link,
+          } : {}),
+          hidden: override.hidden || false,
+          displayOrder: override.displayOrder ?? 999,
+        }
+      })
+      .filter(p => !p.hidden)
+      .sort((a, b) => (a.displayOrder || 999) - (b.displayOrder || 999))
+  } catch {
+    return projects.map(p => ({ ...p, hidden: false, displayOrder: 999 }))
+  }
+}
