@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 import BlogHeader from './../../components/blog/BlogHeader'
-import BlogGrid from './../../components/blog/BlogGrid'
 import FeaturedPost from './../../components/blog/FeaturedPost'
-import { getFeaturedPosts, blogPosts } from '../../lib/blogData'
+import BlogCategoryFilter from './../../components/blog/BlogCategoryFilter'
+import { getFeaturedPosts, blogPosts, getAllCategories } from '../../lib/blogData'
 
 export const metadata: Metadata = {
   title: 'Blog | Brand Anthony McDonald - Stories, Insights & Technical Explorations',
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   const featuredPosts = getFeaturedPosts()
   const recentPosts = blogPosts.slice(0, 26) // Show 26 most recent
+  const categories = getAllCategories()
 
   return (
     <main className="min-h-screen bg-gray-50 pt-28">
@@ -28,7 +29,7 @@ export default function BlogPage() {
           </div>
         </section>
       )}
-      <BlogGrid posts={recentPosts} />
+      <BlogCategoryFilter posts={recentPosts} categories={categories} />
     </main>
   )
 }

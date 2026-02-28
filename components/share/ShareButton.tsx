@@ -63,7 +63,7 @@ export default function ShareButton() {
     if ('share' in navigator) {
       try {
         const screenshot = await captureScreenshot()
-        const shareObject: any = {
+        const shareObject: { title?: string; text?: string; url?: string; files?: File[] } = {
           title: shareData.title,
           text: shareData.description,
           url: shareData.url

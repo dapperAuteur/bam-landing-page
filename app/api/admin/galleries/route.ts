@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '../../../../lib/db/mongodb'
 import { ClientGallery } from '../../../../types/client-gallery'
 
 // GET - Fetch all galleries
 export async function GET() {
   try {
+    const session = await getServerSession(authOptions)
+    if (!session || session.user?.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const client = await clientPromise
     const db = client.db('bam_portfolio')
     
@@ -22,6 +29,11 @@ export async function GET() {
 // POST - Create new gallery
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions)
+    if (!session || session.user?.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const data = await request.json()
     const client = await clientPromise
     const db = client.db('bam_portfolio')

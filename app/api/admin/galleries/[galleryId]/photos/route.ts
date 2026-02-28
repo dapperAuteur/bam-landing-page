@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/lib/auth/authOptions'
 import { uploadToCloudinary, getThumbnailUrl } from '../../../../../../lib/cloudinary'
 import clientPromise from '../../../../../../lib/db/mongodb'
 
@@ -6,8 +8,12 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { galleryId: string } }
 ) {
-  console.log('Upload request received for gallery:', params.galleryId)
   try {
+    const session = await getServerSession(authOptions)
+    if (!session || session.user?.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const formData = await request.formData()
     const files = formData.getAll('photos') as File[]
     console.log('Files received:', files.length)
@@ -69,6 +75,11 @@ export async function PUT(
   { params }: { params: { galleryId: string } }
 ) {
   try {
+    const session = await getServerSession(authOptions)
+    if (!session || session.user?.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const data = await request.json()
     const client = await clientPromise
     const db = client.db('bam_portfolio')

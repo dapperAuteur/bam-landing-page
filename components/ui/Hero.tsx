@@ -10,12 +10,12 @@ export default function Hero() {
             Developer Relations, Software Developer, AI Adviser, Business Consultant & Voiceover Artist 
           </p>
           <p className="text-lg mb-8 text-blue-200 max-w-2xl mx-auto">
-            Building the world's smallest conglomerate while training to be the world's fastest centenarian. 
-            Professional voiceover services and strategic business consulting.
+            Developer advocacy, professional voiceover, and strategic consulting —
+            building tools and documenting the journey to become the world's fastest centenarian.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#contact" className="btn-primary bg-white text-blue-600 hover:bg-gray-100">
-              Get Voiceover Quote
+              Let's Work Together
             </a>
             <a href="#services" className="btn-secondary bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600">
               View Services

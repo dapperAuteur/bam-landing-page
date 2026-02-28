@@ -18,12 +18,12 @@ export default function About() {
             </p>
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <h3 className="font-bold text-gray-900 mb-2">Daily Morning Show</h3>
-                <p className="text-gray-600">Consistent content creation and community building</p>
+                <h3 className="font-bold text-gray-900 mb-2">Developer Advocacy</h3>
+                <p className="text-gray-600">API documentation, community building, and technical content creation</p>
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 mb-2">Educational Content</h3>
-                <p className="text-gray-600">Courses in fitness, intervention design, financial literacy, and more</p>
+                <h3 className="font-bold text-gray-900 mb-2">Voiceover & Narration</h3>
+                <p className="text-gray-600">Audiobooks, commercials, e-learning, and corporate content</p>
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 mb-2">Technical Projects</h3>
@@ -50,7 +50,7 @@ export default function About() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Specializations</span>
-                <span className="font-bold text-blue-600">Voiceover + Business</span>
+                <span className="font-bold text-blue-600">Dev Rel + Voiceover</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Mission</span>

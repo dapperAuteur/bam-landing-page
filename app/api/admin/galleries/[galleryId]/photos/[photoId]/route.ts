@@ -1,5 +1,7 @@
 // app/api/admin/galleries/[galleryId]/photos/[photoId]/route.ts
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '../../../../../../../lib/db/mongodb'
 
 export async function DELETE(
@@ -7,6 +9,11 @@ export async function DELETE(
   { params }: { params: { galleryId: string; photoId: string } }
 ) {
   try {
+    const session = await getServerSession(authOptions)
+    if (!session || session.user?.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const client = await clientPromise
     const db = client.db('bam_portfolio')
     
@@ -40,6 +47,11 @@ export async function POST(
   { params }: { params: { galleryId: string; photoId: string } }
 ) {
   try {
+    const session = await getServerSession(authOptions)
+    if (!session || session.user?.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { action, comment } = await request.json()
     const client = await clientPromise
     const db = client.db('bam_portfolio')
