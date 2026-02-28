@@ -2,11 +2,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Analytics } from "@vercel/analytics/next"
 import { Inter } from 'next/font/google'
-import Navigation from '../components/ui/Navigation'
 import {Providers} from "@/components/providers/SessionProvider"
-import ShareButton from '../components/share/ShareButton'
-import ConsoltoChat from "./../components/ConsoltoChat";
-import Footer from 'components/ui/Footer'
+import PublicLayout from '@/components/layout/PublicLayout'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -59,11 +56,9 @@ export default function RootLayout({
       <Analytics />
       <Providers>
         <body className={inter.className}>
-          <Navigation />
-          {children}
-          <ConsoltoChat />
-          <ShareButton />
-          <Footer/>
+          <PublicLayout>
+            {children}
+          </PublicLayout>
         </body>
       </Providers>
     </html>

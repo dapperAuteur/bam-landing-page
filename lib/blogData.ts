@@ -307,8 +307,48 @@ export const blogPosts: BlogPost[] = [
   // 4. The blog listing will automatically pick it up!
 ]
 
-// Helper functions
+// Helper functions (synchronous — used by client components and as fallback)
 export const getFeaturedPosts = () => blogPosts.filter(post => post.featured)
 export const getPostsByCategory = (category: string) => blogPosts.filter(post => post.category === category)
 export const getAllCategories = () => Array.from(new Set(blogPosts.map(post => post.category)))
 export const getPostBySlug = (slug: string) => blogPosts.find(post => post.slug === slug)
+
+// Async helper — merges DB overrides with hardcoded data (server components/API routes only)
+export async function getBlogPostsWithOverrides(): Promise<(BlogPost & { hidden?: boolean; featuredOrder?: number })[]> {
+  try {
+    const clientPromise = (await import('./db/mongodb')).default
+    const client = await clientPromise
+    const db = client.db('bam_portfolio')
+    const overrides = await db.collection('blog_metadata').find({}).toArray()
+    const overrideMap = new Map(overrides.map(o => [o.slug, o]))
+
+    return blogPosts
+      .map(post => {
+        const override = overrideMap.get(post.slug)
+        if (!override) return { ...post, hidden: false, featuredOrder: 999 }
+
+        const ovr = override.overrides || {}
+        return {
+          ...post,
+          ...(ovr.title ? { title: override.title } : {}),
+          ...(ovr.description ? { description: override.description } : {}),
+          ...(ovr.featured ? { featured: override.featured } : {}),
+          ...(ovr.category ? { category: override.category } : {}),
+          ...(ovr.tags ? { tags: override.tags } : {}),
+          ...(ovr.excerpt ? { excerpt: override.excerpt } : {}),
+          ...(ovr.readTime ? { readTime: override.readTime } : {}),
+          ...(ovr.publishDate ? { publishDate: override.publishDate } : {}),
+          hidden: override.hidden || false,
+          featuredOrder: override.featuredOrder ?? 999,
+        }
+      })
+      .filter(post => !post.hidden)
+      .sort((a, b) => {
+        if (a.featured && b.featured) return (a.featuredOrder || 999) - (b.featuredOrder || 999)
+        return 0
+      })
+  } catch {
+    // Fallback to hardcoded data if DB unavailable
+    return blogPosts.map(p => ({ ...p, hidden: false, featuredOrder: 999 }))
+  }
+}

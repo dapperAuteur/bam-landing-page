@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 // import { useAuth } from './../../contexts/AuthContext'
 import { signOut, useSession } from 'next-auth/react'
-import { authOptions } from '@/lib/auth/authOptions'
 
 
 export default function AdminLayout({
@@ -13,7 +12,7 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   // const { isAuthenticated, isAdmin, isLoading, logout } = useAuth()
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter()
   const pathname = usePathname()
 
@@ -23,8 +22,13 @@ export default function AdminLayout({
       return
     }
 
-    // If not loading and not authenticated, redirect to login
-    if ( !session) {
+    // Wait for session to load before making auth decisions
+    if (status === 'loading') {
+      return
+    }
+
+    // If not authenticated, redirect to login
+    if (status === 'unauthenticated') {
       router.push('/login')
       return
     }
@@ -34,16 +38,16 @@ export default function AdminLayout({
       router.push('/')
       return
     }
-  }, [session, router, pathname])
+  }, [session, status, router, pathname])
 
   // Show loading spinner while checking authentication
-  // if (isLoading) {
-  //   return (
-  //     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-  //       <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-  //     </div>
-  //   )
-  // }
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
 
   // Show login page if on login route
   if (pathname === '/login') {
@@ -51,7 +55,7 @@ export default function AdminLayout({
   }
 
   // Show unauthorized if not authenticated or not admin
-  if (!session || session.user?.role !== 'admin') {
+  if (status === 'unauthenticated' || !session || session.user?.role !== 'admin') {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -81,57 +85,32 @@ export default function AdminLayout({
               </h1>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <nav className="flex space-x-8">
-                <a
-                  href="/admin/contact"
-                  className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    pathname === '/admin/contact'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  Contact Dashboard
-                </a>
+            <div className="flex items-center space-x-2">
+              <nav className="flex space-x-1">
+                {[
+                  { href: '/admin/contact', label: 'Contact', match: '/admin/contact' },
+                  { href: '/admin/logs', label: 'Logs', match: '/admin/logs' },
+                  { href: '/admin/galleries', label: 'Galleries', match: '/admin/galleries' },
+                  { href: '/admin/projects', label: 'Projects', match: '/admin/projects' },
+                  { href: '/admin/blog', label: 'Blog', match: '/admin/blog' },
+                  { href: '/admin/content', label: 'Content', match: '/admin/content' },
+                  { href: '/admin/guide', label: 'Guide', match: '/admin/guide' },
+                ].map(({ href, label, match }) => (
+                  <a
+                    key={href}
+                    href={href}
+                    className={`px-3 py-2 rounded-md text-sm font-medium ${
+                      pathname?.startsWith(match)
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    {label}
+                  </a>
+                ))}
               </nav>
-              <nav className="flex space-x-8">
-                <a
-                  href="/admin/logs"
-                  className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    pathname === '/admin/logs'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  Logs Dashboard
-                </a>
-              </nav>
-              <nav className="flex space-x-8">
-                <a
-                  href="/admin/galleries"
-                  className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    pathname === '/admin/galleries'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  Galleries
-                </a>
-              </nav>
-              <nav className="flex space-x-8">
-                <a
-                  href="/admin/projects"
-                  className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    pathname?.startsWith('/admin/projects')
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  Projects
-                </a>
-              </nav>
-              
-              <div className="flex items-center space-x-4">
+
+              <div className="flex items-center space-x-3 ml-4 pl-4 border-l border-gray-200">
                 <span className="text-sm text-gray-700">
                   Welcome, Admin
                 </span>

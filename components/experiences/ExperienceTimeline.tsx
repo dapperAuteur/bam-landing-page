@@ -1,8 +1,7 @@
-'use client'
+import { Experience } from '@/types/types'
+import { experiences as defaultExperiences } from './../../lib/experienceData'
 
-import { experiences } from './../../lib/experienceData'
-
-export default function ExperienceTimeline() {
+export default function ExperienceTimeline({ experiences = defaultExperiences }: { experiences?: Experience[] }) {
   return (
     <section className="section-padding bg-white">
       <div className="container-max">

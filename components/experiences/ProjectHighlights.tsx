@@ -1,6 +1,7 @@
-import { projects } from './../../lib/projectData'
+import { Project } from '@/types/types'
+import { projects as defaultProjects } from './../../lib/projectData'
 
-export default function ProjectHighlights() {
+export default function ProjectHighlights({ projects = defaultProjects }: { projects?: Project[] }) {
   return (
     <section className="section-padding bg-white">
       <div className="container-max">
