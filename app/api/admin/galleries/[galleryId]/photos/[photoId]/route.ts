@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth/authOptions'
+import { v2 as cloudinary } from 'cloudinary'
 import clientPromise from '../../../../../../../lib/db/mongodb'
 
 export async function DELETE(
@@ -16,25 +17,48 @@ export async function DELETE(
 
     const client = await clientPromise
     const db = client.db('bam_portfolio')
-    
-    // FIXED: Use type assertion for MongoDB operation
+
+    // Look up the photo's cloudinaryId before removing it
+    const gallery = await db.collection('client_galleries').findOne(
+      { galleryId: params.galleryId }
+    )
+
+    if (!gallery) {
+      return NextResponse.json({ error: 'Gallery not found' }, { status: 404 })
+    }
+
+    const photo = gallery.photos?.find((p: any) => p.id === params.photoId)
+    const cloudinaryId = photo?.cloudinaryId
+
     const result = await db.collection('client_galleries').updateOne(
       { galleryId: params.galleryId },
-      { 
-        $pull: { 
+      {
+        $pull: {
           photos: { id: params.photoId }
         } as any,
         $set: { updatedAt: new Date() }
       }
     )
-    
-    if (result.matchedCount === 0) {
-      return NextResponse.json({ error: 'Gallery not found' }, { status: 404 })
+
+    if (result.modifiedCount === 0) {
+      return NextResponse.json({ error: 'Photo not found in gallery' }, { status: 404 })
     }
-    
-    // TODO: Also delete from Cloudinary if using cloud storage
-    // await cloudinary.uploader.destroy(params.photoId)
-    
+
+    // Clean up Cloudinary asset
+    if (cloudinaryId) {
+      cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET
+      })
+      try {
+        await cloudinary.uploader.destroy(cloudinaryId)
+      } catch (cloudinaryError) {
+        // Log but don't fail — the DB record is already removed
+        console.error('Cloudinary cleanup failed for', cloudinaryId, cloudinaryError)
+      }
+    }
+
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting photo:', error)

@@ -30,11 +30,11 @@ export default function AdminLayout({
     }
 
     // If authenticated but not admin, redirect to home
-    if ( session && !session) {
+    if (session && session.user?.role !== 'admin') {
       router.push('/')
       return
     }
-  }, [session, session, router, pathname])
+  }, [session, router, pathname])
 
   // Show loading spinner while checking authentication
   // if (isLoading) {
@@ -51,7 +51,7 @@ export default function AdminLayout({
   }
 
   // Show unauthorized if not authenticated or not admin
-  if (!session || !session) {
+  if (!session || session.user?.role !== 'admin') {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -106,13 +106,37 @@ export default function AdminLayout({
                   Logs Dashboard
                 </a>
               </nav>
+              <nav className="flex space-x-8">
+                <a
+                  href="/admin/galleries"
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    pathname === '/admin/galleries'
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Galleries
+                </a>
+              </nav>
+              <nav className="flex space-x-8">
+                <a
+                  href="/admin/projects"
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    pathname?.startsWith('/admin/projects')
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Projects
+                </a>
+              </nav>
               
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-700">
                   Welcome, Admin
                 </span>
                 <button
-                  // onClick={signOut()}
+                  onClick={() => signOut({ callbackUrl: '/' })}
                   className="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700"
                 >
                   Logout

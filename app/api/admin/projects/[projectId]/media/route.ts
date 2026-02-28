@@ -7,15 +7,14 @@ import {
   getVideoThumbnailUrl,
   getDocumentPreviewUrl,
   getMediaTypeFromMime
-} from '../../../../../../lib/cloudinary'
-import clientPromise from '../../../../../../lib/db/mongodb'
-import type { MediaType } from '../../../../../../types/client-gallery'
+} from '@/lib/cloudinary'
+import clientPromise from '@/lib/db/mongodb'
+import type { MediaType } from '@/types/client-gallery'
 
-// Size limits per media type (bytes)
 const SIZE_LIMITS: Record<MediaType, number> = {
-  image: 20 * 1024 * 1024,    // 20MB
-  video: 100 * 1024 * 1024,   // 100MB
-  document: 50 * 1024 * 1024  // 50MB
+  image: 20 * 1024 * 1024,
+  video: 100 * 1024 * 1024,
+  document: 50 * 1024 * 1024
 }
 
 function getThumbnailForType(publicId: string, mediaType: MediaType): string {
@@ -28,7 +27,7 @@ function getThumbnailForType(publicId: string, mediaType: MediaType): string {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { galleryId: string } }
+  { params }: { params: { projectId: string } }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -37,8 +36,7 @@ export async function POST(
     }
 
     const formData = await request.formData()
-    // Accept both 'photos' (backward compat) and 'media' field names
-    const files = [...formData.getAll('photos'), ...formData.getAll('media')] as File[]
+    const files = [...formData.getAll('media'), ...formData.getAll('photos')] as File[]
 
     for (const file of files) {
       const mediaType = getMediaTypeFromMime(file.type)
@@ -65,7 +63,7 @@ export async function POST(
 
       const result = await uploadToCloudinary(
         buffer,
-        `galleries/${params.galleryId}`,
+        `projects/${params.projectId}`,
         `${Date.now()}-${file.name.replace(/\.[^/.]+$/, '')}`
       )
 
@@ -92,40 +90,17 @@ export async function POST(
 
     const media = await Promise.all(uploadPromises)
 
-    await db.collection('client_galleries').updateOne(
-      { galleryId: params.galleryId },
-      { $addToSet: { photos: { $each: media } } } as any
+    await db.collection('client_projects').updateOne(
+      { projectId: params.projectId },
+      {
+        $addToSet: { media: { $each: media } } as any,
+        $set: { updatedAt: new Date() }
+      }
     )
 
-    return NextResponse.json({ photos: media })
+    return NextResponse.json({ media })
   } catch (error) {
     console.error('Upload error:', error)
     return NextResponse.json({ error: 'Upload failed' }, { status: 500 })
-  }
-}
-
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { galleryId: string } }
-) {
-  try {
-    const session = await getServerSession(authOptions)
-    if (!session || session.user?.role !== 'admin') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const data = await request.json()
-    const client = await clientPromise
-    const db = client.db('bam_portfolio')
-    
-    const { _id, ...updateData } = data
-    await db.collection('client_galleries').updateOne(
-      { galleryId: params.galleryId },
-      { $set: { ...updateData, updatedAt: new Date() } }
-    )
-    
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    return NextResponse.json({ error: 'Update failed' }, { status: 500 })
   }
 }
