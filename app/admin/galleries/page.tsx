@@ -2,7 +2,19 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ClientGallery, GallerySettings } from '../../../types/client-gallery'
+import { ClientGallery, ClientMedia, GallerySettings } from '../../../types/client-gallery'
+
+function getMediaSummary(photos: ClientMedia[]): string {
+  if (!photos || photos.length === 0) return '0 items'
+  const images = photos.filter(p => !p.mediaType || p.mediaType === 'image').length
+  const videos = photos.filter(p => p.mediaType === 'video').length
+  const docs = photos.filter(p => p.mediaType === 'document').length
+  const parts: string[] = []
+  if (images > 0) parts.push(`${images} photo${images !== 1 ? 's' : ''}`)
+  if (videos > 0) parts.push(`${videos} video${videos !== 1 ? 's' : ''}`)
+  if (docs > 0) parts.push(`${docs} doc${docs !== 1 ? 's' : ''}`)
+  return parts.join(', ')
+}
 
 export default function AdminGalleriesPage() {
   const [galleries, setGalleries] = useState<ClientGallery[]>([])
@@ -341,12 +353,12 @@ export default function AdminGalleriesPage() {
                 <h3 className="text-lg font-semibold">{gallery.eventName}</h3>
                 <p className="text-gray-600">{gallery.clientName} • {gallery.clientEmail}</p>
                 <p className="text-sm text-gray-500">
-                  {new Date(gallery.eventDate).toLocaleDateString()} • {gallery.photos?.length || 0} photos
+                  {new Date(gallery.eventDate).toLocaleDateString()} &bull; {getMediaSummary(gallery.photos)}
                 </p>
                 <input
                   type="file"
                   multiple
-                  accept="image/*"
+                  accept="image/*,video/*,application/pdf,.pptx,.docx,.doc,.xlsx,.xls"
                   onChange={(e) => e.target.files && handlePhotoUpload(gallery.galleryId, e.target.files)}
                   className="hidden"
                   id={`upload-${gallery.galleryId}`}
@@ -355,7 +367,7 @@ export default function AdminGalleriesPage() {
                   htmlFor={`upload-${gallery.galleryId}`}
                   className="inline-block mt-2 px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 cursor-pointer"
                 >
-                  Upload Photos
+                  Upload Media
                 </label>
                 <div className="mt-2 flex space-x-4 text-sm">
                   <span className={`px-2 py-1 rounded-full ${
@@ -378,21 +390,32 @@ export default function AdminGalleriesPage() {
                 {/* FIXED: Photo management section */}
                 {gallery.photos && gallery.photos.length > 0 && (
                   <div className="mt-4">
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Manage Photos</h4>
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">Manage Media</h4>
                     <div className="grid grid-cols-6 gap-2">
                       {gallery.photos.slice(0, 6).map((photo) => (
                         <div key={photo.id} className="relative group">
-                          <img 
-                            src={photo.thumbnailUrl} 
-                            alt="Gallery photo" 
-                            className="w-full h-16 object-cover rounded"
-                          />
+                          {photo.mediaType === 'document' ? (
+                            <div className="w-full h-16 bg-gray-100 rounded flex items-center justify-center">
+                              <span className="text-xs text-gray-500 uppercase">{photo.metadata?.format || 'doc'}</span>
+                            </div>
+                          ) : (
+                            <img
+                              src={photo.thumbnailUrl}
+                              alt={photo.title || 'Media'}
+                              className="w-full h-16 object-cover rounded"
+                            />
+                          )}
+                          {photo.mediaType === 'video' && (
+                            <div className="absolute bottom-0 left-0 bg-black/60 text-white text-[10px] px-1 rounded-tr">
+                              VID
+                            </div>
+                          )}
                           <button
                             onClick={() => handleDeletePhoto(gallery.galleryId, photo.id)}
                             className="absolute top-0 right-0 bg-red-500 text-white text-xs p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                            title="Delete photo"
+                            title="Delete"
                           >
-                            ×
+                            &times;
                           </button>
                         </div>
                       ))}

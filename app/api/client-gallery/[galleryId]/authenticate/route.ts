@@ -11,10 +11,8 @@ export async function POST(
     const { accessCode } = await request.json()
     const client = await clientPromise
     const db = client.db('bam_portfolio')
-    
-    // const gallery = await db.collection<ClientGallery>('client_galleries')
-    console.log('accessCode :>> ', accessCode);
-    const gallery = await db.collection('client_galleries')
+
+    const gallery = await db.collection<ClientGallery>('client_galleries')
       .findOne({ galleryId: params.galleryId })
     
     if (!gallery || gallery.accessCode !== accessCode) {

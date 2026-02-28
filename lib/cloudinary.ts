@@ -19,6 +19,9 @@ export interface CloudinaryUploadResult {
   height: number
   format: string
   bytes: number
+  resource_type: string // 'image' | 'video' | 'raw'
+  duration?: number // Video duration in seconds
+  pages?: number // Multi-page document page count
 }
 
 export async function uploadToCloudinary(
@@ -59,4 +62,47 @@ export function getThumbnailUrl(publicId: string, width = 400, height = 400): st
       { width, height, crop: 'fill', quality: 'auto', fetch_format: 'auto' }
     ]
   })
+}
+
+export function getVideoThumbnailUrl(publicId: string, width = 400, height = 400): string {
+  configureCloudinary();
+  return cloudinary.url(publicId, {
+    resource_type: 'video',
+    transformation: [
+      { width, height, crop: 'fill', quality: 'auto', fetch_format: 'jpg', start_offset: '2' }
+    ]
+  })
+}
+
+export function getDocumentPreviewUrl(publicId: string, page = 1): string {
+  configureCloudinary();
+  return cloudinary.url(publicId, {
+    transformation: [
+      { page, width: 400, height: 400, crop: 'fill', quality: 'auto', fetch_format: 'jpg' }
+    ]
+  })
+}
+
+export function getVideoStreamUrl(publicId: string): string {
+  configureCloudinary();
+  return cloudinary.url(publicId, {
+    resource_type: 'video',
+    transformation: [
+      { quality: 'auto', fetch_format: 'auto' }
+    ]
+  })
+}
+
+/** Determine MediaType from MIME type string */
+export function getMediaTypeFromMime(mimeType: string): 'image' | 'video' | 'document' {
+  if (mimeType.startsWith('image/')) return 'image'
+  if (mimeType.startsWith('video/')) return 'video'
+  return 'document'
+}
+
+/** Map MediaType to Cloudinary resource_type */
+export function getResourceType(mediaType: 'image' | 'video' | 'document'): string {
+  if (mediaType === 'video') return 'video'
+  if (mediaType === 'document') return 'raw'
+  return 'image'
 }

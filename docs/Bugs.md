@@ -1,12 +1,15 @@
-please review the code base for bugs.
-then review it for opportunities to improve the UI/UX/DX and return on investment as a portfolio site for me as a developer, developer relations, voice actor, business consultant.
+Gallery, Client Portal, Proposal System
 
-dev rel and voice acting are the priorities job I'm looking for.
-Im creating a portfolio of voice content and building tools and documenting it all.
-Also, leave those commented jobs commented.
+file upload works on dev. not on prod.
+upload doesn't work. error is returnd:
+page-e2462114fd7f1893.js:1 
+ POST https://www.brandanthonymcdonald.com/api/admin/galleries/earl-1772294569711/photos 413 (Content Too Large)
 
-LinkedIn.com: https://l.awews.com/brand-am-linkedin
+ensure access code restriction works and when clicking box for "required password" access code is provided in text box to strict access before saving.
 
-github.com: https://i.brandanthonymcdonald.com/github-profile
-
-bluesky: https://i.brandanthonymcdonald.com/bluesky
+allow videos and put text communicating to user size limits and files supported. user/admin managing profile should see which files were downloaded and liked by customer/client.
+allow customer/client to chat with admin about files and easily assign comments to each file or gallery as a whole.
+send notice to admin about new messages.
+what other ways may experience be improved?
+are you able to add email notifications to customer/client to and from admin about new messages, access has been granted/revoked, library created/removed, etc
+attach invoices, proposals, contracts/documents to gallery experience.

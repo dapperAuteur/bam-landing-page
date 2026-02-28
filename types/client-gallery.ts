@@ -1,3 +1,5 @@
+export type MediaType = 'image' | 'video' | 'document'
+
 export interface ClientGallery {
   _id?: string
   galleryId: string // URL-safe unique identifier
@@ -6,7 +8,7 @@ export interface ClientGallery {
   eventName: string
   eventDate: string
   description?: string
-  photos: ClientPhoto[]
+  photos: ClientMedia[] // Backward-compatible field name
   settings: GallerySettings
   accessCode?: string // Optional password protection
   expiresAt?: Date // Optional expiration
@@ -14,25 +16,37 @@ export interface ClientGallery {
   updatedAt: Date
 }
 
-export interface ClientPhoto {
+export interface ClientMedia {
   id: string
   cloudinaryId?: string
   originalUrl: string
   thumbnailUrl: string
   title?: string
   description?: string
+  mediaType?: MediaType // Defaults to 'image' for backward compat
+  resourceType?: string // Cloudinary resource_type: 'image' | 'video' | 'raw'
+  mimeType?: string // e.g. 'application/pdf', 'video/mp4'
   isFavorite?: boolean
+  likes?: number
   comments?: Array<{
-    text: string;
-    timestamp: Date;
-    author?: string }>
+    id?: string
+    text: string
+    timestamp: Date
+    author?: string
+  }>
   metadata?: {
-    width: number;
-    height: number;
-    format: string;
-    size: number }
+    width?: number
+    height?: number
+    format: string
+    size: number
+    duration?: number // Video duration in seconds
+    pages?: number // Document page count
+  }
   uploadedAt: Date | string
 }
+
+/** @deprecated Use ClientMedia instead */
+export type ClientPhoto = ClientMedia
 
 export interface GallerySettings {
   allowDownloads: boolean
