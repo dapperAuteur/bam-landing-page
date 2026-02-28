@@ -82,7 +82,7 @@ export default function EducationDashboard() {
     }
   }
 
-  const updateSubmissionStatus = async (id: string, newStatus: string) => {
+  const updateSubmissionStatus = async (id: string, newStatus: EducationSubmission['status']) => {
     try {
       const adminKey = process.env.NEXT_PUBLIC_ADMIN_API_KEY
       
@@ -97,7 +97,7 @@ export default function EducationDashboard() {
 
       setSubmissions(prev =>
         prev.map(sub =>
-          sub._id === id ? { ...sub, status: newStatus as any } : sub
+          sub._id === id ? { ...sub, status: newStatus } : sub
         )
       )
     } catch (err) {
@@ -309,7 +309,7 @@ export default function EducationDashboard() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <select
                     value={submission.status}
-                    onChange={(e) => updateSubmissionStatus(submission._id, e.target.value)}
+                    onChange={(e) => updateSubmissionStatus(submission._id, e.target.value as EducationSubmission['status'])}
                     className={`text-sm rounded-full px-3 py-1 font-medium ${
                       submission.status === 'new'
                         ? 'bg-yellow-100 text-yellow-800'

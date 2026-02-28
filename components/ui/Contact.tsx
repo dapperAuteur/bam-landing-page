@@ -39,10 +39,10 @@ export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    serviceType: 'Voiceover Services',
+    serviceType: 'Developer Relations',
     projectDetails: ''
   })
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [submitMessage, setSubmitMessage] = useState('')
@@ -221,7 +221,7 @@ export default function Contact() {
         setFormData({
           name: '',
           email: '',
-          serviceType: 'Voiceover Services',
+          serviceType: 'Developer Relations',
           projectDetails: ''
         })
         setErrors({})
@@ -272,7 +272,7 @@ export default function Contact() {
               Let's Work Together
             </h2>
             <p className="text-xl text-gray-600">
-              Ready to start your voiceover project or discuss business consulting? 
+              Interested in developer relations, voiceover, or a collaboration?
               Let's connect and make it happen.
             </p>
           </div>
@@ -299,7 +299,7 @@ export default function Contact() {
                   <svg className="w-6 h-6 text-blue-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span className="text-gray-700">Quick turnaround on voiceover projects</span>
+                  <span className="text-gray-700">Quick turnaround on projects</span>
                 </div>
               </div>
               
@@ -308,9 +308,8 @@ export default function Contact() {
                   Ready to Start?
                 </h4>
                 <p className="text-gray-600 mb-4">
-                  Whether you need professional voiceover services or strategic business consulting, 
-                  I'm here to help you achieve your goals with the same discipline and focus that 
-                  drives my mission to become the world's fastest centenarian.
+                  Whether you need developer advocacy, professional voiceover, or strategic consulting,
+                  I bring the same discipline and focus that drives my mission to become the world's fastest centenarian.
                 </p>
               </div>
             </div>
@@ -405,6 +404,7 @@ export default function Contact() {
                     }`}
                     required
                   >
+                    <option value="Developer Relations">Developer Relations</option>
                     <option value="Voiceover Services">Voiceover Services</option>
                     <option value="AI Consulting">AI Consulting</option>
                     <option value="Business Consulting">Business Consulting</option>

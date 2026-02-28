@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-// Note: You'll need to create a lib/logging/logger.ts file or adapt this to your existing logging structure
-// For now, this is a simple implementation that logs to console
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/lib/auth/authOptions'
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions)
+    if (!session || session.user?.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { level, context, message, metadata } = await request.json()
 
     // Validate the log data

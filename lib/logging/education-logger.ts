@@ -2,7 +2,7 @@
 import { NextRequest } from "next/server";
 import clientPromise from "./../db/mongodb";
 import { getClientIp } from "@/lib/utils/client";
-import { EducationFormData } from "./../../types/education";
+import { EducationFormData, CorvidEducationFormData } from "./../../types/education";
 
 export enum EducationEventType {
   FORM_SUBMISSION = "education_form_submission",
@@ -111,8 +111,8 @@ export async function logEducationEvent({
         state: formData.state,
         country: formData.country,
         formType: formData.formType,
-        gradesTeachingCount: (formData as any).gradesTeaching?.length,
-        customCreationRequest: (formData as any).customCreationRequest
+        gradesTeachingCount: 'gradesTeaching' in formData ? (formData as CorvidEducationFormData).gradesTeaching?.length : undefined,
+        customCreationRequest: formData.customCreationRequest
       } : undefined,
       metadata,
       timestamp: new Date(),
