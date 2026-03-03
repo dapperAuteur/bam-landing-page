@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer className="bg-gray-900 text-white section-padding">
       <div className="container-max">
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
             <h3 className="text-2xl font-bold mb-4">Brand Anthony McDonald</h3>
             <p className="text-gray-300 mb-4">

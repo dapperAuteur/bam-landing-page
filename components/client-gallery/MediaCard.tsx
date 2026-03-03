@@ -74,7 +74,7 @@ export default function MediaCard({ item, allowDownloads, onSelect, onDownload, 
       <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <button
           onClick={(e) => { e.stopPropagation(); onToggleFavorite(item.id) }}
-          className="bg-white/80 hover:bg-white p-2 rounded-full min-w-[36px] min-h-[36px] flex items-center justify-center"
+          className="bg-white/80 hover:bg-white p-2 rounded-full min-w-[44px] min-h-[44px] flex items-center justify-center"
           aria-label={item.isFavorite ? 'Unlike' : 'Like'}
         >
           {item.isFavorite ? '❤️' : '🤍'}
@@ -83,7 +83,7 @@ export default function MediaCard({ item, allowDownloads, onSelect, onDownload, 
         {allowDownloads && (
           <button
             onClick={(e) => { e.stopPropagation(); onDownload(item) }}
-            className="bg-white/80 hover:bg-white p-2 rounded-full min-w-[36px] min-h-[36px] flex items-center justify-center"
+            className="bg-white/80 hover:bg-white p-2 rounded-full min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label={`Download ${item.title || mediaType}`}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
