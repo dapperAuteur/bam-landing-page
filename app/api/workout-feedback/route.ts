@@ -41,11 +41,12 @@ async function verifyRecaptcha(token: string): Promise<{ success: boolean; score
   return { success: result.success, score: result.score }
 }
 
-const VALID_CATEGORIES = ['AM', 'PM', 'WORKOUT', 'friction'] as const
+const VALID_CATEGORIES = ['AM', 'PM', 'WORKOUT_HOTEL', 'WORKOUT_GYM', 'friction'] as const
 const VALID_DURATIONS: Record<string, string[]> = {
   AM: ['5', '15', '30'],
   PM: ['5', '15', '30'],
-  WORKOUT: ['5', '15', '45']
+  WORKOUT_HOTEL: ['5', '15', '45'],
+  WORKOUT_GYM: ['30', '45', '60']
 }
 const VALID_MOOD_RATINGS = [1, 2, 3, 4, 5]
 const VALID_DIFFICULTIES = ['easier', 'just-right', 'harder']

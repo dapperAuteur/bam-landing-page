@@ -2,7 +2,7 @@
 
 /** Which activity the user completed */
 export interface WorkoutActivitySelection {
-  category: 'AM' | 'PM' | 'WORKOUT' | 'friction'
+  category: 'AM' | 'PM' | 'WORKOUT_HOTEL' | 'WORKOUT_GYM' | 'friction'
   /** Duration chosen (e.g., '5', '15', '30', '45') — null if friction protocol */
   duration: string | null
   /** For friction protocol, which scenario index (0-3) */
