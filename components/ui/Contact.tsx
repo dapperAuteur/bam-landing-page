@@ -347,59 +347,67 @@ export default function Contact() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                     Name *
                   </label>
-                  <input 
+                  <input
+                    id="name"
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
                     onBlur={handleBlur}
                     onFocus={handleFocus}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors ${
+                    aria-invalid={!!errors.name}
+                    aria-describedby={errors.name ? 'error-name' : undefined}
+                    className={`w-full px-4 py-3 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors ${
                       errors.name ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     }`}
                     placeholder="Your full name"
                     required
                   />
                   {errors.name && (
-                    <p className="text-red-600 text-sm mt-1">{errors.name}</p>
+                    <p id="error-name" role="alert" className="text-red-600 text-sm mt-1">{errors.name}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                     Email *
                   </label>
-                  <input 
+                  <input
+                    id="email"
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
                     onBlur={handleBlur}
                     onFocus={handleFocus}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors ${
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? 'error-email' : undefined}
+                    className={`w-full px-4 py-3 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors ${
                       errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     }`}
                     placeholder="your@email.com"
                     required
                   />
                   {errors.email && (
-                    <p className="text-red-600 text-sm mt-1">{errors.email}</p>
+                    <p id="error-email" role="alert" className="text-red-600 text-sm mt-1">{errors.email}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="serviceType" className="block text-sm font-medium text-gray-700 mb-2">
                     Service Type *
                   </label>
-                  <select 
+                  <select
+                    id="serviceType"
                     name="serviceType"
                     value={formData.serviceType}
                     onChange={handleInputChange}
                     onFocus={handleFocus}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors ${
+                    aria-invalid={!!errors.serviceType}
+                    className={`w-full px-4 py-3 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors ${
                       errors.serviceType ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     }`}
                     required
@@ -414,13 +422,13 @@ export default function Contact() {
                     <option value="Combination Project">Combination Project</option>
                   </select>
                   {errors.serviceType && (
-                    <p className="text-red-600 text-sm mt-1">{errors.serviceType}</p>
+                    <p id="error-serviceType" role="alert" className="text-red-600 text-sm mt-1">{errors.serviceType}</p>
                   )}
                 </div>
 
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="projectDetails" className="block text-sm font-medium text-gray-700">
                       Project Details *
                     </label>
                     <span className={`text-xs ${
@@ -429,7 +437,8 @@ export default function Contact() {
                       {projectDetailsCount}/{projectDetailsMax}
                     </span>
                   </div>
-                  <textarea 
+                  <textarea
+                    id="projectDetails"
                     name="projectDetails"
                     value={formData.projectDetails}
                     onChange={handleInputChange}
@@ -437,14 +446,16 @@ export default function Contact() {
                     onFocus={handleFocus}
                     rows={4}
                     maxLength={projectDetailsMax}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors resize-vertical ${
+                    aria-invalid={!!errors.projectDetails}
+                    aria-describedby={errors.projectDetails ? 'error-projectDetails' : undefined}
+                    className={`w-full px-4 py-3 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-colors resize-vertical ${
                       errors.projectDetails ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     }`}
                     placeholder="Tell me about your project, timeline, and goals..."
                     required
                   />
                   {errors.projectDetails && (
-                    <p className="text-red-600 text-sm mt-1">{errors.projectDetails}</p>
+                    <p id="error-projectDetails" role="alert" className="text-red-600 text-sm mt-1">{errors.projectDetails}</p>
                   )}
                 </div>
 

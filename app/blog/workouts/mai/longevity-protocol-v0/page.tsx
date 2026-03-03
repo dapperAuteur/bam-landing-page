@@ -78,7 +78,7 @@ const GLOSSARY: Record<string, string> = {
 
 const ROUTINES: Record<CategoryKey, RoutineCategory> = {
   AM: {
-    icon: <Sun className="w-5 h-5" />,
+    icon: <Sun className="w-5 h-5" aria-hidden="true" />,
     title: "AM Priming",
     goal: "Undo the physical shortening of sleep and prepare the kinetic chain for a day of sitting or travel.",
     tabs: [
@@ -119,7 +119,7 @@ const ROUTINES: Record<CategoryKey, RoutineCategory> = {
     ]
   },
   PM: {
-    icon: <Moon className="w-5 h-5" />,
+    icon: <Moon className="w-5 h-5" aria-hidden="true" />,
     title: "PM Recovery",
     goal: "Down-regulate the Autonomic Nervous System from Sympathetic (Fight/Flight) to Parasympathetic (Rest/Digest).",
     tabs: [
@@ -157,7 +157,7 @@ const ROUTINES: Record<CategoryKey, RoutineCategory> = {
     ]
   },
   WORKOUT_HOTEL: {
-    icon: <Zap className="w-5 h-5" />,
+    icon: <Zap className="w-5 h-5" aria-hidden="true" />,
     title: "Metabolic Engine (Hotel)",
     goal: "Maximize caloric expenditure using Bands & Bodyweight. ALL resistance movements follow a strict 4/2/1/1 Tempo.",
     tabs: [
@@ -223,7 +223,7 @@ const ROUTINES: Record<CategoryKey, RoutineCategory> = {
     ]
   },
   WORKOUT_GYM: {
-    icon: <Dumbbell className="w-5 h-5" />,
+    icon: <Dumbbell className="w-5 h-5" aria-hidden="true" />,
     title: "Metabolic Engine (Full Gym)",
     goal: "For when you have time and access to a full gym. Leverages cables, dumbbells, and stability balls for maximum Phase 1 adaptations.",
     tabs: [
@@ -331,6 +331,13 @@ const ROUTINES: Record<CategoryKey, RoutineCategory> = {
   }
 };
 
+const NAV_LABELS: Record<CategoryKey, string> = {
+  AM: 'AM Priming',
+  PM: 'PM Recovery',
+  WORKOUT_HOTEL: 'Hotel',
+  WORKOUT_GYM: 'Full Gym',
+};
+
 const FRICTION_PROTOCOL: FrictionScenario[] = [
   {
     condition: "Arrive at hotel late and exhausted (High Stress/Low Energy)",
@@ -374,26 +381,32 @@ export default function NomadOS() {
   const renderExerciseList = (exercises: Exercise[]) => (
     <div className="space-y-3">
       {exercises.map((ex, idx) => (
-        <div 
-          key={idx} 
-          className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
+        <div
+          key={idx}
+          role="button"
+          tabIndex={0}
+          aria-expanded={expandedExercise === ex.name}
           onClick={() => toggleExercise(ex.name)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleExercise(ex.name); }
+          }}
+          className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
         >
           <div className="p-4 flex justify-between items-center bg-slate-50 hover:bg-slate-100 transition-colors">
             <div className="flex items-center space-x-3">
-              <CheckCircle2 className="w-5 h-5 text-indigo-600 flex-shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-indigo-600 flex-shrink-0" aria-hidden="true" />
               <div>
                 <p className="font-semibold text-slate-800">{ex.name}</p>
                 <p className="text-sm text-slate-500">{ex.reps}</p>
               </div>
             </div>
-            {expandedExercise === ex.name ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
+            {expandedExercise === ex.name ? <ChevronUp className="w-5 h-5 text-slate-400" aria-hidden="true" /> : <ChevronDown className="w-5 h-5 text-slate-400" aria-hidden="true" />}
           </div>
           
           {expandedExercise === ex.name && (
             <div className="p-4 bg-white border-t border-slate-100 text-slate-700 text-sm leading-relaxed">
               <div className="flex space-x-2">
-                <Info className="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" />
+                <Info className="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <p>{GLOSSARY[ex.name] || "Execution details pending."}</p>
               </div>
             </div>
@@ -409,7 +422,7 @@ export default function NomadOS() {
       <header className="bg-gradient-to-br from-slate-900 to-indigo-900 text-white pt-12 pb-8 px-6 shadow-lg">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center space-x-3 mb-2">
-            <Activity className="w-8 h-8 text-indigo-400" />
+            <Activity className="w-8 h-8 text-indigo-400" aria-hidden="true" />
             <h1 className="text-3xl font-bold tracking-tight">Nomad Longevity OS</h1>
             <span className="bg-indigo-600 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider">v1.1</span>
           </div>
@@ -431,25 +444,37 @@ export default function NomadOS() {
       <main className="max-w-4xl mx-auto px-4 -mt-4 relative z-10">
 
         {/* MAIN NAVIGATION */}
-        <div className="bg-white rounded-2xl shadow-md p-2 mb-6 grid grid-cols-2 md:grid-cols-4 gap-2">
+        <div
+          role="group"
+          aria-label="Workout category"
+          className="bg-white rounded-2xl shadow-md p-2 mb-6 grid grid-cols-2 md:grid-cols-4 gap-2"
+        >
           {(Object.entries(ROUTINES) as [CategoryKey, RoutineCategory][]).map(([key, data]) => (
             <button
               key={key}
+              type="button"
+              aria-pressed={activeCategory === key}
               onClick={() => { setActiveCategory(key); setExpandedExercise(null); }}
-              className={`flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-2 py-3 px-2 rounded-xl font-semibold transition-all duration-200 text-sm ${
+              className={`flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-2 py-3 px-2 rounded-xl font-semibold transition-all duration-200 text-sm
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
                 activeCategory === key
                   ? 'bg-indigo-600 text-white shadow-md'
                   : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
               {data.icon}
-              <span className="text-center leading-tight">{data.title}</span>
+              <span className="text-center leading-tight">{NAV_LABELS[key]}</span>
             </button>
           ))}
         </div>
 
         {/* ACTIVE CATEGORY CONTENT */}
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+        <div
+          id="routine-content-panel"
+          role="tabpanel"
+          aria-label={`${currentData.title} ${activeDurations[activeCategory]} minute routine`}
+          className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mb-8"
+        >
           
           {/* Category Header */}
           <div className="bg-slate-50 p-6 border-b border-slate-200">
@@ -459,7 +484,7 @@ export default function NomadOS() {
             {/* Special rule for workouts */}
             {(activeCategory === 'WORKOUT_HOTEL' || activeCategory === 'WORKOUT_GYM') && (
               <div className="mt-4 bg-indigo-50 border border-indigo-100 p-3 rounded-lg flex items-start space-x-3">
-                <Clock className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" />
+                <Clock className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <p className="text-sm text-indigo-900">
                   <span className="font-bold">Tempo Rule (4/2/1/1):</span> 4s lower, 2s hold at hardest point, 1s up, 1s rest. The 2-second hold builds stability.
                 </p>
@@ -468,12 +493,22 @@ export default function NomadOS() {
           </div>
 
           {/* Duration Sub-tabs */}
-          <div className="px-6 pt-6 flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+          <div
+            role="tablist"
+            aria-label={`${currentData.title} duration options`}
+            className="px-4 pt-6 pb-4 flex flex-wrap gap-2"
+          >
             {currentData.tabs.map(tab => (
               <button
                 key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={activeDurations[activeCategory] === tab.id}
+                aria-controls="routine-content-panel"
                 onClick={() => handleDurationChange(tab.id)}
-                className={`px-5 py-2 rounded-full font-bold text-sm whitespace-nowrap transition-colors ${
+                className={`flex-1 min-w-[90px] py-3 px-3 rounded-full font-bold text-sm
+                  transition-colors focus-visible:outline-none focus-visible:ring-2
+                  focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
                   activeDurations[activeCategory] === tab.id
                     ? 'bg-slate-800 text-white'
                     : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
@@ -511,7 +546,7 @@ export default function NomadOS() {
         {/* FRICTION PROTOCOL (Always visible at bottom for quick reference) */}
         <div className="mt-12 mb-8">
           <div className="flex items-center space-x-2 mb-4 px-2">
-            <ShieldAlert className="w-6 h-6 text-slate-700" />
+            <ShieldAlert className="w-6 h-6 text-slate-700" aria-hidden="true" />
             <h2 className="text-xl font-bold text-slate-800">The Friction Protocol</h2>
           </div>
           <p className="text-slate-500 text-sm mb-6 px-2">
@@ -565,7 +600,7 @@ function WorkoutFeedbackFormWrapper({ frictionProtocol, routines }: FeedbackForm
     return (
       <div className="mt-12 mb-8">
         <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
-          <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-2" />
+          <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-2" aria-hidden="true" />
           <p className="text-red-700 font-medium">Feedback form is temporarily unavailable.</p>
         </div>
       </div>
@@ -702,7 +737,7 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
   return (
     <div className="mt-12 mb-8">
       <div className="flex items-center space-x-2 mb-4 px-2">
-        <MessageSquare className="w-6 h-6 text-slate-700" />
+        <MessageSquare className="w-6 h-6 text-slate-700" aria-hidden="true" />
         <h2 className="text-xl font-bold text-slate-800">How Was Your Workout?</h2>
       </div>
       <p className="text-slate-500 text-sm mb-6 px-2">
@@ -711,11 +746,12 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
 
       {submitStatus === 'success' ? (
         <div className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center">
-          <CheckCircle2 className="w-10 h-10 text-green-500 mx-auto mb-3" />
+          <CheckCircle2 className="w-10 h-10 text-green-500 mx-auto mb-3" aria-hidden="true" />
           <p className="text-green-800 font-semibold text-lg">{submitMessage}</p>
           <button
+            type="button"
             onClick={() => setSubmitStatus('idle')}
-            className="mt-4 text-sm text-green-700 underline hover:text-green-900"
+            className="mt-4 text-sm text-green-700 underline hover:text-green-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2 rounded"
           >
             Submit another response
           </button>
@@ -727,13 +763,17 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
           <fieldset>
             <legend className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">What did you do?</legend>
 
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4">
+            <div
+              className="flex flex-wrap gap-2 mb-4"
+              aria-describedby={errors.activity ? 'error-activity' : undefined}
+            >
               {(['AM', 'PM', 'WORKOUT_HOTEL', 'WORKOUT_GYM', 'friction'] as const).map(cat => (
                 <button
                   key={cat}
                   type="button"
+                  aria-pressed={selectedCategory === cat}
                   onClick={() => handleCategoryChange(cat)}
-                  className={`py-2.5 px-3 rounded-xl text-sm font-semibold transition-colors ${
+                  className={`flex-1 min-w-[100px] max-w-[calc(50%-4px)] sm:max-w-none py-3 px-3 rounded-xl text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
                     selectedCategory === cat
                       ? 'bg-indigo-600 text-white shadow-sm'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -751,8 +791,9 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
                   <button
                     key={opt.id}
                     type="button"
+                    aria-pressed={selectedDuration === opt.id}
                     onClick={() => { setSelectedDuration(opt.id); setErrors(prev => { const { activity, ...rest } = prev; return rest; }); }}
-                    className={`py-2 px-4 rounded-full text-sm font-medium transition-colors ${
+                    className={`py-3 px-4 rounded-full text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
                       selectedDuration === opt.id
                         ? 'bg-slate-800 text-white'
                         : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
@@ -772,7 +813,7 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
                     key={idx}
                     type="button"
                     onClick={() => { setSelectedFrictionIndex(idx); setErrors(prev => { const { activity, ...rest } = prev; return rest; }); }}
-                    className={`w-full text-left py-2.5 px-4 rounded-xl text-sm transition-colors ${
+                    className={`w-full text-left py-3 px-4 rounded-xl text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
                       selectedFrictionIndex === idx
                         ? 'bg-orange-50 border-2 border-orange-400 text-slate-800'
                         : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
@@ -784,19 +825,20 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
               </div>
             )}
 
-            {errors.activity && <p className="text-red-600 text-sm mt-2">{errors.activity}</p>}
+            {errors.activity && <p id="error-activity" role="alert" className="text-red-600 text-sm mt-2">{errors.activity}</p>}
           </fieldset>
 
           {/* 2. Mood Before */}
           <fieldset>
             <legend className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">How did you feel before?</legend>
-            <div className="flex gap-2">
+            <div className="flex gap-2" aria-describedby={errors.moodBefore ? 'error-mood-before' : undefined}>
               {([1, 2, 3, 4, 5] as MoodRating[]).map(rating => (
                 <button
                   key={rating}
                   type="button"
+                  aria-pressed={moodBefore === rating}
                   onClick={() => { setMoodBefore(rating); setErrors(prev => { const { moodBefore, ...rest } = prev; return rest; }); }}
-                  className={`flex-1 py-3 rounded-xl text-center transition-colors ${
+                  className={`flex-1 py-3 rounded-xl text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
                     moodBefore === rating
                       ? 'bg-indigo-600 text-white shadow-sm'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -807,19 +849,20 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
                 </button>
               ))}
             </div>
-            {errors.moodBefore && <p className="text-red-600 text-sm mt-2">{errors.moodBefore}</p>}
+            {errors.moodBefore && <p id="error-mood-before" role="alert" className="text-red-600 text-sm mt-2">{errors.moodBefore}</p>}
           </fieldset>
 
           {/* 3. Mood After */}
           <fieldset>
             <legend className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">How did you feel after?</legend>
-            <div className="flex gap-2">
+            <div className="flex gap-2" aria-describedby={errors.moodAfter ? 'error-mood-after' : undefined}>
               {([1, 2, 3, 4, 5] as MoodRating[]).map(rating => (
                 <button
                   key={rating}
                   type="button"
+                  aria-pressed={moodAfter === rating}
                   onClick={() => { setMoodAfter(rating); setErrors(prev => { const { moodAfter, ...rest } = prev; return rest; }); }}
-                  className={`flex-1 py-3 rounded-xl text-center transition-colors ${
+                  className={`flex-1 py-3 rounded-xl text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
                     moodAfter === rating
                       ? 'bg-indigo-600 text-white shadow-sm'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -830,13 +873,13 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
                 </button>
               ))}
             </div>
-            {errors.moodAfter && <p className="text-red-600 text-sm mt-2">{errors.moodAfter}</p>}
+            {errors.moodAfter && <p id="error-mood-after" role="alert" className="text-red-600 text-sm mt-2">{errors.moodAfter}</p>}
           </fieldset>
 
           {/* 4. Difficulty */}
           <fieldset>
             <legend className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">Difficulty level</legend>
-            <div className="flex gap-2">
+            <div className="flex gap-2" aria-describedby={errors.difficulty ? 'error-difficulty' : undefined}>
               {([
                 { value: 'easier' as const, label: 'Too Easy', sub: 'Make it harder' },
                 { value: 'just-right' as const, label: 'Just Right', sub: 'Keep it here' },
@@ -845,8 +888,9 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
                 <button
                   key={opt.value}
                   type="button"
+                  aria-pressed={difficulty === opt.value}
                   onClick={() => { setDifficulty(opt.value); setErrors(prev => { const { difficulty, ...rest } = prev; return rest; }); }}
-                  className={`flex-1 py-3 px-2 rounded-xl text-center transition-colors ${
+                  className={`flex-1 py-3 px-2 rounded-xl text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
                     difficulty === opt.value
                       ? 'bg-indigo-600 text-white shadow-sm'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -857,13 +901,13 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
                 </button>
               ))}
             </div>
-            {errors.difficulty && <p className="text-red-600 text-sm mt-2">{errors.difficulty}</p>}
+            {errors.difficulty && <p id="error-difficulty" role="alert" className="text-red-600 text-sm mt-2">{errors.difficulty}</p>}
           </fieldset>
 
           {/* 5. Instruction Clarity */}
           <fieldset>
             <legend className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">Are the instructions clear enough?</legend>
-            <div className="flex gap-2">
+            <div className="flex gap-2" aria-describedby={errors.instructionPreference ? 'error-instruction' : undefined}>
               {([
                 { value: 'text-is-fine' as const, label: 'Text Is Clear' },
                 { value: 'need-images' as const, label: 'Need Images' },
@@ -872,8 +916,9 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
                 <button
                   key={opt.value}
                   type="button"
+                  aria-pressed={instructionPref === opt.value}
                   onClick={() => { setInstructionPref(opt.value); setErrors(prev => { const { instructionPreference, ...rest } = prev; return rest; }); }}
-                  className={`flex-1 py-3 px-2 rounded-xl text-sm font-semibold text-center transition-colors ${
+                  className={`flex-1 py-3 px-2 rounded-xl text-sm font-semibold text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 ${
                     instructionPref === opt.value
                       ? 'bg-indigo-600 text-white shadow-sm'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -883,7 +928,7 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
                 </button>
               ))}
             </div>
-            {errors.instructionPreference && <p className="text-red-600 text-sm mt-2">{errors.instructionPreference}</p>}
+            {errors.instructionPreference && <p id="error-instruction" role="alert" className="text-red-600 text-sm mt-2">{errors.instructionPreference}</p>}
           </fieldset>
 
           {/* 6. Open Feedback */}
@@ -912,11 +957,13 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
               id="email"
               type="email"
               value={email}
+              aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? 'error-email' : undefined}
               onChange={(e) => { setEmail(e.target.value); setErrors(prev => { const { email, ...rest } = prev; return rest; }); }}
               placeholder="you@example.com"
-              className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-transparent focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
-            {errors.email && <p className="text-red-600 text-sm mt-2">{errors.email}</p>}
+            {errors.email && <p id="error-email" role="alert" className="text-red-600 text-sm mt-2">{errors.email}</p>}
           </div>
 
           {/* Error alert */}
@@ -930,16 +977,16 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+            className="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
                 <span>Sending...</span>
               </>
             ) : (
               <>
-                <Send className="w-5 h-5" />
+                <Send className="w-5 h-5" aria-hidden="true" />
                 <span>Submit Feedback</span>
               </>
             )}

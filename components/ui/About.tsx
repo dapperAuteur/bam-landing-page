@@ -16,7 +16,7 @@ export default function About() {
               My background spans developer relations, education, content creation, and health 
               optimization. I bring a multidisciplinary approach to both voiceover work and business consulting.
             </p>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div>
                 <h3 className="font-bold text-gray-900 mb-2">Developer Advocacy</h3>
                 <p className="text-gray-600">API documentation, community building, and technical content creation</p>

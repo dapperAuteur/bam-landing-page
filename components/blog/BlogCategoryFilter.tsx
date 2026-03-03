@@ -31,6 +31,7 @@ export default function BlogCategoryFilter({ posts, categories }: BlogCategoryFi
           <div className="flex flex-wrap justify-center gap-2">
             <button
               onClick={() => setSelectedCategory(null)}
+              aria-pressed={selectedCategory === null}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 selectedCategory === null
                   ? 'bg-blue-600 text-white'
@@ -43,6 +44,7 @@ export default function BlogCategoryFilter({ posts, categories }: BlogCategoryFi
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
+                aria-pressed={selectedCategory === category}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   selectedCategory === category
                     ? 'bg-blue-600 text-white'
