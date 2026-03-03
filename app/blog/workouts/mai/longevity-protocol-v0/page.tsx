@@ -1,11 +1,50 @@
 "use client"
 
 import React, { useState } from 'react';
-import { Sun, Moon, Zap, Clock, AlertCircle, ChevronDown, ChevronUp, CheckCircle2, Info, Activity, ShieldAlert } from 'lucide-react';
+import { Sun, Moon, Zap, Clock, ChevronDown, ChevronUp, CheckCircle2, Info, Activity, ShieldAlert, MessageSquare, Send, Loader2 } from 'lucide-react';
+import { WorkoutFeedbackFormData, WorkoutFeedbackResponse, MoodRating, DifficultyPreference, InstructionPreference } from '../../../../../types/workout-feedback';
+
+// --- TYPE DEFINITIONS ---
+
+type CategoryKey = 'AM' | 'PM' | 'WORKOUT';
+type DurationId = '5' | '15' | '30' | '45';
+type ActiveDurations = Record<CategoryKey, DurationId>;
+
+interface Exercise {
+  name: string;
+  reps: string;
+}
+
+interface RoutineSection {
+  name: string;
+  context?: string;
+  exercises: Exercise[];
+}
+
+interface RoutineTab {
+  id: DurationId;
+  label: string;
+  title: string;
+  context: string;
+  exercises?: Exercise[];
+  sections?: RoutineSection[];
+}
+
+interface RoutineCategory {
+  icon: React.ReactNode;
+  title: string;
+  goal: string;
+  tabs: RoutineTab[];
+}
+
+interface FrictionScenario {
+  condition: string;
+  action: string;
+}
 
 // --- DATA MODEL ---
 
-const GLOSSARY = {
+const GLOSSARY: Record<string, string> = {
   "Half-Kneeling Hip Flexor Stretch": "Kneel on one knee with the front foot flat on the floor. Draw your belly button in (drawing-in maneuver) and squeeze the glute of your kneeling leg to tuck your pelvis under. Lean forward slightly until you feel a stretch in the front of your thigh. For an active stretch, hold for 2 seconds and repeat 10 times. For a static stretch, hold for 60 seconds.",
   "Glute Bridges": "Lie on your back with knees bent and feet flat on the floor. Draw your belly button in. Squeeze your glutes and push through your heels to lift your hips until your knees, hips, and shoulders form a straight line. Hold for 2 seconds at the top, then lower slowly.",
   "Cat-Cow Flow": "Start on your hands and knees. Draw your belly button in. Arch your back upward toward the ceiling (Cat), tucking your chin. Then, slowly let your belly drop toward the floor while lifting your chest and tailbone (Cow).",
@@ -27,7 +66,7 @@ const GLOSSARY = {
   "Mental Wind-Down": "Engage in guided journaling away from blue light (screens) to reduce cognitive arousal before sleep."
 };
 
-const ROUTINES = {
+const ROUTINES: Record<CategoryKey, RoutineCategory> = {
   AM: {
     icon: <Sun className="w-6 h-6" />,
     title: "AM Priming",
@@ -175,7 +214,7 @@ const ROUTINES = {
   }
 };
 
-const FRICTION_PROTOCOL = [
+const FRICTION_PROTOCOL: FrictionScenario[] = [
   {
     condition: "Arrive at hotel late and exhausted (High Stress/Low Energy)",
     action: "Execute the 5-Minute PM Recovery (Sleep Signal) to shift into a restorative state without taxing muscles."
@@ -197,23 +236,25 @@ const FRICTION_PROTOCOL = [
 // --- COMPONENTS ---
 
 export default function NomadOS() {
-  const [activeCategory, setActiveCategory] = useState('WORKOUT');
-  const [activeDurations, setActiveDurations] = useState({ AM: '5', PM: '15', WORKOUT: '15' });
-  const [expandedExercise, setExpandedExercise] = useState(null);
+  const [activeCategory, setActiveCategory] = useState<CategoryKey>('WORKOUT');
+  const [activeDurations, setActiveDurations] = useState<ActiveDurations>({ AM: '5', PM: '15', WORKOUT: '15' });
+  const [expandedExercise, setExpandedExercise] = useState<string | null>(null);
 
-  const handleDurationChange = (duration) => {
+  const handleDurationChange = (duration: DurationId) => {
     setActiveDurations(prev => ({ ...prev, [activeCategory]: duration }));
-    setExpandedExercise(null); // Reset expansions on tab change
+    setExpandedExercise(null);
   };
 
-  const toggleExercise = (name) => {
+  const toggleExercise = (name: string) => {
     setExpandedExercise(expandedExercise === name ? null : name);
   };
 
   const currentData = ROUTINES[activeCategory];
   const currentRoutine = currentData.tabs.find(t => t.id === activeDurations[activeCategory]);
 
-  const renderExerciseList = (exercises) => (
+  if (!currentRoutine) return null;
+
+  const renderExerciseList = (exercises: Exercise[]) => (
     <div className="space-y-3">
       {exercises.map((ex, idx) => (
         <div 
@@ -274,7 +315,7 @@ export default function NomadOS() {
         
         {/* MAIN NAVIGATION */}
         <div className="bg-white rounded-2xl shadow-md p-2 mb-6 flex flex-wrap md:flex-nowrap gap-2">
-          {Object.entries(ROUTINES).map(([key, data]) => (
+          {(Object.entries(ROUTINES) as [CategoryKey, RoutineCategory][]).map(([key, data]) => (
             <button
               key={key}
               onClick={() => { setActiveCategory(key); setExpandedExercise(null); }}
@@ -336,7 +377,7 @@ export default function NomadOS() {
             {/* Flat list of exercises OR Sectioned list */}
             {currentRoutine.exercises ? (
               renderExerciseList(currentRoutine.exercises)
-            ) : (
+            ) : currentRoutine.sections ? (
               <div className="space-y-8">
                 {currentRoutine.sections.map((sec, idx) => (
                   <div key={idx}>
@@ -346,7 +387,7 @@ export default function NomadOS() {
                   </div>
                 ))}
               </div>
-            )}
+            ) : null}
           </div>
         </div>
 
@@ -374,7 +415,384 @@ export default function NomadOS() {
           </div>
         </div>
 
+        {/* WORKOUT FEEDBACK FORM */}
+        <WorkoutFeedbackForm frictionProtocol={FRICTION_PROTOCOL} routines={ROUTINES} />
+
       </main>
+    </div>
+  );
+}
+
+// --- FEEDBACK FORM ---
+
+const MOOD_BEFORE_LABELS = ['Exhausted', 'Low Energy', 'Neutral', 'Good', 'Fired Up'];
+const MOOD_AFTER_LABELS = ['Worse', 'No Change', 'Slightly Better', 'Good', 'Energized'];
+
+const CATEGORY_LABELS: Record<string, string> = {
+  AM: 'AM Priming',
+  PM: 'PM Recovery',
+  WORKOUT: 'Metabolic Engine',
+  friction: 'Friction Protocol'
+};
+
+function WorkoutFeedbackForm({ frictionProtocol, routines }: { frictionProtocol: FrictionScenario[]; routines: Record<CategoryKey, RoutineCategory> }) {
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedDuration, setSelectedDuration] = useState<string>('');
+  const [selectedFrictionIndex, setSelectedFrictionIndex] = useState<number | null>(null);
+  const [moodBefore, setMoodBefore] = useState<MoodRating | null>(null);
+  const [moodAfter, setMoodAfter] = useState<MoodRating | null>(null);
+  const [difficulty, setDifficulty] = useState<DifficultyPreference | null>(null);
+  const [instructionPref, setInstructionPref] = useState<InstructionPreference | null>(null);
+  const [feedback, setFeedback] = useState('');
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitMessage, setSubmitMessage] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const handleCategoryChange = (cat: string) => {
+    setSelectedCategory(cat);
+    setSelectedDuration('');
+    setSelectedFrictionIndex(null);
+    setErrors(prev => { const { activity, ...rest } = prev; return rest; });
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!selectedCategory) {
+      newErrors.activity = 'Please select which activity you did';
+    } else if (selectedCategory === 'friction' && selectedFrictionIndex === null) {
+      newErrors.activity = 'Please select which scenario you followed';
+    } else if (selectedCategory !== 'friction' && !selectedDuration) {
+      newErrors.activity = 'Please select which duration you completed';
+    }
+
+    if (!moodBefore) newErrors.moodBefore = 'Please rate how you felt before';
+    if (!moodAfter) newErrors.moodAfter = 'Please rate how you felt after';
+    if (!difficulty) newErrors.difficulty = 'Please select a difficulty preference';
+    if (!instructionPref) newErrors.instructionPreference = 'Please select your instruction format preference';
+
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const formData: WorkoutFeedbackFormData = {
+        activity: {
+          category: selectedCategory as 'AM' | 'PM' | 'WORKOUT' | 'friction',
+          duration: selectedCategory !== 'friction' ? selectedDuration : null,
+          ...(selectedCategory === 'friction' && selectedFrictionIndex !== null ? { frictionScenarioIndex: selectedFrictionIndex } : {})
+        },
+        moodBefore: moodBefore!,
+        moodAfter: moodAfter!,
+        difficulty: difficulty!,
+        instructionPreference: instructionPref!,
+        feedback: feedback.trim() || undefined,
+        email: email.trim() || undefined,
+        protocolVersion: 'longevity-v0'
+      };
+
+      const response = await fetch('/api/workout-feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const result: WorkoutFeedbackResponse = await response.json();
+
+      if (result.success) {
+        setSubmitStatus('success');
+        setSubmitMessage(result.message);
+        // Reset form
+        setSelectedCategory('');
+        setSelectedDuration('');
+        setSelectedFrictionIndex(null);
+        setMoodBefore(null);
+        setMoodAfter(null);
+        setDifficulty(null);
+        setInstructionPref(null);
+        setFeedback('');
+        setEmail('');
+      } else {
+        setSubmitStatus('error');
+        setSubmitMessage(result.message);
+        if (result.errors) {
+          setErrors(result.errors as Record<string, string>);
+        }
+      }
+    } catch {
+      setSubmitStatus('error');
+      setSubmitMessage('Something went wrong. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const getDurationOptions = (): { id: string; label: string }[] => {
+    if (selectedCategory === 'friction' || !selectedCategory) return [];
+    const category = routines[selectedCategory as CategoryKey];
+    return category.tabs.map(t => ({ id: t.id, label: t.label }));
+  };
+
+  return (
+    <div className="mt-12 mb-8">
+      <div className="flex items-center space-x-2 mb-4 px-2">
+        <MessageSquare className="w-6 h-6 text-slate-700" />
+        <h2 className="text-xl font-bold text-slate-800">How Was Your Workout?</h2>
+      </div>
+      <p className="text-slate-500 text-sm mb-6 px-2">
+        Your feedback helps refine these protocols. Takes about 30 seconds.
+      </p>
+
+      {submitStatus === 'success' ? (
+        <div className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center">
+          <CheckCircle2 className="w-10 h-10 text-green-500 mx-auto mb-3" />
+          <p className="text-green-800 font-semibold text-lg">{submitMessage}</p>
+          <button
+            onClick={() => setSubmitStatus('idle')}
+            className="mt-4 text-sm text-green-700 underline hover:text-green-900"
+          >
+            Submit another response
+          </button>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-8">
+
+          {/* 1. Activity Selection */}
+          <fieldset>
+            <legend className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">What did you do?</legend>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+              {(['AM', 'PM', 'WORKOUT', 'friction'] as const).map(cat => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => handleCategoryChange(cat)}
+                  className={`py-2.5 px-3 rounded-xl text-sm font-semibold transition-colors ${
+                    selectedCategory === cat
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  {CATEGORY_LABELS[cat]}
+                </button>
+              ))}
+            </div>
+
+            {/* Duration sub-select for AM/PM/WORKOUT */}
+            {selectedCategory && selectedCategory !== 'friction' && (
+              <div className="flex flex-wrap gap-2 ml-1">
+                {getDurationOptions().map(opt => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => { setSelectedDuration(opt.id); setErrors(prev => { const { activity, ...rest } = prev; return rest; }); }}
+                    className={`py-2 px-4 rounded-full text-sm font-medium transition-colors ${
+                      selectedDuration === opt.id
+                        ? 'bg-slate-800 text-white'
+                        : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Friction scenario select */}
+            {selectedCategory === 'friction' && (
+              <div className="space-y-2 ml-1">
+                {frictionProtocol.map((scenario, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => { setSelectedFrictionIndex(idx); setErrors(prev => { const { activity, ...rest } = prev; return rest; }); }}
+                    className={`w-full text-left py-2.5 px-4 rounded-xl text-sm transition-colors ${
+                      selectedFrictionIndex === idx
+                        ? 'bg-orange-50 border-2 border-orange-400 text-slate-800'
+                        : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    <span className="font-medium">{scenario.condition}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {errors.activity && <p className="text-red-600 text-sm mt-2">{errors.activity}</p>}
+          </fieldset>
+
+          {/* 2. Mood Before */}
+          <fieldset>
+            <legend className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">How did you feel before?</legend>
+            <div className="flex gap-2">
+              {([1, 2, 3, 4, 5] as MoodRating[]).map(rating => (
+                <button
+                  key={rating}
+                  type="button"
+                  onClick={() => { setMoodBefore(rating); setErrors(prev => { const { moodBefore, ...rest } = prev; return rest; }); }}
+                  className={`flex-1 py-3 rounded-xl text-center transition-colors ${
+                    moodBefore === rating
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  <span className="text-lg font-bold block">{rating}</span>
+                  <span className="text-[10px] leading-tight block mt-0.5">{MOOD_BEFORE_LABELS[rating - 1]}</span>
+                </button>
+              ))}
+            </div>
+            {errors.moodBefore && <p className="text-red-600 text-sm mt-2">{errors.moodBefore}</p>}
+          </fieldset>
+
+          {/* 3. Mood After */}
+          <fieldset>
+            <legend className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">How did you feel after?</legend>
+            <div className="flex gap-2">
+              {([1, 2, 3, 4, 5] as MoodRating[]).map(rating => (
+                <button
+                  key={rating}
+                  type="button"
+                  onClick={() => { setMoodAfter(rating); setErrors(prev => { const { moodAfter, ...rest } = prev; return rest; }); }}
+                  className={`flex-1 py-3 rounded-xl text-center transition-colors ${
+                    moodAfter === rating
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  <span className="text-lg font-bold block">{rating}</span>
+                  <span className="text-[10px] leading-tight block mt-0.5">{MOOD_AFTER_LABELS[rating - 1]}</span>
+                </button>
+              ))}
+            </div>
+            {errors.moodAfter && <p className="text-red-600 text-sm mt-2">{errors.moodAfter}</p>}
+          </fieldset>
+
+          {/* 4. Difficulty */}
+          <fieldset>
+            <legend className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">Difficulty level</legend>
+            <div className="flex gap-2">
+              {([
+                { value: 'easier' as const, label: 'Too Easy', sub: 'Make it harder' },
+                { value: 'just-right' as const, label: 'Just Right', sub: 'Keep it here' },
+                { value: 'harder' as const, label: 'Too Hard', sub: 'Dial it back' }
+              ]).map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => { setDifficulty(opt.value); setErrors(prev => { const { difficulty, ...rest } = prev; return rest; }); }}
+                  className={`flex-1 py-3 px-2 rounded-xl text-center transition-colors ${
+                    difficulty === opt.value
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  <span className="text-sm font-bold block">{opt.label}</span>
+                  <span className="text-[10px] block mt-0.5 opacity-80">{opt.sub}</span>
+                </button>
+              ))}
+            </div>
+            {errors.difficulty && <p className="text-red-600 text-sm mt-2">{errors.difficulty}</p>}
+          </fieldset>
+
+          {/* 5. Instruction Clarity */}
+          <fieldset>
+            <legend className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">Are the instructions clear enough?</legend>
+            <div className="flex gap-2">
+              {([
+                { value: 'text-is-fine' as const, label: 'Text Is Clear' },
+                { value: 'need-images' as const, label: 'Need Images' },
+                { value: 'need-video' as const, label: 'Need Video' }
+              ]).map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => { setInstructionPref(opt.value); setErrors(prev => { const { instructionPreference, ...rest } = prev; return rest; }); }}
+                  className={`flex-1 py-3 px-2 rounded-xl text-sm font-semibold text-center transition-colors ${
+                    instructionPref === opt.value
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+            {errors.instructionPreference && <p className="text-red-600 text-sm mt-2">{errors.instructionPreference}</p>}
+          </fieldset>
+
+          {/* 6. Open Feedback */}
+          <div>
+            <label htmlFor="feedback" className="text-sm font-bold text-slate-700 uppercase tracking-wider block mb-3">
+              Anything else? <span className="font-normal normal-case text-slate-400">(optional)</span>
+            </label>
+            <textarea
+              id="feedback"
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              placeholder="What would make this workout better for you?"
+              rows={3}
+              maxLength={1000}
+              className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+            />
+            <p className="text-xs text-slate-400 mt-1 text-right">{feedback.length}/1000</p>
+          </div>
+
+          {/* 7. Email */}
+          <div>
+            <label htmlFor="email" className="text-sm font-bold text-slate-700 uppercase tracking-wider block mb-3">
+              Email <span className="font-normal normal-case text-slate-400">(optional — only if you want follow-up)</span>
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setErrors(prev => { const { email, ...rest } = prev; return rest; }); }}
+              placeholder="you@example.com"
+              className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+            {errors.email && <p className="text-red-600 text-sm mt-2">{errors.email}</p>}
+          </div>
+
+          {/* Error alert */}
+          {submitStatus === 'error' && (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+              <p className="text-red-800 text-sm font-medium">{submitMessage}</p>
+            </div>
+          )}
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Sending...</span>
+              </>
+            ) : (
+              <>
+                <Send className="w-5 h-5" />
+                <span>Submit Feedback</span>
+              </>
+            )}
+          </button>
+        </form>
+      )}
     </div>
   );
 }
