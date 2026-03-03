@@ -1,14 +1,14 @@
 "use client"
 
 import React, { useState } from 'react';
-import { Sun, Moon, Zap, Clock, ChevronDown, ChevronUp, CheckCircle2, Info, Activity, ShieldAlert, MessageSquare, Send, Loader2, AlertTriangle } from 'lucide-react';
+import { Sun, Moon, Zap, Clock, ChevronDown, ChevronUp, CheckCircle2, Info, Activity, ShieldAlert, MessageSquare, Send, Loader2, AlertTriangle, Dumbbell } from 'lucide-react';
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { WorkoutFeedbackFormData, WorkoutFeedbackResponse, MoodRating, DifficultyPreference, InstructionPreference } from '../../../../../types/workout-feedback';
 
 // --- TYPE DEFINITIONS ---
 
-type CategoryKey = 'AM' | 'PM' | 'WORKOUT';
-type DurationId = '5' | '15' | '30' | '45';
+type CategoryKey = 'AM' | 'PM' | 'WORKOUT_HOTEL' | 'WORKOUT_GYM';
+type DurationId = '5' | '15' | '30' | '45' | '60';
 type ActiveDurations = Record<CategoryKey, DurationId>;
 
 interface Exercise {
@@ -62,14 +62,23 @@ const GLOSSARY: Record<string, string> = {
   "Plank": "Draw your belly button in, squeeze your glutes, and maintain a perfectly straight line from head to heels.",
   "Active Walking Lunge": "Step forward and lower your hips until both knees are bent at a 90-degree angle. Push off the front foot to bring your back foot forward into the next step.",
   "Box Breathing (In Bed)": "Lie flat. Inhale for 4 seconds, hold for 4 seconds, exhale for 4 seconds, hold for 4 seconds. Focus on deep diaphragmatic expansion.",
-  "Child’s Pose": "Kneel, sit back on your heels, and reach your arms forward on the floor. Take deep diaphragmatic breaths into your lower back.",
+  "Child's Pose": "Kneel, sit back on your heels, and reach your arms forward on the floor. Take deep diaphragmatic breaths into your lower back.",
   "Legs-Up-The-Wall Pose": "Lie on your back, resting your legs vertically against the wall to promote venous return and reduce lower body swelling from flights.",
-  "Mental Wind-Down": "Engage in guided journaling away from blue light (screens) to reduce cognitive arousal before sleep."
+  "Mental Wind-Down": "Engage in guided journaling away from blue light (screens) to reduce cognitive arousal before sleep.",
+  "Foam Rolling (Gym)": "Since you are in a full gym, utilize a foam roller. Target the calves, quadriceps, and latissimus dorsi. Roll slowly until you find a tender spot, then hold pressure on that exact spot for 30 to 60 seconds until the tension releases. This inhibits overactive tissue.",
+  "Dumbbell Goblet Squat": "Hold a dumbbell vertically against your chest. Perform the drawing-in maneuver (pull belly button toward spine) and brace your core tightly. Keeping your chest proud and spine neutral, push your hips back and squat down until your thighs are parallel to the floor. Ensure your knees track over your second and third toes. Hold the bottom position for 2 seconds, then push through your heels to stand. (Tempo: 4/2/1/1)",
+  "Standing Cable Row": "Stand facing a cable machine with handles attached at chest height. Perform the drawing-in maneuver and brace your abdominals. Initiate the movement by retracting (squeezing) your shoulder blades together, then pull the handles toward your ribs. Keep your shoulders dropped away from your ears. Hold the peak contraction for 2 seconds before slowly returning to the start over 4 seconds. (Tempo: 4/2/1/1)",
+  "Stability Ball Dumbbell Chest Press": "Sit on a stability ball with dumbbells, then walk your feet forward until your head and upper back are supported by the ball. Squeeze your glutes to lift your hips into a bridge position, forming a straight line from knees to shoulders. Draw your belly button in and brace your core to prevent your hips from sagging. Lower the dumbbells slowly for 4 seconds, pause for 2 seconds at the bottom stretch to maximize stabilization, then press back up. (Tempo: 4/2/1/1)",
+  "Single-Leg Scaption": "Stand on one leg with a light dumbbell in each hand. Draw your belly button in and brace your core to maintain a neutral, stable pelvis. Raise both arms slightly in front of your body (at a 45-degree angle in the scapular plane) until they reach shoulder height. Keep your shoulders pressed down. Hold for 2 seconds at the top, then lower over 4 seconds. (Tempo: 4/2/1/1)",
+  "Step-Up to Balance": "Stand facing a plyo box or bench with dumbbells in hand. Draw in and brace your core. Step one foot onto the box, pushing through the heel to stand up, simultaneously driving your opposite knee up to hip height. Hold this single-leg balance position for 2 seconds, ensuring your standing leg is fully straight and glute is squeezed. Step back down slowly. (Tempo: 4/2/1/1)",
+  "Standing Cable Chest Press": "Stand facing away from a cable machine holding a handle in each hand, using a staggered (split) stance for stability. Draw your belly button in and brace your midsection to prevent your lower back from arching. Press the cables straight forward. Hold for 1 second, then slowly let your arms return over 4 seconds, pausing for 2 seconds at the stretch. (Tempo: 4/2/1/1)",
+  "Single-Leg Dumbbell Curl to Press": "Stand on one leg holding dumbbells. Perform the drawing-in maneuver and brace your core to stabilize your spine. Curl the dumbbells up to your shoulders, then immediately press them overhead. Lower them back to your shoulders, then down to your sides. Maintain perfect balance and a neutral spine throughout. (Tempo: 4/2/1/1)",
+  "Multiplanar Lunge to Balance": "Hold dumbbells at your sides. Step forward into a lunge (sagittal plane), dropping your hips until both knees are at 90 degrees. Push off the front foot to return to the start, but instead of putting the foot down, drive the knee up and balance on one leg for 2 seconds. Draw your belly button in and brace your core to maintain perfect alignment during the balance phase. (Tempo: 4/2/1/1)"
 };
 
 const ROUTINES: Record<CategoryKey, RoutineCategory> = {
   AM: {
-    icon: <Sun className="w-6 h-6" />,
+    icon: <Sun className="w-5 h-5" />,
     title: "AM Priming",
     goal: "Undo the physical shortening of sleep and prepare the kinetic chain for a day of sitting or travel.",
     tabs: [
@@ -110,7 +119,7 @@ const ROUTINES: Record<CategoryKey, RoutineCategory> = {
     ]
   },
   PM: {
-    icon: <Moon className="w-6 h-6" />,
+    icon: <Moon className="w-5 h-5" />,
     title: "PM Recovery",
     goal: "Down-regulate the Autonomic Nervous System from Sympathetic (Fight/Flight) to Parasympathetic (Rest/Digest).",
     tabs: [
@@ -130,7 +139,7 @@ const ROUTINES: Record<CategoryKey, RoutineCategory> = {
         title: "The 15-Minute Stress Offload",
         context: "Standard Evening. Complete the 5-Minute Sleep Signal, plus:",
         exercises: [
-          { name: "Child’s Pose", reps: "2 minutes" },
+          { name: "Child's Pose", reps: "2 minutes" },
           { name: "Latissimus Dorsi Doorframe Stretch", reps: "60 seconds per side" },
           { name: "Cat-Cow Flow", reps: "10 slow transitions" }
         ]
@@ -147,10 +156,10 @@ const ROUTINES: Record<CategoryKey, RoutineCategory> = {
       }
     ]
   },
-  WORKOUT: {
-    icon: <Zap className="w-6 h-6" />,
-    title: "Metabolic Engine",
-    goal: "Maximize caloric expenditure and build structural stability. ALL resistance movements follow a strict 4/2/1/1 Tempo.",
+  WORKOUT_HOTEL: {
+    icon: <Zap className="w-5 h-5" />,
+    title: "Metabolic Engine (Hotel)",
+    goal: "Maximize caloric expenditure using Bands & Bodyweight. ALL resistance movements follow a strict 4/2/1/1 Tempo.",
     tabs: [
       {
         id: '5',
@@ -204,8 +213,115 @@ const ROUTINES: Record<CategoryKey, RoutineCategory> = {
           {
             name: "Phase 3: Cool-Down (10 Mins)",
             exercises: [
-              { name: "Child’s Pose", reps: "2 minutes" },
+              { name: "Child's Pose", reps: "2 minutes" },
               { name: "Latissimus Dorsi Doorframe Stretch", reps: "60 seconds/side" },
+              { name: "Cat-Cow Flow", reps: "10 slow transitions" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  WORKOUT_GYM: {
+    icon: <Dumbbell className="w-5 h-5" />,
+    title: "Metabolic Engine (Full Gym)",
+    goal: "For when you have time and access to a full gym. Leverages cables, dumbbells, and stability balls for maximum Phase 1 adaptations.",
+    tabs: [
+      {
+        id: '30',
+        label: "30 Min",
+        title: "The 30-Minute Gym Circuit",
+        context: "High-density gym stabilization. 3 Rounds. 60s rest between rounds. Focus strictly on the 4/2/1/1 tempo.",
+        sections: [
+          {
+            name: "Warm-Up (5 Mins)",
+            exercises: [
+              { name: "Half-Kneeling Hip Flexor Stretch", reps: "Active - 10 reps/side" },
+              { name: "Wall Pectoral Stretch", reps: "Active - 10 reps/side" }
+            ]
+          },
+          {
+            name: "The Circuit (25 Mins)",
+            exercises: [
+              { name: "Dumbbell Goblet Squat", reps: "15 reps" },
+              { name: "Standing Cable Row", reps: "15 reps" },
+              { name: "Stability Ball Dumbbell Chest Press", reps: "15 reps" },
+              { name: "Single-Leg Scaption", reps: "10 reps per leg" }
+            ]
+          }
+        ]
+      },
+      {
+        id: '45',
+        label: "45 Min",
+        title: "The 45-Minute Gym Standard",
+        context: "The standard Phase 1 OPT workout. Utilize the gym's foam roller for a true release.",
+        sections: [
+          {
+            name: "Phase 1: Warm-Up & Activation (10 Mins)",
+            exercises: [
+              { name: "Foam Rolling (Gym)", reps: "5 Mins (Calves, Quads, Lats)" },
+              { name: "Half-Kneeling Hip Flexor Stretch", reps: "Active - 10 reps/side" },
+              { name: "Plank", reps: "2 sets of 45-second holds" }
+            ]
+          },
+          {
+            name: "Phase 2: The Circuit (3 Rounds)",
+            context: "Rest 60s between rounds.",
+            exercises: [
+              { name: "Step-Up to Balance", reps: "12-15 reps per leg" },
+              { name: "Standing Cable Chest Press", reps: "12-15 reps" },
+              { name: "Standing Cable Row", reps: "12-15 reps" },
+              { name: "Single-Leg Dumbbell Curl to Press", reps: "10 reps per leg" }
+            ]
+          },
+          {
+            name: "Phase 3: Cool-Down (5 Mins)",
+            exercises: [
+              { name: "Foam Rolling (Gym)", reps: "Roll tight areas" },
+              { name: "Latissimus Dorsi Doorframe Stretch", reps: "60 seconds/side (Static)" }
+            ]
+          }
+        ]
+      },
+      {
+        id: '60',
+        label: "60 Min",
+        title: "The 60-Minute Phase 1 Integration",
+        context: "The ultimate Phase 1 workout when you have full facility access and schedule control.",
+        sections: [
+          {
+            name: "Phase 1: Warm-Up (15 Mins)",
+            exercises: [
+              { name: "Foam Rolling (Gym)", reps: "5 Mins" },
+              { name: "Half-Kneeling Hip Flexor Stretch", reps: "Active - 10 reps/side" },
+              { name: "Wall Pectoral Stretch", reps: "Active - 10 reps/side" },
+              { name: "Jump Rope", reps: "3 Mins light cardio" }
+            ]
+          },
+          {
+            name: "Phase 2: Activation (10 Mins)",
+            exercises: [
+              { name: "Glute Bridges", reps: "2 sets of 15" },
+              { name: "Plank", reps: "2 sets of 60 seconds" },
+              { name: "Bird-Dogs", reps: "2 sets of 10/side" }
+            ]
+          },
+          {
+            name: "Phase 3: The Extended Circuit (4 Rounds)",
+            context: "Rest 60s between rounds.",
+            exercises: [
+              { name: "Multiplanar Lunge to Balance", reps: "15 reps per leg" },
+              { name: "Stability Ball Dumbbell Chest Press", reps: "15 reps" },
+              { name: "Standing Cable Row", reps: "15 reps" },
+              { name: "Single-Leg Scaption", reps: "12 reps per leg" },
+              { name: "Single-Leg Dumbbell Curl to Press", reps: "12 reps per leg" }
+            ]
+          },
+          {
+            name: "Phase 4: Cool-Down (5 Mins)",
+            exercises: [
+              { name: "Child's Pose", reps: "2 minutes" },
               { name: "Cat-Cow Flow", reps: "10 slow transitions" }
             ]
           }
@@ -237,8 +353,8 @@ const FRICTION_PROTOCOL: FrictionScenario[] = [
 // --- COMPONENTS ---
 
 export default function NomadOS() {
-  const [activeCategory, setActiveCategory] = useState<CategoryKey>('WORKOUT');
-  const [activeDurations, setActiveDurations] = useState<ActiveDurations>({ AM: '5', PM: '15', WORKOUT: '15' });
+  const [activeCategory, setActiveCategory] = useState<CategoryKey>('WORKOUT_GYM');
+  const [activeDurations, setActiveDurations] = useState<ActiveDurations>({ AM: '5', PM: '15', WORKOUT_HOTEL: '15', WORKOUT_GYM: '45' });
   const [expandedExercise, setExpandedExercise] = useState<string | null>(null);
 
   const handleDurationChange = (duration: DurationId) => {
@@ -291,43 +407,43 @@ export default function NomadOS() {
     <div className="min-h-screen bg-slate-100 font-sans pb-12">
       {/* HEADER */}
       <header className="bg-gradient-to-br from-slate-900 to-indigo-900 text-white pt-12 pb-8 px-6 shadow-lg">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <div className="flex items-center space-x-3 mb-2">
             <Activity className="w-8 h-8 text-indigo-400" />
             <h1 className="text-3xl font-bold tracking-tight">Nomad Longevity OS</h1>
-            <span className="bg-indigo-600 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider">v1.0</span>
+            <span className="bg-indigo-600 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider">v1.1</span>
           </div>
           <p className="text-indigo-200 text-sm mb-6 uppercase tracking-widest font-semibold">Beta-Test Case Study 001</p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mt-6 border-t border-indigo-800/50 pt-6">
             <div>
               <p className="text-slate-400 mb-1">Objective</p>
               <p className="font-medium">Weight Loss, Postural Correction, Sleep</p>
             </div>
             <div>
-              <p className="text-slate-400 mb-1">Equipment Required</p>
-              <p className="font-medium">Bands, Jump Rope, Bodyweight</p>
+              <p className="text-slate-400 mb-1">Equipment Framework</p>
+              <p className="font-medium">Hotel (Bands/Bodyweight) vs. Full Gym</p>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 -mt-4 relative z-10">
-        
+      <main className="max-w-4xl mx-auto px-4 -mt-4 relative z-10">
+
         {/* MAIN NAVIGATION */}
-        <div className="bg-white rounded-2xl shadow-md p-2 mb-6 flex flex-wrap md:flex-nowrap gap-2">
+        <div className="bg-white rounded-2xl shadow-md p-2 mb-6 grid grid-cols-2 md:grid-cols-4 gap-2">
           {(Object.entries(ROUTINES) as [CategoryKey, RoutineCategory][]).map(([key, data]) => (
             <button
               key={key}
               onClick={() => { setActiveCategory(key); setExpandedExercise(null); }}
-              className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-semibold transition-all duration-200 ${
-                activeCategory === key 
-                  ? 'bg-indigo-600 text-white shadow-md' 
+              className={`flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-2 py-3 px-2 rounded-xl font-semibold transition-all duration-200 text-sm ${
+                activeCategory === key
+                  ? 'bg-indigo-600 text-white shadow-md'
                   : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
               {data.icon}
-              <span>{data.title}</span>
+              <span className="text-center leading-tight">{data.title}</span>
             </button>
           ))}
         </div>
@@ -341,7 +457,7 @@ export default function NomadOS() {
             <p className="text-slate-600 text-sm">{currentData.goal}</p>
             
             {/* Special rule for workouts */}
-            {activeCategory === 'WORKOUT' && (
+            {(activeCategory === 'WORKOUT_HOTEL' || activeCategory === 'WORKOUT_GYM') && (
               <div className="mt-4 bg-indigo-50 border border-indigo-100 p-3 rounded-lg flex items-start space-x-3">
                 <Clock className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-indigo-900">
@@ -432,7 +548,8 @@ const MOOD_AFTER_LABELS = ['Worse', 'No Change', 'Slightly Better', 'Good', 'Ene
 const CATEGORY_LABELS: Record<string, string> = {
   AM: 'AM Priming',
   PM: 'PM Recovery',
-  WORKOUT: 'Metabolic Engine',
+  WORKOUT_HOTEL: 'Hotel Workout',
+  WORKOUT_GYM: 'Full Gym Workout',
   friction: 'Friction Protocol'
 };
 
@@ -527,7 +644,7 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
 
       const formData: WorkoutFeedbackFormData = {
         activity: {
-          category: selectedCategory as 'AM' | 'PM' | 'WORKOUT' | 'friction',
+          category: selectedCategory as 'AM' | 'PM' | 'WORKOUT_HOTEL' | 'WORKOUT_GYM' | 'friction',
           duration: selectedCategory !== 'friction' ? selectedDuration : null,
           ...(selectedCategory === 'friction' && selectedFrictionIndex !== null ? { frictionScenarioIndex: selectedFrictionIndex } : {})
         },
@@ -610,8 +727,8 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) 
           <fieldset>
             <legend className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">What did you do?</legend>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-              {(['AM', 'PM', 'WORKOUT', 'friction'] as const).map(cat => (
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4">
+              {(['AM', 'PM', 'WORKOUT_HOTEL', 'WORKOUT_GYM', 'friction'] as const).map(cat => (
                 <button
                   key={cat}
                   type="button"
