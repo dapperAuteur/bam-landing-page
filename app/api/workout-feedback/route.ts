@@ -25,6 +25,22 @@ function sanitizeInput(input: string): string {
   return input.trim().replace(/[<>]/g, '')
 }
 
+async function verifyRecaptcha(token: string): Promise<{ success: boolean; score?: number }> {
+  const secret = process.env.RECAPTCHA_SECRET_KEY
+  if (!secret) {
+    throw new Error('RECAPTCHA_SECRET_KEY not configured')
+  }
+
+  const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `secret=${secret}&response=${token}`
+  })
+
+  const result = await response.json()
+  return { success: result.success, score: result.score }
+}
+
 const VALID_CATEGORIES = ['AM', 'PM', 'WORKOUT', 'friction'] as const
 const VALID_DURATIONS: Record<string, string[]> = {
   AM: ['5', '15', '30'],
@@ -127,20 +143,40 @@ export async function POST(request: NextRequest) {
       } as WorkoutFeedbackResponse, { status: 429 })
     }
 
+    // Verify reCAPTCHA
+    const { token, ...formFields } = body
+    if (token) {
+      const recaptchaResult = await verifyRecaptcha(token)
+      if (!recaptchaResult.success || (recaptchaResult.score && recaptchaResult.score < 0.5)) {
+        await logWorkoutFeedbackEvent({
+          event: 'workout_feedback_failure',
+          status: 'failure',
+          reason: 'reCAPTCHA verification failed',
+          ipAddress,
+          metadata: { recaptchaScore: recaptchaResult.score }
+        })
+
+        return NextResponse.json({
+          success: true,
+          message: 'Thank you for your feedback! It helps us make these protocols better.'
+        } as WorkoutFeedbackResponse)
+      }
+    }
+
     // Build form data
     const formData: WorkoutFeedbackFormData = {
       activity: {
-        category: body.activity?.category || '',
-        duration: body.activity?.duration || null,
-        frictionScenarioIndex: body.activity?.frictionScenarioIndex
+        category: formFields.activity?.category || '',
+        duration: formFields.activity?.duration || null,
+        frictionScenarioIndex: formFields.activity?.frictionScenarioIndex
       },
-      moodBefore: body.moodBefore,
-      moodAfter: body.moodAfter,
-      difficulty: body.difficulty || '',
-      instructionPreference: body.instructionPreference || '',
-      feedback: body.feedback ? sanitizeInput(body.feedback) : undefined,
-      email: body.email ? sanitizeInput(body.email).toLowerCase() : undefined,
-      protocolVersion: body.protocolVersion || 'unknown'
+      moodBefore: formFields.moodBefore,
+      moodAfter: formFields.moodAfter,
+      difficulty: formFields.difficulty || '',
+      instructionPreference: formFields.instructionPreference || '',
+      feedback: formFields.feedback ? sanitizeInput(formFields.feedback) : undefined,
+      email: formFields.email ? sanitizeInput(formFields.email).toLowerCase() : undefined,
+      protocolVersion: formFields.protocolVersion || 'unknown'
     }
 
     // Validate

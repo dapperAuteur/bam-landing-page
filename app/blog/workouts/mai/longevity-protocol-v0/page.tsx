@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useState } from 'react';
-import { Sun, Moon, Zap, Clock, ChevronDown, ChevronUp, CheckCircle2, Info, Activity, ShieldAlert, MessageSquare, Send, Loader2 } from 'lucide-react';
+import { Sun, Moon, Zap, Clock, ChevronDown, ChevronUp, CheckCircle2, Info, Activity, ShieldAlert, MessageSquare, Send, Loader2, AlertTriangle } from 'lucide-react';
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { WorkoutFeedbackFormData, WorkoutFeedbackResponse, MoodRating, DifficultyPreference, InstructionPreference } from '../../../../../types/workout-feedback';
 
 // --- TYPE DEFINITIONS ---
@@ -416,7 +417,7 @@ export default function NomadOS() {
         </div>
 
         {/* WORKOUT FEEDBACK FORM */}
-        <WorkoutFeedbackForm frictionProtocol={FRICTION_PROTOCOL} routines={ROUTINES} />
+        <WorkoutFeedbackFormWrapper frictionProtocol={FRICTION_PROTOCOL} routines={ROUTINES} />
 
       </main>
     </div>
@@ -435,7 +436,34 @@ const CATEGORY_LABELS: Record<string, string> = {
   friction: 'Friction Protocol'
 };
 
-function WorkoutFeedbackForm({ frictionProtocol, routines }: { frictionProtocol: FrictionScenario[]; routines: Record<CategoryKey, RoutineCategory> }) {
+interface FeedbackFormProps {
+  frictionProtocol: FrictionScenario[];
+  routines: Record<CategoryKey, RoutineCategory>;
+}
+
+function WorkoutFeedbackFormWrapper({ frictionProtocol, routines }: FeedbackFormProps) {
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+  if (!recaptchaSiteKey) {
+    return (
+      <div className="mt-12 mb-8">
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
+          <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-2" />
+          <p className="text-red-700 font-medium">Feedback form is temporarily unavailable.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={recaptchaSiteKey}>
+      <WorkoutFeedbackForm frictionProtocol={frictionProtocol} routines={routines} />
+    </GoogleReCaptchaProvider>
+  );
+}
+
+function WorkoutFeedbackForm({ frictionProtocol, routines }: FeedbackFormProps) {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedDuration, setSelectedDuration] = useState<string>('');
   const [selectedFrictionIndex, setSelectedFrictionIndex] = useState<number | null>(null);
@@ -485,10 +513,18 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: { frictionProtocol:
     e.preventDefault();
     if (!validateForm()) return;
 
+    if (!executeRecaptcha) {
+      setSubmitStatus('error');
+      setSubmitMessage('reCAPTCHA is not ready. Please try again in a moment.');
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
     try {
+      const token = await executeRecaptcha('workout_feedback');
+
       const formData: WorkoutFeedbackFormData = {
         activity: {
           category: selectedCategory as 'AM' | 'PM' | 'WORKOUT' | 'friction',
@@ -507,7 +543,7 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: { frictionProtocol:
       const response = await fetch('/api/workout-feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ ...formData, token })
       });
 
       const result: WorkoutFeedbackResponse = await response.json();
@@ -791,6 +827,13 @@ function WorkoutFeedbackForm({ frictionProtocol, routines }: { frictionProtocol:
               </>
             )}
           </button>
+
+          {/* reCAPTCHA notice */}
+          <p className="text-xs text-slate-400 text-center">
+            This site is protected by reCAPTCHA and the Google{' '}
+            <a href="https://policies.google.com/privacy" className="underline hover:text-slate-600" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and{' '}
+            <a href="https://policies.google.com/terms" className="underline hover:text-slate-600" target="_blank" rel="noopener noreferrer">Terms of Service</a> apply.
+          </p>
         </form>
       )}
     </div>
