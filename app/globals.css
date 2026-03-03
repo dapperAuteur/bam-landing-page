@@ -6,6 +6,13 @@
   html {
     scroll-behavior: smooth;
   }
+
+  /* Ensure keyboard focus is always visible — unaffected by mouse interaction */
+  :focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 }
 
 @layer components {
