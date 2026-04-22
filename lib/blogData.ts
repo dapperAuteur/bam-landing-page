@@ -24,6 +24,17 @@ export const blogPosts: BlogPost[] = [
     tags: ["Longevity", "Sprinting", "NASM", "Biohacking", "LPHC"],
     excerpt: "The 'Core' is a myth. The LPHC is the reality. Discover the modular 15/30/45-minute protocols designed to build the structural integrity required for a sub-17 second 100m dash at age 100."
   },
+  {
+    slug: "workouts/mai/longevity-protocol-v0",
+    title: "Nomad Longevity OS: A Traveler's Phase 1 Protocol",
+    description: "A modular 5/15/30/45/60-minute training system for nomads — AM priming, PM recovery, and metabolic engine work for hotel or full-gym access. Built on the NASM OPT Phase 1 model with a strict 4/2/1/1 tempo.",
+    publishDate: "2026-04-22",
+    readTime: "8 min read",
+    category: "Performance",
+    featured: true,
+    tags: ["Longevity", "Travel Fitness", "NASM", "OPT Model", "Mobility", "Recovery", "Biohacking"],
+    excerpt: "Environmental friction derails most travelers' training. Nomad Longevity OS is a beta case-study protocol that replaces willpower with pre-planned If/Then responses — modular routines for AM, PM, hotel, and full gym, plus a Friction Protocol for airport gaps and late hotel arrivals."
+  },
   // {
   //   slug: "the-intensity-minutes-that-changed-everything",
   //   title: "The Intensity Minutes That Changed Everything",

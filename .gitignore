@@ -43,3 +43,9 @@ next-env.d.ts
 scripts/create-admin.js
 
 scripts/create-admin-manual.js
+
+# local planning and promo notes (not shipped)
+/plans
+/social-media
+
+.claude/
