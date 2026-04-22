@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MongoClient, ObjectId } from 'mongodb'
 import { Logger, LogContext } from '../../../../../../lib/logging/logger'
+import { assertAdminOrUnauthorized } from '@/lib/utils/utilsNextAuth'
 
 let client: MongoClient
 
@@ -16,24 +17,13 @@ async function connectToDatabase() {
   return client.db('bam_portfolio')
 }
 
-function validateAdminAuth(request: NextRequest): boolean {
-  const authHeader = request.headers.get('authorization')
-  const adminKey = process.env.ADMIN_API_KEY
-
-  if (!adminKey || !authHeader) return false
-
-  const token = authHeader.replace('Bearer ', '')
-  return token === adminKey
-}
-
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    if (!validateAdminAuth(request)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const unauthorized = await assertAdminOrUnauthorized()
+    if (unauthorized) return unauthorized
 
     const { id } = params
 
@@ -73,9 +63,8 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    if (!validateAdminAuth(request)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const unauthorized = await assertAdminOrUnauthorized()
+    if (unauthorized) return unauthorized
 
     const { id } = params
 
@@ -152,9 +141,8 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    if (!validateAdminAuth(request)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const unauthorized = await assertAdminOrUnauthorized()
+    if (unauthorized) return unauthorized
 
     const { id } = params
 

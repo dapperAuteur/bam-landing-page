@@ -73,19 +73,9 @@ export default function WorkoutFeedbackDashboard() {
     try {
       setLoading(true)
 
-      const adminKey = process.env.NEXT_PUBLIC_ADMIN_API_KEY
-
-      if (!adminKey) {
-        throw new Error('Configuration Error: NEXT_PUBLIC_ADMIN_API_KEY is missing in environment variables.')
-      }
-
       const [statsResponse, submissionsResponse] = await Promise.all([
-        fetch('/api/admin/workout-feedback/stats', {
-          headers: { 'Authorization': `Bearer ${adminKey}` }
-        }),
-        fetch('/api/admin/workout-feedback/submissions', {
-          headers: { 'Authorization': `Bearer ${adminKey}` }
-        })
+        fetch('/api/admin/workout-feedback/stats'),
+        fetch('/api/admin/workout-feedback/submissions')
       ])
 
       if (!statsResponse.ok || !submissionsResponse.ok) {
@@ -107,14 +97,9 @@ export default function WorkoutFeedbackDashboard() {
 
   const updateSubmissionStatus = async (id: string, newStatus: WorkoutFeedbackSubmission['status']) => {
     try {
-      const adminKey = process.env.NEXT_PUBLIC_ADMIN_API_KEY
-
       await fetch(`/api/admin/workout-feedback/submissions/${id}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${adminKey}`
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
       })
 
