@@ -1,62 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MongoClient } from 'mongodb'
 import { Logger, LogContext } from '../../../../../lib/logging/logger'
+import { assertAdminOrUnauthorized } from '@/lib/utils/utilsNextAuth'
 
 // MongoDB connection
 let client: MongoClient
-let adminKey: string | undefined
-let token: string;
 
 async function connectToDatabase() {
-
   if (!client) {
     const uri = process.env.MONGODB_URI
     if (!uri) {
       throw new Error('MONGODB_URI environment variable is not set')
     }
-    
+
     client = new MongoClient(uri)
     await client.connect()
   }
   return client.db('bam_portfolio')
 }
 
-// Admin authentication
-function validateAdminAuth(request: NextRequest): boolean {
-  const authHeader = request.headers.get('authorization')
-  // const adminKey = process.env.ADMIN_API_KEY
-  adminKey = process.env.ADMIN_API_KEY
-  
-  if (!adminKey || !authHeader) return false
-  
-  // const token = authHeader.replace('Bearer ', '')
-  token = authHeader.replace('Bearer ', '')
-  return token === adminKey
-}
-
 export async function GET(request: NextRequest) {
   try {
-    // Validate admin authentication
-    if (!validateAdminAuth(request)) {
+    const unauthorized = await assertAdminOrUnauthorized()
+    if (unauthorized) {
       await Logger.error(LogContext.SYSTEM, 'Admin education stats error', {
-      request,
-      metadata: {
-        error: String("Unauthorized"),
-        adminKey: adminKey,
-        token: token
-      }
-    })
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+        request,
+        metadata: { error: 'Unauthorized' }
+      })
+      return unauthorized
     }
 
     await Logger.info(LogContext.SYSTEM, "Admin education stats request", { request })
 
     const db = await connectToDatabase()
     const educationCollection = db.collection('education_submissions')
-    
+
     // Get query parameters
     const searchParams = new URL(request.url).searchParams
     const days = parseInt(searchParams.get('days') || '30')
@@ -71,21 +49,21 @@ export async function GET(request: NextRequest) {
       closedSubmissions
     ] = await Promise.all([
       educationCollection.countDocuments({ submittedAt: { $gte: lookbackTime } }),
-      educationCollection.countDocuments({ 
+      educationCollection.countDocuments({
         submittedAt: { $gte: lookbackTime },
-        status: 'new' 
+        status: 'new'
       }),
-      educationCollection.countDocuments({ 
+      educationCollection.countDocuments({
         submittedAt: { $gte: lookbackTime },
-        status: 'reviewed' 
+        status: 'reviewed'
       }),
-      educationCollection.countDocuments({ 
+      educationCollection.countDocuments({
         submittedAt: { $gte: lookbackTime },
-        status: 'responded' 
+        status: 'responded'
       }),
-      educationCollection.countDocuments({ 
+      educationCollection.countDocuments({
         submittedAt: { $gte: lookbackTime },
-        status: 'closed' 
+        status: 'closed'
       })
     ])
 

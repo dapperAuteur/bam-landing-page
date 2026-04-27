@@ -8,12 +8,8 @@ console.log('_migrate-photos.ts file');
 // // Load environment variables from .env.local
 // config({ path: join(process.cwd(), '.env.local') })
 
-// // Check different possible environment variable names
-// const MONGODB_URI = 
-//   process.env.MONGODB_URI || 
-//   process.env.MONGO_URI || 
-//   process.env.DATABASE_URL ||
-//   process.env.MONGODB_CONNECTION_STRING
+// // Canonical env var: MONGODB_URI (only).
+// const MONGODB_URI = process.env.MONGODB_URI
 
 // const DB_NAME = 'bam_portfolio'
 
@@ -26,11 +22,8 @@ console.log('_migrate-photos.ts file');
 //   console.error(`
 // ❌ MongoDB connection string not found!
 
-// Please check your .env.local file contains one of these variables:
+// Please check your .env.local file contains:
 // - MONGODB_URI
-// - MONGO_URI  
-// - DATABASE_URL
-// - MONGODB_CONNECTION_STRING
 
 // Example .env.local content:
 // MONGODB_URI="mongodb://localhost:27017"

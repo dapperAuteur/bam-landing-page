@@ -44,26 +44,11 @@ export default function EducationDashboard() {
   const fetchEducationData = async () => {
     try {
       setLoading(true)
-      
-      const adminKey = process.env.NEXT_PUBLIC_ADMIN_API_KEY
 
-      if (!adminKey) {
-        throw new Error('Configuration Error: NEXT_PUBLIC_ADMIN_API_KEY is missing in environment variables.')
-      }
-      
       const [statsResponse, submissionsResponse] = await Promise.all([
-        fetch('/api/admin/education/stats', {
-          headers: { 'Authorization': `Bearer ${adminKey}` }
-        }),
-        fetch('/api/admin/education/submissions', {
-          headers: { 'Authorization': `Bearer ${adminKey}` }
-        })
+        fetch('/api/admin/education/stats'),
+        fetch('/api/admin/education/submissions')
       ])
-
-      console.log('API Response Status:', {
-        stats: statsResponse.status,
-        submissions: submissionsResponse.status
-      })
 
       if (!statsResponse.ok || !submissionsResponse.ok) {
         throw new Error('Failed to fetch education data')
@@ -84,14 +69,9 @@ export default function EducationDashboard() {
 
   const updateSubmissionStatus = async (id: string, newStatus: EducationSubmission['status']) => {
     try {
-      const adminKey = process.env.NEXT_PUBLIC_ADMIN_API_KEY
-      
       await fetch(`/api/admin/education/submissions/${id}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${adminKey}`
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
       })
 

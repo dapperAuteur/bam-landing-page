@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth/authOptions"
-import { NextRequest } from "next/server"
+import { NextResponse } from "next/server"
 
 export async function getCurrentUser() {
   const session = await getServerSession(authOptions)
@@ -23,13 +23,10 @@ export async function requireAdmin() {
   return user
 }
 
-// For API route protection
-export function validateAdminAuth(request: NextRequest): boolean {
-  const authHeader = request.headers.get('authorization')
-  const adminKey = process.env.ADMIN_API_KEY
-  
-  if (!adminKey || !authHeader) return false
-  
-  const token = authHeader.replace('Bearer ', '')
-  return token === adminKey
+export async function assertAdminOrUnauthorized(): Promise<NextResponse | null> {
+  const user = await getCurrentUser()
+  if (!user || user.role !== 'admin') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+  return null
 }
