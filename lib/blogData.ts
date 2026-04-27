@@ -3,6 +3,17 @@ import { BlogPost } from "./../types/types"
 // 🔥 BLOG POST REGISTRY - Add new blog posts here!
 export const blogPosts: BlogPost[] = [
   {
+    slug: "gitkraken-accidental-rebase",
+    title: "GitKraken and Accidental Rebases — Not as Scary as You Think",
+    description: "One click in the GitKraken UI, a wave of panic, then thirty seconds with git reflog. A practical walkthrough of why accidental rebases are usually recoverable in under a minute.",
+    publishDate: "2026-04-27",
+    readTime: "5 min read",
+    category: "Software Development",
+    featured: false,
+    tags: ["Git", "GitKraken", "Developer Experience", "Reflog", "Recovery"],
+    excerpt: "I had this exact moment last week — the wrong button in GitKraken, history rewritten, mild panic. Here's why it took less time to fix than to spike my heart rate, and how to make the reflog second nature."
+  },
+  {
     slug: "why-i-track-every-step-toward-100",
     title: "Why I Track Every Step Toward 100",
     description: "How discovering 4 simple metrics changed my path to becoming the world's fastest centenarian. How they can transform your health too.",
