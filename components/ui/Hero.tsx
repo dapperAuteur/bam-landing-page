@@ -20,7 +20,7 @@ export default function Hero() {
             <a href="/partner" className="btn-primary bg-purple-600 text-white hover:bg-purple-700 border-2 border-purple-400">
               Partner with me
             </a>
-            <a href="/projects" className="btn-secondary bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600">
+            <a href="/projects#live-shipped" className="btn-secondary bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600">
               See what I&apos;m building
             </a>
           </div>

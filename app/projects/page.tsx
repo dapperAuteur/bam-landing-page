@@ -221,7 +221,7 @@ export default function ProjectsPage() {
       </section>
 
       {/* Tier A — shipped */}
-      <section className="section-padding pt-0">
+      <section id="live-shipped" className="section-padding pt-0 scroll-mt-20">
         <div className="container-max">
           <div className="max-w-6xl mx-auto">
             <div className="mb-10">
