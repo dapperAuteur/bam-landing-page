@@ -5,3 +5,17 @@
 It is sometimes called "BAM's portfolio" or "bam-portfolio" in plans and conversations — that nickname is **wrong**. There is also a stray directory at `/Users/bam/Code_NOiCloud/projects/bam-portfolio/` created by a prior misplaced `Write` call (parent dirs auto-created); it is NOT a real repo. Anything written there should be moved here or deleted.
 
 This mistake has been made more than once. If you're about to write a file under `projects/bam-portfolio/` or refer to it as the BAM portfolio repo, stop and re-read this note. Work on brandanthonymcdonald.com happens in `ai-builds/claude/bam-landing-page/`.
+
+---
+
+## Operator-task rule — capture user actions in `./plans/user-tasks/`
+
+When Claude proposes work that needs BAM to do something outside the editor (account signup, API key, DNS change, vendor dashboard, env-var rotation, secret generation, PR review/merge, etc.), Claude MUST create a `./plans/user-tasks/NN-slug.md` file in this repo. **No exceptions for "small" steps.**
+
+Required sections per task file: **Scope tag** · **What + why** (with explicit *what this blocks* detail and any hard deadline) · **Steps** · **What Claude will use** · **How to mark done** · **Related**.
+
+Update `./plans/user-tasks/00-descriptions.md` index with columns `# | Title | Scope | Blocks | Status`. The `Blocks` column is non-negotiable — that's the column BAM scans to triage the queue.
+
+This repo's queue is the reference implementation alongside the canonical witus queue at `gemini/witus/plans/user-tasks/`. Full rule with rationale: [`gemini/witus/CLAUDE.md`](../../gemini/witus/CLAUDE.md) §"Operator-task rule".
+
+**Ecosystem-wide tasks** (Keap, IRL events, weekly retros, consultant reconciliation, cross-product decisions) live in the canonical witus queue. **Repo-local tasks** (this repo's deploy, env vars, vendor outreach for brandanthonymcdonald.com) live here. Read the witus queue at session start before starting dependent work.
