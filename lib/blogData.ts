@@ -322,6 +322,486 @@ export const blogPosts: BlogPost[] = [
   //   excerpt: "The Gut-Health Bridge. Your bowel habits shape the trillions of microbes in your gut, which in turn influence your entire body."
   // }
 
+
+  // ========================================
+  // BACKLOG: Unpublished blog posts (have page.tsx files but not yet ready for the blog index).
+  // Manual review required for each — fill in title/description/publishDate/readTime/category/tags/excerpt,
+  // verify the page builds, then uncomment to publish.
+  // Auto-generated 2026-04-28 from app/blog/<slug>/page.tsx files lacking registry entries.
+  // ========================================
+  // {
+  //   slug: "-nss-natural-short-sleep-ai",
+  //   title: "Nss Natural Short Sleep Ai",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "-routines-architecture-of-well-being",
+  //   title: "Routines Architecture Of Well Being",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "-secret-life-of-the-fishers-cottontail",
+  //   title: "Secret Life Of The Fishers Cottontail",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "-sleep-for-active-folk",
+  //   title: "Sleep For Active Folk",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "ai/anatomy-of-a-critical-partner-ai",
+  //   title: "Anatomy Of A Critical Partner Ai",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "ai/anatomy-of-a-critical-partner-ai-keyword-prompts",
+  //   title: "Anatomy Of A Critical Partner Ai Keyword Prompts",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "ai/anatomy-of-a-critical-partner-ai-keyword-prompts-v2",
+  //   title: "Anatomy Of A Critical Partner Ai Keyword Prompts V2",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "ai/local-ai-agent-tool",
+  //   title: "Local Ai Agent Tool",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "ama-sports-media",
+  //   title: "Ama Sports Media",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "better-vice-club-ebook",
+  //   title: "Better Vice Club Ebook",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "better-vice-club-v1",
+  //   title: "Better Vice Club V1",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "better-vice-club-v2",
+  //   title: "Better Vice Club V2",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "corvid-digital-student-portfolio-template",
+  //   title: "Corvid Digital Student Portfolio Template",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "corvid-interactive-web-content",
+  //   title: "Corvid Interactive Web Content",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "endocannabinoid-system-curriculum-infographic",
+  //   title: "Endocannabinoid System Curriculum Infographic",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "indiana-corvid-species-analysis",
+  //   title: "Indiana Corvid Species Analysis",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "indiana-corvid-species-analysis-copy",
+  //   title: "Indiana Corvid Species Analysis Copy",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "journey-into-african-spiritual-traditions",
+  //   title: "Journey Into African Spiritual Traditions",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "page.tsx",
+  //   title: "Page.tsx",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/part-01",
+  //   title: "Part 01",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/part-02",
+  //   title: "Part 02",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/part-03",
+  //   title: "Part 03",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/part-04",
+  //   title: "Part 04",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/part-05",
+  //   title: "Part 05",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/professional",
+  //   title: "Professional",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/professional/part-01",
+  //   title: "Part 01",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/professional/part-02",
+  //   title: "Part 02",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/professional/part-03",
+  //   title: "Part 03",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/professional/part-04",
+  //   title: "Part 04",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/professional/part-05",
+  //   title: "Part 05",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/story",
+  //   title: "Story",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/story/part-01",
+  //   title: "Part 01",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/story/part-02",
+  //   title: "Part 02",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/story/part-03",
+  //   title: "Part 03",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/story/part-04",
+  //   title: "Part 04",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/story/part-05",
+  //   title: "Part 05",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/technical/part-02",
+  //   title: "Part 02",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/technical/part-03",
+  //   title: "Part 03",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/technical/part-04",
+  //   title: "Part 04",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "rabbit-holes-to-rabbit-holes/technical/part-05",
+  //   title: "Part 05",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "sign-language-learning-app",
+  //   title: "Sign Language Learning App",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "spaced-repetition-system-infographic-component",
+  //   title: "Spaced Repetition System Infographic Component",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
+  // {
+  //   slug: "workouts/stable-explosiveness-lphc-protocol-ver0",
+  //   title: "Stable Explosiveness Lphc Protocol Ver0",
+  //   description: "TODO: write description",
+  //   publishDate: "TODO",
+  //   readTime: "TODO",
+  //   category: "TODO",
+  //   featured: false,
+  //   tags: [],
+  //   excerpt: "TODO: write excerpt"
+  // },
   // 🔥 TO ADD A NEW BLOG POST:
   // 1. Create a folder in /blog/[your-blog-title-slug]/
   // 2. Add your page.tsx file to that folder
