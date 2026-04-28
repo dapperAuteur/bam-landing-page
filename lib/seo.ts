@@ -48,12 +48,22 @@ export function getPageMetadata({
   };
 }
 
+function slugToTitle(slug: string): string {
+  const lastSegment = slug.split("/").pop() || slug;
+  return lastSegment
+    .replace(/^-+/, "") // strip leading dashes (e.g. "-routines-…" → "routines-…")
+    .split("-")
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
 export function getBlogMetadata(slug: string): Metadata {
   const post = blogPosts.find((p) => p.slug === slug);
   if (!post) {
     return getPageMetadata({
-      title: slug,
-      description: "Blog post on brandanthonymcdonald.com.",
+      title: slugToTitle(slug),
+      description: `${slugToTitle(slug)} — a post by Brand Anthony McDonald.`,
       path: `/blog/${slug}`,
       type: "article",
     });
