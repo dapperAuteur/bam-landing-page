@@ -9,7 +9,7 @@ export const blogPosts: BlogPost[] = [
     publishDate: "2026-04-27",
     readTime: "5 min read",
     category: "Software Development",
-    featured: false,
+    featured: true,
     tags: ["Git", "GitKraken", "Developer Experience", "Reflog", "Recovery"],
     excerpt: "I had this exact moment last week — the wrong button in GitKraken, history rewritten, mild panic. Here's why it took less time to fix than to spike my heart rate, and how to make the reflog second nature."
   },
@@ -245,7 +245,7 @@ export const blogPosts: BlogPost[] = [
     excerpt: "An AI-Enhanced Infographic for Indiana Species"
   },
   {
-    slug: "making-sense-of-statistics",
+    slug: "statistics/making-sense-of-statistics",
     title: "Making Sense of Statistics",
     description: "A Guide to Understanding & Explaining Data",
     publishDate: "2025-05-07",
@@ -267,7 +267,7 @@ export const blogPosts: BlogPost[] = [
     excerpt: "Shattered the 100m world record for the M100 age group with a time of 26.34 seconds."
   },
   {
-    slug: "scientific-study-infographic",
+    slug: "science/scientific-study-infographic",
     title: "Understanding Scientific Studies",
     description: "The design of a study determines the strength of its conclusions. Understanding the type is the first step to critical appraisal.",
     publishDate: "2025-07-20",
@@ -289,7 +289,7 @@ export const blogPosts: BlogPost[] = [
     excerpt: "An interactive infographic tracing a profound spiritual practice from its African origins to its enduring presence in the diaspora."
   },
   {
-    slug: "skeptics-guide-to-statistics",
+    slug: "statistics/skeptics-guide-to-statistics",
     title: "The Skeptics Guide to Statistics",
     description: "How Data Can Be Misused & What to Look For. Misinformation isn't always about fake data. Often, it's about presenting real data in a misleading way. Here are the most common traps.",
     publishDate: "2025-01-10",
