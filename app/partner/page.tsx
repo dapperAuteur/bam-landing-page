@@ -1,18 +1,12 @@
-import type { Metadata } from "next";
 import IntakeForm from "@/components/forms/IntakeForm";
+import { getPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Partner With Me | Brand Anthony McDonald",
+export const metadata = getPageMetadata({
+  title: "Partner With Me",
   description:
     "Collaborations, integrations, co-marketing, and grant partnerships across the WitUS ecosystem (CentenarianOS, Work.WitUS, FlashLearnAI, and more).",
-  openGraph: {
-    title: "Partner with Brand Anthony McDonald",
-    description:
-      "Collaboration and partnership intake — integrations, co-marketing, grants, and joint ventures across the WitUS ecosystem.",
-    url: "https://brandanthonymcdonald.com/partner",
-    type: "website",
-  },
-};
+  path: "/partner",
+});
 
 export default function PartnerPage() {
   return (

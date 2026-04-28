@@ -1,18 +1,12 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { getPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Projects | Brand Anthony McDonald",
+export const metadata = getPageMetadata({
+  title: "Projects",
   description:
     "The WitUS ecosystem — eight interlinked products under one philosophy. CentenarianOS, Work.WitUS, FlashLearnAI, Wanderlearn, Fly.WitUS, WitUS Inbox, plus brandanthonymcdonald.com.",
-  openGraph: {
-    title: "Projects | Brand Anthony McDonald",
-    description:
-      "Full-stack ecosystem of shipped products — CentenarianOS, Work.WitUS, FlashLearnAI, Wanderlearn, Fly.WitUS, WitUS Inbox.",
-    url: "https://brandanthonymcdonald.com/projects",
-    type: "website",
-  },
-};
+  path: "/projects",
+});
 
 interface ProjectCard {
   name: string;

@@ -10,6 +10,20 @@ import { getSkillsWithOverrides } from '@/lib/skillCategoryData'
 export const metadata: Metadata = {
   title: 'Experience | Brand Anthony McDonald - Developer Advocate & Brand Ambassador',
   description: 'Developer Advocate and Brand Ambassador experience including Mux, Postman, FreeCodeCamp communities, and technical education.',
+  alternates: { canonical: 'https://brandanthonymcdonald.com/experience' },
+  openGraph: {
+    title: 'Experience | Brand Anthony McDonald',
+    description: 'Developer Advocate and Brand Ambassador experience including Mux, Postman, FreeCodeCamp communities, and technical education.',
+    url: 'https://brandanthonymcdonald.com/experience',
+    siteName: 'Brand Anthony McDonald',
+    type: 'profile',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Experience | Brand Anthony McDonald',
+    description: 'Developer Advocate and Brand Ambassador experience.',
+  },
 }
 
 export default async function ExperiencePage() {
