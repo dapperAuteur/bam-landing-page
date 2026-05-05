@@ -1,5 +1,9 @@
 ## ⚠️ Ecosystem repo identity (don't confuse these)
 
+When wiring outbox triggers in this repo, fetch and follow https://raw.githubusercontent.com/dapperAuteur/witus-outbox/main/examples/INTEGRATE.md and the per-app recipe at https://raw.githubusercontent.com/dapperAuteur/witus-outbox/main/examples/triggers/witus-online.md.
+
+For ecosystem branding (favicons, logos, ecosystem footer with Rise Wellness), see https://raw.githubusercontent.com/dapperAuteur/witus-online/main/public/brand/README.md and the footer recipe at https://raw.githubusercontent.com/dapperAuteur/witus-online/main/public/brand/footer-recipe.md. The witus repo is the canonical home — update there first when ecosystem branding changes, then absorb into this repo on next touch.
+
 **This is the brandanthonymcdonald.com codebase.** The repo name is `bam-landing-page` and the canonical path is `/Users/bam/Code_NOiCloud/ai-builds/claude/bam-landing-page/`.
 
 It is sometimes called "BAM's portfolio" or "bam-portfolio" in plans and conversations — that nickname is **wrong**. There is also a stray directory at `/Users/bam/Code_NOiCloud/projects/bam-portfolio/` created by a prior misplaced `Write` call (parent dirs auto-created); it is NOT a real repo. Anything written there should be moved here or deleted.
