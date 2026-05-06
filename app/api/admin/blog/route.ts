@@ -3,6 +3,23 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '@/lib/db/mongodb'
 import { blogPosts } from '@/lib/blogData'
+import { fireOutboxDrafts } from '@/lib/outbox-trigger'
+
+const PUBLIC_BASE_URL = 'https://brandanthonymcdonald.com'
+
+function buildBlogCaption(post: {
+  slug: string
+  title: string
+  excerpt: string
+}): string {
+  return [
+    `New post: "${post.title}"`,
+    '',
+    post.excerpt,
+    '',
+    `${PUBLIC_BASE_URL}/blog/${post.slug}`,
+  ].join('\n')
+}
 
 export async function GET() {
   try {
@@ -82,6 +99,16 @@ export async function POST(request: NextRequest) {
           updatedAt: new Date(),
         })
         created++
+
+        // New post became publicly visible (hidden:false default) — fire outbox drafts.
+        // Gates inside fireOutboxDrafts: kill-switch + BAM-only.
+        fireOutboxDrafts({
+          triggerUserId: session.user.id,
+          externalRefBase: `bam-blog-${post.slug}`,
+          caption: buildBlogCaption(post),
+          mediaUrls: [],
+          platforms: ['linkedin', 'twitter', 'bluesky'],
+        })
       }
     }
 
