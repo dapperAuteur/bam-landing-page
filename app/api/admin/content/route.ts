@@ -5,6 +5,26 @@ import clientPromise from '@/lib/db/mongodb'
 import { projects } from '@/lib/projectData'
 import { experiences } from '@/lib/experienceData'
 import { skillCategories } from '@/lib/skillCategoryData'
+import { fireOutboxDrafts } from '@/lib/outbox-trigger'
+
+const PUBLIC_BASE_URL = 'https://brandanthonymcdonald.com'
+
+function slugifyTitle(title: string): string {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+}
+
+function buildProjectCaption(p: Record<string, unknown>): string {
+  const title = (p.title as string) || 'New project'
+  const description = (p.description as string) || ''
+  const technologies = Array.isArray(p.technologies) ? (p.technologies as string[]) : []
+  const link = (p.link as string) || `${PUBLIC_BASE_URL}/`
+  return [
+    `New project: "${title}"`,
+    description,
+    technologies.length ? `Stack: ${technologies.join(', ')}` : '',
+    link,
+  ].filter(Boolean).join('\n')
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -107,6 +127,18 @@ export async function POST(request: NextRequest) {
           updatedAt: new Date(),
         })
         created++
+
+        // New row inserts hidden:false → publicly visible immediately. Fire
+        // outbox drafts based on type. Skill rows have no recipe; skip.
+        if (type === 'project') {
+          fireOutboxDrafts({
+            triggerUserId: session.user.id,
+            externalRefBase: `bam-project-${slugifyTitle(item.title)}`,
+            caption: buildProjectCaption(item.data),
+            mediaUrls: [],
+            platforms: ['linkedin', 'twitter', 'bluesky'],
+          })
+        }
       }
     }
 
