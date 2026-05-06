@@ -22,6 +22,9 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     title: `${post.title} | Brand Anthony McDonald`,
     description: post.description,
     keywords: post.tags.join(', '),
+    alternates: {
+      canonical: `/blog/${params.slug}`,
+    },
   }
 }
 

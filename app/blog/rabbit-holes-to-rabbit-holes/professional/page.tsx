@@ -2,6 +2,12 @@
 import { VideoPlaceholder } from '@/components/ui/VideoPlaceholder';
 import { AudioPlayer } from '@/components/ui/AudioPlayer';
 
+
+export const metadata = {
+  alternates: {
+    canonical: '/blog/rabbit-holes-to-rabbit-holes/professional',
+  },
+}
 export default function RabbitHolesLandingProfessional() {
   const parts = [
     {

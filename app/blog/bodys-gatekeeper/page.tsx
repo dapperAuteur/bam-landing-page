@@ -1,6 +1,12 @@
 import React from 'react';
 
 // Helper component for Font Awesome Icons
+
+export const metadata = {
+  alternates: {
+    canonical: '/blog/bodys-gatekeeper',
+  },
+}
 const Icon = ({ className }: { className: string }) => <i className={className} />;
 
 interface IInfoCardProps {

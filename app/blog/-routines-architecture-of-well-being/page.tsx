@@ -11,6 +11,12 @@ import { BrainCircuit, Dna, Activity, Zap, ShieldCheck, Target, Brain, Bot, Book
 // npx shadcn-ui@latest add card accordion table
 // npm install lucide-react
 
+
+export const metadata = {
+  alternates: {
+    canonical: '/blog/-routines-architecture-of-well-being',
+  },
+}
 const constructData = [
   { construct: 'Habit', characteristic: 'Automaticity', consciousness: 'Low / Non-conscious', driver: 'Environmental Cue', example: 'Automatically grabbing coffee after waking up.', icon: <Bot className="h-6 w-6 text-blue-500" /> },
   { construct: 'Routine', characteristic: 'Intentionality', consciousness: 'Conscious / Deliberate', driver: 'Deliberate Practice', example: 'A structured morning sequence of meditation, exercise, and breakfast.', icon: <Activity className="h-6 w-6 text-green-500" /> },
