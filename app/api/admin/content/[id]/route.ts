@@ -23,6 +23,19 @@ function buildProjectCaption(p: Record<string, unknown>, fallbackTitle: string):
   ].filter(Boolean).join('\n')
 }
 
+function buildExperienceCaption(e: Record<string, unknown>, fallbackTitle: string): string {
+  const title = (e.title as string) || fallbackTitle
+  const company = (e.company as string) || ''
+  const period = (e.period as string) || ''
+  const description = (e.description as string) || ''
+  const lead = company ? `${title} — ${company}` : title
+  return [
+    period ? `${lead} (${period})` : lead,
+    description,
+    `${PUBLIC_BASE_URL}/experience`,
+  ].filter(Boolean).join('\n')
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -74,6 +87,14 @@ export async function PUT(
           triggerUserId: session.user.id,
           externalRefBase: `bam-project-${slugifyTitle(title)}`,
           caption: buildProjectCaption(data, title),
+          mediaUrls: [],
+          platforms: ['linkedin', 'twitter', 'bluesky'],
+        })
+      } else if (type === 'experience') {
+        fireOutboxDrafts({
+          triggerUserId: session.user.id,
+          externalRefBase: `bam-speaking-${contentId}`,
+          caption: buildExperienceCaption(data, title),
           mediaUrls: [],
           platforms: ['linkedin', 'twitter', 'bluesky'],
         })

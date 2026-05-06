@@ -26,6 +26,19 @@ function buildProjectCaption(p: Record<string, unknown>): string {
   ].filter(Boolean).join('\n')
 }
 
+function buildExperienceCaption(e: Record<string, unknown>): string {
+  const title = (e.title as string) || 'New engagement'
+  const company = (e.company as string) || ''
+  const period = (e.period as string) || ''
+  const description = (e.description as string) || ''
+  const lead = company ? `${title} — ${company}` : title
+  return [
+    period ? `${lead} (${period})` : lead,
+    description,
+    `${PUBLIC_BASE_URL}/experience`,
+  ].filter(Boolean).join('\n')
+}
+
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -135,6 +148,14 @@ export async function POST(request: NextRequest) {
             triggerUserId: session.user.id,
             externalRefBase: `bam-project-${slugifyTitle(item.title)}`,
             caption: buildProjectCaption(item.data),
+            mediaUrls: [],
+            platforms: ['linkedin', 'twitter', 'bluesky'],
+          })
+        } else if (type === 'experience') {
+          fireOutboxDrafts({
+            triggerUserId: session.user.id,
+            externalRefBase: `bam-speaking-${item.contentId}`,
+            caption: buildExperienceCaption(item.data),
             mediaUrls: [],
             platforms: ['linkedin', 'twitter', 'bluesky'],
           })
