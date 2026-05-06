@@ -2,6 +2,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata = {
+  alternates: {
+    canonical: '/blog/why-i-track-every-step-toward-100',
+  },
   title: 'Why I Track Every Step Toward 100 | Brand Anthony McDonald',
   description: 'How discovering 4 simple metrics changed my path to becoming the world\'s fastest centenarian—and how they can transform your health too.',
   openGraph: {

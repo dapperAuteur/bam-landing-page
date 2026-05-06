@@ -6,6 +6,12 @@ import { AudioPlayer } from '@/components/ui/AudioPlayer';
 import Link from 'next/link';
 import { SeriesProgress } from '@/components/blog/SeriesNavigation';
 
+
+export const metadata = {
+  alternates: {
+    canonical: '/blog/rabbit-holes-to-rabbit-holes/professional/part-02',
+  },
+}
 export default function RabbitHolePart2() {
   return (
     <article className="max-w-4xl mx-auto px-4 py-12 space-y-12">

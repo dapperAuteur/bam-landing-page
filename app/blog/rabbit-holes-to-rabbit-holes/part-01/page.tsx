@@ -1,5 +1,11 @@
 import { CodeBlock } from '@/components/blog/CodeBlock'
 
+
+export const metadata = {
+  alternates: {
+    canonical: '/blog/rabbit-holes-to-rabbit-holes/part-01',
+  },
+}
 const shuffleArrayCode = `
 // /src/lib/utils/arrayUtils.ts
 export const shuffleArray = <T,>(array: T[]): T[] => {

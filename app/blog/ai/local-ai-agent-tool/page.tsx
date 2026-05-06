@@ -1,6 +1,12 @@
 import type { FC, SVGProps } from 'react';
 
 // Helper component for Icons
+
+export const metadata = {
+  alternates: {
+    canonical: '/blog/ai/local-ai-agent-tool',
+  },
+}
 const Icon: FC<{ icon: 'shield' | 'user' | 'code' | 'rocket' | 'target' | 'stack' }> = ({ icon }) => {
     const icons = {
         shield: (props: SVGProps<SVGSVGElement>) => (

@@ -2,6 +2,12 @@ import Link from 'next/link';
 import React from 'react';
 
 // Helper component for icons to keep the main component clean
+
+export const metadata = {
+  alternates: {
+    canonical: '/blog/ai/anatomy-of-a-critical-partner-ai',
+  },
+}
 const Icon = ({ children, className }: { children: React.ReactNode; className?: string }) => (
   <div className={`flex-shrink-0 w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center ${className}`}>
     {children}
