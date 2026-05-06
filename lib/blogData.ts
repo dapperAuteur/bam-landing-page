@@ -3,6 +3,17 @@ import { BlogPost } from "./../types/types"
 // 🔥 BLOG POST REGISTRY - Add new blog posts here!
 export const blogPosts: BlogPost[] = [
   {
+    slug: "penn-relays-2026-masters-50-plus-sprints",
+    title: "Penn Relays 2026: What the Masters 50+ Sprints (and Relays) Just Showed Me",
+    description: "A breakdown of the 100m and sprint-relay finals across the Masters 50+ age groups at Penn Relays 2026 — every place, every time, every club, plus what those splits sketch about the road to a sub-26 M100.",
+    publishDate: "2026-05-05",
+    readTime: "8 min read",
+    category: "Performance",
+    featured: true,
+    tags: ["Penn Relays", "Masters Track", "Sprinting", "Longevity", "100m", "Relays"],
+    excerpt: "The 2026 Penn Relays Masters 50+ field gave me 50 years of preview footage. Sub-12 at 60, sub-13 at 65, a 4×400 decided by 0.67 seconds — here are the times and the road map they sketch."
+  },
+  {
     slug: "gitkraken-accidental-rebase",
     title: "GitKraken and Accidental Rebases — Not as Scary as You Think",
     description: "One click in the GitKraken UI, a wave of panic, then thirty seconds with git reflog. A practical walkthrough of why accidental rebases are usually recoverable in under a minute.",
