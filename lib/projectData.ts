@@ -2,6 +2,15 @@ import { Project } from "./../types/types"
 
 export const projects: Project[] = [
   {
+    title: "Remove Later",
+    description: "AI/ML flashcard web app that uses spaced recall to help students learn and retain information. Repo: https://github.com/dapperAuteur/flashlearn-ai",
+    type: "Open Source Project",
+    technologies: ["NextJS", "Gemini AI", "TensorFlow", "MongoDB", "ChartJS", "UpStash", "Tailwind CSS"],
+    impact: "Helps users identify weaknesses in their knowledge and improve their learning.",
+    featured: true,
+    link: "https://flashlearnai.witus.online/"
+  },
+  {
     title: "FlashLearn AI",
     description: "AI/ML flashcard web app that uses spaced recall to help students learn and retain information. Repo: https://github.com/dapperAuteur/flashlearn-ai",
     type: "Open Source Project",
