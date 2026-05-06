@@ -2,6 +2,9 @@ import Link from 'next/link'
 import { YouTubeEmbed } from '@/components/blog/YouTubeEmbed'
 
 export const metadata = {
+  alternates: {
+    canonical: '/blog/penn-relays-2026-masters-50-plus-sprints',
+  },
   title: 'Penn Relays 2026: What the Masters 50+ Sprints (and Relays) Just Showed Me | Brand Anthony McDonald',
   description:
     'A breakdown of the 100m and sprint-relay finals across the Masters 50+ age groups at Penn Relays 2026 — every place, every time, every club, plus what those splits sketch about the road to a sub-26 M100.',
