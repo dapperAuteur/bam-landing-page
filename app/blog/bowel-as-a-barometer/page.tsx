@@ -1,5 +1,11 @@
 import React from 'react';
 
+
+export const metadata = {
+  alternates: {
+    canonical: '/blog/bowel-as-a-barometer',
+  },
+}
 interface IInfoCardProps {
   icon: string;
   title: string;

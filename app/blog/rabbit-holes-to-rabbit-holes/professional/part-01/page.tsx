@@ -11,6 +11,12 @@ import {
 } from '@/components/blog/SeriesNavigation';
 import Link from 'next/link';
 
+
+export const metadata = {
+  alternates: {
+    canonical: '/blog/rabbit-holes-to-rabbit-holes/professional/part-01',
+  },
+}
 export default function RabbitHolePart1() {
   return (
     <article className="max-w-4xl mx-auto px-4 py-12 space-y-12">

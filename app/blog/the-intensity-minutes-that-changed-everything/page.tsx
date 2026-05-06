@@ -2,6 +2,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata = {
+  alternates: {
+    canonical: '/blog/the-intensity-minutes-that-changed-everything',
+  },
   title: 'The Intensity Minutes That Changed Everything | Brand Anthony McDonald',
   description: 'Understanding the single metric that predicts 50% mortality reduction and how to optimize it for your body.',
   openGraph: {

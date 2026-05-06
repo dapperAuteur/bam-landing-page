@@ -2,6 +2,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata = {
+  alternates: {
+    canonical: '/blog/building-a-health-dashboard-for-the-next-70-years',
+  },
   title: 'Building a Health Dashboard for the Next 70 Years | Brand Anthony McDonald',
   description: 'The complete system for transforming health data into daily decisions—designed to keep my community active and present for decades.',
   openGraph: {

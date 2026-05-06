@@ -2,6 +2,12 @@
 
 import Link from "next/link"
 
+
+export const metadata = {
+  alternates: {
+    canonical: '/blog/body-dashboard-fitness-metrics-series-part-1',
+  },
+}
 const COURSE_URL = "https://fitness-data-analytics-course-lp.thecalisthenics.com"
 
 export default function BodyDashboardPart1Page() {
