@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '@/lib/db/mongodb'
+import { fireOutboxDrafts } from '@/lib/outbox-trigger'
+
+const PUBLIC_BASE_URL = 'https://brandanthonymcdonald.com'
 
 export async function PUT(
   request: NextRequest,
@@ -18,6 +21,9 @@ export async function PUT(
 
     const client = await clientPromise
     const db = client.db('bam_portfolio')
+
+    // Look up prior state so we can detect hidden:true → false (the publish edge).
+    const existing = await db.collection('blog_metadata').findOne({ slug })
 
     // Build update object and track overrides
     const updates: Record<string, unknown> = { updatedAt: new Date() }
@@ -39,6 +45,29 @@ export async function PUT(
       { slug },
       { $set: { ...updates, ...overrideUpdates } }
     )
+
+    // Hidden → visible flip is the closest analogue to "publish" in this CMS.
+    // Use the post-update title/excerpt (caller may have edited copy in the
+    // same request) but pull the slug-keyed identity from the URL param.
+    const becameVisible =
+      existing?.hidden === true && body.hidden === false
+    if (becameVisible) {
+      const title = (updates.title ?? existing?.title ?? slug) as string
+      const excerpt = (updates.excerpt ?? existing?.excerpt ?? '') as string
+      fireOutboxDrafts({
+        triggerUserId: session.user.id,
+        externalRefBase: `bam-blog-${slug}`,
+        caption: [
+          `New post: "${title}"`,
+          '',
+          excerpt,
+          '',
+          `${PUBLIC_BASE_URL}/blog/${slug}`,
+        ].join('\n'),
+        mediaUrls: [],
+        platforms: ['linkedin', 'twitter', 'bluesky'],
+      })
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {
