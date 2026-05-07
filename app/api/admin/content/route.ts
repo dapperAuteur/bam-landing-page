@@ -66,7 +66,9 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Sync content metadata from code into MongoDB
+// POST - Sync content metadata from code into MongoDB.
+// Body: { type, asHidden? }. asHidden=true backfills new rows hidden,
+// no outbox trigger fires. Use for bulk imports without flooding outbox.
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -74,7 +76,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { type } = await request.json()
+    const body = await request.json()
+    const { type, asHidden = false } = body as { type: string; asHidden?: boolean }
     if (!type || !['project', 'experience', 'skill'].includes(type)) {
       return NextResponse.json({ error: 'Invalid type' }, { status: 400 })
     }
@@ -126,13 +129,16 @@ export async function POST(request: NextRequest) {
         )
         updated++
       } else {
+        // asHidden=true backfills the row hidden so it shows in admin but
+        // isn't publicly visible — operator un-hides later via PUT, which
+        // is the publish edge that fires the trigger.
         await collection.insertOne({
           contentId: item.contentId,
           type,
           title: item.title,
           description: (item.data as Record<string, unknown>).description as string || '',
           featured: (item.data as Record<string, unknown>).featured as boolean || false,
-          hidden: false,
+          hidden: asHidden,
           displayOrder: 999,
           overrides: {},
           data: item.data,
@@ -141,29 +147,32 @@ export async function POST(request: NextRequest) {
         })
         created++
 
-        // New row inserts hidden:false → publicly visible immediately. Fire
-        // outbox drafts based on type. Skill rows have no recipe; skip.
-        if (type === 'project') {
-          fireOutboxDrafts({
-            triggerUserId: session.user.id,
-            externalRefBase: `bam-project-${slugifyTitle(item.title)}`,
-            caption: buildProjectCaption(item.data),
-            mediaUrls: [],
-            platforms: ['linkedin', 'twitter', 'bluesky'],
-          })
-        } else if (type === 'experience') {
-          fireOutboxDrafts({
-            triggerUserId: session.user.id,
-            externalRefBase: `bam-speaking-${item.contentId}`,
-            caption: buildExperienceCaption(item.data),
-            mediaUrls: [],
-            platforms: ['linkedin', 'twitter', 'bluesky'],
-          })
+        // Only fire on insert when the row was inserted publicly visible.
+        // Backfill mode (asHidden) defers the trigger to the un-hide step.
+        // Skill rows have no recipe; skip regardless.
+        if (!asHidden) {
+          if (type === 'project') {
+            fireOutboxDrafts({
+              triggerUserId: session.user.id,
+              externalRefBase: `bam-project-${slugifyTitle(item.title)}`,
+              caption: buildProjectCaption(item.data),
+              mediaUrls: [],
+              platforms: ['linkedin', 'twitter', 'bluesky'],
+            })
+          } else if (type === 'experience') {
+            fireOutboxDrafts({
+              triggerUserId: session.user.id,
+              externalRefBase: `bam-speaking-${item.contentId}`,
+              caption: buildExperienceCaption(item.data),
+              mediaUrls: [],
+              platforms: ['linkedin', 'twitter', 'bluesky'],
+            })
+          }
         }
       }
     }
 
-    return NextResponse.json({ success: true, created, updated, total: sourceItems.length })
+    return NextResponse.json({ success: true, created, updated, total: sourceItems.length, asHidden })
   } catch (error) {
     console.error('Failed to sync content metadata:', error)
     return NextResponse.json({ error: 'Failed to sync content metadata' }, { status: 500 })

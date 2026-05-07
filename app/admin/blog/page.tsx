@@ -1,7 +1,29 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import type { BlogMetadata } from '@/types/blog-admin'
+
+const PAGE_SIZE = 20
+
+// Multi-field tokenized search: each whitespace-separated token in `query`
+// must appear (case-insensitive substring) in at least one of the searchable
+// fields. AND across tokens, OR across fields. Empty/whitespace query matches
+// every post. Not Levenshtein-fuzzy (no typo tolerance), but unbounded across
+// title / slug / description / excerpt / category / tags so partial matches
+// like "penn relay 2026" find "Penn Relays 2026 Masters Sprint Recap".
+function matchesQuery(post: BlogMetadata, query: string): boolean {
+  const tokens = query.toLowerCase().split(/\s+/).filter(Boolean)
+  if (tokens.length === 0) return true
+  const haystack = [
+    post.title,
+    post.slug,
+    post.description,
+    post.excerpt,
+    post.category,
+    (post.tags || []).join(' '),
+  ].join(' ').toLowerCase()
+  return tokens.every(t => haystack.includes(t))
+}
 
 export default function AdminBlogPage() {
   const [posts, setPosts] = useState<BlogMetadata[]>([])
@@ -11,6 +33,7 @@ export default function AdminBlogPage() {
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [showFilter, setShowFilter] = useState<'all' | 'featured' | 'hidden'>('all')
   const [editingPost, setEditingPost] = useState<BlogMetadata | null>(null)
+  const [page, setPage] = useState(1)
 
   useEffect(() => { fetchPosts() }, [])
 
@@ -26,13 +49,20 @@ export default function AdminBlogPage() {
     }
   }
 
-  const syncFromCode = async () => {
+  const syncFromCode = async (asHidden = false) => {
+    if (asHidden && !confirm(
+      'Backfill new posts as HIDDEN (no outbox triggers fire)?\n\n' +
+      'New rows will appear in the admin list but won\'t be publicly visible. ' +
+      'Use the Hide → Show toggle on each post to publish (and fire its outbox drafts) one at a time.'
+    )) return
     setSyncing(true)
     try {
-      const response = await fetch('/api/admin/blog', { method: 'POST' })
+      const url = asHidden ? '/api/admin/blog?asHidden=true' : '/api/admin/blog'
+      const response = await fetch(url, { method: 'POST' })
       const data = await response.json()
       if (response.ok) {
-        alert(`Synced: ${data.created} new, ${data.updated} updated (${data.total} total in code)`)
+        const mode = asHidden ? ' as HIDDEN (no triggers)' : ''
+        alert(`Synced${mode}: ${data.created} new, ${data.updated} updated (${data.total} total in code)`)
         fetchPosts()
       }
     } catch (error) {
@@ -84,14 +114,22 @@ export default function AdminBlogPage() {
 
   const categories = Array.from(new Set(posts.map(p => p.category))).sort()
 
-  const filteredPosts = posts.filter(post => {
-    if (search && !post.title.toLowerCase().includes(search.toLowerCase()) &&
-        !post.slug.toLowerCase().includes(search.toLowerCase())) return false
+  const filteredPosts = useMemo(() => posts.filter(post => {
+    if (!matchesQuery(post, search)) return false
     if (categoryFilter !== 'all' && post.category !== categoryFilter) return false
     if (showFilter === 'featured' && !post.featured) return false
     if (showFilter === 'hidden' && !post.hidden) return false
     return true
-  })
+  }), [posts, search, categoryFilter, showFilter])
+
+  // Reset to page 1 whenever the filter set changes; otherwise the user could
+  // be stuck on page 4 of a result set that just shrank to 12 items.
+  useEffect(() => { setPage(1) }, [search, categoryFilter, showFilter])
+
+  const totalPages = Math.max(1, Math.ceil(filteredPosts.length / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages)
+  const pageStart = (currentPage - 1) * PAGE_SIZE
+  const pagePosts = filteredPosts.slice(pageStart, pageStart + PAGE_SIZE)
 
   const stats = {
     total: posts.length,
@@ -110,13 +148,24 @@ export default function AdminBlogPage() {
           <h1 className="text-2xl font-bold text-gray-900">Blog Management</h1>
           <p className="text-gray-600 mt-1">Manage blog post metadata, featured status, and visibility</p>
         </div>
-        <button
-          onClick={syncFromCode}
-          disabled={syncing}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
-        >
-          {syncing ? 'Syncing...' : 'Sync from Code'}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => syncFromCode(true)}
+            disabled={syncing}
+            className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 disabled:opacity-50"
+            title="Insert new posts as hidden — does NOT fire outbox triggers. Use Hide → Show on each post to publish individually."
+          >
+            {syncing ? 'Syncing...' : 'Backfill (hidden)'}
+          </button>
+          <button
+            onClick={() => syncFromCode(false)}
+            disabled={syncing}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+            title="Insert new posts as visible — FIRES outbox triggers (3 drafts per new post)."
+          >
+            {syncing ? 'Syncing...' : 'Sync from Code'}
+          </button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -137,13 +186,24 @@ export default function AdminBlogPage() {
       {posts.length === 0 ? (
         <div className="bg-white rounded-lg shadow p-12 text-center">
           <p className="text-gray-600 mb-4">No blog metadata in database yet.</p>
-          <button
-            onClick={syncFromCode}
-            disabled={syncing}
-            className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 disabled:opacity-50"
-          >
-            {syncing ? 'Syncing...' : 'Sync from Code to Get Started'}
-          </button>
+          <div className="flex justify-center gap-3">
+            <button
+              onClick={() => syncFromCode(true)}
+              disabled={syncing}
+              className="bg-gray-200 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-300 disabled:opacity-50"
+              title="Insert new posts as hidden — does NOT fire outbox triggers."
+            >
+              {syncing ? 'Syncing...' : 'Backfill as Hidden (no triggers)'}
+            </button>
+            <button
+              onClick={() => syncFromCode(false)}
+              disabled={syncing}
+              className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 disabled:opacity-50"
+              title="Insert new posts as visible — FIRES outbox triggers per new post."
+            >
+              {syncing ? 'Syncing...' : 'Sync from Code to Get Started'}
+            </button>
+          </div>
         </div>
       ) : (
         <>
@@ -151,10 +211,10 @@ export default function AdminBlogPage() {
           <div className="bg-white rounded-lg shadow p-4 flex flex-wrap gap-4 items-center">
             <input
               type="text"
-              placeholder="Search posts..."
+              placeholder="Search title, slug, description, excerpt, category, tags..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-2 text-sm flex-1 min-w-[200px]"
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm flex-1 min-w-[260px]"
             />
             <select
               value={categoryFilter}
@@ -183,12 +243,29 @@ export default function AdminBlogPage() {
             </div>
           </div>
 
+          {/* Result count + top pagination */}
+          <div className="flex justify-between items-center text-sm text-gray-600">
+            <span>
+              {filteredPosts.length === 0
+                ? 'No matches'
+                : `Showing ${pageStart + 1}–${Math.min(pageStart + PAGE_SIZE, filteredPosts.length)} of ${filteredPosts.length}`}
+              {filteredPosts.length !== posts.length && ` (filtered from ${posts.length})`}
+            </span>
+            {totalPages > 1 && (
+              <PaginationControls
+                page={currentPage}
+                totalPages={totalPages}
+                onChange={setPage}
+              />
+            )}
+          </div>
+
           {/* Posts List */}
           <div className="bg-white rounded-lg shadow divide-y">
             {filteredPosts.length === 0 ? (
               <div className="p-8 text-center text-gray-500">No posts match your filters</div>
             ) : (
-              filteredPosts.map(post => (
+              pagePosts.map(post => (
                 <div key={post.slug} className="p-4 flex items-center gap-4 hover:bg-gray-50">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -254,6 +331,17 @@ export default function AdminBlogPage() {
               ))
             )}
           </div>
+
+          {/* Bottom pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center">
+              <PaginationControls
+                page={currentPage}
+                totalPages={totalPages}
+                onChange={setPage}
+              />
+            </div>
+          )}
         </>
       )}
 
@@ -266,6 +354,54 @@ export default function AdminBlogPage() {
           onCancel={() => setEditingPost(null)}
         />
       )}
+    </div>
+  )
+}
+
+function PaginationControls({
+  page,
+  totalPages,
+  onChange,
+}: {
+  page: number
+  totalPages: number
+  onChange: (n: number) => void
+}) {
+  return (
+    <div className="flex items-center gap-1">
+      <button
+        onClick={() => onChange(1)}
+        disabled={page <= 1}
+        className="px-2 py-1 text-sm rounded-md text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent"
+        title="First page"
+      >
+        «
+      </button>
+      <button
+        onClick={() => onChange(page - 1)}
+        disabled={page <= 1}
+        className="px-3 py-1 text-sm rounded-md text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent"
+      >
+        Prev
+      </button>
+      <span className="px-3 py-1 text-sm text-gray-700">
+        Page {page} of {totalPages}
+      </span>
+      <button
+        onClick={() => onChange(page + 1)}
+        disabled={page >= totalPages}
+        className="px-3 py-1 text-sm rounded-md text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent"
+      >
+        Next
+      </button>
+      <button
+        onClick={() => onChange(totalPages)}
+        disabled={page >= totalPages}
+        className="px-2 py-1 text-sm rounded-md text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent"
+        title="Last page"
+      >
+        »
+      </button>
     </div>
   )
 }
