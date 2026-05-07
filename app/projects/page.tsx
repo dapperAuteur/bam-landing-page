@@ -19,13 +19,6 @@ interface ProjectCard {
 
 const tierAProjects: ProjectCard[] = [
   {
-    name: "Sunday",
-    url: "https://witus.online",
-    status: "🟢",
-    tagline: "Parent brand site for the WitUS ecosystem — philosophy-first landing page connecting CentenarianOS and Work.WitUS under \"Live Long. Work Free.\"",
-    stack: "Next.js 16 · Tailwind v4 · Vercel · fully static",
-    detail: "Solo build. Required vercel.json for framework auto-detection — a real operational detail worth noting.",
-  },{
     name: "witus.online",
     url: "https://witus.online",
     status: "🟢",
