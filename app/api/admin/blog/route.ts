@@ -43,13 +43,17 @@ export async function GET() {
   }
 }
 
-// POST - Sync blog metadata from code (blogData.ts) into MongoDB
+// POST - Sync blog metadata from code (blogData.ts) into MongoDB.
+// Query: ?asHidden=true → new rows insert hidden, no outbox trigger fires.
+// Use this for backfilling many posts at once without flooding the outbox.
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user?.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    const asHidden = request.nextUrl.searchParams.get('asHidden') === 'true'
 
     const client = await clientPromise
     const db = client.db('bam_portfolio')
@@ -81,7 +85,9 @@ export async function POST(request: NextRequest) {
         )
         updated++
       } else {
-        // Insert new entry
+        // Insert new entry. asHidden=true backfills the row hidden so it
+        // shows up in admin but isn't publicly visible — operator un-hides
+        // later via PUT, which is the publish edge that fires the trigger.
         await collection.insertOne({
           slug: post.slug,
           title: post.title,
@@ -92,7 +98,7 @@ export async function POST(request: NextRequest) {
           featured: post.featured || false,
           tags: post.tags,
           excerpt: post.excerpt,
-          hidden: false,
+          hidden: asHidden,
           featuredOrder: 999,
           overrides: {},
           createdAt: new Date(),
@@ -100,19 +106,21 @@ export async function POST(request: NextRequest) {
         })
         created++
 
-        // New post became publicly visible (hidden:false default) — fire outbox drafts.
-        // Gates inside fireOutboxDrafts: kill-switch + BAM-only.
-        fireOutboxDrafts({
-          triggerUserId: session.user.id,
-          externalRefBase: `bam-blog-${post.slug}`,
-          caption: buildBlogCaption(post),
-          mediaUrls: [],
-          platforms: ['linkedin', 'twitter', 'bluesky'],
-        })
+        // Only fire on insert when the row was inserted publicly visible.
+        // Backfill mode (asHidden) defers the trigger to the un-hide step.
+        if (!asHidden) {
+          fireOutboxDrafts({
+            triggerUserId: session.user.id,
+            externalRefBase: `bam-blog-${post.slug}`,
+            caption: buildBlogCaption(post),
+            mediaUrls: [],
+            platforms: ['linkedin', 'twitter', 'bluesky'],
+          })
+        }
       }
     }
 
-    return NextResponse.json({ success: true, created, updated, total: blogPosts.length })
+    return NextResponse.json({ success: true, created, updated, total: blogPosts.length, asHidden })
   } catch (error) {
     console.error('Failed to sync blog metadata:', error)
     return NextResponse.json({ error: 'Failed to sync blog metadata' }, { status: 500 })
