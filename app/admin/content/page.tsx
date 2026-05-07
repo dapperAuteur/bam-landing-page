@@ -29,17 +29,23 @@ export default function AdminContentPage() {
     }
   }
 
-  const syncFromCode = async () => {
+  const syncFromCode = async (asHidden = false) => {
+    if (asHidden && !confirm(
+      `Backfill new ${activeTab}s as HIDDEN (no outbox triggers fire)?\n\n` +
+      'New rows appear in the admin list but won\'t be publicly visible. ' +
+      'Use the Hide → Show toggle on each one to publish (and fire its outbox drafts) individually.'
+    )) return
     setSyncing(true)
     try {
       const response = await fetch('/api/admin/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: activeTab })
+        body: JSON.stringify({ type: activeTab, asHidden })
       })
       const data = await response.json()
       if (response.ok) {
-        alert(`Synced ${activeTab}s: ${data.created} new, ${data.updated} updated (${data.total} total in code)`)
+        const mode = asHidden ? ' as HIDDEN (no triggers)' : ''
+        alert(`Synced ${activeTab}s${mode}: ${data.created} new, ${data.updated} updated (${data.total} total in code)`)
         fetchItems(activeTab)
       }
     } catch (error) {
@@ -105,13 +111,24 @@ export default function AdminContentPage() {
           <h1 className="text-2xl font-bold text-gray-900">Content Management</h1>
           <p className="text-gray-600 mt-1">Manage portfolio projects, experience, and skills</p>
         </div>
-        <button
-          onClick={syncFromCode}
-          disabled={syncing}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
-        >
-          {syncing ? 'Syncing...' : `Sync ${tabLabels[activeTab]} from Code`}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => syncFromCode(true)}
+            disabled={syncing}
+            className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 disabled:opacity-50"
+            title="Insert new rows as hidden — does NOT fire outbox triggers."
+          >
+            {syncing ? 'Syncing...' : 'Backfill (hidden)'}
+          </button>
+          <button
+            onClick={() => syncFromCode(false)}
+            disabled={syncing}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+            title="Insert new rows as visible — FIRES outbox triggers per new row (project/experience only)."
+          >
+            {syncing ? 'Syncing...' : `Sync ${tabLabels[activeTab]} from Code`}
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -152,13 +169,24 @@ export default function AdminContentPage() {
       ) : items.length === 0 ? (
         <div className="bg-white rounded-lg shadow p-12 text-center">
           <p className="text-gray-600 mb-4">No {tabLabels[activeTab].toLowerCase()} metadata in database yet.</p>
-          <button
-            onClick={syncFromCode}
-            disabled={syncing}
-            className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 disabled:opacity-50"
-          >
-            {syncing ? 'Syncing...' : 'Sync from Code to Get Started'}
-          </button>
+          <div className="flex justify-center gap-3">
+            <button
+              onClick={() => syncFromCode(true)}
+              disabled={syncing}
+              className="bg-gray-200 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-300 disabled:opacity-50"
+              title="Insert new rows as hidden — does NOT fire outbox triggers."
+            >
+              {syncing ? 'Syncing...' : 'Backfill as Hidden (no triggers)'}
+            </button>
+            <button
+              onClick={() => syncFromCode(false)}
+              disabled={syncing}
+              className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 disabled:opacity-50"
+              title="Insert new rows as visible — FIRES outbox triggers per new row."
+            >
+              {syncing ? 'Syncing...' : 'Sync from Code to Get Started'}
+            </button>
+          </div>
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow divide-y">

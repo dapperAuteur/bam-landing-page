@@ -26,13 +26,20 @@ export default function AdminBlogPage() {
     }
   }
 
-  const syncFromCode = async () => {
+  const syncFromCode = async (asHidden = false) => {
+    if (asHidden && !confirm(
+      'Backfill new posts as HIDDEN (no outbox triggers fire)?\n\n' +
+      'New rows will appear in the admin list but won\'t be publicly visible. ' +
+      'Use the Hide → Show toggle on each post to publish (and fire its outbox drafts) one at a time.'
+    )) return
     setSyncing(true)
     try {
-      const response = await fetch('/api/admin/blog', { method: 'POST' })
+      const url = asHidden ? '/api/admin/blog?asHidden=true' : '/api/admin/blog'
+      const response = await fetch(url, { method: 'POST' })
       const data = await response.json()
       if (response.ok) {
-        alert(`Synced: ${data.created} new, ${data.updated} updated (${data.total} total in code)`)
+        const mode = asHidden ? ' as HIDDEN (no triggers)' : ''
+        alert(`Synced${mode}: ${data.created} new, ${data.updated} updated (${data.total} total in code)`)
         fetchPosts()
       }
     } catch (error) {
@@ -110,13 +117,24 @@ export default function AdminBlogPage() {
           <h1 className="text-2xl font-bold text-gray-900">Blog Management</h1>
           <p className="text-gray-600 mt-1">Manage blog post metadata, featured status, and visibility</p>
         </div>
-        <button
-          onClick={syncFromCode}
-          disabled={syncing}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
-        >
-          {syncing ? 'Syncing...' : 'Sync from Code'}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => syncFromCode(true)}
+            disabled={syncing}
+            className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 disabled:opacity-50"
+            title="Insert new posts as hidden — does NOT fire outbox triggers. Use Hide → Show on each post to publish individually."
+          >
+            {syncing ? 'Syncing...' : 'Backfill (hidden)'}
+          </button>
+          <button
+            onClick={() => syncFromCode(false)}
+            disabled={syncing}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+            title="Insert new posts as visible — FIRES outbox triggers (3 drafts per new post)."
+          >
+            {syncing ? 'Syncing...' : 'Sync from Code'}
+          </button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -137,13 +155,24 @@ export default function AdminBlogPage() {
       {posts.length === 0 ? (
         <div className="bg-white rounded-lg shadow p-12 text-center">
           <p className="text-gray-600 mb-4">No blog metadata in database yet.</p>
-          <button
-            onClick={syncFromCode}
-            disabled={syncing}
-            className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 disabled:opacity-50"
-          >
-            {syncing ? 'Syncing...' : 'Sync from Code to Get Started'}
-          </button>
+          <div className="flex justify-center gap-3">
+            <button
+              onClick={() => syncFromCode(true)}
+              disabled={syncing}
+              className="bg-gray-200 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-300 disabled:opacity-50"
+              title="Insert new posts as hidden — does NOT fire outbox triggers."
+            >
+              {syncing ? 'Syncing...' : 'Backfill as Hidden (no triggers)'}
+            </button>
+            <button
+              onClick={() => syncFromCode(false)}
+              disabled={syncing}
+              className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 disabled:opacity-50"
+              title="Insert new posts as visible — FIRES outbox triggers per new post."
+            >
+              {syncing ? 'Syncing...' : 'Sync from Code to Get Started'}
+            </button>
+          </div>
         </div>
       ) : (
         <>
