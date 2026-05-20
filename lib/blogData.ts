@@ -5,13 +5,13 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "nss-natural-short-sleep",
     title: "Why Some People Sleep Less and Still Feel Great",
-    description: "A plain-language tour of what science knows about natural short sleepers — the rare people who thrive on 4 to 6.5 hours of sleep — and the five genes researchers have linked to the trait.",
+    description: "A plain-language tour of what science knows about natural short sleepers, the rare people who thrive on 4 to 6.5 hours of sleep, and the five genes researchers have linked to the trait.",
     publishDate: "2026-05-20",
     readTime: "8 min read",
     category: "Health & Longevity",
     featured: true,
     tags: ["Sleep", "Genetics", "Longevity", "Natural Short Sleepers", "SIK3", "DEC2"],
-    excerpt: "Most adults need 7 to 9 hours of sleep. A tiny group of people — about 1 in 100 — feel great on far less. Here's what scientists have found in their genes, written for curious readers of any age."
+    excerpt: "Most adults need 7 to 9 hours of sleep. A tiny group of people, about 1 in 100, feel great on far less. Here's what scientists have found in their genes, written for curious readers of any age."
   },
   {
     slug: "penn-relays-2026-masters-sprint-results",

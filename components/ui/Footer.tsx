@@ -28,7 +28,7 @@ export default function Footer() {
           <div className="md:col-span-2 lg:col-span-2">
             <h3 className="text-2xl font-bold mb-4">Brand Anthony McDonald</h3>
             <p className="text-gray-300 mb-4">
-              Developer advocate, voiceover artist, and strategic consultant —
+              Developer advocate, voiceover artist, and strategic consultant,
               building the world&apos;s smallest conglomerate while training to be the world&apos;s fastest centenarian.
             </p>
             <p className="text-gray-400 text-sm">
@@ -78,7 +78,7 @@ export default function Footer() {
                   className="hover:text-white transition-colors"
                 >
                   Rise Wellness
-                  <span className="sr-only"> (mental-health partner — opens in new tab)</span>
+                  <span className="sr-only"> (mental-health partner, opens in new tab)</span>
                 </a>
               </li>
             </ul>
@@ -125,10 +125,10 @@ export default function Footer() {
   )
 }
 
-// Rise Wellness callout — canonical copy per gemini/witus/public/brand/footer-recipe.md.
+// Rise Wellness callout. Canonical copy per gemini/witus/public/brand/footer-recipe.md.
 // Container surface + accent tokens swapped to bam-landing-page's dark + indigo theme;
 // the disclaimer text is byte-identical (vetted with the partner). The only token
-// changed inside the disclaimer is [YOUR APP NAME] → "Brand Anthony McDonald".
+// changed inside the disclaimer is [YOUR APP NAME] -> "Brand Anthony McDonald".
 function RiseWellnessCallout() {
   return (
     <section
@@ -152,9 +152,9 @@ function RiseWellnessCallout() {
 
       <p className="text-gray-300 leading-relaxed">
         Rise Wellness of Indiana provides compassionate, personalized,
-        holistic mental health care — evidence-based medicine, trauma-informed
-        care, and a whole-person approach to help you heal, grow, and thrive
-        in mind, body, and spirit.
+        holistic mental health care, including evidence-based medicine,
+        trauma-informed care, and a whole-person approach to help you heal,
+        grow, and thrive in mind, body, and spirit.
       </p>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -221,7 +221,7 @@ function RiseWellnessCallout() {
         guided by the belief that healing is personal, holistic, and rooted
         in compassion.&rdquo;
         <span className="block not-italic mt-1 text-gray-500">
-          — Rise Wellness of Indiana
+          Rise Wellness of Indiana
         </span>
       </blockquote>
 
