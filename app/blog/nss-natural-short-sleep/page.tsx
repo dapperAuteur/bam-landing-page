@@ -122,7 +122,7 @@ export default function NaturalShortSleepPost() {
             callbacks: {
               label: (context) => {
                 const gene = genes[context.datasetIndex]
-                return `${gene.gene} — ${Math.round(gene.year)}`
+                return `${gene.gene} (${Math.round(gene.year)})`
               },
             },
           },
@@ -163,8 +163,8 @@ export default function NaturalShortSleepPost() {
         <p className="text-xl text-gray-600 mb-6">
           A tiny group of people only need about 4 to 6 hours of sleep. They
           wake up rested. They live long, healthy lives. Scientists have found
-          genes that may explain why — and what those genes might one day
-          teach the rest of us.
+          genes that may explain why, and the research could one day teach the
+          rest of us how to sleep better.
         </p>
         <div className="flex items-center gap-4 text-sm text-gray-500">
           <time dateTime="2026-05-20">May 20, 2026</time>
@@ -292,7 +292,7 @@ export default function NaturalShortSleepPost() {
         <div className="space-y-6">
           <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-5">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              DEC2 — found in 2009
+              DEC2 (found in 2009)
             </h3>
             <p className="text-gray-700 leading-relaxed">
               The first short-sleep gene. Scientists studied a mom
@@ -308,13 +308,13 @@ export default function NaturalShortSleepPost() {
 
           <div className="bg-violet-50 border border-violet-200 rounded-lg p-5">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              ADRB1 — found in 2019
+              ADRB1 (found in 2019)
             </h3>
             <p className="text-gray-700 leading-relaxed">
               Ten years later, the same team found a second gene
               in a different family. They called it ADRB1. The
               change in ADRB1 makes a part of the brainstem more
-              &ldquo;awake-ready&rdquo; — so the body needs less
+              &ldquo;awake-ready,&rdquo; so the body needs less
               sleep to feel rested
               {' '}
               {cite('shi2019', '(Shi et al., 2019)')}.
@@ -323,7 +323,7 @@ export default function NaturalShortSleepPost() {
 
           <div className="bg-purple-50 border border-purple-200 rounded-lg p-5">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              NPSR1 — found in 2019
+              NPSR1 (found in 2019)
             </h3>
             <p className="text-gray-700 leading-relaxed">
               Later in 2019, scientists found a third gene called
@@ -338,7 +338,7 @@ export default function NaturalShortSleepPost() {
 
           <div className="bg-fuchsia-50 border border-fuchsia-200 rounded-lg p-5">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              GRM1 — found in 2020
+              GRM1 (found in 2020)
             </h3>
             <p className="text-gray-700 leading-relaxed">
               The fourth gene change is in GRM1. It was found in
@@ -353,7 +353,7 @@ export default function NaturalShortSleepPost() {
 
           <div className="bg-pink-50 border border-pink-200 rounded-lg p-5">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              SIK3-N783Y — found in 2025
+              SIK3-N783Y (found in 2025)
             </h3>
             <p className="text-gray-700 leading-relaxed">
               The newest discovery. SIK3 is a gene that helps the
@@ -411,7 +411,7 @@ export default function NaturalShortSleepPost() {
           her life. She had no memory problems. She had no health
           problems. Doctors tested her sleep with a wrist tracker
           for a week. The tracker showed she really got about
-          6.3 hours of sleep each night — more than she thought,
+          6.3 hours of sleep each night. That was more than she thought,
           but still less than most adults
           {' '}
           {cite('chen2025', '(Chen et al., 2025)')}.
