@@ -1,72 +1,26 @@
 'use client';
 
 import React, { useState } from 'react';
-import { 
-  Mic, 
-  Video, 
-  Calendar, 
-  Clock, 
-  Users, 
-  Globe, 
-  CheckCircle, 
-  ChevronDown, 
-  ChevronUp,
+import {
+  Calendar,
+  Clock,
+  Users,
+  Globe,
+  CheckCircle,
+  ChevronDown,
   Send,
-  Radio
+  Radio,
+  AlertTriangle
 } from 'lucide-react';
+import {
+  GoogleReCaptchaProvider,
+  useGoogleReCaptcha,
+} from 'react-google-recaptcha-v3';
 
 export default function GuestSpeakerPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    profession: '',
-    expertise: '',
-    availability: '',
-    message: ''
-  });
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [statusMessage, setStatusMessage] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus('submitting');
-    console.log('Submitting guest speaker form:', formData);
-    
-    try {
-      const res = await fetch('/api/guest-speaker', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      
-      const data = await res.json();
-      console.log('Guest speaker API response:', data);
-      
-      if (data.success) {
-        setStatus('success');
-        setStatusMessage(data.message);
-      } else {
-        setStatus('error');
-        setStatusMessage(data.message);
-        console.error('Guest speaker submission failed:', data.message);
-      }
-    } catch (error) {
-      console.error('Guest speaker submission error:', error);
-      setStatus('error');
-      setStatusMessage('An unexpected error occurred. Please try again.');
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
-
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-red-600 selection:text-white">
-      
+
       {/* --- HERO SECTION --- */}
       <header className="relative border-b border-gray-100">
         <div className="container mx-auto px-4 py-24 md:py-32 relative z-10 max-w-5xl">
@@ -74,26 +28,26 @@ export default function GuestSpeakerPage() {
             <span className="w-2 h-2 bg-red-600 rounded-full animate-pulse shadow-[0_0_10px_#ef4444]"></span>
             Live On Air
           </div>
-          
+
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 tracking-tighter mb-6 leading-[1.1]">
             Pass the Torch.<br />
             <span className="text-gray-400">Inspire the Next Generation.</span>
           </h1>
-          
+
           <p className="text-xl text-gray-600 max-w-2xl leading-relaxed mb-10">
-            The Sports Broadcasting Club at Fishers & Westfield High Schools is looking for industry professionals to share their journey. 
+            The Sports Broadcasting Club at Fishers & Westfield High Schools is looking for industry professionals to share their journey.
             <strong>35 minutes. Virtual. Massive Impact.</strong>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <a 
-              href="#sign-up" 
+            <a
+              href="#sign-up"
               className="bg-black text-white hover:bg-gray-800 font-bold px-8 py-4 rounded-full transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
             >
               Join the Roster <ChevronDown size={18} />
             </a>
-            <a 
-              href="#the-playbook" 
+            <a
+              href="#the-playbook"
               className="border border-gray-300 text-gray-600 hover:border-black hover:text-black px-8 py-4 rounded-full transition-all flex items-center justify-center bg-white"
             >
               See How It Works
@@ -152,17 +106,17 @@ export default function GuestSpeakerPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <PlaybookCard 
+            <PlaybookCard
               icon={<Globe size={32} />}
               title="100% Virtual"
               desc="Join us from your office, home, or the road via Zoom/Teams. No travel required."
             />
-            <PlaybookCard 
+            <PlaybookCard
               icon={<Clock size={32} />}
               title="35 Minutes"
               desc="1:53 PM - 2:28 PM EST. Short, punchy, and high-energy. We handle the moderation."
             />
-            <PlaybookCard 
+            <PlaybookCard
               icon={<Calendar size={32} />}
               title="Monthly Series"
               desc="Events happen monthly. Pick a Monday, Tuesday, Thursday, or Friday that works for you."
@@ -187,7 +141,7 @@ export default function GuestSpeakerPage() {
       <section className="py-20 border-b border-gray-100 bg-gray-50">
         <div className="container mx-auto px-4 max-w-5xl">
           <h2 className="text-3xl font-bold text-gray-900 mb-10">Join The Roster</h2>
-          
+
           <div className="grid md:grid-cols-2 gap-6">
             {/* Madison Card */}
             <div className="group bg-white border border-gray-200 p-6 rounded-xl hover:border-green-500/50 hover:shadow-md transition-all flex items-start gap-4">
@@ -224,120 +178,7 @@ export default function GuestSpeakerPage() {
             </p>
           </div>
 
-          {status === 'success' ? (
-            <div className="bg-green-50 border border-green-200 p-8 rounded-2xl text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="text-green-600" size={32} />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Interest Received!</h3>
-              <p className="text-gray-600">
-                {statusMessage}
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="bg-white border border-gray-200 p-8 rounded-2xl shadow-xl space-y-6">
-            
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Name</label>
-                  <input 
-                    type="text" 
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Jane Doe" 
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400" 
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email</label>
-                  <input 
-                    type="email" 
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="jane@network.com" 
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400" 
-                  />
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Profession / Title</label>
-                  <input 
-                    type="text" 
-                    name="profession"
-                    required
-                    value={formData.profession}
-                    onChange={handleChange}
-                    placeholder="e.g. Technical Director" 
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400" 
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Area of Expertise</label>
-                  <input 
-                    type="text" 
-                    name="expertise"
-                    required
-                    value={formData.expertise}
-                    onChange={handleChange}
-                    placeholder="e.g. Audio Engineering, On-Air" 
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400" 
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                  Availability <span className="text-gray-400 normal-case ml-2">(Mon/Tue/Thu/Fri @ 1:53-2:28 PM)</span>
-                </label>
-                <textarea 
-                  name="availability"
-                  value={formData.availability}
-                  onChange={handleChange}
-                  rows={2} 
-                  placeholder="I am generally available on Fridays in February. Tuesdays also work..." 
-                  className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400"
-                ></textarea>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Introduction / Message</label>
-                <textarea 
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows={4} 
-                  placeholder="Tell us a bit about yourself or what you'd like to share with the students." 
-                  className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400"
-                ></textarea>
-              </div>
-
-              {status === 'error' && (
-                <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg text-sm">
-                  {statusMessage}
-                </div>
-              )}
-
-              <div className="pt-4">
-                <button 
-                  type="submit" 
-                  disabled={status === 'submitting'}
-                  className="w-full bg-black text-white font-bold text-lg py-4 rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {status === 'submitting' ? 'Sending...' : <><Send size={20} /> Send Interest</>}
-                </button>
-                <p className="text-center text-gray-400 text-sm mt-4">
-                  Note: This form expresses interest. We will email you to finalize the booking.
-                </p>
-              </div>
-
-            </form>
-          )}
+          <SignUpForm />
         </div>
       </section>
 
@@ -346,23 +187,23 @@ export default function GuestSpeakerPage() {
       <section className="py-20 border-t border-gray-100 bg-gray-50">
         <div className="container mx-auto px-4 max-w-4xl">
           <h2 className="text-3xl font-bold text-gray-900 mb-10 text-center">Frequently Asked Questions</h2>
-          
+
           <div className="grid md:grid-cols-2 gap-6">
-            <FAQItem 
-              q="Is this in-person or virtual?" 
-              a="Always virtual. We use Zoom or Teams so you can join from anywhere." 
+            <FAQItem
+              q="Is this in-person or virtual?"
+              a="Always virtual. We use Zoom or Teams so you can join from anywhere."
             />
-            <FAQItem 
-              q="What if I don't work in sports?" 
-              a="We welcome all professionals! The skills you use—communication, technology, leadership—are transferable and valuable for our students to hear about." 
+            <FAQItem
+              q="What if I don't work in sports?"
+              a="We welcome all professionals! The skills you use—communication, technology, leadership—are transferable and valuable for our students to hear about."
             />
-            <FAQItem 
-              q="Do I need to prepare a presentation?" 
-              a="No slides required. This is an AMA (Ask Me Anything) format. We prep the students with questions beforehand, but feel free to share photos if you like." 
+            <FAQItem
+              q="Do I need to prepare a presentation?"
+              a="No slides required. This is an AMA (Ask Me Anything) format. We prep the students with questions beforehand, but feel free to share photos if you like."
             />
-            <FAQItem 
-              q="Can I invite a colleague?" 
-              a="Absolutely. Panels are great. Just mention it in the form notes." 
+            <FAQItem
+              q="Can I invite a colleague?"
+              a="Absolutely. Panels are great. Just mention it in the form notes."
             />
           </div>
         </div>
@@ -378,6 +219,221 @@ export default function GuestSpeakerPage() {
       </footer>
 
     </div>
+  );
+}
+
+// --- SIGN-UP FORM ---
+
+// Provider wrapper: loads the reCAPTCHA v3 script and renders the form beneath
+// it. If the public site key is missing the form is replaced with a fallback
+// so visitors still have a way to reach out.
+function SignUpForm() {
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+  if (!recaptchaSiteKey) {
+    return (
+      <div className="bg-red-50 border border-red-200 p-8 rounded-2xl text-center">
+        <AlertTriangle className="text-red-500 mx-auto mb-3" size={40} />
+        <h3 className="text-xl font-bold text-red-700 mb-2">Form temporarily unavailable</h3>
+        <p className="text-red-700">
+          Please email{' '}
+          <a className="underline" href="mailto:contact@brandanthonymcdonald.com">
+            contact@brandanthonymcdonald.com
+          </a>{' '}
+          to express your interest and we&apos;ll follow up.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={recaptchaSiteKey}>
+      <SignUpFormInner />
+    </GoogleReCaptchaProvider>
+  );
+}
+
+function SignUpFormInner() {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    profession: '',
+    expertise: '',
+    availability: '',
+    message: ''
+  });
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [statusMessage, setStatusMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatusMessage('');
+
+    if (!executeRecaptcha) {
+      setStatus('error');
+      setStatusMessage("Security check isn't ready yet — give it a second and try again.");
+      return;
+    }
+
+    setStatus('submitting');
+
+    try {
+      const recaptchaToken = await executeRecaptcha('guest_speaker_submit');
+
+      const res = await fetch('/api/guest-speaker', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, recaptchaToken }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setStatus('success');
+        setStatusMessage(data.message);
+      } else {
+        setStatus('error');
+        setStatusMessage(data.message || 'Something went wrong. Please try again.');
+      }
+    } catch (error) {
+      console.error('Guest speaker submission error:', error);
+      setStatus('error');
+      setStatusMessage('An unexpected error occurred. Please try again.');
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  if (status === 'success') {
+    return (
+      <div className="bg-green-50 border border-green-200 p-8 rounded-2xl text-center">
+        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <CheckCircle className="text-green-600" size={32} />
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">Interest Received!</h3>
+        <p className="text-gray-600">
+          {statusMessage}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="bg-white border border-gray-200 p-8 rounded-2xl shadow-xl space-y-6">
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Name</label>
+          <input
+            type="text"
+            name="name"
+            required
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Jane Doe"
+            className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email</label>
+          <input
+            type="email"
+            name="email"
+            required
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="jane@network.com"
+            className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400"
+          />
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Profession / Title</label>
+          <input
+            type="text"
+            name="profession"
+            required
+            value={formData.profession}
+            onChange={handleChange}
+            placeholder="e.g. Technical Director"
+            className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Area of Expertise</label>
+          <input
+            type="text"
+            name="expertise"
+            required
+            value={formData.expertise}
+            onChange={handleChange}
+            placeholder="e.g. Audio Engineering, On-Air"
+            className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+          Availability <span className="text-gray-400 normal-case ml-2">(Mon/Tue/Thu/Fri @ 1:53-2:28 PM)</span>
+        </label>
+        <textarea
+          name="availability"
+          value={formData.availability}
+          onChange={handleChange}
+          rows={2}
+          placeholder="I am generally available on Fridays in February. Tuesdays also work..."
+          className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400"
+        ></textarea>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Introduction / Message</label>
+        <textarea
+          name="message"
+          value={formData.message}
+          onChange={handleChange}
+          rows={4}
+          placeholder="Tell us a bit about yourself or what you'd like to share with the students."
+          className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none transition-colors placeholder-gray-400"
+        ></textarea>
+      </div>
+
+      {status === 'error' && (
+        <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg text-sm">
+          {statusMessage}
+        </div>
+      )}
+
+      <div className="pt-4">
+        <button
+          type="submit"
+          disabled={status === 'submitting'}
+          className="w-full bg-black text-white font-bold text-lg py-4 rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {status === 'submitting' ? 'Sending...' : <><Send size={20} /> Send Interest</>}
+        </button>
+        <p className="text-center text-gray-400 text-sm mt-4">
+          Note: This form expresses interest. We will email you to finalize the booking.
+        </p>
+        <p className="text-center text-gray-400 text-xs mt-2">
+          Protected by reCAPTCHA — Google&apos;s{' '}
+          <a href="https://policies.google.com/privacy" className="underline hover:text-gray-600">Privacy Policy</a>{' '}
+          and{' '}
+          <a href="https://policies.google.com/terms" className="underline hover:text-gray-600">Terms</a>{' '}
+          apply.
+        </p>
+      </div>
+
+    </form>
   );
 }
 
