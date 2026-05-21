@@ -18,6 +18,7 @@ import {
 } from '../../../lib/logging/education-logger'
 import { Logger, LogContext } from './../../../lib/logging/logger'
 import { getClientIp } from '@/lib/utils/client'
+import { notifyInbox } from '@/lib/inbox/notifyInbox'
 
 // MongoDB connection
 let client: MongoClient
@@ -368,6 +369,18 @@ export async function POST(request: NextRequest) {
           submissionId: result.insertedId.toString()
         }
       })
+
+      // Mirror the submission into the WitUS Inbox. Non-blocking: MongoDB is
+      // the system of record here, so a failed dispatch is logged but does not
+      // affect the visitor's success response. `formData.formType` is the
+      // variant slug, so each education variant stays distinct in the Inbox.
+      await notifyInbox({
+        form_type: formData.formType,
+        submitter_email: formData.email,
+        submitter_name: formData.name,
+        priority: 'normal',
+        payload: { ...formData },
+      }, request)
 
       // Custom success messages based on form type
       let successMessage = 'Thank you for your interest! We\'ll be in touch soon.'

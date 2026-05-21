@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MongoClient } from 'mongodb';
 import { logGuestSpeakerEvent } from '../../../lib/logging/guest-speaker-logger';
+import { notifyInbox } from '@/lib/inbox/notifyInbox';
 
 interface GuestSpeakerSubmission {
   name: string;
@@ -64,6 +65,17 @@ export async function POST(request: NextRequest) {
     };
 
     await collection.insertOne(submission);
+
+    // Mirror the submission into the WitUS Inbox. Non-blocking: MongoDB is the
+    // system of record here, so a failed dispatch is logged but does not affect
+    // the visitor's success response.
+    await notifyInbox({
+      form_type: 'guest-speaker',
+      submitter_email: email,
+      submitter_name: name,
+      priority: 'normal',
+      payload: { name, email, profession, expertise, availability, message },
+    }, request);
 
     await logGuestSpeakerEvent({
       event: 'guest_speaker_success',
