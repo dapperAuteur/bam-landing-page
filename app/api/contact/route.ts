@@ -10,6 +10,7 @@ import {
 } from '../../../lib/logging/contact-logger'
 import { Logger, LogContext, LogLevel } from './../../../lib/logging/logger'
 import { getClientIp } from '@/lib/utils/client'
+import { notifyInbox } from '@/lib/inbox/notifyInbox'
 
 // MongoDB connection
 let client: MongoClient
@@ -236,6 +237,22 @@ export async function POST(request: NextRequest) {
           submissionId: result.insertedId.toString()
         }
       })
+
+      // Mirror the submission into the WitUS Inbox. Non-blocking: MongoDB is
+      // the system of record here, so a failed dispatch is logged but does not
+      // affect the visitor's success response.
+      await notifyInbox({
+        form_type: 'contact',
+        submitter_email: formData.email,
+        submitter_name: formData.name,
+        priority: 'normal',
+        payload: {
+          name: formData.name,
+          email: formData.email,
+          service_type: formData.serviceType,
+          project_details: formData.projectDetails,
+        },
+      }, request)
 
       return NextResponse.json({
         success: true,
