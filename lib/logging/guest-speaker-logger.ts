@@ -42,6 +42,76 @@ export async function logGuestSpeakerEvent(log: Omit<GuestSpeakerLog, 'timestamp
   }
 }
 
+/**
+ * Rate-limit guest-speaker submissions. Mirrors `checkRateLimit` in
+ * contact-logger.ts: 3/hour and 10/day per IP, 5/day per email. Spam-flagged
+ * rows are excluded from the counts so a blocked spammer can't lock out a
+ * shared IP. Fails open (isLimited: false) if the DB read errors.
+ */
+export async function checkGuestSpeakerRateLimit(
+  ipAddress: string,
+  email?: string
+): Promise<{ isLimited: boolean; reason?: string; nextAllowedTime?: Date }> {
+  try {
+    const db = await connectToDatabase()
+    const logs = db.collection<GuestSpeakerLog>('guest_speaker_logs')
+
+    const hourLimit = 3
+    const dayLimit = 10
+    const emailDayLimit = 5
+
+    const now = new Date()
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
+    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+
+    const hourlySubmissions = await logs.countDocuments({
+      ipAddress,
+      timestamp: { $gte: oneHourAgo },
+      status: { $ne: 'spam' },
+    })
+    if (hourlySubmissions >= hourLimit) {
+      return {
+        isLimited: true,
+        reason: `Exceeded hourly limit of ${hourLimit} submissions`,
+        nextAllowedTime: new Date(oneHourAgo.getTime() + 60 * 60 * 1000),
+      }
+    }
+
+    const dailySubmissions = await logs.countDocuments({
+      ipAddress,
+      timestamp: { $gte: oneDayAgo },
+      status: { $ne: 'spam' },
+    })
+    if (dailySubmissions >= dayLimit) {
+      return {
+        isLimited: true,
+        reason: `Exceeded daily limit of ${dayLimit} submissions`,
+        nextAllowedTime: new Date(oneDayAgo.getTime() + 24 * 60 * 60 * 1000),
+      }
+    }
+
+    if (email) {
+      const emailDailySubmissions = await logs.countDocuments({
+        email,
+        timestamp: { $gte: oneDayAgo },
+        status: { $ne: 'spam' },
+      })
+      if (emailDailySubmissions >= emailDayLimit) {
+        return {
+          isLimited: true,
+          reason: `Exceeded daily limit of ${emailDayLimit} submissions per email`,
+          nextAllowedTime: new Date(oneDayAgo.getTime() + 24 * 60 * 60 * 1000),
+        }
+      }
+    }
+
+    return { isLimited: false }
+  } catch (error) {
+    console.error('Failed to check guest speaker rate limit:', error)
+    return { isLimited: false }
+  }
+}
+
 export async function getRecentGuestSpeakerLogs(limit: number = 50): Promise<GuestSpeakerLog[]> {
   const db = await connectToDatabase()
   const collection = db.collection<GuestSpeakerLog>('guest_speaker_logs')
