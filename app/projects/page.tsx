@@ -214,6 +214,37 @@ export default function ProjectsPage() {
         </div>
       </section>
 
+      {/* Start-a-project anchored section (target for the e-intake short link) */}
+      <section id="start-a-project" className="section-padding pt-0 scroll-mt-20">
+        <div className="container-max">
+          <div className="max-w-4xl mx-auto bg-white border-2 border-emerald-200 rounded-2xl p-8 md:p-10 shadow-md">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">
+                Build with me
+              </span>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                Have a project in mind?
+              </h2>
+            </div>
+            <p className="text-gray-700 mb-4 text-lg leading-relaxed">
+              If you want an app built — for your team, your sport, your league, your company —
+              the intake survey takes about 5 minutes and gives me what I need to come back
+              with a thoughtful first response, not a generic one.
+            </p>
+            <p className="text-gray-700 mb-6">
+              Scope, must-haves, timeline, budget range, integrations — the questions you&apos;d
+              expect, structured so I can actually use the answers.
+            </p>
+            <Link
+              href="/intake"
+              className="inline-block btn-primary bg-emerald-600 text-white hover:bg-emerald-700 text-lg"
+            >
+              Start the intake →
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Tier A — shipped */}
       <section id="live-shipped" className="section-padding pt-0 scroll-mt-20">
         <div className="container-max">
