@@ -92,6 +92,7 @@ export default function AdminLayout({
                   { href: '/admin/logs', label: 'Logs', match: '/admin/logs' },
                   { href: '/admin/galleries', label: 'Galleries', match: '/admin/galleries' },
                   { href: '/admin/projects', label: 'Projects', match: '/admin/projects' },
+                  { href: '/admin/blog/posts', label: 'Posts', match: '/admin/blog/posts' },
                   { href: '/admin/blog', label: 'Blog', match: '/admin/blog' },
                   { href: '/admin/content', label: 'Content', match: '/admin/content' },
                   { href: '/admin/guide', label: 'Guide', match: '/admin/guide' },
