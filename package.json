@@ -11,6 +11,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@heroicons/react": "^2.2.0",
+    "@mdx-js/mdx": "^3.1.1",
     "@mux/mux-player-react": "^3.5.1",
     "@radix-ui/react-accordion": "^1.2.11",
     "@types/archiver": "^6.0.3",
@@ -34,7 +35,6 @@
     "motion": "^12.12.2",
     "next": "14.2.35",
     "next-auth": "^4.24.11",
-    "next-mdx-remote": "^5.0.0",
     "next-rate-limit": "^0.0.3",
     "nodemailer": "~6.9.13",
     "react": "^18.3.1",
