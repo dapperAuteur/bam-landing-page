@@ -1,0 +1,96 @@
+## The panic moment
+
+Picture this. You shipped a feature branch on top of `main`. Two clean commits, all green, push to origin. You hop into GitKraken to merge it back to `main` the way you always do — except your eye lands on a different button. Click. Confirm dialog blurs past. The branch labels swap places.
+
+You weren't supposed to *rebase*. You were supposed to *merge*. Where's your merge commit? Is your work still there? Did you just rewrite shared history? Is the entire team going to see a force-push notification in the next thirty seconds?
+
+I had this exact moment last week. Here's what actually happened — and why it took less time to recover than it took to spike my heart rate.
+
+## What git actually did
+
+The setup: `main` hadn't moved since I branched. My feature branch was just `main + 2 commits`. So when I rebased `main` onto the feature branch, git did something almost boring: a **fast-forward**.
+
+A fast-forward rebase doesn't rewrite anything. It just slides the `main` pointer up the line until it's at the same commit as the feature tip. Both branches now point at the same commit. No commits got recreated with new SHAs. No history got rewritten. Nobody got force-push notifications.
+
+The only thing "wrong" was cosmetic: instead of the merge bubble I usually create, the history was now linear. That's a style preference, not a bug.
+
+## How I knew, in 30 seconds
+
+Three commands. Drop into the terminal. Run them in order:
+
+```bash
+# Where am I, where's main, where's the feature branch?
+git log --oneline -3 main
+git log --oneline -3 feat/my-feature
+
+# What just happened to HEAD and to main?
+git reflog show main --date=relative -n 5
+git reflog --date=relative -n 10
+```
+
+The reflog is git's built-in "you-just-did-what?" log. Every move of `HEAD` and every branch tip update is recorded with a timestamp and a one-line description. Mine looked like this:
+
+```text
+cdf6b82 main@{2 minutes ago}: rebase (finish): refs/heads/main onto cdf6b82...
+dc95934 main@{7 hours ago}: merge fix/lesson-editor-content-url-clobber
+
+cdf6b82 HEAD@{2 minutes ago}: rebase (finish): returning to refs/heads/main
+cdf6b82 HEAD@{2 minutes ago}: rebase (start): checkout feat/my-feature
+dc95934 HEAD@{2 minutes ago}: checkout: moving from feat/my-feature to main
+```
+
+Read top to bottom: switched to main, started a rebase against the feature branch, finished. `main` moved from `dc95934` (the last merge commit) up to `cdf6b82` (the feature tip). No commits were rewritten — that's why both `main` and the feature branch share the same SHA in those entries. Fast-forward, no harm done.
+
+## The reflog is your safety net
+
+Even if the rebase had been the bad kind — the kind that rewrites commit SHAs and orphans your old commits — the reflog would have shown me exactly where the old `main` tip used to be. Git keeps reflog entries for **90 days by default**. Plenty of time to notice and recover.
+
+And if you do need to actually undo a destructive operation, the recipe is simple. Find the entry in the reflog that points at the commit you want to be at, then jump back to it:
+
+```bash
+# Look at the reflog for whichever ref you nuked
+git reflog show main
+
+# Reset main to whatever it was before the bad operation
+git reset --hard main@{1}    # one move ago
+# or
+git reset --hard <sha>        # any commit you can see in the reflog
+```
+
+That `main@{1}` syntax means "the position main was in one move ago." Bump the number to walk further back. Combine it with `git reset --hard` only when you're sure — that command is the one operation that actually *throws away* uncommitted work in your tree.
+
+## When the rebase is already pushed
+
+The trickier flavor of accidental rebase: you rebased and the result was *already pushed* to origin. Now your local fix has to deal with everyone else who pulled the rewritten history.
+
+For your own feature branches, force-push is fine — coordinate with anyone who pulled it. For shared branches like `main`, the right move is almost never "force-push the old version back." It's "leave the rewritten history, communicate, and move on." The reflog still proves nothing was lost; the history shape is just slightly different than your team's usual convention.
+
+In my case the rewritten `main` was already on origin within seconds. Force-pushing back would have caused more chaos than the linear-vs-merge-bubble cosmetic difference. I left it. Future merges will look normal again.
+
+## Practice this on a throwaway repo
+
+The reason my heart rate spiked even though everything was fine is that I'd never read a reflog under stress before. The fix takes ten minutes and pays you back forever. Spin up a scratch repo and hurt it on purpose:
+
+```bash
+mkdir reflog-practice && cd reflog-practice
+git init
+echo "v1" > file && git add . && git commit -m "v1"
+echo "v2" > file && git commit -am "v2"
+echo "v3" > file && git commit -am "v3"
+
+# Now intentionally do scary things
+git reset --hard HEAD~2    # "lose" two commits
+git reflog                  # they're still there
+git reset --hard <sha>     # bring them back
+
+git rebase -i HEAD~3       # mess with history
+git reflog                  # still recoverable
+```
+
+Once you've done this on a throwaway, the muscle is in your hands when it matters. The next accidental click in GitKraken — or anywhere — becomes thirty seconds of typing instead of minutes of dread.
+
+## The takeaway
+
+GitKraken's UI made the action one click. Git's reflog made the consequence reversible. The fear was bigger than the reality.
+
+If you're panicking right now: stop. Run `git reflog`. Read the entries. The story is right there.
