@@ -4,6 +4,9 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth/authOptions'
 import { getRecentContactSubmissions } from '../../../../lib/logging/contact-logger'
 
+// Auth-gated (reads headers via getServerSession) — never statically rendered.
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
