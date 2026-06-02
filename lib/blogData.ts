@@ -1,4 +1,5 @@
 import { BlogPost } from "./../types/types"
+import { BLOG_DB, COLLECTIONS } from "./db/collections"
 
 // 🔥 BLOG POST REGISTRY - Add new blog posts here!
 export const blogPosts: BlogPost[] = [
@@ -831,41 +832,69 @@ export const blogPosts: BlogPost[] = [
   // 4. The blog listing will automatically pick it up!
 ]
 
-// Helper functions (synchronous — used by client components and as fallback)
+// Synchronous helpers — static array only (safe for client components / fallback)
 export const getFeaturedPosts = () => blogPosts.filter(post => post.featured)
 export const getPostsByCategory = (category: string) => blogPosts.filter(post => post.category === category)
 export const getAllCategories = () => Array.from(new Set(blogPosts.map(post => post.category)))
-export const getPostBySlug = (slug: string) => blogPosts.find(post => post.slug === slug)
+export const getPostBySlugSync = (slug: string) => blogPosts.find(post => post.slug === slug)
 
-// Async helper — merges DB overrides with hardcoded data (server components/API routes only)
-export async function getBlogPostsWithOverrides(): Promise<(BlogPost & { hidden?: boolean; featuredOrder?: number })[]> {
+export type BlogPostWithMeta = BlogPost & { hidden?: boolean; featuredOrder?: number }
+
+// SINGLE SOURCE OF TRUTH (server components / API routes only).
+// Merges three inputs, deduped by slug:
+//   1. static blogPosts[] + blog_metadata overrides (legacy model)
+//   2. blog_posts CMS rows (the unified automated blog) — these WIN on collision
+// When blog_posts is empty (pre-migration) this returns exactly the legacy
+// static+override result, so there is no behavior change until posts are migrated.
+export async function getAllBlogPosts(): Promise<BlogPostWithMeta[]> {
   try {
     const clientPromise = (await import('./db/mongodb')).default
     const client = await clientPromise
-    const db = client.db('bam_portfolio')
-    const overrides = await db.collection('blog_metadata').find({}).toArray()
+    const db = client.db(BLOG_DB)
+
+    // 1) Legacy: static posts with blog_metadata overrides applied
+    const overrides = await db.collection(COLLECTIONS.blogMetadata).find({}).toArray()
     const overrideMap = new Map(overrides.map(o => [o.slug, o]))
+    const staticMerged: BlogPostWithMeta[] = blogPosts.map(post => {
+      const override = overrideMap.get(post.slug)
+      if (!override) return { ...post, hidden: false, featuredOrder: 999, contentSource: 'static' as const }
 
-    return blogPosts
-      .map(post => {
-        const override = overrideMap.get(post.slug)
-        if (!override) return { ...post, hidden: false, featuredOrder: 999 }
+      const ovr = override.overrides || {}
+      return {
+        ...post,
+        ...(ovr.title ? { title: override.title } : {}),
+        ...(ovr.description ? { description: override.description } : {}),
+        ...(ovr.featured ? { featured: override.featured } : {}),
+        ...(ovr.category ? { category: override.category } : {}),
+        ...(ovr.tags ? { tags: override.tags } : {}),
+        ...(ovr.excerpt ? { excerpt: override.excerpt } : {}),
+        ...(ovr.readTime ? { readTime: override.readTime } : {}),
+        ...(ovr.publishDate ? { publishDate: override.publishDate } : {}),
+        hidden: override.hidden || false,
+        featuredOrder: override.featuredOrder ?? 999,
+        contentSource: 'static' as const,
+      }
+    })
 
-        const ovr = override.overrides || {}
-        return {
-          ...post,
-          ...(ovr.title ? { title: override.title } : {}),
-          ...(ovr.description ? { description: override.description } : {}),
-          ...(ovr.featured ? { featured: override.featured } : {}),
-          ...(ovr.category ? { category: override.category } : {}),
-          ...(ovr.tags ? { tags: override.tags } : {}),
-          ...(ovr.excerpt ? { excerpt: override.excerpt } : {}),
-          ...(ovr.readTime ? { readTime: override.readTime } : {}),
-          ...(ovr.publishDate ? { publishDate: override.publishDate } : {}),
-          hidden: override.hidden || false,
-          featuredOrder: override.featuredOrder ?? 999,
-        }
-      })
+    // 2) CMS rows from the unified blog_posts collection. status:'draft' => hidden from public.
+    const cmsRows = await db.collection(COLLECTIONS.blogPosts).find({}).toArray()
+    const cmsPosts: BlogPostWithMeta[] = cmsRows.map(row => {
+      const { _id, ...rest } = row as Record<string, unknown>
+      const post = rest as unknown as BlogPost & { status?: string; featuredOrder?: number }
+      return {
+        ...post,
+        hidden: post.status === 'draft',
+        featuredOrder: post.featuredOrder ?? 999,
+        contentSource: post.contentSource ?? 'cms',
+      }
+    })
+
+    // 3) Merge by slug — CMS row wins on collision
+    const bySlug = new Map<string, BlogPostWithMeta>()
+    for (const p of staticMerged) bySlug.set(p.slug, p)
+    for (const p of cmsPosts) bySlug.set(p.slug, { ...bySlug.get(p.slug), ...p })
+
+    return Array.from(bySlug.values())
       .filter(post => !post.hidden)
       .sort((a, b) => {
         if (a.featured && b.featured) return (a.featuredOrder || 999) - (b.featuredOrder || 999)
@@ -873,6 +902,26 @@ export async function getBlogPostsWithOverrides(): Promise<(BlogPost & { hidden?
       })
   } catch {
     // Fallback to hardcoded data if DB unavailable
-    return blogPosts.map(p => ({ ...p, hidden: false, featuredOrder: 999 }))
+    return blogPosts.map(p => ({ ...p, hidden: false, featuredOrder: 999, contentSource: 'static' as const }))
   }
+}
+
+// Back-compat alias — existing caller app/blog/page.tsx keeps working unchanged.
+export const getBlogPostsWithOverrides = getAllBlogPosts
+
+// Single-post lookup (server). CMS row wins; falls back to the static registry.
+export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
+  try {
+    const clientPromise = (await import('./db/mongodb')).default
+    const client = await clientPromise
+    const db = client.db(BLOG_DB)
+    const cms = await db.collection(COLLECTIONS.blogPosts).findOne({ slug })
+    if (cms) {
+      const { _id, ...rest } = cms as Record<string, unknown>
+      return rest as unknown as BlogPost
+    }
+  } catch {
+    // fall through to static registry
+  }
+  return blogPosts.find(post => post.slug === slug) ?? null
 }

@@ -10,8 +10,8 @@ interface BlogPostPageProps {
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = getPostBySlug(params.slug)
-  
+  const post = await getPostBySlug(params.slug)
+
   if (!post) {
     return {
       title: 'Blog Post Not Found',
@@ -28,9 +28,9 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 }
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = getPostBySlug(params.slug)
-  
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const post = await getPostBySlug(params.slug)
+
   if (!post) {
     notFound()
   }
