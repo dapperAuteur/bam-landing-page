@@ -4,6 +4,9 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '../../../../lib/db/mongodb'
 
+// Auth-gated (reads headers via getServerSession) — never statically rendered.
+export const dynamic = 'force-dynamic'
+
 // Server-side interfaces
 interface BaseLogEntry {
   _id?: string
