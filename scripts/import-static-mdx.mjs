@@ -42,11 +42,16 @@ for (const file of files) {
     missing++
     continue
   }
-  console.log(`  ${DRY ? '[dry] ' : ''}${slug}: ${content.length} chars MDX -> contentSource:cms`)
+  // These are LIVE posts (their folder serves them publicly today), so migrating
+  // means they stay public -> status:'published'. We write directly here, NOT via
+  // the Phase 3 API, so the outbox does NOT fire (this is a migration, not a new
+  // announcement). Posts you want kept out of the listing simply shouldn't be
+  // migrated yet.
+  console.log(`  ${DRY ? '[dry] ' : ''}${slug}: ${content.length} chars MDX -> contentSource:cms, status:published`)
   if (!DRY) {
     await col.updateOne(
       { slug },
-      { $set: { content, contentSource: 'cms', updatedAt: new Date().toISOString() } },
+      { $set: { content, contentSource: 'cms', status: 'published', updatedAt: new Date().toISOString() } },
     )
     updated++
   }
