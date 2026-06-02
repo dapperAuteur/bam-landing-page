@@ -1,0 +1,65 @@
+import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
+import { getPostBySlug, getAllBlogPosts } from '@/lib/blogData'
+import BlogPostWrapper from '@/components/blog/BlogPostWrapper'
+import { renderMdxSafe } from '@/lib/mdx/render'
+
+// ISR: MDX compile happens at build / on-demand revalidate, never per-visitor.
+export const revalidate = 3600
+
+interface BlogPostPageProps {
+  params: { slug: string[] }
+}
+
+// Prerender only the CMS/MDX posts this catch-all actually renders. Legacy
+// 'static' posts are served by their own app/blog/<slug> folder route (Next
+// prioritizes a concrete folder over this catch-all), so they are NOT listed here.
+export async function generateStaticParams() {
+  const posts = await getAllBlogPosts()
+  return posts
+    .filter(p => p.contentSource === 'cms' && p.content)
+    .map(p => ({ slug: p.slug.split('/') }))
+}
+
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+  const slug = params.slug.join('/')
+  const post = await getPostBySlug(slug)
+
+  if (!post) {
+    return { title: 'Blog Post Not Found' }
+  }
+
+  return {
+    title: `${post.title} | Brand Anthony McDonald`,
+    description: post.description,
+    keywords: post.tags?.join(', '),
+    alternates: {
+      canonical: `/blog/${slug}`,
+    },
+  }
+}
+
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const slug = params.slug.join('/')
+  const post = await getPostBySlug(slug)
+
+  if (!post) {
+    notFound()
+  }
+
+  // CMS/MDX posts render their stored MDX content. Drafts are not public.
+  if (post.contentSource === 'cms' && post.content) {
+    if (post.status && post.status !== 'published') {
+      notFound()
+    }
+    const rendered = await renderMdxSafe(post.content)
+    if (!rendered) {
+      notFound() // malformed MDX — don't crash the route
+    }
+    return <BlogPostWrapper post={post}>{rendered}</BlogPostWrapper>
+  }
+
+  // Legacy 'static' posts are served by their own folder route; if we reach here
+  // for one (no MDX content), there's nothing to render.
+  notFound()
+}
