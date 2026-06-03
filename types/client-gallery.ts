@@ -15,6 +15,8 @@ export interface ClientGallery {
   settings: GallerySettings
   accessCode?: string // Optional password protection
   expiresAt?: Date // Optional expiration
+  lastSharedAt?: Date | string // Last time the link was emailed to the client
+  shareCount?: number // How many times the link has been sent
   createdAt: Date
   updatedAt: Date
 }

@@ -1,6 +1,7 @@
 // app/api/client-gallery/[galleryId]/photos/[photoId]/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import clientPromise from './../../../../../../lib/db/mongodb'
+import { notifyInbox } from '@/lib/inbox/notifyInbox'
 
 export async function POST(
   request: NextRequest, 
@@ -51,8 +52,33 @@ export async function POST(
       if (result.matchedCount === 0) {
         return NextResponse.json({ error: 'Photo not found' }, { status: 404 })
       }
+
+      // Route the client's comment into the WitUS Inbox so the conversation
+      // lives alongside every other client touchpoint. Non-blocking — a missing
+      // or unreachable Inbox never fails the client's comment (already saved).
+      const gallery = await db
+        .collection('client_galleries')
+        .findOne(
+          { galleryId: params.galleryId },
+          { projection: { clientName: 1, clientEmail: 1, eventName: 1 } }
+        )
+      await notifyInbox(
+        {
+          form_type: 'gallery-comment',
+          submitter_name: by ?? (gallery?.clientName as string | undefined),
+          submitter_email: gallery?.clientEmail as string | undefined,
+          payload: {
+            galleryId: params.galleryId,
+            photoId: params.photoId,
+            eventName: gallery?.eventName ?? null,
+            comment: String(comment).slice(0, 2000),
+            author: by ?? null,
+          },
+        },
+        request
+      )
     }
-    
+
     if (action === 'favorite') {
       const result = await db.collection('client_galleries').updateOne(
         { galleryId: params.galleryId, 'photos.id': params.photoId },
