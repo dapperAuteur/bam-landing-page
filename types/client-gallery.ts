@@ -28,6 +28,9 @@ export interface ClientMedia {
   mimeType?: string // e.g. 'application/pdf', 'video/mp4'
   isFavorite?: boolean
   likes?: number
+  // Client approval workflow (when settings.allowApprovals is on)
+  approvalStatus?: 'pending' | 'approved' | 'rejected'
+  approvedAt?: Date | string
   comments?: Array<{
     id?: string
     text: string
@@ -56,6 +59,7 @@ export interface GallerySettings {
   showMetadata: boolean
   layout: 'grid' | 'masonry' | 'slideshow'
   downloadsPerSession?: number // Rate limiting
+  allowApprovals?: boolean // Let the client approve/reject each photo
 }
 
 export interface GalleryAccess {

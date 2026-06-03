@@ -92,6 +92,7 @@ export default function AdminGalleriesPage() {
         allowSocialSharing: false,
         requirePassword: false,
         showMetadata: false,
+        allowApprovals: false,
         layout: 'grid' as const
       }
     })
@@ -236,6 +237,18 @@ export default function AdminGalleriesPage() {
               />
               Show Photo Metadata
             </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={formData.settings.allowApprovals || false}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  settings: { ...prev.settings, allowApprovals: e.target.checked }
+                }))}
+                className="rounded border-gray-300 mr-2"
+              />
+              Let Client Approve / Reject Photos
+            </label>
           </div>
         </div>
         <div className="flex justify-end space-x-3 pt-4">
@@ -355,6 +368,21 @@ export default function AdminGalleriesPage() {
                 <p className="text-sm text-gray-500">
                   {new Date(gallery.eventDate).toLocaleDateString()} &bull; {getMediaSummary(gallery.photos)}
                 </p>
+                {gallery.settings.allowApprovals && (
+                  <p className="text-sm mt-1">
+                    <span className="text-green-700 font-medium">
+                      ✅ {gallery.photos?.filter(p => p.approvalStatus === 'approved').length || 0} approved
+                    </span>
+                    {' · '}
+                    <span className="text-red-700 font-medium">
+                      ❌ {gallery.photos?.filter(p => p.approvalStatus === 'rejected').length || 0} rejected
+                    </span>
+                    {' · '}
+                    <span className="text-gray-500">
+                      {gallery.photos?.filter(p => !p.approvalStatus || p.approvalStatus === 'pending').length || 0} pending
+                    </span>
+                  </p>
+                )}
                 <input
                   type="file"
                   multiple
