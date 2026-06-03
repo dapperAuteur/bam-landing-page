@@ -3,10 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import clientPromise from './../../../../../lib/db/mongodb'
 import { ClientGallery } from './../../../../../types/client-gallery'
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { galleryId: string } }
-) {
+export async function POST(request: NextRequest, props: { params: Promise<{ galleryId: string }> }) {
+  const params = await props.params;
   try {
     const { accessCode } = await request.json()
     const client = await clientPromise

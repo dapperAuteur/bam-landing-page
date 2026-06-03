@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['res.cloudinary.com'],
+    // Next 16 removed images.domains in favor of remotePatterns.
+    remotePatterns: [
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
+    ],
   },
   async redirects() {
     return [
@@ -14,19 +17,10 @@ const nextConfig = {
       },
     ]
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-        'child_process': false,
-        'fs/promises': false,
-      };
-    }
-    return config;
-  },
+  // Next 16 defaults to Turbopack, which resolves Node built-ins for client
+  // bundles automatically — the old webpack `resolve.fallback` block is no
+  // longer needed. Empty turbopack config opts in explicitly.
+  turbopack: {},
 };
 
 export default nextConfig;

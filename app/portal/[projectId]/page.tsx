@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react';
 import type { ClientProject, ProposalStatus } from '@/types/client-portal'
 import type { ClientMedia, MediaType } from '@/types/client-gallery'
 import AccessCodeForm from '@/components/client-gallery/AccessCodeForm'
@@ -13,7 +13,8 @@ const STATUS_LABELS: Record<ProposalStatus, string> = {
   approved: 'Approved', rejected: 'Declined', revised: 'Revision Requested'
 }
 
-export default function ClientPortalPage({ params }: { params: { projectId: string } }) {
+export default function ClientPortalPage(props: { params: Promise<{ projectId: string }> }) {
+  const params = use(props.params);
   const [project, setProject] = useState<ClientProject | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

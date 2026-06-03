@@ -9,10 +9,8 @@ import type { ClientMedia } from '@/types/client-gallery'
 // Body: { photoIds: string[] }. Each library Photo is copied into the gallery's
 // embedded photos[] as a ClientMedia entry, and the gallery is tracked in the
 // photo's usedIn.galleries.
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { galleryId: string } },
-) {
+export async function POST(request: NextRequest, props: { params: Promise<{ galleryId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user?.role !== 'admin') {

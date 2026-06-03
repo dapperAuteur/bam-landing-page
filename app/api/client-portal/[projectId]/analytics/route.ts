@@ -14,10 +14,8 @@ const VALID_EVENTS = new Set([
   PortalEventType.MEDIA_DOWNLOADED
 ])
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { projectId: string } }
-) {
+export async function POST(request: NextRequest, props: { params: Promise<{ projectId: string }> }) {
+  const params = await props.params;
   try {
     const { event, properties } = await request.json()
 

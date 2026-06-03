@@ -17,7 +17,8 @@ function byId(id: string) {
 }
 
 // GET — single photo (public).
-export async function GET(_req: NextRequest, { params }: { params: { photoId: string } }) {
+export async function GET(_req: NextRequest, props: { params: Promise<{ photoId: string }> }) {
+  const params = await props.params;
   try {
     const client = await clientPromise
     const db = client.db('bam_portfolio')
@@ -31,7 +32,8 @@ export async function GET(_req: NextRequest, { params }: { params: { photoId: st
 }
 
 // PUT — update metadata (admin).
-export async function PUT(request: NextRequest, { params }: { params: { photoId: string } }) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ photoId: string }> }) {
+  const params = await props.params;
   if (!(await isAdmin())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   try {
     const body = await request.json()
@@ -51,7 +53,8 @@ export async function PUT(request: NextRequest, { params }: { params: { photoId:
 }
 
 // DELETE — remove photo from the library + Cloudinary (admin).
-export async function DELETE(_req: NextRequest, { params }: { params: { photoId: string } }) {
+export async function DELETE(_req: NextRequest, props: { params: Promise<{ photoId: string }> }) {
+  const params = await props.params;
   if (!(await isAdmin())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   try {
     const client = await clientPromise

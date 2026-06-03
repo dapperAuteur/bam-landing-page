@@ -4,10 +4,8 @@ import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '../../../../../lib/db/mongodb'
 import { v2 as cloudinary } from 'cloudinary';
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { galleryId: string } }
-) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ galleryId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user?.role !== 'admin') {
@@ -30,7 +28,8 @@ export async function PUT(
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { galleryId: string } }) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ galleryId: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions)
   if (!session || session.user?.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -38,12 +37,12 @@ export async function DELETE(request: NextRequest, { params }: { params: { galle
 
   const client = await clientPromise
   const db = client.db('bam_portfolio')
-  
+
   // Delete from database
   await db.collection('client_galleries').deleteOne({ galleryId: params.galleryId })
-  
+
   // Delete from Cloudinary folder
   await cloudinary.api.delete_resources_by_prefix(`bam-photography/galleries/${params.galleryId}`)
-  
+
   return NextResponse.json({ success: true })
 }

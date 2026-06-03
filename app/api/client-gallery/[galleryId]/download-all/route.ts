@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import clientPromise from './../../../../../lib/db/mongodb'
 import { checkDownloadRateLimit, recordDownload } from './../../../../../lib/utils/download-rate-limit'
 
-export async function POST(request: NextRequest, { params }: { params: { galleryId: string } }) {
+export async function POST(request: NextRequest, props: { params: Promise<{ galleryId: string }> }) {
+  const params = await props.params;
   try {
     const client = await clientPromise
     const db = client.db('bam_portfolio')

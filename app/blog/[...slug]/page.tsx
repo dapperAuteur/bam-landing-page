@@ -8,7 +8,7 @@ import { renderMdxSafe } from '@/lib/mdx/render'
 export const revalidate = 3600
 
 interface BlogPostPageProps {
-  params: { slug: string[] }
+  params: Promise<{ slug: string[] }>
 }
 
 // Prerender only the CMS/MDX posts this catch-all actually renders. Legacy
@@ -21,7 +21,8 @@ export async function generateStaticParams() {
     .map(p => ({ slug: p.slug.split('/') }))
 }
 
-export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+export async function generateMetadata(props: BlogPostPageProps): Promise<Metadata> {
+  const params = await props.params;
   const slug = params.slug.join('/')
   const post = await getPostBySlug(slug)
 
@@ -54,7 +55,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 }
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage(props: BlogPostPageProps) {
+  const params = await props.params;
   const slug = params.slug.join('/')
   const post = await getPostBySlug(slug)
 

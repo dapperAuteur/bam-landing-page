@@ -4,9 +4,10 @@ import clientPromise from './../../../../../../lib/db/mongodb'
 import { notifyInbox } from '@/lib/inbox/notifyInbox'
 
 export async function POST(
-  request: NextRequest, 
-  { params }: { params: { galleryId: string; photoId: string } }
+  request: NextRequest,
+  props: { params: Promise<{ galleryId: string; photoId: string }> }
 ) {
+  const params = await props.params;
   try {
     const { action, comment, isFavorite, reviewer } = await request.json()
     const client = await clientPromise

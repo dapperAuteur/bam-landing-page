@@ -19,10 +19,8 @@ async function connectToDatabase() {
 }
 
 // GET individual submission
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const unauthorized = await assertAdminOrUnauthorized()
     if (unauthorized) return unauthorized
@@ -63,10 +61,8 @@ export async function GET(
 }
 
 // PATCH (update) individual submission
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const unauthorized = await assertAdminOrUnauthorized()
     if (unauthorized) return unauthorized
@@ -145,10 +141,8 @@ export async function PATCH(
 }
 
 // DELETE individual submission
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const unauthorized = await assertAdminOrUnauthorized()
     if (unauthorized) return unauthorized

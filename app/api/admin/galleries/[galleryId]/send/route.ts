@@ -9,17 +9,12 @@ import type { ClientGallery } from '@/types/client-gallery'
 export const dynamic = 'force-dynamic'
 
 function baseUrl(): string {
-  return (
-    process.env.NEXTAUTH_URL?.replace(/\/$/, '') ||
-    'https://brandanthonymcdonald.com'
-  )
+  return (process.env.NEXTAUTH_URL?.replace(/\/$/, '') || 'https://brandanthonymcdonald.com');
 }
 
 // POST — email the client their gallery link and log the share to the WitUS Inbox.
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { galleryId: string } }
-) {
+export async function POST(request: NextRequest, props: { params: Promise<{ galleryId: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions)
   if (!session || session.user?.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

@@ -3,10 +3,8 @@ import clientPromise from '@/lib/db/mongodb'
 import { validateClientSession } from '@/lib/auth/client-auth'
 import { trackPortalView } from '@/lib/analytics/portal-analytics'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { projectId: string } }
-) {
+export async function GET(request: NextRequest, props: { params: Promise<{ projectId: string }> }) {
+  const params = await props.params;
   try {
     const client = await clientPromise
     const db = client.db('bam_portfolio')

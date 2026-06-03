@@ -1,7 +1,7 @@
 // app/client-gallery/[galleryId]/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react';
 import type { ClientGallery, ClientMedia, MediaType } from '@/types/client-gallery'
 import AccessCodeForm from '@/components/client-gallery/AccessCodeForm'
 import GalleryHeader from '@/components/client-gallery/GalleryHeader'
@@ -11,10 +11,11 @@ import Lightbox from '@/components/client-gallery/Lightbox'
 import PhotoCarousel from '@/components/ui/PhotoCarousel'
 
 interface ClientGalleryPageProps {
-  params: { galleryId: string }
+  params: Promise<{ galleryId: string }>
 }
 
-export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
+export default function ClientGalleryPage(props: ClientGalleryPageProps) {
+  const params = use(props.params);
   const [gallery, setGallery] = useState<ClientGallery | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
