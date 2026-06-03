@@ -25,10 +25,41 @@ export default function AdminGalleriesPage() {
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [editingGallery, setEditingGallery] = useState<ClientGallery | null>(null)
   const [libraryPickerGalleryId, setLibraryPickerGalleryId] = useState<string | null>(null)
+  const [sendingGallery, setSendingGallery] = useState<ClientGallery | null>(null)
+  const [sendMessage, setSendMessage] = useState('')
+  const [sendBusy, setSendBusy] = useState(false)
 
   useEffect(() => {
     fetchGalleries()
   }, [])
+
+  const handleSendGallery = async () => {
+    if (!sendingGallery) return
+    setSendBusy(true)
+    try {
+      const res = await fetch(`/api/admin/galleries/${sendingGallery.galleryId}/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: sendMessage }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data.success) {
+        alert(
+          `Sent to ${sendingGallery.clientEmail}.` +
+            (data.inboxLogged ? ' Logged to the Inbox.' : ' (Inbox logging unavailable.)')
+        )
+        setSendingGallery(null)
+        setSendMessage('')
+        fetchGalleries()
+      } else {
+        alert(data.error || 'Failed to send the gallery link.')
+      }
+    } catch {
+      alert('Failed to send the gallery link.')
+    } finally {
+      setSendBusy(false)
+    }
+  }
 
   const addFromLibrary = async (photos: Photo[]) => {
     const galleryId = libraryPickerGalleryId
@@ -388,6 +419,49 @@ export default function AdminGalleriesPage() {
         </div>
       )}
 
+      {/* Send-to-client modal */}
+      {sendingGallery && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg p-6 max-w-lg w-full">
+            <h2 className="text-xl font-bold mb-1">Send gallery to client</h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Emails the gallery link to <strong>{sendingGallery.clientEmail}</strong>
+              {sendingGallery.settings?.requirePassword && sendingGallery.accessCode
+                ? ' (the access code is included)'
+                : ''}
+              . The share is also logged to your WitUS Inbox, and client replies/comments route back there.
+            </p>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Optional message
+            </label>
+            <textarea
+              value={sendMessage}
+              onChange={(e) => setSendMessage(e.target.value)}
+              rows={4}
+              placeholder="Hi! Here are your photos from the shoot — let me know your favorites."
+              className="w-full border border-gray-300 rounded-md px-3 py-2 mb-4"
+            />
+            <div className="flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={() => { setSendingGallery(null); setSendMessage('') }}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={sendBusy}
+                onClick={handleSendGallery}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
+              >
+                {sendBusy ? 'Sending…' : 'Send email'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Galleries List */}
       <div className="grid gap-6">
         {galleries.map((gallery) => (
@@ -494,13 +568,22 @@ export default function AdminGalleriesPage() {
                   </div>
                 )}
               </div>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2 justify-end">
                 <button
                   onClick={() => window.open(`/client-gallery/${gallery.galleryId}`, '_blank')}
                   className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
                 >
                   View
                 </button>
+                {gallery.type !== 'marketing' && gallery.clientEmail && (
+                  <button
+                    onClick={() => { setSendingGallery(gallery); setSendMessage('') }}
+                    className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200"
+                    title={gallery.lastSharedAt ? `Last sent ${new Date(gallery.lastSharedAt).toLocaleString()}` : 'Email the gallery link to the client'}
+                  >
+                    {gallery.lastSharedAt ? 'Resend link' : 'Send to client'}
+                  </button>
+                )}
                 <button
                   onClick={() => setEditingGallery(gallery)}
                   className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"

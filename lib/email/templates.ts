@@ -68,6 +68,43 @@ export function getProposalSharedTemplate({
   `)
 }
 
+export function getGalleryShareTemplate({
+  clientName,
+  eventName,
+  galleryUrl,
+  accessCode,
+  message
+}: {
+  clientName: string
+  eventName: string
+  galleryUrl: string
+  accessCode?: string
+  message?: string
+}): string {
+  return baseTemplate(`
+    <div class="header">
+      <h1>Your photo gallery is ready</h1>
+    </div>
+    <div class="card">
+      <p>Hi ${clientName},</p>
+      <p>Your gallery for <strong>${eventName}</strong> is ready to view${accessCode ? ' (it\'s password protected — see the code below)' : ''}.</p>
+      ${message ? `<div class="note">${message}</div>` : ''}
+      <p>You can browse the photos, mark favorites, leave a comment on any image, and approve or request changes right from the gallery.</p>
+      <div style="text-align: center;">
+        <a href="${galleryUrl}" class="btn">View Your Gallery</a>
+      </div>
+      ${accessCode ? `
+        <div class="note">
+          <strong>Access Code:</strong> ${accessCode}<br>
+          <small>You'll need this code to open the gallery.</small>
+        </div>
+      ` : ''}
+      <p>Just reply to this email if you have any questions — your messages come straight to me.</p>
+      <p>Best regards,<br>Brand Anthony McDonald</p>
+    </div>
+  `)
+}
+
 export function getProposalUpdatedTemplate({
   clientName,
   projectName,
