@@ -22,7 +22,7 @@ const GH = "https://github.com/dapperAuteur";
 
 const tierAProjects: ProjectCard[] = [
   {
-    name: "witus.online",
+    name: "WitUS.Online",
     url: "https://witus.online",
     status: "🟢",
     tagline: "Parent brand site for the WitUS ecosystem — philosophy-first landing page connecting CentenarianOS and Work.WitUS under \"Live Long. Work Free.\"",
@@ -93,7 +93,7 @@ const tierAProjects: ProjectCard[] = [
     detail: "The outbound twin of WitUS Inbox — every product can announce through one service.",
   },
   {
-    name: "Centenarian Coach (multi-agent)",
+    name: "Centenarian Coach (multi-agent Fit T. Cent)",
     url: "https://centenarian-coach-multiagent.witus.online",
     repo: `${GH}/centenarian-coach-multiagent`,
     status: "🟢",
@@ -119,7 +119,7 @@ const tierAProjects: ProjectCard[] = [
     detail: "Human-in-the-loop with LangSmith observability. Plugs into the Inbox webhook bus.",
   },
   {
-    name: "brandanthonymcdonald.com",
+    name: "BrandAnthonyMcDonald.com",
     url: "https://brandanthonymcdonald.com",
     repo: `${GH}/bam-landing-page`,
     status: "🟢",
