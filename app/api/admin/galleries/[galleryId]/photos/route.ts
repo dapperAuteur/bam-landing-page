@@ -26,10 +26,8 @@ function getThumbnailForType(publicId: string, mediaType: MediaType): string {
   }
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { galleryId: string } }
-) {
+export async function POST(request: NextRequest, props: { params: Promise<{ galleryId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user?.role !== 'admin') {
@@ -104,10 +102,8 @@ export async function POST(
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { galleryId: string } }
-) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ galleryId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user?.role !== 'admin') {

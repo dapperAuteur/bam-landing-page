@@ -7,7 +7,7 @@ import { fireOutboxDrafts } from '@/lib/outbox-trigger'
 const PUBLIC_BASE_URL = 'https://brandanthonymcdonald.com'
 
 function slugifyTitle(title: string): string {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
 function buildProjectCaption(p: Record<string, unknown>, fallbackTitle: string): string {
@@ -36,10 +36,8 @@ function buildExperienceCaption(e: Record<string, unknown>, fallbackTitle: strin
   ].filter(Boolean).join('\n')
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user?.role !== 'admin') {
@@ -108,10 +106,8 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user?.role !== 'admin') {

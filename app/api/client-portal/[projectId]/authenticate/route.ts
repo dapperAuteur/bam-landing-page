@@ -3,10 +3,8 @@ import clientPromise from '@/lib/db/mongodb'
 import { createClientSession } from '@/lib/auth/client-auth'
 import { trackPortalView } from '@/lib/analytics/portal-analytics'
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { projectId: string } }
-) {
+export async function POST(request: NextRequest, props: { params: Promise<{ projectId: string }> }) {
+  const params = await props.params;
   try {
     const { accessCode } = await request.json()
     const client = await clientPromise

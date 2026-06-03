@@ -23,8 +23,9 @@ function getDownloadInfo(photo: any): { contentType: string; extension: string }
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { galleryId: string; photoId: string } }
+  props: { params: Promise<{ galleryId: string; photoId: string }> }
 ) {
+  const params = await props.params;
   try {
     const client = await clientPromise
     const db = client.db('bam_portfolio')

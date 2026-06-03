@@ -25,9 +25,7 @@ export function getClientIp(request: NextRequest): string {
   const fastlyClientIp = request.headers.get('fastly-client-ip') // Fastly
   if (fastlyClientIp) return fastlyClientIp
 
-  // Fallback to direct connection (when not behind proxy)
-  if (request.ip) return request.ip
-
+  // Next 16 removed NextRequest.ip; the proxy headers above cover Vercel/CDN.
   // Final fallback
   return 'unknown'
 }

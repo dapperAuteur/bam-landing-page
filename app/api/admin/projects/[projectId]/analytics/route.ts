@@ -4,10 +4,8 @@ import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '@/lib/db/mongodb'
 import { PortalEventType } from '@/lib/analytics/portal-analytics'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { projectId: string } }
-) {
+export async function GET(request: NextRequest, props: { params: Promise<{ projectId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user?.role !== 'admin') {

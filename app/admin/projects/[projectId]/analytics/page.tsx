@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts'
 
 interface AnalyticsData {
@@ -49,7 +49,8 @@ function formatDuration(seconds: number): string {
   return `${hours}h ${minutes % 60}m`
 }
 
-export default function ProjectAnalyticsPage({ params }: { params: { projectId: string } }) {
+export default function ProjectAnalyticsPage(props: { params: Promise<{ projectId: string }> }) {
+  const params = use(props.params);
   const [data, setData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
 

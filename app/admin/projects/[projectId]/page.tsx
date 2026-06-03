@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react';
 import type { ClientProject, ProposalContent, PricingLineItem, TimelineItem, DeliverableItem } from '@/types/client-portal'
 
-export default function AdminProjectEditorPage({ params }: { params: { projectId: string } }) {
+export default function AdminProjectEditorPage(props: { params: Promise<{ projectId: string }> }) {
+  const params = use(props.params);
   const [project, setProject] = useState<ClientProject | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)

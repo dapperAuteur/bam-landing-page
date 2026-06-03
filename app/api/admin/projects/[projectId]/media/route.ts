@@ -25,10 +25,8 @@ function getThumbnailForType(publicId: string, mediaType: MediaType): string {
   }
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { projectId: string } }
-) {
+export async function POST(request: NextRequest, props: { params: Promise<{ projectId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session || session.user?.role !== 'admin') {
