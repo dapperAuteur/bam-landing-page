@@ -1,0 +1,146 @@
+---
+title: Why Some People Sleep Less and Still Feel Great
+description: A plain-language tour of what science knows about natural short sleepers, the rare people who thrive on 4 to 6.5 hours of sleep, and the five genes researchers have linked to the trait.
+excerpt: Most adults need 7 to 9 hours of sleep. A tiny group of people, about 1 in 100, feel great on far less. Here's what scientists have found in their genes, written for curious readers of any age.
+category: Health & Longevity
+tags: [Sleep, Genetics, Longevity, Natural Short Sleepers, SIK3, DEC2]
+readTime: 8 min read
+publishDate: 2026-05-20
+featured: true
+---
+
+## What is a natural short sleeper?
+
+Most grown-ups need about 8 hours of sleep each night. But not everyone does. A small number of people feel just fine on much less. They might sleep only 4 to 6 hours and still have great days. Scientists call these people **natural short sleepers** [(Chen et al., 2025)](#bib-chen2025).
+
+This is not the same as being tired. Natural short sleepers wake up rested. They don't yawn through their day. They don't need naps. Their bodies just need less sleep than the rest of us [(He et al., 2009)](#bib-he2009).
+
+## Two very different kinds of "less sleep"
+
+Sleeping less is not always healthy. There are two very different kinds:
+
+- **Insomnia.** Insomnia is a sleep problem. People with insomnia *want* to sleep, but their body won't let them. They feel tired during the day. Over time, it hurts their health.
+- **Natural short sleep.** This is rare. It is built into a person's genes. The body fully rests in fewer hours. The person feels great [(He et al., 2009)](#bib-he2009) [(Shi et al., 2019)](#bib-shi2019).
+
+One is a problem. The other is just how someone's body works.
+
+## How rare is it?
+
+Scientists think only about 1 to 3 people out of every 100 are *true* natural short sleepers [(Watson et al., 2015)](#bib-aasm). That is not many. Most people who say they "only need 4 hours" are actually short on rest. Their bodies are just used to feeling tired.
+
+Real natural short sleepers can be tested. Doctors put a small tracker on their wrist for a week. The tracker measures how much they really sleep. In one new study, a woman said she slept only 3 hours, but the tracker showed she actually slept about 6.3 hours [(Chen et al., 2025)](#bib-chen2025).
+
+## Graph 1: How sleep hours compare
+
+The chart below shows three numbers: how much sleep most adults need, how much a measured natural short sleeper actually got, and how little some people *claim* they sleep.
+
+<Chart
+  type="bar"
+  height={360}
+  data={{
+    labels: ['Typical adult (CDC guidance)', 'Natural short sleeper (measured)', 'Some short sleepers (self-report)'],
+    datasets: [{
+      label: 'Hours of sleep per night',
+      data: [8, 6.3, 4],
+      backgroundColor: ['rgba(99, 102, 241, 0.65)', 'rgba(168, 85, 247, 0.65)', 'rgba(236, 72, 153, 0.65)'],
+      borderColor: ['#6366f1', '#a855f7', '#ec4899'],
+      borderWidth: 2,
+      borderRadius: 6,
+    }],
+  }}
+  options={{
+    indexAxis: 'y',
+    scales: { x: { beginAtZero: true, max: 10, title: { display: true, text: 'Hours of sleep per night' } } },
+    plugins: { legend: { display: false } },
+  }}
+/>
+
+*Sources: CDC sleep guidance [(CDC, 2024)](#bib-cdc); actigraphy measurement from [Chen et al. (2025)](#bib-chen2025).*
+
+## The five genes scientists have found
+
+Genes are tiny instructions in your cells. They tell your body how to grow, look, and act. Some people have small changes in their genes that make them need less sleep. So far, scientists have found **five** of these gene changes.
+
+### DEC2 (found in 2009)
+
+The first short-sleep gene. Scientists studied a mom and her daughter. Both slept about 6 hours and felt fine. The team looked at their DNA and found one tiny change in a gene called DEC2. The change was passed from mom to daughter. DEC2 helps tell the body when to sleep [(He et al., 2009)](#bib-he2009).
+
+### ADRB1 (found in 2019)
+
+Ten years later, the same team found a second gene in a different family. They called it ADRB1. The change in ADRB1 makes a part of the brainstem more "awake-ready," so the body needs less sleep to feel rested [(Shi et al., 2019)](#bib-shi2019).
+
+### NPSR1 (found in 2019)
+
+Later in 2019, scientists found a third gene called NPSR1. This one is special. It seems to help with sleep *and* memory. In mice with the same change, the mice slept less but still remembered things just as well [(Xing et al., 2019)](#bib-xing2019).
+
+### GRM1 (found in 2020)
+
+The fourth gene change is in GRM1. It was found in two different families of short sleepers. People in one family slept only about 5 to 6 hours, while their relatives who did not have the gene change slept the normal 7 to 8 hours [(Shi et al., 2020)](#bib-shi2020).
+
+### SIK3-N783Y (found in 2025)
+
+The newest discovery. SIK3 is a gene that helps the brain build up the "need" for sleep. A tiny change in SIK3, called SIK3-N783Y, was found in a healthy 70-year-old woman who slept very little [(Chen et al., 2025)](#bib-chen2025).
+
+## Graph 2: A timeline of gene discoveries
+
+Each dot on the timeline below is one short-sleep gene and the year scientists figured it out. Notice how more discoveries are happening as DNA tools get better.
+
+<Chart
+  type="scatter"
+  height={320}
+  data={{
+    datasets: [
+      { label: 'DEC2', data: [{ x: 2009, y: 1 }], backgroundColor: '#6366f1', borderColor: '#6366f1', pointRadius: 12, pointHoverRadius: 14 },
+      { label: 'ADRB1', data: [{ x: 2019, y: 1 }], backgroundColor: '#8b5cf6', borderColor: '#8b5cf6', pointRadius: 12, pointHoverRadius: 14 },
+      { label: 'NPSR1', data: [{ x: 2019.4, y: 1 }], backgroundColor: '#a855f7', borderColor: '#a855f7', pointRadius: 12, pointHoverRadius: 14 },
+      { label: 'GRM1', data: [{ x: 2020, y: 1 }], backgroundColor: '#d946ef', borderColor: '#d946ef', pointRadius: 12, pointHoverRadius: 14 },
+      { label: 'SIK3-N783Y', data: [{ x: 2025, y: 1 }], backgroundColor: '#ec4899', borderColor: '#ec4899', pointRadius: 12, pointHoverRadius: 14 },
+    ],
+  }}
+  options={{
+    scales: {
+      x: { type: 'linear', min: 2008, max: 2026, ticks: { stepSize: 1 }, title: { display: true, text: 'Year the gene was identified' } },
+      y: { display: false, min: 0, max: 2 },
+    },
+    plugins: { legend: { position: 'bottom' } },
+  }}
+/>
+
+*Sources: [He et al. (2009)](#bib-he2009), [Shi et al. (2019)](#bib-shi2019), [Xing et al. (2019)](#bib-xing2019), [Shi et al. (2020)](#bib-shi2020), [Chen et al. (2025)](#bib-chen2025).*
+
+## A closer look at the newest study
+
+The 2025 study began with a healthy 70-year-old woman. She said she had slept only 3 hours a night for most of her life. She had no memory problems. She had no health problems. Doctors tested her sleep with a wrist tracker for a week. The tracker showed she really got about 6.3 hours of sleep each night. That was more than she thought, but still less than most adults [(Chen et al., 2025)](#bib-chen2025).
+
+Scientists looked at her DNA and found a small change in a gene called SIK3. To make sure the gene change was really the cause, they made mice with the very same change. Those mice slept less than normal mice. And here is the surprising part: the mice's deep-sleep brain waves were *stronger* than normal mice's.
+
+That means: **less sleep, but higher-quality sleep**. The body packs more rest into fewer hours [(Chen et al., 2025)](#bib-chen2025).
+
+## What this could mean for the rest of us
+
+Right now, scientists cannot change your DNA. So you cannot "give yourself" the gene change. But the discovery may still help people sleep *better*.
+
+If a future medicine could copy what these gene changes do, people might rest more deeply in fewer hours. They might wake up feeling more rested. They might have more energy for the rest of their day [(Chen et al., 2025)](#bib-chen2025) [(Funato et al., 2016)](#bib-funato2016).
+
+This may also help with healthy aging. Deep sleep is when the brain cleans itself. Better sleep over a lifetime could mean a healthier brain.
+
+> ### ⚠️ A safety note
+>
+> **Most adults need 7 to 9 hours of sleep** [(CDC, 2024)](#bib-cdc) [(Watson et al., 2015)](#bib-aasm). Natural short sleep runs in families. You cannot train yourself into it.
+>
+> If you cut your sleep without the right genes, you'll feel awful. You'll think slower. You'll feel sad more often. You'll get sick more easily. If you feel tired during the day, your body probably needs *more* sleep, not less.
+
+## Bibliography
+
+All sources are peer-reviewed primary research or authoritative public health bodies.
+
+<ol className="space-y-4 text-sm text-gray-700">
+  <li id="bib-chen2025">Chen, A., Wu, H., Zhang, S., Shi, G., Xu, Y., Zhang, L., Fu, Y.-H., & Ptáček, L. J. (2025). The SIK3-N783Y mutation is associated with the human natural short sleep trait. <em>Proceedings of the National Academy of Sciences, 122</em>(19), e2500356122. <a href="https://www.pnas.org/doi/10.1073/pnas.2500356122" target="_blank" rel="noopener noreferrer">https://www.pnas.org/doi/10.1073/pnas.2500356122</a></li>
+  <li id="bib-he2009">He, Y., Jones, C. R., Fujiki, N., Xu, Y., Guo, B., Holder, J. L., Rossner, M. J., Nishino, S., & Fu, Y.-H. (2009). The transcriptional repressor DEC2 regulates sleep length in mammals. <em>Science, 325</em>(5942), 866–870. <a href="https://www.science.org/doi/10.1126/science.1174443" target="_blank" rel="noopener noreferrer">https://www.science.org/doi/10.1126/science.1174443</a></li>
+  <li id="bib-shi2019">Shi, G., Xing, L., Liu, Z., Qu, Z., Wu, X., Dong, Z., Wang, X., Gao, X., Huang, M., Yan, J., Yang, L., Liu, Y., Ptáček, L. J., & Fu, Y.-H. (2019). A rare mutation of β1-adrenergic receptor affects sleep/wake behaviors. <em>Neuron, 103</em>(6), 1044–1055.e7. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6763376/" target="_blank" rel="noopener noreferrer">https://pmc.ncbi.nlm.nih.gov/articles/PMC6763376/</a></li>
+  <li id="bib-xing2019">Xing, L., Shi, G., Mostovoy, Y., Gentry, N. W., Fan, Z., McMahon, T. B., Kwok, P.-Y., Jones, C. R., Ptáček, L. J., & Fu, Y.-H. (2019). Mutant neuropeptide S receptor reduces sleep duration with preserved memory consolidation. <em>Science Translational Medicine, 11</em>(514), eaax2014. <a href="https://www.science.org/doi/10.1126/scitranslmed.aax2014" target="_blank" rel="noopener noreferrer">https://www.science.org/doi/10.1126/scitranslmed.aax2014</a></li>
+  <li id="bib-shi2020">Shi, G., Yin, C., Fan, Z., Xing, L., Mostovoy, Y., Kwok, P.-Y., Ashbrook, L. H., Krystal, A. D., Ptáček, L. J., & Fu, Y.-H. (2020). Mutations in metabotropic glutamate receptor 1 contribute to natural short sleep trait. <em>Current Biology, 31</em>(1), 13–24.e4. <a href="https://www.cell.com/current-biology/fulltext/S0960-9822(20)31441-X" target="_blank" rel="noopener noreferrer">https://www.cell.com/current-biology/fulltext/S0960-9822(20)31441-X</a></li>
+  <li id="bib-funato2016">Funato, H., Miyoshi, C., Fujiyama, T., Kanda, T., Sato, M., Wang, Z., Ma, J., Nakane, S., Tomita, J., Ikkyu, A., … Yanagisawa, M. (2016). Forward-genetics analysis of sleep in randomly mutagenized mice. <em>Nature, 539</em>, 378–383. <a href="https://pubmed.ncbi.nlm.nih.gov/27074515/" target="_blank" rel="noopener noreferrer">https://pubmed.ncbi.nlm.nih.gov/27074515/</a></li>
+  <li id="bib-cdc">Centers for Disease Control and Prevention. (2024). <em>About sleep</em>. <a href="https://www.cdc.gov/sleep/about/index.html" target="_blank" rel="noopener noreferrer">https://www.cdc.gov/sleep/about/index.html</a></li>
+  <li id="bib-aasm">Watson, N. F., Badr, M. S., Belenky, G., Bliwise, D. L., Buxton, O. M., Buysse, D., Dinges, D. F., Gangwisch, J., Grandner, M. A., Kushida, C., Malhotra, R. K., Martin, J. L., Patel, S. R., Quan, S. F., & Tasali, E. (2015). Recommended amount of sleep for a healthy adult. <em>Sleep, 38</em>(6), 843–844. <a href="https://aasm.org/recommended-amount-sleep-healthy-adult-aasm-srs/" target="_blank" rel="noopener noreferrer">https://aasm.org/recommended-amount-sleep-healthy-adult-aasm-srs/</a></li>
+</ol>
