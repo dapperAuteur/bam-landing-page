@@ -20,11 +20,18 @@ This system makes it super easy to add new work experiences, projects, and skill
 
 ## Adding a New Project
 
-1. In the same file, find the `projects` array
-2. Copy an existing project format
-3. Update all the fields
-4. Add a `link` if you want to link to the project
-5. Set `featured: true` for important projects
+There are **two** project surfaces — pick the right one:
+
+- **Homepage portfolio / `/experience`** — uses the `projects` array in `lib/experienceData.ts`:
+  1. Find the `projects` array
+  2. Copy an existing project format and update the fields
+  3. Add a `link` if you want to link to the project
+  4. Set `featured: true` for important projects
+
+- **The WitUS ecosystem `/projects` page** — these cards are **not** in `experienceData.ts`. Edit the
+  `tierAProjects` / `tierBProjects` arrays directly in **`app/projects/page.tsx`** (each card has
+  `name`, `url`, `repo`, `status`, `tagline`, `stack`, `detail`). Update the header/ecosystem-tree copy in
+  the same file if the count changes.
 
 ## Adding New Skills
 
