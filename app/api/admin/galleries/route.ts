@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '../../../../lib/db/mongodb'
 import { ClientGallery } from '../../../../types/client-gallery'
+import { fireOutboxDrafts } from '@/lib/outbox-trigger'
+import { buildGalleryCaption } from '@/lib/blog/caption'
 
 // GET - Fetch all galleries
 export async function GET() {
@@ -58,6 +60,24 @@ export async function POST(request: NextRequest) {
     
     const { _id, ...galleryData } = gallery
     await db.collection('client_galleries').insertOne(galleryData)
+
+    // Marketing galleries are public showcases → announce via the Outbox
+    // (coming-soon draft for review). Private client-delivery galleries never
+    // fire — they're not for broadcast.
+    if (gallery.type === 'marketing' && session.user?.id) {
+      fireOutboxDrafts({
+        triggerUserId: session.user.id,
+        externalRefBase: `bam-gallery-${galleryId}`,
+        caption: buildGalleryCaption({
+          galleryId,
+          eventName: gallery.eventName,
+          description: gallery.description,
+        }),
+        platforms: ['linkedin', 'twitter', 'bluesky'],
+        asDraft: true,
+      })
+    }
+
     return NextResponse.json({ gallery })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to create gallery' }, { status: 500 })
