@@ -66,6 +66,11 @@ export default function Footer() {
                 </a>
               </li>
               <li>
+                <a href="/feed.xml" className="hover:text-white transition-colors">
+                  RSS
+                </a>
+              </li>
+              <li>
                 <a href="#contact" className="hover:text-white transition-colors">
                   Contact
                 </a>
