@@ -37,7 +37,7 @@ export default function Navigation() {
             <Link href="/intake" className="text-gray-700 hover:text-blue-600 transition-colors">
               Start a project
             </Link>
-            <Link href="/blog" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/blog/legacy" className="text-gray-700 hover:text-blue-600 transition-colors">
               Blog
             </Link>
             <Link href="/photography" className="text-gray-700 hover:text-blue-600 transition-colors">
@@ -133,7 +133,7 @@ export default function Navigation() {
             <Link href="/intake" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
               Start a project
             </Link>
-            <Link href="/blog" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
+            <Link href="/blog/legacy" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
               Blog
             </Link>
             <Link href="/photography" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
