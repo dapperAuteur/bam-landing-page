@@ -79,6 +79,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   if (willPublish || existing.status === 'published') {
     revalidatePath('/blog')
     revalidatePath(`/blog/${slug}`)
+    revalidatePath('/feed.xml')
+    revalidatePath('/feed.json')
   }
 
   return NextResponse.json({ success: true, published: willPublish })
@@ -97,5 +99,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
   await db.collection(COLLECTIONS.blogPosts).deleteOne({ _id: existing._id })
   revalidatePath('/blog')
   revalidatePath(`/blog/${existing.slug}`)
+  revalidatePath('/feed.xml')
+  revalidatePath('/feed.json')
   return NextResponse.json({ success: true })
 }

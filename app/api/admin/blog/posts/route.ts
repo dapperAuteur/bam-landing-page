@@ -89,6 +89,8 @@ export async function POST(request: NextRequest) {
     })
     revalidatePath('/blog')
     revalidatePath(`/blog/${doc.slug}`)
+    revalidatePath('/feed.xml')
+    revalidatePath('/feed.json')
   }
 
   return NextResponse.json({ success: true, id: result.insertedId.toString() })

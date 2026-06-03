@@ -32,7 +32,7 @@ export default function MarketingGalleriesPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
+    <main className="min-h-screen bg-gray-50 pt-24">
       <div className="max-w-6xl mx-auto px-4 py-12">
         <header className="mb-10 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">Galleries</h1>
@@ -75,6 +75,6 @@ export default function MarketingGalleriesPage() {
           </div>
         )}
       </div>
-    </div>
+    </main>
   )
 }
