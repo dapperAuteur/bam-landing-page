@@ -225,7 +225,7 @@ function RiseWellnessCallout() {
         above challenges and live a fulfilling, healthy life. Our care is
         guided by the belief that healing is personal, holistic, and rooted
         in compassion.&rdquo;
-        <span className="block not-italic mt-1 text-gray-500">
+        <span className="block not-italic mt-1 text-gray-400">
           Rise Wellness of Indiana
         </span>
       </blockquote>
@@ -233,7 +233,7 @@ function RiseWellnessCallout() {
       {/* === NON-NEGOTIABLE DISCLAIMER ===
           Edit ONLY the app name token. Don't paraphrase. Don't trim.
           Don't reorder. This was vetted with the partner. */}
-      <p className="mt-4 text-[11px] leading-relaxed text-gray-500">
+      <p className="mt-4 text-[11px] leading-relaxed text-gray-400">
         Rise Wellness of Indiana is an independent organization. They are
         not affiliated with, employed by, or endorsed by Brand Anthony McDonald,
         CentenarianOS, B4C LLC, AwesomeWebStore.com, or Anthony McDonald.
