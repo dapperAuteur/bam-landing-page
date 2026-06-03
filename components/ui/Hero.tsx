@@ -10,7 +10,7 @@ export default function Hero() {
             Developer Relations, Software Developer, AI Adviser, Business Consultant & Voiceover Artist 
           </p>
           <p className="text-lg mb-8 text-blue-200 max-w-2xl mx-auto">
-            Developer advocacy, professional voiceover, and strategic consulting —
+            Developer advocacy, professional voiceover, and strategic consulting:
             building tools and documenting the journey to become the world's fastest centenarian.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
