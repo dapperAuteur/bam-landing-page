@@ -8,6 +8,7 @@ import GalleryHeader from '@/components/client-gallery/GalleryHeader'
 import MediaFilter from '@/components/client-gallery/MediaFilter'
 import MediaCard from '@/components/client-gallery/MediaCard'
 import Lightbox from '@/components/client-gallery/Lightbox'
+import PhotoCarousel from '@/components/ui/PhotoCarousel'
 
 interface ClientGalleryPageProps {
   params: { galleryId: string }
@@ -21,6 +22,7 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
   const [selectedItem, setSelectedItem] = useState<ClientMedia | null>(null)
   const [downloadingAll, setDownloadingAll] = useState(false)
   const [activeFilter, setActiveFilter] = useState<MediaType | 'all'>('all')
+  const [showSlideshow, setShowSlideshow] = useState(false)
 
   useEffect(() => {
     fetchGallery()
@@ -268,11 +270,21 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
 
       {/* Media Grid */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <MediaFilter
-          media={gallery.photos}
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
-        />
+        <div className="flex items-center justify-between gap-4">
+          <MediaFilter
+            media={gallery.photos}
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+          />
+          {gallery.photos.some(p => (p.mediaType || 'image') === 'image') && (
+            <button
+              onClick={() => setShowSlideshow(true)}
+              className="shrink-0 px-4 py-2 rounded-md bg-gray-900 text-white text-sm hover:bg-gray-700"
+            >
+              🎠 Slideshow
+            </button>
+          )}
+        </div>
 
         {!filteredMedia || filteredMedia.length === 0 ? (
           <div className="text-center py-12">
@@ -308,6 +320,32 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
           onAddComment={addComment}
           onApprove={setApproval}
         />
+      )}
+
+      {/* Slideshow */}
+      {showSlideshow && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Slideshow"
+          onClick={() => setShowSlideshow(false)}
+        >
+          <button
+            onClick={() => setShowSlideshow(false)}
+            aria-label="Close slideshow"
+            className="absolute top-4 right-4 text-white bg-black/50 rounded-full w-11 h-11 flex items-center justify-center"
+          >
+            ✕
+          </button>
+          <div className="w-full max-w-4xl" onClick={(e) => e.stopPropagation()}>
+            <PhotoCarousel
+              images={gallery.photos
+                .filter(p => (p.mediaType || 'image') === 'image')
+                .map(p => ({ url: p.originalUrl, alt: p.title, title: p.title }))}
+            />
+          </div>
+        </div>
       )}
     </div>
   )

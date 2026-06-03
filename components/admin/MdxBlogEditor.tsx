@@ -53,17 +53,28 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
   const [error, setError] = useState<string | null>(null)
   const [slugTouched, setSlugTouched] = useState(false)
   const [pickerOpen, setPickerOpen] = useState(false)
+  const [pickerMode, setPickerMode] = useState<'single' | 'carousel'>('single')
   const contentRef = useRef<HTMLTextAreaElement>(null)
 
-  // Insert a library photo as a markdown image at the cursor (renders via the
-  // MDX `img` registry component).
-  function insertPhoto(photo: Photo) {
-    const md = `\n\n![${photo.alt || photo.title || 'photo'}](${photo.originalUrl})\n\n`
+  function insertAtCursor(text: string) {
     const el = contentRef.current
     const pos = el ? el.selectionStart : form.content.length
-    const next = form.content.slice(0, pos) + md + form.content.slice(pos)
-    set('content', next)
+    set('content', form.content.slice(0, pos) + text + form.content.slice(pos))
     setPickerOpen(false)
+  }
+
+  // Single photo → markdown image (renders via the MDX `img` registry component).
+  function insertPhoto(photo: Photo) {
+    insertAtCursor(`\n\n![${photo.alt || photo.title || 'photo'}](${photo.originalUrl})\n\n`)
+  }
+
+  // Multiple photos → an MDX <Carousel> (serializable images prop).
+  function insertCarousel(photos: Photo[]) {
+    if (photos.length === 0) return
+    const images = photos
+      .map(p => `    { url: ${JSON.stringify(p.originalUrl)}, alt: ${JSON.stringify(p.alt || p.title || '')} }`)
+      .join(',\n')
+    insertAtCursor(`\n\n<Carousel images={[\n${images}\n]} />\n\n`)
   }
 
   useEffect(() => {
@@ -203,17 +214,26 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
       <div>
         <div className="flex items-center justify-between mb-1">
           <label className={label}>Content (MDX)</label>
-          <button
-            type="button"
-            onClick={() => setPickerOpen(true)}
-            className="text-sm px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
-          >
-            🖼️ Insert photo from library
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => { setPickerMode('single'); setPickerOpen(true) }}
+              className="text-sm px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+            >
+              🖼️ Insert photo
+            </button>
+            <button
+              type="button"
+              onClick={() => { setPickerMode('carousel'); setPickerOpen(true) }}
+              className="text-sm px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+            >
+              🎠 Insert carousel
+            </button>
+          </div>
         </div>
         <p className="text-xs text-gray-500 mb-1">
-          Markdown + components: <code>&lt;Chart&gt;</code>, <code>&lt;CodeBlock&gt;</code>,
-          <code> &lt;YouTubeEmbed&gt;</code>, fenced code blocks.
+          Markdown + components: <code>&lt;Chart&gt;</code>, <code>&lt;Carousel&gt;</code>,
+          <code> &lt;CodeBlock&gt;</code>, <code>&lt;YouTubeEmbed&gt;</code>, fenced code blocks.
         </p>
         <textarea
           ref={contentRef}
@@ -227,9 +247,13 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
       <PhotoPicker
         isOpen={pickerOpen}
         onClose={() => setPickerOpen(false)}
+        allowMultiple={pickerMode === 'carousel'}
         onSelect={insertPhoto}
-        title="Insert a photo"
-        description="Pick a photo from your library to insert into the post."
+        onSelectMultiple={insertCarousel}
+        title={pickerMode === 'carousel' ? 'Build a carousel' : 'Insert a photo'}
+        description={pickerMode === 'carousel'
+          ? 'Pick multiple photos for a carousel in the post.'
+          : 'Pick a photo from your library to insert into the post.'}
       />
 
       <div className="flex items-center gap-3 border-t pt-4">
