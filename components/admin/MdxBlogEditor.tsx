@@ -10,6 +10,14 @@ interface MdxBlogEditorProps {
   postId?: string
 }
 
+interface FeaturedImage {
+  id: string
+  url: string
+  thumbnailUrl: string
+  title?: string
+  alt?: string
+}
+
 interface FormState {
   title: string
   slug: string
@@ -21,6 +29,7 @@ interface FormState {
   publishDate: string
   featured: boolean
   featuredOrder: number
+  featuredImage: FeaturedImage | null
   content: string // MDX source
   status: 'draft' | 'published'
 }
@@ -36,6 +45,7 @@ const EMPTY: FormState = {
   publishDate: '',
   featured: false,
   featuredOrder: 999,
+  featuredImage: null,
   content: '',
   status: 'draft',
 }
@@ -53,7 +63,7 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
   const [error, setError] = useState<string | null>(null)
   const [slugTouched, setSlugTouched] = useState(false)
   const [pickerOpen, setPickerOpen] = useState(false)
-  const [pickerMode, setPickerMode] = useState<'single' | 'carousel'>('single')
+  const [pickerMode, setPickerMode] = useState<'single' | 'carousel' | 'featured'>('single')
   const contentRef = useRef<HTMLTextAreaElement>(null)
 
   function insertAtCursor(text: string) {
@@ -61,6 +71,23 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
     const pos = el ? el.selectionStart : form.content.length
     set('content', form.content.slice(0, pos) + text + form.content.slice(pos))
     setPickerOpen(false)
+  }
+
+  // Set the post's featured image (hero + social-share card) from the library.
+  function setFeatured(photo: Photo) {
+    set('featuredImage', {
+      id: photo.id,
+      url: photo.originalUrl,
+      thumbnailUrl: photo.thumbnailUrl,
+      title: photo.title,
+      alt: photo.alt || photo.title,
+    })
+    setPickerOpen(false)
+  }
+
+  function onPick(photo: Photo) {
+    if (pickerMode === 'featured') setFeatured(photo)
+    else insertPhoto(photo)
   }
 
   // Single photo → markdown image (renders via the MDX `img` registry component).
@@ -95,6 +122,7 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
           publishDate: post.publishDate ?? '',
           featured: !!post.featured,
           featuredOrder: post.featuredOrder ?? 999,
+          featuredImage: post.featuredImage ?? null,
           content: post.content ?? '',
           status: post.status === 'published' ? 'published' : 'draft',
         })
@@ -211,6 +239,30 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
         </div>
       </div>
 
+      {/* Featured image (post hero + social-share card) */}
+      <div>
+        <label className={label}>Featured image</label>
+        <div className="flex items-center gap-4">
+          {form.featuredImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={form.featuredImage.thumbnailUrl} alt={form.featuredImage.alt || ''} className="h-20 w-32 object-cover rounded-md border" />
+          ) : (
+            <div className="h-20 w-32 rounded-md border border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-400">None</div>
+          )}
+          <button
+            type="button"
+            onClick={() => { setPickerMode('featured'); setPickerOpen(true) }}
+            className="text-sm px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+          >
+            {form.featuredImage ? 'Change' : 'Set'} featured image
+          </button>
+          {form.featuredImage && (
+            <button type="button" onClick={() => set('featuredImage', null)} className="text-sm text-red-600 hover:text-red-800">Remove</button>
+          )}
+        </div>
+        <p className="text-xs text-gray-500 mt-1">Shown as the post hero and as the Open Graph / Twitter card image when shared.</p>
+      </div>
+
       <div>
         <div className="flex items-center justify-between mb-1">
           <label className={label}>Content (MDX)</label>
@@ -248,11 +300,13 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
         isOpen={pickerOpen}
         onClose={() => setPickerOpen(false)}
         allowMultiple={pickerMode === 'carousel'}
-        onSelect={insertPhoto}
+        onSelect={onPick}
         onSelectMultiple={insertCarousel}
-        title={pickerMode === 'carousel' ? 'Build a carousel' : 'Insert a photo'}
+        title={pickerMode === 'carousel' ? 'Build a carousel' : pickerMode === 'featured' ? 'Set featured image' : 'Insert a photo'}
         description={pickerMode === 'carousel'
           ? 'Pick multiple photos for a carousel in the post.'
+          : pickerMode === 'featured'
+          ? 'Pick the post hero / social-share image.'
           : 'Pick a photo from your library to insert into the post.'}
       />
 

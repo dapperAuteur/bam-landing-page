@@ -29,12 +29,27 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     return { title: 'Blog Post Not Found' }
   }
 
+  const ogImages = post.featuredImage?.url ? [{ url: post.featuredImage.url, alt: post.featuredImage.alt || post.title }] : undefined
+
   return {
     title: `${post.title} | Brand Anthony McDonald`,
     description: post.description,
     keywords: post.tags?.join(', '),
     alternates: {
       canonical: `/blog/${slug}`,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: 'article',
+      url: `/blog/${slug}`,
+      images: ogImages,
+    },
+    twitter: {
+      card: ogImages ? 'summary_large_image' : 'summary',
+      title: post.title,
+      description: post.description,
+      images: ogImages?.map(i => i.url),
     },
   }
 }

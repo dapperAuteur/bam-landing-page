@@ -32,6 +32,10 @@ function BlogCard({ post }: { post: BlogPost }) {
   return (
     <Link href={`/blog/${post.slug}`} className="group">
       <article className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group-hover:scale-[1.02]">
+        {post.featuredImage?.url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={post.featuredImage.url} alt={post.featuredImage.alt || post.title} className="w-full h-44 object-cover" />
+        )}
         <div className="p-6">
           <div className="flex items-center gap-2 mb-3">
             <span className="bg-purple-100 text-purple-800 text-sm px-3 py-1 rounded-full font-medium">
