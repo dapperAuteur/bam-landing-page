@@ -8,7 +8,12 @@ interface FeaturedPostProps {
 export default function FeaturedPost({ post }: FeaturedPostProps) {
   return (
     <Link href={`/blog/${post.slug}`} className="group">
-      <article className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-8 hover:shadow-xl transition-all duration-300 group-hover:scale-[1.02]">
+      <article className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 group-hover:scale-[1.02]">
+        {post.featuredImage?.url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={post.featuredImage.url} alt={post.featuredImage.alt || post.title} className="w-full h-56 object-cover" />
+        )}
+        <div className="p-8">
         <div className="flex items-center gap-4 mb-4">
           <span className="bg-yellow-100 text-yellow-800 text-sm px-3 py-1 rounded-full font-bold">
             FEATURED
@@ -44,6 +49,7 @@ export default function FeaturedPost({ post }: FeaturedPostProps) {
               </span>
             ))}
           </div>
+        </div>
         </div>
       </article>
     </Link>

@@ -68,6 +68,22 @@ export default function BlogPostWrapper({ post, children }: BlogPostWrapperProps
         </div>
       </section>
 
+      {/* Featured image hero */}
+      {post.featuredImage?.url && (
+        <section className="bg-white">
+          <div className="container-max">
+            <div className="max-w-4xl mx-auto">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={post.featuredImage.url}
+                alt={post.featuredImage.alt || post.title}
+                className="w-full rounded-xl object-cover max-h-[28rem]"
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* The actual blog post content */}
       <main>
         {children}
