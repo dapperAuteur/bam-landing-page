@@ -30,7 +30,12 @@ export async function generateMetadata(props: BlogPostPageProps): Promise<Metada
     return { title: 'Blog Post Not Found' }
   }
 
-  const ogImages = post.featuredImage?.url ? [{ url: post.featuredImage.url, alt: post.featuredImage.alt || post.title }] : undefined
+  // Prefer the post's featured photo; otherwise fall back to a generated,
+  // branded OG card so EVERY post has a strong social image.
+  const generatedOg = `/api/og?title=${encodeURIComponent(post.title)}${post.category ? `&category=${encodeURIComponent(post.category)}` : ''}`
+  const ogImages = post.featuredImage?.url
+    ? [{ url: post.featuredImage.url, alt: post.featuredImage.alt || post.title }]
+    : [{ url: generatedOg, alt: post.title }]
 
   return {
     title: `${post.title} | Brand Anthony McDonald`,
@@ -47,10 +52,10 @@ export async function generateMetadata(props: BlogPostPageProps): Promise<Metada
       images: ogImages,
     },
     twitter: {
-      card: ogImages ? 'summary_large_image' : 'summary',
+      card: 'summary_large_image',
       title: post.title,
       description: post.description,
-      images: ogImages?.map(i => i.url),
+      images: ogImages.map(i => i.url),
     },
   }
 }
