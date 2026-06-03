@@ -37,7 +37,7 @@ export default function Navigation() {
             <Link href="/intake" className="text-gray-700 hover:text-blue-600 transition-colors">
               Start a project
             </Link>
-            <Link href="/blog" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/blog/legacy" className="text-gray-700 hover:text-blue-600 transition-colors">
               Blog
             </Link>
             <Link href="/photography" className="text-gray-700 hover:text-blue-600 transition-colors">
@@ -66,33 +66,41 @@ export default function Navigation() {
               </a>
             </div>
 
-            {/* Auth Buttons */}
+            {/* Auth — admin controls collapse into one dropdown so the
+                authenticated bar is no wider than the logged-out one (was
+                overflowing horizontally). Hover + focus-within for keyboard. */}
             {session ? (
-              <div className="flex items-center space-x-4">
-                {session && (
-                  <div>
-                    <Link href="/admin/contact" className="text-blue-600 hover:text-blue-800 font-medium">
-                      Contacts
-                    </Link>
-                    <span className="text-gray-600 text-sm">/</span>
-                    <Link href="/admin/logs" className="text-blue-600 hover:text-blue-800 font-medium">
-                      Logs
-                    </Link>
-                    <span className="text-gray-600 text-sm">/</span>
-                    <Link href="/admin/galleries" className="text-blue-600 hover:text-blue-800 font-medium">
-                      Galleries
-                    </Link>
-                  </div>
-                )}
-                <span className="text-gray-600 text-sm">
-                  {session?.user?.name}
-                </span>
+              <div className="relative group">
                 <button
-                  onClick={handleLogout}
-                  className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors"
+                  className="flex items-center gap-1 bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 transition-colors"
+                  aria-haspopup="true"
                 >
-                  Logout
+                  Admin
+                  <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                  </svg>
                 </button>
+                <div className="absolute right-0 mt-1 w-52 rounded-md border border-gray-200 bg-white shadow-lg py-1 z-50 hidden group-hover:block group-focus-within:block">
+                  <p className="px-4 py-1.5 text-xs text-gray-400 truncate">Signed in as {session?.user?.name}</p>
+                  {[
+                    { href: '/admin/blog/posts', label: 'Blog posts' },
+                    { href: '/admin/photos', label: 'Photos' },
+                    { href: '/admin/galleries', label: 'Galleries' },
+                    { href: '/admin/approvals', label: 'Approvals' },
+                    { href: '/admin/contact', label: 'Contacts' },
+                    { href: '/admin/logs', label: 'Logs' },
+                  ].map(item => (
+                    <Link key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                      {item.label}
+                    </Link>
+                  ))}
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 border-t border-gray-100 mt-1"
+                  >
+                    Logout
+                  </button>
+                </div>
               </div>
             ) : (
               <Link
@@ -133,7 +141,7 @@ export default function Navigation() {
             <Link href="/intake" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
               Start a project
             </Link>
-            <Link href="/blog" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
+            <Link href="/blog/legacy" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
               Blog
             </Link>
             <Link href="/photography" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
