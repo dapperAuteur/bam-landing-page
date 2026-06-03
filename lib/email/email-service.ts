@@ -3,7 +3,8 @@ import {
   getProposalSharedTemplate,
   getProposalUpdatedTemplate,
   getApprovalNotificationTemplate,
-  getCommentNotificationTemplate
+  getCommentNotificationTemplate,
+  getGalleryShareTemplate
 } from './templates'
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'bam@awews.com'
@@ -56,6 +57,23 @@ export async function sendProposalSharedEmail(
 ): Promise<boolean> {
   const subject = `New proposal: ${projectName}`
   const html = getProposalSharedTemplate({ clientName, projectName, portalUrl, accessCode })
+  return sendEmail(clientEmail, subject, html)
+}
+
+/**
+ * Send a client their photo-gallery link (with optional access code + note).
+ * Delivery uses the configured SMTP provider (point SMTP_HOST at Mailgun's SMTP).
+ */
+export async function sendGalleryShareEmail(
+  clientEmail: string,
+  clientName: string,
+  eventName: string,
+  galleryUrl: string,
+  accessCode?: string,
+  message?: string
+): Promise<boolean> {
+  const subject = `Your photo gallery: ${eventName}`
+  const html = getGalleryShareTemplate({ clientName, eventName, galleryUrl, accessCode, message })
   return sendEmail(clientEmail, subject, html)
 }
 

@@ -24,7 +24,7 @@ export default function Navigation() {
           </Link>
           
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-5 xl:space-x-8">
             <Link href="/#services" className="text-gray-700 hover:text-blue-600 transition-colors">
               Services
             </Link>
@@ -106,7 +106,7 @@ export default function Navigation() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden"
+            className="lg:hidden"
             onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={isOpen}
@@ -120,7 +120,7 @@ export default function Navigation() {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div id="mobile-menu" className="md:hidden py-4 space-y-2">
+          <div id="mobile-menu" className="lg:hidden py-4 space-y-2">
             <Link href="/#services" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
               Services
             </Link>
