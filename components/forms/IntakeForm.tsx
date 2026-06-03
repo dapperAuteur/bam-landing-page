@@ -127,7 +127,7 @@ function IntakeFormInner({ config }: { config: IntakeFormConfig }) {
   };
 
   return (
-    <section className="bg-gray-50 section-padding pt-32">
+    <main className="bg-gray-50 section-padding pt-32">
       <div className="container-max">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-10">
@@ -314,7 +314,7 @@ function IntakeFormInner({ config }: { config: IntakeFormConfig }) {
           </div>
         </div>
       </div>
-    </section>
+    </main>
   );
 }
 
@@ -323,7 +323,7 @@ export default function IntakeForm({ config }: { config: IntakeFormConfig }) {
 
   if (!recaptchaSiteKey) {
     return (
-      <section className="bg-gray-50 section-padding pt-32">
+      <main className="bg-gray-50 section-padding pt-32">
         <div className="container-max max-w-2xl mx-auto text-center">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6">
             <AlertTriangle className="w-10 h-10 text-red-500 mx-auto mb-3" />
@@ -339,7 +339,7 @@ export default function IntakeForm({ config }: { config: IntakeFormConfig }) {
             </p>
           </div>
         </div>
-      </section>
+      </main>
     );
   }
 
