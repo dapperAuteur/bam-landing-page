@@ -3,6 +3,9 @@ export type MediaType = 'image' | 'video' | 'document'
 export interface ClientGallery {
   _id?: string
   galleryId: string // URL-safe unique identifier
+  // 'client' = private delivery/approval gallery; 'marketing' = public showcase
+  // for prospective clients (listed at /galleries, no access code).
+  type?: 'client' | 'marketing'
   clientName: string
   clientEmail: string
   eventName: string
