@@ -91,13 +91,6 @@ const tierBProjects: ProjectCard[] = [
     stack: "Next.js · Supabase · Stripe · PWA · WCAG 2.1 AA",
     detail: "In-progress build.",
   },
-  {
-    name: "Centenarian Athlete Academy (CAA)",
-    status: "🟠",
-    tagline: "High-performance LMS for NASM CPT/CES/CNC certification candidates; Choose-Your-Own-Adventure video navigation, Gemini transcript embeddings + pgvector similarity for recommendations, hierarchical content gating with Cloudinary signed URLs, $100 one-time Stripe purchase.",
-    stack: "Next.js 14 · Supabase pgvector · Cloudinary · Gemini · Stripe",
-    detail: "Gated study locker, visual journey trail.",
-  },
 ];
 
 function ProjectCardView({ project }: { project: ProjectCard }) {
