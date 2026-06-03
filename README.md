@@ -1,26 +1,31 @@
 # BAM — Brand Anthony McDonald
 
-Personal brand platform and portfolio for Brand Anthony McDonald: developer advocate, voiceover artist, business consultant, and content creator.
+Personal brand platform and portfolio for Brand Anthony McDonald: developer advocate, voiceover artist, business consultant, and content creator. Lives at **[brandanthonymcdonald.com](https://brandanthonymcdonald.com)** and is part of the WitUS ecosystem.
 
 ## About
 
-This is a full-stack Next.js web application serving as BAM's professional home on the web. It combines a public-facing portfolio and blog with a private admin dashboard and client portal system.
+A full-stack Next.js App Router application that combines a public portfolio + blog with a private admin dashboard, a client portal, and a photo-delivery system.
 
 **What it does:**
 - Showcases professional services: developer advocacy, voiceover, technical education, brand consulting, and content creation
-- Hosts 70+ blog articles across technology, education, African heritage, fitness, and more
+- Hosts 70+ blog articles on a unified **MDX CMS** (rich, interactive posts authored from the admin and rendered from MongoDB), with RSS + JSON feeds
 - Provides a client portal for project-based access with per-project custom URLs
-- Includes a gallery system for client deliverables with Cloudinary-backed image hosting
-- Features an admin dashboard for managing content, projects, contacts, and analytics
+- Runs a **photo system**: a central library, private **client galleries with per-photo approvals**, and public **marketing galleries**
+- Routes client + publishing activity through the **WitUS Inbox** (submissions/comments/approvals) and **WitUS Outbox** (coming-soon social drafts on publish)
+- Features an admin dashboard for managing content, photos, galleries, projects, contacts, and analytics
 
 ## Features
 
-- **Landing Page** — Hero, services showcase, about section, portfolio, and contact form with reCAPTCHA v3
-- **Blog** — 70+ articles with categories, individual post pages, and admin management
-- **Client Portal** — Project-based access at `/portal/[projectId]` with JWT-authenticated sessions
-- **Admin Dashboard** — Manage blog posts, projects, gallery, contacts, education submissions, and workout feedback
-- **Gallery** — Cloudinary-integrated image gallery for clients
-- **Education** — Corvids e-book download and educational submission tracking
+- **Landing page** — Hero, services, about, portfolio, contact form with reCAPTCHA v3
+- **Blog (MDX CMS)** — 70+ posts in a unified `blog_posts` collection; authored in the admin MDX editor; rendered via `@mdx-js/mdx` with a closed component registry (`<Chart>`, `<Carousel>`, `<CodeBlock>`, `<YouTubeEmbed>`, …); ISR-cached. See [docs/MANAGE_BLOG.md](./docs/MANAGE_BLOG.md).
+- **Feeds** — `/feed.xml` (RSS 2.0) and `/feed.json` (JSON Feed), auto-updating from the same data layer
+- **Photo library** — upload once at `/admin/photos`, reuse across galleries, blog, and portfolio (Cloudinary-backed)
+- **Galleries** — private **client** galleries (access code, downloads, like/comment, **per-photo approve/reject**) and public **marketing** galleries at `/galleries`; admin can **send the gallery link to the client by email** and review approvals at `/admin/approvals`
+- **Client portal** — project-based access at `/portal/[projectId]` with JWT-authenticated sessions
+- **Admin dashboard** — manage blog posts, photos, galleries, projects, contacts, education submissions, and workout feedback
+- **Ecosystem integration** — signed-webhook dispatch to the WitUS Inbox (client/contact activity) and Outbox (social drafts)
+- **SEO + a11y** — per-page metadata, Article JSON-LD, robots, sitemap, skip-link, single-`<main>` landmarks
+- **Graceful errors** — branded 404 (`not-found`) and 500 (`error` / `global-error`) pages that route users back into the app
 - **Analytics** — Vercel Analytics + per-project engagement tracking
 
 ## Tech Stack
@@ -30,13 +35,15 @@ This is a full-stack Next.js web application serving as BAM's professional home 
 | Framework | Next.js 14 (App Router) |
 | Language | TypeScript |
 | Styling | TailwindCSS, Framer Motion |
-| Database | MongoDB Atlas (Mongoose) |
+| Database | MongoDB Atlas (official `mongodb` driver) |
+| Blog rendering | `@mdx-js/mdx` (`evaluate` + `react/jsx-runtime`) |
 | Auth | NextAuth v4 + JWT |
-| Storage | Cloudinary |
-| Email | Nodemailer (Gmail SMTP) |
+| Storage / media | Cloudinary |
+| Email | Nodemailer over SMTP (Mailgun in production) |
 | AI | Google Gemini API |
+| Ecosystem | WitUS Inbox + Outbox (HMAC-signed webhooks) |
 | Analytics | Vercel Analytics |
-| UI Components | Radix UI, Lucide React |
+| UI | Radix UI, Lucide React |
 
 ## Getting Started
 
@@ -46,7 +53,7 @@ This is a full-stack Next.js web application serving as BAM's professional home 
 - MongoDB Atlas cluster
 - Cloudinary account
 - Google reCAPTCHA v3 keys
-- Gmail account with app password
+- An SMTP provider (Mailgun in production) for outbound email
 - Google Gemini API key
 
 ### Install & Run
@@ -60,36 +67,17 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Environment Variables
 
-Create a `.env.local` file at the project root:
+Copy **[`.env.example`](./.env.example)** to `.env.local` and fill it in — that file is the canonical, commented list. The groups are:
 
-```env
-# Database
-MONGODB_URI=
-
-# Auth
-NEXTAUTH_SECRET=
-NEXTAUTH_URL=http://localhost:3000
-
-# Cloudinary
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
-
-# Email
-EMAIL_USER=
-EMAIL_PASS=
-
-# Google reCAPTCHA v3
-NEXT_PUBLIC_RECAPTCHA_SITE_KEY=
-RECAPTCHA_SECRET_KEY=
-
-# Google Gemini AI
-GEMINI_API_KEY=
-
-# Admin
-ADMIN_EMAIL=
-ADMIN_PASSWORD_HASH=
-```
+- **Database** — `MONGODB_URI` (plus legacy aliases `MONGODB_CONNECTION_STRING` / `MONGO_URI` / `DATABASE_URL`, kept in sync)
+- **Auth** — `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `JWT_SECRET`
+- **Admin** — `ADMIN_EMAIL`, `ADMIN_API_KEY`
+- **reCAPTCHA v3** — `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`
+- **Email (SMTP / Mailgun)** — `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
+- **Cloudinary** — `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
+- **WitUS Inbox** — `INBOX_INGEST_URL`, `INBOX_INGEST_SECRET`, `INBOX_SOURCE_SLUG`
+- **WitUS Outbox** — `OUTBOX_INGEST_URL`, `OUTBOX_INGEST_SECRET`, `OUTBOX_SOURCE_SLUG`, `OUTBOX_TRIGGER_ENABLED`, `PRODUCT_OWNER_USER_ID`
+- **AI** — `GEMINI_API_KEY`
 
 ## Key Routes
 
@@ -97,19 +85,23 @@ ADMIN_PASSWORD_HASH=
 |---|---|
 | `/` | Homepage |
 | `/experience` | Work experience timeline |
-| `/blog/[slug]` | Blog post |
+| `/projects` | WitUS ecosystem projects |
+| `/blog` · `/blog/[...slug]` | Blog listing · post (MDX/CMS) |
+| `/feed.xml` · `/feed.json` | RSS · JSON feeds |
+| `/photography` | Public photography showcase |
+| `/galleries` | Public marketing galleries |
+| `/client-gallery/[galleryId]` | Client gallery viewer (access-code gated) |
 | `/portal/[projectId]` | Client project portal |
-| `/client-gallery` | Public gallery |
-| `/education/corvids-ebook-download` | E-book download |
-| `/admin/*` | Admin dashboard (protected) |
+| `/intake` · `/hire` · `/partner` | Client intake forms |
+| `/admin/*` | Admin dashboard (protected): `blog/posts`, `photos`, `galleries`, `approvals`, `projects`, `contact`, `logs` |
 | `/login` | Login page |
 
 ## Docs
 
-See the [`/docs`](./docs/) directory for site management guides:
+See the [`/docs`](./docs/) directory for site-management guides:
 
+- [MANAGE_BLOG.md](./docs/MANAGE_BLOG.md) — Authoring posts in the MDX CMS admin
 - [MANAGE_SITE.md](./docs/MANAGE_SITE.md) — Adding experiences, projects, and skills
-- [MANAGE_BLOG.md](./docs/MANAGE_BLOG.md) — Blog management
 - [MANAGE_SHARE.md](./docs/MANAGE_SHARE.md) — Social sharing features
 
 ## Privacy

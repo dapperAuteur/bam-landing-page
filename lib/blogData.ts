@@ -15,17 +15,6 @@ export const blogPosts: BlogPost[] = [
     excerpt: "Most adults need 7 to 9 hours of sleep. A tiny group of people, about 1 in 100, feel great on far less. Here's what scientists have found in their genes, written for curious readers of any age."
   },
   {
-    slug: "penn-relays-2026-masters-sprint-results",
-    title: "Speed Beyond 50: 2026 Penn Relays Masters Sprint Recap",
-    description: "A deep dive into the Masters 50+ outcomes at the 2026 Penn Relays. Breaking down the 100m, 200m, and the thrilling 4x100m relays with full times.",
-    publishDate: "2026-05-04",
-    readTime: "6 min read",
-    category: "Athletics",
-    featured: true,
-    tags: ["Penn Relays", "Masters Athletics", "Sprinting", "Longevity", "Track and Field"],
-    excerpt: "Franklin Field never disappoints. This year's Masters sprints proved that explosive power isn't just a young man's game. From sub-11.5s 100m dashes to tactical relay wins, here's the breakdown of the 50+ division."
-  },
-  {
     slug: "gitkraken-accidental-rebase",
     title: "GitKraken and Accidental Rebases — Not as Scary as You Think",
     description: "One click in the GitKraken UI, a wave of panic, then thirty seconds with git reflog. A practical walkthrough of why accidental rebases are usually recoverable in under a minute.",
