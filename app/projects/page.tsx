@@ -4,18 +4,21 @@ import { getPageMetadata } from "@/lib/seo";
 export const metadata = getPageMetadata({
   title: "Projects",
   description:
-    "The WitUS ecosystem — eight interlinked products under one philosophy. CentenarianOS, Work.WitUS, FlashLearnAI, Wanderlearn, Fly.WitUS, WitUS Inbox, plus brandanthonymcdonald.com.",
+    "The WitUS ecosystem — a dozen-plus interlinked products and LangGraph agents under one philosophy: CentenarianOS, Work.WitUS, FlashLearnAI, Fly.WitUS, Tour Manager OS, Wanderlearn, Ride WitUS, WitUS Inbox/Outbox, a multi-agent coach, and brandanthonymcdonald.com.",
   path: "/projects",
 });
 
 interface ProjectCard {
   name: string;
   url?: string;
+  repo?: string;
   status: "🟢" | "🟡" | "🟠";
   tagline: string;
   stack: string;
   detail: string;
 }
+
+const GH = "https://github.com/dapperAuteur";
 
 const tierAProjects: ProjectCard[] = [
   {
@@ -29,14 +32,16 @@ const tierAProjects: ProjectCard[] = [
   {
     name: "CentenarianOS",
     url: "https://centenarianos.com",
+    repo: `${GH}/centenarian-os`,
     status: "🟢",
     tagline: "Multi-decade personal operating system: planner, nutrition, focus engine, health metrics, workouts, finance, travel, equipment, correlations, data hub, blog, recipes, LMS academy, and AI coach in a single modular monolith.",
     stack: "Next.js 14 · Supabase (RLS, real-time) · Stripe (subs + Connect) · Gemini · Cloudinary · IndexedDB",
-    detail: "84+ DB migrations across 14 modules. Offline-first sync with conflict resolution.",
+    detail: "84+ DB migrations across 14 modules. Offline-first sync with conflict resolution. Academy at centenarianos.com/academy.",
   },
   {
     name: "Work.WitUS",
     url: "https://work.witus.online",
+    repo: `${GH}/contractor-os`,
     status: "🟢",
     tagline: "Contractor management platform: jobs, time entries, AI-extracted invoices, document scanner for pay stubs and receipts, multi-day non-consecutive scheduling, mileage/expenses, push notifications, public job board, and a course academy.",
     stack: "Next.js 15 · Supabase (shared with CentenarianOS) · Stripe · Gemini 2.5 Flash · PWA",
@@ -45,51 +50,103 @@ const tierAProjects: ProjectCard[] = [
   {
     name: "FlashLearnAI",
     url: "https://flashlearnai.witus.online",
+    repo: `${GH}/flashlearn-ai`,
     status: "🟢",
     tagline: "AI flashcard platform: generate sets from topics, PDFs, YouTube videos, audio, or images; SM-2 spaced repetition; three study modes; Versus-mode ELO ratings; teams, classrooms, public API, white-label app.",
     stack: "Next.js 15 · React 19 · MongoDB · NextAuth · PowerSync · Stripe metered billing",
     detail: "Public REST API: 30 endpoints across 26 paths under /api/v1/, with an OpenAPI spec served at /api/v1/openapi. White-label sold separately.",
   },
   {
-    name: "Wanderlearn",
-    url: "https://wanderlearn.witus.online",
-    status: "🟢",
-    tagline: "Immersive 360°/drone place-based learning; every course anchored to a real location captured first-hand. Cross-linked into Centenarian Academy and Fly.WitUS via a shared Cloudinary tenant.",
-    stack: "Next.js · Cloudinary · Supabase",
-    detail: "Flagship course: MUCHO Museo del Chocolate, Mexico City.",
-  },
-  {
     name: "Fly.WitUS",
     url: "https://fly.witus.online",
+    repo: `${GH}/fly-witus`,
     status: "🟢",
     tagline: "UAS pre-flight checklist and mission log for FAA Part 107 compliance: 8-section checklist (50+ items), NOAA weather auto-fetch, battery/flight logging, FAA-compliant PDF export.",
     stack: "Next.js · IndexedDB · NOAA API · offline-first PWA",
     detail: "Real Part 107 use case driving the schema.",
   },
   {
+    name: "Tour Manager OS",
+    url: "https://tour.witus.online",
+    repo: `${GH}/tour-manager-os`,
+    status: "🟢",
+    tagline: "Touring musicians' platform replacing spreadsheets and printed itineraries: digital advance sheets, auto-generated daily itineraries, real-time per-show P&L, merch management with Stripe checkout, fan engagement, family collaboration, per-tour document hub.",
+    stack: "Next.js · Supabase · Stripe · PWA · WCAG 2.1 AA",
+    detail: "Per-show P&L and QR ticketing for working musicians.",
+  },
+  {
     name: "WitUS Inbox",
+    url: "https://inbox.witus.online",
+    repo: `${GH}/witus-inbox`,
     status: "🟢",
     tagline: "Cross-product submission triage and reply surface. Ingests signed webhooks from every WitUS product, stores canonical records, lets me read and reply from one dashboard.",
     stack: "Next.js 16 · Drizzle · Neon Postgres · NextAuth · Mailgun · Mobile Text Alerts SMS",
-    detail: "The connective tissue for the ecosystem. Internal-facing — no public URL.",
+    detail: "The connective tissue for the ecosystem — the webhook bus all products report into.",
+  },
+  {
+    name: "WitUS Outbox",
+    url: "https://outbox.witus.online",
+    repo: `${GH}/witus-outbox`,
+    status: "🟢",
+    tagline: "Cross-product outbound publishing: HMAC-signed webhooks schedule and post to social platforms via a publisher-agnostic adapter pattern, with Google Apps Script reconciliation.",
+    stack: "Next.js 16 · Drizzle · Neon Postgres · NextAuth",
+    detail: "The outbound twin of WitUS Inbox — every product can announce through one service.",
+  },
+  {
+    name: "Centenarian Coach (multi-agent)",
+    url: "https://centenarian-coach-multiagent.witus.online",
+    repo: `${GH}/centenarian-coach-multiagent`,
+    status: "🟢",
+    tagline: "LangGraph supervisor with specialist subgraphs — a coordinator routes your question to the right specialists, each with its own retrieval store and tools, then weaves the findings into one cited answer.",
+    stack: "LangGraph.js · @langchain (Anthropic/OpenAI/Mistral/Ollama) · Drizzle · Next.js · TypeScript · Vercel AI SDK",
+    detail: "Live demo gated to one admin email + a paid-access waitlist. Portfolio + course artifact.",
+  },
+  {
+    name: "Wanderlearn Field Reporter",
+    repo: `${GH}/wanderlearn-field-reporter`,
+    status: "🟢",
+    tagline: "LangGraph agent that turns a raw Wanderlearn capture (location transcript, GPS, photo refs) into a publishable, cited lesson draft — it researches the place, drafts an objectives-first outline, writes, then self-critiques against a rubric and revises until it passes.",
+    stack: "LangGraph.js · @langchain · Drizzle · Next.js · TypeScript",
+    detail: "Self-critique / revision loop with a revision cap. A sibling of Wanderlearn.",
+  },
+  {
+    name: "WitUS Triage Agent",
+    url: "https://triage.agent.witus.online",
+    repo: `${GH}/witus-triage-agent`,
+    status: "🟢",
+    tagline: "LangGraph agent that reads WitUS Inbox submissions, classifies and enriches them, proposes an action, and waits for a human to approve before doing anything irreversible.",
+    stack: "LangGraph.js · @langchain · Drizzle · Next.js · TypeScript · LangSmith",
+    detail: "Human-in-the-loop with LangSmith observability. Plugs into the Inbox webhook bus.",
   },
   {
     name: "brandanthonymcdonald.com",
     url: "https://brandanthonymcdonald.com",
+    repo: `${GH}/bam-landing-page`,
     status: "🟢",
-    tagline: "Personal portfolio + blog + client portal with per-project custom URLs and JWT-authenticated sessions; admin dashboard manages content, projects, gallery, contacts, and analytics.",
-    stack: "Next.js 14 · MongoDB Atlas · NextAuth · Cloudinary · reCAPTCHA v3 · Gemini",
-    detail: "70+ articles. Active client portal in production.",
+    tagline: "Personal portfolio + blog + client portal with per-project custom URLs and JWT-authenticated sessions; admin dashboard manages an MDX blog, projects, photo library, client galleries with approvals, contacts, and analytics.",
+    stack: "Next.js 14 · MongoDB Atlas · NextAuth · @mdx-js/mdx · Cloudinary · reCAPTCHA v3 · Gemini",
+    detail: "70+ articles on a unified MDX CMS. Active client portal + photo-approval galleries in production.",
   },
 ];
 
 const tierBProjects: ProjectCard[] = [
   {
-    name: "Tour Manager OS",
+    name: "Wanderlearn",
+    url: "https://wanderlearn.witus.online/en",
+    repo: `${GH}/wanderlearn-app`,
     status: "🟠",
-    tagline: "Touring musicians' platform replacing spreadsheets and printed itineraries: digital advance sheets, auto-generated daily itineraries, real-time per-show P&L, merch management with Stripe checkout, fan engagement, family collaboration, per-tour document hub.",
-    stack: "Next.js · Supabase · Stripe · PWA · WCAG 2.1 AA",
-    detail: "In-progress build.",
+    tagline: "Immersive 360°/drone place-based learning; every course anchored to a real location captured first-hand. Cross-linked into Centenarian Academy and Fly.WitUS via a shared Cloudinary tenant.",
+    stack: "Next.js 16 · Neon Postgres (Drizzle) · Better Auth · Cloudinary · Stripe · i18n (EN/ES) · PWA",
+    detail: "Flagship course: MUCHO Museo del Chocolate, Mexico City. Live and being iterated toward broader launch.",
+  },
+  {
+    name: "Ride WitUS",
+    url: "https://ride.witus.online",
+    repo: `${GH}/ride-wit-us`,
+    status: "🟠",
+    tagline: "Audio-first bicycle-mechanic curriculum in podcast form — 4 seasons, 32 episodes with episode pages and cross-product links.",
+    stack: "Next.js 15 · TypeScript · static · Mailgun",
+    detail: "Live + actively in-progress.",
   },
 ];
 
@@ -120,7 +177,19 @@ function ProjectCardView({ project }: { project: ProjectCard }) {
       <p className="text-xs font-mono text-gray-500 bg-gray-50 px-3 py-2 rounded mb-3 break-words">
         {project.stack}
       </p>
-      <p className="text-sm text-gray-600 italic">{project.detail}</p>
+      <p className="text-sm text-gray-600 italic mb-3">{project.detail}</p>
+      <div className="flex flex-wrap gap-4 text-sm">
+        {project.url && (
+          <a href={project.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-medium">
+            Visit ↗
+          </a>
+        )}
+        {project.repo && (
+          <a href={project.repo} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 font-medium">
+            Code ↗
+          </a>
+        )}
+      </div>
     </article>
   );
 }
@@ -134,7 +203,7 @@ export default function ProjectsPage() {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Projects</h1>
             <p className="text-xl text-blue-100 mb-2">
-              The WitUS ecosystem — eight interlinked products under one philosophy.
+              The WitUS ecosystem — a dozen-plus interlinked products and LangGraph agents under one philosophy.
             </p>
             <p className="text-lg text-blue-200">
               I ship full-stack products, write about the work, teach it, and operate the platforms.
@@ -322,12 +391,17 @@ export default function ProjectsPage() {
             <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono">
 {`B4C LLC / AwesomeWebStore.com   ← legal entity
 └── WitUS.online                ← parent brand
-    ├── CentenarianOS.com       ← multi-decade personal OS
+    ├── CentenarianOS.com       ← multi-decade personal OS (+ Academy)
     ├── Work.WitUS.Online       ← contractor management
     ├── FlashLearnAI            ← AI flashcards + public API
+    ├── Tour Manager OS         ← touring-musician platform
     ├── Wanderlearn             ← 360°/drone place-based learning
+    ├── Ride WitUS              ← audio-first bike-mechanic course
     ├── Fly.WitUS               ← UAS pre-flight + flight log
-    └── WitUS Inbox             ← cross-product webhook triage`}
+    ├── WitUS Inbox             ← cross-product webhook triage (in)
+    ├── WitUS Outbox            ← cross-product publishing (out)
+    └── LangGraph agents        ← Coach (multi-agent), Field Reporter,
+                                   Triage Agent`}
             </pre>
           </div>
         </div>
