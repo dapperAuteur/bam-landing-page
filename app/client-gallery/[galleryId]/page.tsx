@@ -118,9 +118,26 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
     }
   }
 
+  const setApproval = async (itemId: string, status: 'approved' | 'rejected') => {
+    // Optimistic update first so the client gets instant feedback.
+    const apply = (p: ClientMedia) =>
+      p.id === itemId ? { ...p, approvalStatus: status } : p
+    setGallery(prev => (prev ? { ...prev, photos: prev.photos.map(apply) } : prev))
+    setSelectedItem(prev => (prev && prev.id === itemId ? { ...prev, approvalStatus: status } : prev))
+    try {
+      await fetch(`/api/client-gallery/${params.galleryId}/photos/${itemId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: status === 'approved' ? 'approve' : 'reject' })
+      })
+    } catch {
+      // Optimistic update stays; client can retry.
+    }
+  }
+
   const toggleFavorite = async (itemId: string) => {
     try {
-      const response = await fetch(`/api/admin/galleries/${params.galleryId}/photos/${itemId}`, {
+      const response = await fetch(`/api/client-gallery/${params.galleryId}/photos/${itemId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'like' })
@@ -149,7 +166,7 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
 
   const addComment = async (itemId: string, text: string) => {
     try {
-      const response = await fetch(`/api/admin/galleries/${params.galleryId}/photos/${itemId}`, {
+      const response = await fetch(`/api/client-gallery/${params.galleryId}/photos/${itemId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'comment', comment: text })
@@ -271,6 +288,8 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
                 onSelect={setSelectedItem}
                 onDownload={handleDownload}
                 onToggleFavorite={toggleFavorite}
+                onApprove={setApproval}
+                allowApprovals={gallery.settings.allowApprovals}
               />
             ))}
           </div>
@@ -282,10 +301,12 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
         <Lightbox
           item={selectedItem}
           allowDownloads={gallery.settings.allowDownloads}
+          allowApprovals={gallery.settings.allowApprovals}
           onClose={() => setSelectedItem(null)}
           onDownload={handleDownload}
           onToggleFavorite={toggleFavorite}
           onAddComment={addComment}
+          onApprove={setApproval}
         />
       )}
     </div>

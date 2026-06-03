@@ -9,6 +9,8 @@ interface MediaCardProps {
   onSelect: (item: ClientMedia) => void
   onDownload: (item: ClientMedia) => void
   onToggleFavorite: (id: string) => void
+  allowApprovals?: boolean
+  onApprove?: (photoId: string, status: 'approved' | 'rejected') => void
 }
 
 function MediaTypeIcon({ type }: { type: string }) {
@@ -35,7 +37,7 @@ function MediaTypeIcon({ type }: { type: string }) {
   return null
 }
 
-export default function MediaCard({ item, allowDownloads, onSelect, onDownload, onToggleFavorite }: MediaCardProps) {
+export default function MediaCard({ item, allowDownloads, onSelect, onDownload, onToggleFavorite, allowApprovals, onApprove }: MediaCardProps) {
   const mediaType = item.mediaType || 'image'
 
   return (
@@ -68,6 +70,17 @@ export default function MediaCard({ item, allowDownloads, onSelect, onDownload, 
 
       <MediaTypeIcon type={mediaType} />
 
+      {/* Approval status badge */}
+      {allowApprovals && item.approvalStatus && item.approvalStatus !== 'pending' && (
+        <div
+          className={`absolute top-2 left-2 text-white px-2 py-1 rounded text-xs font-semibold ${
+            item.approvalStatus === 'approved' ? 'bg-green-600' : 'bg-red-600'
+          }`}
+        >
+          {item.approvalStatus === 'approved' ? '✅ Approved' : '❌ Rejected'}
+        </div>
+      )}
+
       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
 
       {/* Action buttons */}
@@ -79,6 +92,31 @@ export default function MediaCard({ item, allowDownloads, onSelect, onDownload, 
         >
           {item.isFavorite ? '❤️' : '🤍'}
         </button>
+
+        {allowApprovals && onApprove && (
+          <>
+            <button
+              onClick={(e) => { e.stopPropagation(); onApprove(item.id, 'approved') }}
+              className={`p-2 rounded-full min-w-[44px] min-h-[44px] flex items-center justify-center ${
+                item.approvalStatus === 'approved' ? 'bg-green-600 text-white' : 'bg-white/80 hover:bg-white'
+              }`}
+              aria-label="Approve"
+              aria-pressed={item.approvalStatus === 'approved'}
+            >
+              ✅
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); onApprove(item.id, 'rejected') }}
+              className={`p-2 rounded-full min-w-[44px] min-h-[44px] flex items-center justify-center ${
+                item.approvalStatus === 'rejected' ? 'bg-red-600 text-white' : 'bg-white/80 hover:bg-white'
+              }`}
+              aria-label="Reject"
+              aria-pressed={item.approvalStatus === 'rejected'}
+            >
+              ❌
+            </button>
+          </>
+        )}
 
         {allowDownloads && (
           <button

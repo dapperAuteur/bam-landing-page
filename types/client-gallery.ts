@@ -3,6 +3,9 @@ export type MediaType = 'image' | 'video' | 'document'
 export interface ClientGallery {
   _id?: string
   galleryId: string // URL-safe unique identifier
+  // 'client' = private delivery/approval gallery; 'marketing' = public showcase
+  // for prospective clients (listed at /galleries, no access code).
+  type?: 'client' | 'marketing'
   clientName: string
   clientEmail: string
   eventName: string
@@ -28,6 +31,9 @@ export interface ClientMedia {
   mimeType?: string // e.g. 'application/pdf', 'video/mp4'
   isFavorite?: boolean
   likes?: number
+  // Client approval workflow (when settings.allowApprovals is on)
+  approvalStatus?: 'pending' | 'approved' | 'rejected'
+  approvedAt?: Date | string
   comments?: Array<{
     id?: string
     text: string
@@ -56,6 +62,7 @@ export interface GallerySettings {
   showMetadata: boolean
   layout: 'grid' | 'masonry' | 'slideshow'
   downloadsPerSession?: number // Rate limiting
+  allowApprovals?: boolean // Let the client approve/reject each photo
 }
 
 export interface GalleryAccess {

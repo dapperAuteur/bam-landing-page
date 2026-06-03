@@ -8,19 +8,23 @@ import CommentSection from './CommentSection'
 interface LightboxProps {
   item: ClientMedia
   allowDownloads: boolean
+  allowApprovals?: boolean
   onClose: () => void
   onDownload: (item: ClientMedia) => void
   onToggleFavorite: (id: string) => void
   onAddComment: (photoId: string, text: string) => void
+  onApprove?: (photoId: string, status: 'approved' | 'rejected') => void
 }
 
 export default function Lightbox({
   item,
   allowDownloads,
+  allowApprovals,
   onClose,
   onDownload,
   onToggleFavorite,
-  onAddComment
+  onAddComment,
+  onApprove
 }: LightboxProps) {
   const [showComments, setShowComments] = useState(false)
   const mediaType = item.mediaType || 'image'
@@ -126,6 +130,32 @@ export default function Lightbox({
           >
             💬 {item.comments?.length || 0}
           </button>
+
+          {/* Client approval */}
+          {allowApprovals && onApprove && (
+            <>
+              <button
+                onClick={() => onApprove(item.id, 'approved')}
+                aria-pressed={item.approvalStatus === 'approved'}
+                aria-label="Approve this photo"
+                className={`px-3 py-2 rounded-md min-h-[44px] text-white ${
+                  item.approvalStatus === 'approved' ? 'bg-green-600' : 'bg-black/50 hover:bg-green-700'
+                }`}
+              >
+                ✅ Approve
+              </button>
+              <button
+                onClick={() => onApprove(item.id, 'rejected')}
+                aria-pressed={item.approvalStatus === 'rejected'}
+                aria-label="Reject this photo"
+                className={`px-3 py-2 rounded-md min-h-[44px] text-white ${
+                  item.approvalStatus === 'rejected' ? 'bg-red-600' : 'bg-black/50 hover:bg-red-700'
+                }`}
+              >
+                ❌ Reject
+              </button>
+            </>
+          )}
         </div>
 
         {/* Download button */}
