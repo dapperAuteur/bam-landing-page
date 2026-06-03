@@ -10,7 +10,26 @@ export async function POST(
     const { action, comment, isFavorite } = await request.json()
     const client = await clientPromise
     const db = client.db('bam_portfolio')
-    
+
+    // Client approval: set this photo's approvalStatus (no auth — this is the
+    // public, access-code-gated client viewer acting on its own gallery).
+    if (action === 'approve' || action === 'reject') {
+      const result = await db.collection('client_galleries').updateOne(
+        { galleryId: params.galleryId, 'photos.id': params.photoId },
+        {
+          $set: {
+            'photos.$.approvalStatus': action === 'approve' ? 'approved' : 'rejected',
+            'photos.$.approvedAt': new Date(),
+            updatedAt: new Date(),
+          } as any,
+        }
+      )
+      if (result.matchedCount === 0) {
+        return NextResponse.json({ error: 'Photo not found' }, { status: 404 })
+      }
+      return NextResponse.json({ success: true })
+    }
+
     if (action === 'comment' && comment) {
       // FIXED: Use type assertion for MongoDB operation
       const result = await db.collection('client_galleries').updateOne(

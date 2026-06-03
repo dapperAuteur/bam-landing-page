@@ -42,6 +42,7 @@ export async function POST(request: NextRequest) {
     
     const gallery: ClientGallery = {
       galleryId,
+      type: data.type === 'marketing' ? 'marketing' : 'client',
       clientName: data.clientName,
       clientEmail: data.clientEmail,
       eventName: data.eventName,
