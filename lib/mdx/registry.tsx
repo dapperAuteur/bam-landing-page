@@ -4,6 +4,7 @@ import { CodeBlock } from '@/components/blog/CodeBlock'
 import { YouTubeEmbed } from '@/components/blog/YouTubeEmbed'
 import { SeriesTableOfContents } from '@/components/blog/SeriesNavigation'
 import Chart from '@/components/blog/Chart'
+import PhotoCarousel from '@/components/ui/PhotoCarousel'
 
 // The CLOSED component registry for DB-authored MDX. MDX can only render base
 // HTML elements (styled below) plus the named components registered here — it
@@ -47,6 +48,7 @@ function Anchor({ href = '', ...props }: React.AnchorHTMLAttributes<HTMLAnchorEl
 export const mdxComponents = {
   // Named interactive components authors can use in MDX
   Chart,
+  Carousel: PhotoCarousel,
   CodeBlock,
   YouTubeEmbed,
   SeriesTableOfContents,
