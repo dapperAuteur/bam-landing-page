@@ -1,7 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import PhotoPicker from '@/components/ui/PhotoPicker'
+import type { Photo } from '@/types/photo'
 
 interface MdxBlogEditorProps {
   // 'new' (or undefined) = create; otherwise a blog_posts _id to edit.
@@ -50,6 +52,19 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [slugTouched, setSlugTouched] = useState(false)
+  const [pickerOpen, setPickerOpen] = useState(false)
+  const contentRef = useRef<HTMLTextAreaElement>(null)
+
+  // Insert a library photo as a markdown image at the cursor (renders via the
+  // MDX `img` registry component).
+  function insertPhoto(photo: Photo) {
+    const md = `\n\n![${photo.alt || photo.title || 'photo'}](${photo.originalUrl})\n\n`
+    const el = contentRef.current
+    const pos = el ? el.selectionStart : form.content.length
+    const next = form.content.slice(0, pos) + md + form.content.slice(pos)
+    set('content', next)
+    setPickerOpen(false)
+  }
 
   useEffect(() => {
     if (isNew) return
@@ -186,18 +201,36 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
       </div>
 
       <div>
-        <label className={label}>Content (MDX)</label>
+        <div className="flex items-center justify-between mb-1">
+          <label className={label}>Content (MDX)</label>
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            className="text-sm px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+          >
+            🖼️ Insert photo from library
+          </button>
+        </div>
         <p className="text-xs text-gray-500 mb-1">
           Markdown + components: <code>&lt;Chart&gt;</code>, <code>&lt;CodeBlock&gt;</code>,
           <code> &lt;YouTubeEmbed&gt;</code>, fenced code blocks.
         </p>
         <textarea
+          ref={contentRef}
           className={`${input} font-mono`}
           rows={20}
           value={form.content}
           onChange={e => set('content', e.target.value)}
         />
       </div>
+
+      <PhotoPicker
+        isOpen={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={insertPhoto}
+        title="Insert a photo"
+        description="Pick a photo from your library to insert into the post."
+      />
 
       <div className="flex items-center gap-3 border-t pt-4">
         <button
