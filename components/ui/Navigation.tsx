@@ -40,6 +40,9 @@ export default function Navigation() {
             <Link href="/blog" className="text-gray-700 hover:text-blue-600 transition-colors">
               Blog
             </Link>
+            <Link href="/photography" className="text-gray-700 hover:text-blue-600 transition-colors">
+              Photography
+            </Link>
             <Link href="/#about" className="text-gray-700 hover:text-blue-600 transition-colors">
               About
             </Link>
@@ -131,6 +134,9 @@ export default function Navigation() {
             </Link>
             <Link href="/blog" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
               Blog
+            </Link>
+            <Link href="/photography" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
+              Photography
             </Link>
             <Link href="/#about" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
               About

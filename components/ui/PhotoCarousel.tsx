@@ -13,14 +13,15 @@ interface PhotoCarouselProps {
   images: CarouselImage[]
   /** tailwind aspect ratio class for the frame; default 16/10 */
   aspect?: string
+  initialIndex?: number
   className?: string
 }
 
 // Reusable photo carousel for blog posts (via the MDX <Carousel> component) and
 // galleries (slideshow). Keyboard: ← / →. Serializable props only (works in MDX
 // across the RSC boundary).
-export default function PhotoCarousel({ images, aspect = 'aspect-[16/10]', className }: PhotoCarouselProps) {
-  const [index, setIndex] = useState(0)
+export default function PhotoCarousel({ images, aspect = 'aspect-[16/10]', initialIndex = 0, className }: PhotoCarouselProps) {
+  const [index, setIndex] = useState(initialIndex)
   const count = images?.length ?? 0
   const go = useCallback((delta: number) => setIndex(prev => (prev + delta + count) % count), [count])
 

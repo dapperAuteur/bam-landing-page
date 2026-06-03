@@ -3,6 +3,8 @@
 
 import { useState, useEffect } from 'react'
 import { ClientGallery, ClientMedia, GallerySettings } from '../../../types/client-gallery'
+import PhotoPicker from '@/components/ui/PhotoPicker'
+import type { Photo } from '@/types/photo'
 
 function getMediaSummary(photos: ClientMedia[]): string {
   if (!photos || photos.length === 0) return '0 items'
@@ -22,10 +24,24 @@ export default function AdminGalleriesPage() {
   const [loading, setLoading] = useState(true)
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [editingGallery, setEditingGallery] = useState<ClientGallery | null>(null)
+  const [libraryPickerGalleryId, setLibraryPickerGalleryId] = useState<string | null>(null)
 
   useEffect(() => {
     fetchGalleries()
   }, [])
+
+  const addFromLibrary = async (photos: Photo[]) => {
+    const galleryId = libraryPickerGalleryId
+    setLibraryPickerGalleryId(null)
+    if (!galleryId || photos.length === 0) return
+    const res = await fetch(`/api/admin/galleries/${galleryId}/photos/from-library`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ photoIds: photos.map(p => p.id) }),
+    })
+    if (res.ok) fetchGalleries()
+    else alert('Failed to add photos from library')
+  }
 
   const handlePhotoUpload = async (galleryId: string, files: FileList) => {
     setUploadingPhotos(true)
@@ -412,6 +428,13 @@ export default function AdminGalleriesPage() {
                 >
                   Upload Media
                 </label>
+                <button
+                  type="button"
+                  onClick={() => setLibraryPickerGalleryId(gallery.galleryId)}
+                  className="inline-block mt-2 ml-2 px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                >
+                  Add from library
+                </button>
                 <div className="mt-2 flex space-x-4 text-sm">
                   <span className={`px-2 py-1 rounded-full ${
                     gallery.settings.allowDownloads ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -507,6 +530,15 @@ export default function AdminGalleriesPage() {
           </button>
         </div>
       )}
+
+      <PhotoPicker
+        isOpen={libraryPickerGalleryId !== null}
+        onClose={() => setLibraryPickerGalleryId(null)}
+        allowMultiple
+        onSelectMultiple={addFromLibrary}
+        title="Add photos from library"
+        description="Pick library photos to add to this gallery."
+      />
     </div>
   )
 }
