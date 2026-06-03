@@ -18,11 +18,20 @@ export const metadata: Metadata = {
     siteName: 'Brand Anthony McDonald',
     type: 'website',
     locale: 'en_US',
+    images: [
+      {
+        url: '/api/og?title=Brand%20Anthony%20McDonald&category=Portfolio&eyebrow=Developer%20Relations%20%C2%B7%20Voiceover%20%C2%B7%20Consulting',
+        width: 1200,
+        height: 630,
+        alt: 'Brand Anthony McDonald',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Brand Anthony McDonald | Developer Relations, Voiceover & Consulting',
     description: 'Developer advocacy, professional voiceover, and strategic consulting.',
+    images: ['/api/og?title=Brand%20Anthony%20McDonald&category=Portfolio&eyebrow=Developer%20Relations%20%C2%B7%20Voiceover%20%C2%B7%20Consulting'],
   },
   alternates: {
     canonical: '/',
