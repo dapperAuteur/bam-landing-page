@@ -34,6 +34,7 @@ export interface ClientMedia {
   // Client approval workflow (when settings.allowApprovals is on)
   approvalStatus?: 'pending' | 'approved' | 'rejected'
   approvedAt?: Date | string
+  approvedBy?: string // reviewer name captured client-side
   comments?: Array<{
     id?: string
     text: string

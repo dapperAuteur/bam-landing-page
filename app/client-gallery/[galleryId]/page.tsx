@@ -23,6 +23,16 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
   const [downloadingAll, setDownloadingAll] = useState(false)
   const [activeFilter, setActiveFilter] = useState<MediaType | 'all'>('all')
   const [showSlideshow, setShowSlideshow] = useState(false)
+  const [reviewer, setReviewer] = useState('')
+
+  // Remember the reviewer's name per gallery so approvals are attributed.
+  useEffect(() => {
+    const saved = typeof window !== 'undefined' ? window.localStorage.getItem(`gallery-reviewer-${params.galleryId}`) : null
+    if (saved) setReviewer(saved)
+  }, [params.galleryId])
+  useEffect(() => {
+    if (typeof window !== 'undefined' && reviewer) window.localStorage.setItem(`gallery-reviewer-${params.galleryId}`, reviewer)
+  }, [reviewer, params.galleryId])
 
   useEffect(() => {
     fetchGallery()
@@ -130,7 +140,7 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
       await fetch(`/api/client-gallery/${params.galleryId}/photos/${itemId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: status === 'approved' ? 'approve' : 'reject' })
+        body: JSON.stringify({ action: status === 'approved' ? 'approve' : 'reject', reviewer })
       })
     } catch {
       // Optimistic update stays; client can retry.
@@ -171,7 +181,7 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
       const response = await fetch(`/api/client-gallery/${params.galleryId}/photos/${itemId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'comment', comment: text })
+        body: JSON.stringify({ action: 'comment', comment: text, reviewer })
       })
 
       if (response.ok) {
@@ -264,6 +274,23 @@ export default function ClientGalleryPage({ params }: ClientGalleryPageProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Reviewer identity (for approvals) */}
+      {gallery.settings.allowApprovals && (
+        <div className="max-w-7xl mx-auto px-4 pt-4">
+          <div className="bg-blue-50 border border-blue-200 rounded-md px-4 py-3 flex flex-wrap items-center gap-3 text-sm">
+            <span className="text-blue-900 font-medium">Reviewing as:</span>
+            <input
+              value={reviewer}
+              onChange={(e) => setReviewer(e.target.value)}
+              placeholder={gallery.clientName || 'Your name'}
+              className="flex-1 min-w-[180px] border border-gray-300 rounded px-3 py-1.5"
+              aria-label="Your name (for approvals)"
+            />
+            <span className="text-blue-800/70">Your name is saved with the photos you approve or reject.</span>
           </div>
         </div>
       )}

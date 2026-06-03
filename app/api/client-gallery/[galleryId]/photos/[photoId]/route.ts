@@ -7,9 +7,10 @@ export async function POST(
   { params }: { params: { galleryId: string; photoId: string } }
 ) {
   try {
-    const { action, comment, isFavorite } = await request.json()
+    const { action, comment, isFavorite, reviewer } = await request.json()
     const client = await clientPromise
     const db = client.db('bam_portfolio')
+    const by = typeof reviewer === 'string' && reviewer.trim() ? reviewer.trim().slice(0, 80) : undefined
 
     // Client approval: set this photo's approvalStatus (no auth — this is the
     // public, access-code-gated client viewer acting on its own gallery).
@@ -20,6 +21,7 @@ export async function POST(
           $set: {
             'photos.$.approvalStatus': action === 'approve' ? 'approved' : 'rejected',
             'photos.$.approvedAt': new Date(),
+            'photos.$.approvedBy': by ?? null,
             updatedAt: new Date(),
           } as any,
         }
@@ -34,14 +36,15 @@ export async function POST(
       // FIXED: Use type assertion for MongoDB operation
       const result = await db.collection('client_galleries').updateOne(
         { galleryId: params.galleryId, 'photos.id': params.photoId },
-        { 
-          $push: { 
-            'photos.$.comments': { 
-              text: comment, 
+        {
+          $push: {
+            'photos.$.comments': {
+              text: comment,
               timestamp: new Date(),
-              id: Date.now().toString()
+              id: Date.now().toString(),
+              author: by ?? null,
             }
-          } as any 
+          } as any
         }
       )
       
