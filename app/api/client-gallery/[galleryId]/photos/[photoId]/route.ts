@@ -30,6 +30,31 @@ export async function POST(
       if (result.matchedCount === 0) {
         return NextResponse.json({ error: 'Photo not found' }, { status: 404 })
       }
+
+      // Route the approve/reject decision into the WitUS Inbox so every client
+      // touchpoint (shares, comments, approvals) lands in one thread. Non-blocking.
+      const gallery = await db
+        .collection('client_galleries')
+        .findOne(
+          { galleryId: params.galleryId },
+          { projection: { clientName: 1, clientEmail: 1, eventName: 1 } }
+        )
+      await notifyInbox(
+        {
+          form_type: 'gallery-approval',
+          submitter_name: by ?? (gallery?.clientName as string | undefined),
+          submitter_email: gallery?.clientEmail as string | undefined,
+          payload: {
+            galleryId: params.galleryId,
+            photoId: params.photoId,
+            eventName: gallery?.eventName ?? null,
+            decision: action === 'approve' ? 'approved' : 'rejected',
+            reviewer: by ?? null,
+          },
+        },
+        request
+      )
+
       return NextResponse.json({ success: true })
     }
 
