@@ -13,11 +13,38 @@ interface PostRow {
   featured?: boolean
 }
 
+// Lightweight fuzzy matcher — case-insensitive subsequence with bonuses for
+// consecutive runs and word-boundary starts. Returns null when the query's
+// characters don't all appear in order. No external dependency.
+function fuzzyScore(query: string, text: string): number | null {
+  const q = query.toLowerCase()
+  const t = text.toLowerCase()
+  if (!q) return 0
+  let score = 0
+  let ti = 0
+  let prevMatched = false
+  for (let qi = 0; qi < q.length; qi++) {
+    const ch = q[qi]
+    let found = -1
+    for (let i = ti; i < t.length; i++) {
+      if (t[i] === ch) { found = i; break }
+    }
+    if (found === -1) return null
+    score += 1
+    if (prevMatched && found === ti) score += 4 // consecutive run
+    if (found === 0 || /[\s\-/_.]/.test(t[found - 1])) score += 3 // word boundary
+    ti = found + 1
+    prevMatched = true
+  }
+  return score
+}
+
 export default function MdxBlogPostsDashboard() {
   const [posts, setPosts] = useState<PostRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [filter, setFilter] = useState<'all' | 'draft' | 'published' | 'cms'>('all')
+  const [query, setQuery] = useState('')
 
   useEffect(() => { void load() }, [])
 
@@ -42,11 +69,28 @@ export default function MdxBlogPostsDashboard() {
     else alert('Delete failed')
   }
 
-  const shown = posts.filter(p =>
+  const byStatus = posts.filter(p =>
     filter === 'all' ? true :
     filter === 'cms' ? p.contentSource === 'cms' :
     p.status === filter,
   )
+
+  // Fuzzy-rank by query across title, slug, and category; best field score wins.
+  const q = query.trim()
+  const shown = !q
+    ? byStatus
+    : byStatus
+        .map(p => {
+          const scores = [
+            fuzzyScore(q, p.title),
+            fuzzyScore(q, p.slug),
+            p.category ? fuzzyScore(q, p.category) : null,
+          ].filter((s): s is number => s !== null)
+          return { p, score: scores.length ? Math.max(...scores) : null }
+        })
+        .filter((r): r is { p: PostRow; score: number } => r.score !== null)
+        .sort((a, b) => b.score - a.score)
+        .map(r => r.p)
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -60,17 +104,43 @@ export default function MdxBlogPostsDashboard() {
         </Link>
       </div>
 
-      <div className="flex gap-2 mb-4">
-        {(['all', 'published', 'draft', 'cms'] as const).map(f => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`px-3 py-1 rounded-full text-sm ${filter === f ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-gray-700'}`}
-          >
-            {f}
-          </button>
-        ))}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+        <div className="flex gap-2">
+          {(['all', 'published', 'draft', 'cms'] as const).map(f => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-3 py-1 rounded-full text-sm ${filter === f ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-gray-700'}`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+        <div className="relative sm:ml-auto w-full sm:w-72">
+          <input
+            type="search"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="Fuzzy search title, slug, category…"
+            aria-label="Search posts"
+            className="w-full rounded-md border border-gray-300 pl-3 pr-8 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {query && (
+            <button
+              onClick={() => setQuery('')}
+              aria-label="Clear search"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              ×
+            </button>
+          )}
+        </div>
       </div>
+      {!loading && !error && (
+        <p className="text-xs text-gray-400 mb-2">
+          {shown.length} {shown.length === 1 ? 'post' : 'posts'}{query ? ` matching “${query}”` : ''}
+        </p>
+      )}
 
       {loading && <div className="text-gray-500">Loading…</div>}
       {error && <div className="rounded-md bg-red-50 text-red-700 px-4 py-2 text-sm">{error}</div>}
