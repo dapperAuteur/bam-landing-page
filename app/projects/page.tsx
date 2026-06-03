@@ -124,7 +124,7 @@ const tierAProjects: ProjectCard[] = [
     repo: `${GH}/bam-landing-page`,
     status: "🟢",
     tagline: "Personal portfolio + blog + client portal with per-project custom URLs and JWT-authenticated sessions; admin dashboard manages an MDX blog, projects, photo library, client galleries with approvals, contacts, and analytics.",
-    stack: "Next.js 14 · MongoDB Atlas · NextAuth · @mdx-js/mdx · Cloudinary · reCAPTCHA v3 · Gemini",
+    stack: "Next.js 16 · MongoDB Atlas · NextAuth · @mdx-js/mdx · Cloudinary · reCAPTCHA v3 · Gemini",
     detail: "70+ articles on a unified MDX CMS. Active client portal + photo-approval galleries in production.",
   },
 ];
@@ -428,7 +428,7 @@ export default function ProjectsPage() {
                 Partner with me
               </Link>
               <Link
-                href="/blog"
+                href="/blog/legacy"
                 className="btn-secondary border-2 border-gray-300 text-gray-700 hover:border-gray-500"
               >
                 Read the blog
