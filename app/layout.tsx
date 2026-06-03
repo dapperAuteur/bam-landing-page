@@ -24,6 +24,12 @@ export const metadata: Metadata = {
     title: 'Brand Anthony McDonald | Developer Relations, Voiceover & Consulting',
     description: 'Developer advocacy, professional voiceover, and strategic consulting.',
   },
+  alternates: { canonical: '/' },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
+  },
 }
 
 export default function RootLayout({

@@ -71,7 +71,26 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     if (!rendered) {
       notFound() // malformed MDX — don't crash the route
     }
-    return <BlogPostWrapper post={post}>{rendered}</BlogPostWrapper>
+    const articleLd = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: post.title,
+      description: post.description,
+      datePublished: post.publishDate,
+      dateModified: post.lastModified || post.publishDate,
+      author: { '@type': 'Person', name: post.author || 'Brand Anthony McDonald' },
+      publisher: { '@type': 'Person', name: 'Brand Anthony McDonald' },
+      keywords: post.tags?.join(', '),
+      url: `https://brandanthonymcdonald.com/blog/${slug}`,
+      mainEntityOfPage: `https://brandanthonymcdonald.com/blog/${slug}`,
+      ...(post.featuredImage?.url ? { image: post.featuredImage.url } : {}),
+    }
+    return (
+      <BlogPostWrapper post={post}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
+        {rendered}
+      </BlogPostWrapper>
+    )
   }
 
   // Legacy 'static' posts are served by their own folder route; if we reach here
