@@ -8,7 +8,9 @@ import Footer from '../ui/Footer'
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const isAdmin = pathname?.startsWith('/admin') || pathname === '/login'
+  // /admin keeps the bare shell; /login now gets the full nav + footer so it's
+  // navigable like any public page.
+  const isAdmin = pathname?.startsWith('/admin')
 
   if (isAdmin) {
     return <>{children}</>
