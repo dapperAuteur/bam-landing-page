@@ -131,8 +131,10 @@ export default function Navigation() {
               Start a project
             </Link>
 
-            {/* Social Links */}
-            <div className="flex items-center space-x-3">
+            {/* Social Links — only at very wide widths; they're also in the
+                footer, and hiding them in the xl–2xl band keeps the bar from
+                overflowing horizontally. */}
+            <div className="hidden 2xl:flex items-center space-x-3">
               <a href="https://l.awews.com/brand-am-linkedin" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600 transition-colors" aria-label="LinkedIn">
                 <Linkedin className="w-5 h-5" />
               </a>
@@ -197,7 +199,7 @@ export default function Navigation() {
         {/* Mobile Menu — same logical groups as desktop, plus the admin
             section (which previously only exposed a single "Admin Panel" link). */}
         {isOpen && (
-          <div id="mobile-menu" className="xl:hidden py-4 divide-y divide-gray-100">
+          <div id="mobile-menu" className="xl:hidden py-4 divide-y divide-gray-100 max-h-[calc(100dvh-4.5rem)] overflow-y-auto overscroll-contain">
             <MobileGroup heading="Work" items={WORK} onNavigate={close} />
             <MobileGroup heading="Learn" items={LEARN} onNavigate={close} />
             <MobileGroup heading="Company" items={COMPANY} onNavigate={close} />
