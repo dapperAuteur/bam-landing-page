@@ -2,13 +2,100 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { signOut, useSession } from 'next-auth/react'
-import { Linkedin, Github } from 'lucide-react'
+import { Linkedin, Github, ChevronDown } from 'lucide-react'
+
+type NavItem = { href: string; label: string }
+
+// Logically nested groups — keeps the inline bar narrow so it doesn't overflow
+// horizontally (the old flat 9-link bar scrolled sideways once the authenticated
+// Admin button was added).
+const WORK: NavItem[] = [
+  { href: '/projects', label: 'Projects' },
+  { href: '/experience', label: 'Experience' },
+  { href: '/#portfolio', label: 'Portfolio' },
+  { href: '/photography', label: 'Photography' },
+]
+const LEARN: NavItem[] = [
+  { href: '/learn', label: 'Courses' },
+  { href: '/blog/legacy', label: 'Blog' },
+]
+const COMPANY: NavItem[] = [
+  { href: '/#services', label: 'Services' },
+  { href: '/#about', label: 'About' },
+  { href: '/#contact', label: 'Contact' },
+]
+const ADMIN: NavItem[] = [
+  { href: '/admin/blog/posts', label: 'Blog posts' },
+  { href: '/admin/photos', label: 'Photos' },
+  { href: '/admin/galleries', label: 'Galleries' },
+  { href: '/admin/approvals', label: 'Approvals' },
+  { href: '/admin/contact', label: 'Contacts' },
+  { href: '/admin/logs', label: 'Logs' },
+]
+
+/** Desktop hover/focus dropdown — mirrors the existing Admin dropdown pattern. */
+function NavDropdown({ label, items }: { label: string; items: NavItem[] }) {
+  return (
+    <div className="relative group">
+      <button
+        type="button"
+        className="flex items-center gap-1 text-gray-700 hover:text-blue-600 transition-colors"
+        aria-haspopup="true"
+      >
+        {label}
+        <ChevronDown className="w-4 h-4" aria-hidden="true" />
+      </button>
+      <div className="absolute left-0 mt-1 w-52 rounded-md border border-gray-200 bg-white shadow-lg py-1 z-50 hidden group-hover:block group-focus-within:block">
+        {items.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+          >
+            {item.label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/** Mobile grouped section — a small heading + its links. */
+function MobileGroup({
+  heading,
+  items,
+  onNavigate,
+}: {
+  heading: string
+  items: NavItem[]
+  onNavigate: () => void
+}) {
+  return (
+    <div className="py-1">
+      <p className="px-1 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+        {heading}
+      </p>
+      {items.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          className="block py-2 pl-3 text-gray-700 hover:text-blue-600"
+          onClick={onNavigate}
+        >
+          {item.label}
+        </Link>
+      ))}
+    </div>
+  )
+}
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
-  const {data: session } = useSession();
+  const { data: session } = useSession()
 
+  const close = () => setIsOpen(false)
 
   const handleLogout = async () => {
     await signOut()
@@ -19,38 +106,29 @@ export default function Navigation() {
     <nav className="bg-white shadow-lg fixed w-full z-50 ">
       <div className="mx-2 container-max">
         <div className="flex justify-between items-center py-4">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
-            BAM
+          <Link href="/" className="flex items-center" aria-label="Brand Anthony McDonald — Home">
+            <Image
+              src="/flywitus-platypus-logo.png"
+              alt="Brand Anthony McDonald"
+              width={55}
+              height={40}
+              priority
+              sizes="55px"
+              className="h-9 w-auto md:h-10"
+            />
           </Link>
-          
-          {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-5 xl:space-x-8">
-            <Link href="/#services" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Services
-            </Link>
-            <Link href="/experience" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Experience
-            </Link>
-            <Link href="/projects" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Projects
-            </Link>
-            <Link href="/intake" className="text-gray-700 hover:text-blue-600 transition-colors">
+
+          {/* Desktop Menu — switches at xl so the hamburger covers the whole
+              1024–1280px band where the old bar used to overflow. */}
+          <div className="hidden xl:flex items-center space-x-5 2xl:space-x-8">
+            <NavDropdown label="Work" items={WORK} />
+            <NavDropdown label="Learn" items={LEARN} />
+            <NavDropdown label="Company" items={COMPANY} />
+            <Link
+              href="/intake"
+              className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+            >
               Start a project
-            </Link>
-            <Link href="/blog/legacy" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Blog
-            </Link>
-            <Link href="/photography" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Photography
-            </Link>
-            <Link href="/#about" className="text-gray-700 hover:text-blue-600 transition-colors">
-              About
-            </Link>
-            <Link href="/#portfolio" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Portfolio
-            </Link>
-            <Link href="/#contact" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Contact
             </Link>
 
             {/* Social Links */}
@@ -67,8 +145,7 @@ export default function Navigation() {
             </div>
 
             {/* Auth — admin controls collapse into one dropdown so the
-                authenticated bar is no wider than the logged-out one (was
-                overflowing horizontally). Hover + focus-within for keyboard. */}
+                authenticated bar is no wider than the logged-out one. */}
             {session ? (
               <div className="relative group">
                 <button
@@ -76,20 +153,11 @@ export default function Navigation() {
                   aria-haspopup="true"
                 >
                   Admin
-                  <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                  </svg>
+                  <ChevronDown className="w-4 h-4" aria-hidden="true" />
                 </button>
                 <div className="absolute right-0 mt-1 w-52 rounded-md border border-gray-200 bg-white shadow-lg py-1 z-50 hidden group-hover:block group-focus-within:block">
                   <p className="px-4 py-1.5 text-xs text-gray-400 truncate">Signed in as {session?.user?.name}</p>
-                  {[
-                    { href: '/admin/blog/posts', label: 'Blog posts' },
-                    { href: '/admin/photos', label: 'Photos' },
-                    { href: '/admin/galleries', label: 'Galleries' },
-                    { href: '/admin/approvals', label: 'Approvals' },
-                    { href: '/admin/contact', label: 'Contacts' },
-                    { href: '/admin/logs', label: 'Logs' },
-                  ].map(item => (
+                  {ADMIN.map(item => (
                     <Link key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                       {item.label}
                     </Link>
@@ -114,7 +182,7 @@ export default function Navigation() {
 
           {/* Mobile menu button */}
           <button
-            className="lg:hidden"
+            className="xl:hidden"
             onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={isOpen}
@@ -126,56 +194,34 @@ export default function Navigation() {
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu — same logical groups as desktop, plus the admin
+            section (which previously only exposed a single "Admin Panel" link). */}
         {isOpen && (
-          <div id="mobile-menu" className="lg:hidden py-4 space-y-2">
-            <Link href="/#services" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
-              Services
-            </Link>
-            <Link href="/experience" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
-              Experience
-            </Link>
-            <Link href="/projects" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
-              Projects
-            </Link>
-            <Link href="/intake" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
-              Start a project
-            </Link>
-            <Link href="/blog/legacy" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
-              Blog
-            </Link>
-            <Link href="/photography" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
-              Photography
-            </Link>
-            <Link href="/#about" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
-              About
-            </Link>
-            <Link href="/#portfolio" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
-              Portfolio
-            </Link>
-            <Link href="/#contact" className="block py-2 text-gray-700 hover:text-blue-600" onClick={() => setIsOpen(false)}>
-              Contact
-            </Link>
-            
+          <div id="mobile-menu" className="xl:hidden py-4 divide-y divide-gray-100">
+            <MobileGroup heading="Work" items={WORK} onNavigate={close} />
+            <MobileGroup heading="Learn" items={LEARN} onNavigate={close} />
+            <MobileGroup heading="Company" items={COMPANY} onNavigate={close} />
+            <div className="py-2">
+              <Link
+                href="/intake"
+                className="block py-2 pl-1 font-medium text-blue-600 hover:text-blue-800"
+                onClick={close}
+              >
+                Start a project
+              </Link>
+            </div>
+
             {/* Mobile Auth */}
-            <div className="pt-2 border-t border-gray-200">
+            <div className="pt-2">
               {session ? (
                 <>
-                  <div className="py-2 text-gray-600 text-sm">
-                    Welcome, {session?.user?.name}
-                  </div>
-                  {session && (
-                    <Link 
-                      href="/admin/contact" 
-                      className="block py-2 text-blue-600 hover:text-blue-800 font-medium"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Admin Panel
-                    </Link>
-                  )}
+                  <p className="py-2 pl-1 text-sm text-gray-500 truncate">
+                    Signed in as {session?.user?.name}
+                  </p>
+                  <MobileGroup heading="Admin" items={ADMIN} onNavigate={close} />
                   <button
                     onClick={handleLogout}
-                    className="block w-full text-left py-2 text-red-600 hover:text-red-800"
+                    className="block w-full text-left py-2 pl-1 text-red-600 hover:text-red-800"
                   >
                     Logout
                   </button>
@@ -183,8 +229,8 @@ export default function Navigation() {
               ) : (
                 <Link
                   href="/login"
-                  className="block py-2 text-blue-600 hover:text-blue-800 font-medium"
-                  onClick={() => setIsOpen(false)}
+                  className="block py-2 pl-1 text-blue-600 hover:text-blue-800 font-medium"
+                  onClick={close}
                 >
                   Login
                 </Link>
