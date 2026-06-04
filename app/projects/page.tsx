@@ -4,7 +4,7 @@ import { getPageMetadata } from "@/lib/seo";
 export const metadata = getPageMetadata({
   title: "Projects",
   description:
-    "The WitUS ecosystem — a dozen-plus interlinked products and LangGraph agents under one philosophy: CentenarianOS, Work.WitUS, FlashLearnAI, Fly.WitUS, Tour Manager OS, Wanderlearn, Ride WitUS, WitUS Inbox/Outbox, a multi-agent coach, and brandanthonymcdonald.com.",
+    "The WitUS ecosystem, a dozen-plus interlinked products and LangGraph agents under one philosophy: CentenarianOS, Work.WitUS, FlashLearnAI, Fly.WitUS, Tour Manager OS, Wanderlearn, Ride WitUS, WitUS Inbox/Outbox, a multi-agent coach, and brandanthonymcdonald.com.",
   path: "/projects",
 });
 
@@ -25,9 +25,9 @@ const tierAProjects: ProjectCard[] = [
     name: "WitUS.Online",
     url: "https://witus.online",
     status: "🟢",
-    tagline: "Parent brand site for the WitUS ecosystem — philosophy-first landing page connecting CentenarianOS and Work.WitUS under \"Live Long. Work Free.\"",
+    tagline: "Parent brand site for the WitUS ecosystem, philosophy-first landing page connecting CentenarianOS and Work.WitUS under \"Live Long. Work Free.\"",
     stack: "Next.js 16 · Tailwind v4 · Vercel · fully static",
-    detail: "Solo build. Required vercel.json for framework auto-detection — a real operational detail worth noting.",
+    detail: "Solo build. Required vercel.json for framework auto-detection, a real operational detail worth noting.",
   },
   {
     name: "CentenarianOS",
@@ -45,7 +45,7 @@ const tierAProjects: ProjectCard[] = [
     status: "🟢",
     tagline: "Contractor management platform: jobs, time entries, AI-extracted invoices, document scanner for pay stubs and receipts, multi-day non-consecutive scheduling, mileage/expenses, push notifications, public job board, and a course academy.",
     stack: "Next.js 15 · Supabase (shared with CentenarianOS) · Stripe · Gemini 2.5 Flash · PWA",
-    detail: "Shares a Supabase database with CentenarianOS — coordinating migrations across two products is its own discipline.",
+    detail: "Shares a Supabase database with CentenarianOS, so coordinating migrations across two products is its own discipline.",
   },
   {
     name: "FlashLearnAI",
@@ -81,7 +81,7 @@ const tierAProjects: ProjectCard[] = [
     status: "🟢",
     tagline: "Cross-product submission triage and reply surface. Ingests signed webhooks from every WitUS product, stores canonical records, lets me read and reply from one dashboard.",
     stack: "Next.js 16 · Drizzle · Neon Postgres · NextAuth · Mailgun · Mobile Text Alerts SMS",
-    detail: "The connective tissue for the ecosystem — the webhook bus all products report into.",
+    detail: "The connective tissue for the ecosystem, the webhook bus all products report into.",
   },
   {
     name: "WitUS Outbox",
@@ -90,14 +90,14 @@ const tierAProjects: ProjectCard[] = [
     status: "🟢",
     tagline: "Cross-product outbound publishing: HMAC-signed webhooks schedule and post to social platforms via a publisher-agnostic adapter pattern, with Google Apps Script reconciliation.",
     stack: "Next.js 16 · Drizzle · Neon Postgres · NextAuth",
-    detail: "The outbound twin of WitUS Inbox — every product can announce through one service.",
+    detail: "The outbound twin of WitUS Inbox: every product can announce through one service.",
   },
   {
     name: "Centenarian Coach (multi-agent Fit T. Cent)",
     url: "https://centenarian-coach-multiagent.witus.online",
     repo: `${GH}/centenarian-coach-multiagent`,
     status: "🟢",
-    tagline: "LangGraph supervisor with specialist subgraphs — a coordinator routes your question to the right specialists, each with its own retrieval store and tools, then weaves the findings into one cited answer.",
+    tagline: "LangGraph supervisor with specialist subgraphs: a coordinator routes your question to the right specialists, each with its own retrieval store and tools, then weaves the findings into one cited answer.",
     stack: "LangGraph.js · @langchain (Anthropic/OpenAI/Mistral/Ollama) · Drizzle · Next.js · TypeScript · Vercel AI SDK",
     detail: "Live demo gated to one admin email + a paid-access waitlist. Portfolio + course artifact.",
   },
@@ -105,7 +105,7 @@ const tierAProjects: ProjectCard[] = [
     name: "Wanderlearn Field Reporter",
     repo: `${GH}/wanderlearn-field-reporter`,
     status: "🟢",
-    tagline: "LangGraph agent that turns a raw Wanderlearn capture (location transcript, GPS, photo refs) into a publishable, cited lesson draft — it researches the place, drafts an objectives-first outline, writes, then self-critiques against a rubric and revises until it passes.",
+    tagline: "LangGraph agent that turns a raw Wanderlearn capture (location transcript, GPS, photo refs) into a publishable, cited lesson draft. It researches the place, drafts an objectives-first outline, writes, then self-critiques against a rubric and revises until it passes.",
     stack: "LangGraph.js · @langchain · Drizzle · Next.js · TypeScript",
     detail: "Self-critique / revision loop with a revision cap. A sibling of Wanderlearn.",
   },
@@ -144,7 +144,7 @@ const tierBProjects: ProjectCard[] = [
     url: "https://ride.witus.online",
     repo: `${GH}/ride-wit-us`,
     status: "🟠",
-    tagline: "Audio-first bicycle-mechanic curriculum in podcast form — 4 seasons, 32 episodes with episode pages and cross-product links.",
+    tagline: "Audio-first bicycle-mechanic curriculum in podcast form, 4 seasons, 32 episodes with episode pages and cross-product links.",
     stack: "Next.js 15 · TypeScript · static · Mailgun",
     detail: "Live + actively in-progress.",
   },
@@ -203,7 +203,7 @@ export default function ProjectsPage() {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Projects</h1>
             <p className="text-xl text-blue-100 mb-2">
-              The WitUS ecosystem — a dozen-plus interlinked products and LangGraph agents under one philosophy.
+              The WitUS ecosystem, a dozen-plus interlinked products and LangGraph agents under one philosophy.
             </p>
             <p className="text-lg text-blue-200">
               I ship full-stack products, write about the work, teach it, and operate the platforms.
@@ -227,7 +227,7 @@ export default function ProjectsPage() {
             </div>
             <p className="text-gray-700 mb-4 text-lg leading-relaxed">
               I&apos;m targeting <strong>Developer Relations, Tech Support Engineer,</strong> and
-              full-stack <strong>AI-product</strong> roles. The projects below are the evidence —
+              full-stack <strong>AI-product</strong> roles. The projects below are the evidence:
               shipped products with public URLs, public APIs, real users, and real production
               incidents I&apos;ve recovered from.
             </p>
@@ -259,7 +259,7 @@ export default function ProjectsPage() {
             </div>
             <p className="text-gray-700 mb-4 text-lg leading-relaxed">
               I&apos;m open to <strong>integrations, co-marketing, grants,</strong> and{" "}
-              <strong>joint ventures</strong> across the ecosystem — especially anything that
+              <strong>joint ventures</strong> across the ecosystem, especially anything that
               makes one of the products below more useful, or expands its audience.
             </p>
             <p className="text-gray-700 mb-6">
@@ -289,12 +289,12 @@ export default function ProjectsPage() {
               </h2>
             </div>
             <p className="text-gray-700 mb-4 text-lg leading-relaxed">
-              If you want an app built — for your team, your sport, your league, your company —
+              If you want an app built for your team, your sport, your league, or your company,
               the intake survey takes about 5 minutes and gives me what I need to come back
               with a thoughtful first response, not a generic one.
             </p>
             <p className="text-gray-700 mb-6">
-              Scope, must-haves, timeline, budget range, integrations — the questions you&apos;d
+              Scope, must-haves, timeline, budget range, integrations, the questions you&apos;d
               expect, structured so I can actually use the answers.
             </p>
             <Link
@@ -307,7 +307,7 @@ export default function ProjectsPage() {
         </div>
       </section>
 
-      {/* Tier A — shipped */}
+      {/* Tier A, shipped */}
       <section id="live-shipped" className="section-padding pt-0 scroll-mt-20">
         <div className="container-max">
           <div className="max-w-6xl mx-auto">
@@ -316,7 +316,7 @@ export default function ProjectsPage() {
                 Live &amp; shipped
               </h2>
               <p className="text-gray-600 text-lg">
-                Tier A — products with public URLs and active users. Solo builder/operator on
+                Tier A, products with public URLs and active users. Solo builder/operator on
                 each.
               </p>
             </div>
@@ -329,7 +329,7 @@ export default function ProjectsPage() {
         </div>
       </section>
 
-      {/* Tier B — in progress */}
+      {/* Tier B, in progress */}
       <section className="section-padding pt-0">
         <div className="container-max">
           <div className="max-w-6xl mx-auto">
@@ -338,7 +338,7 @@ export default function ProjectsPage() {
                 Live + actively in-progress
               </h2>
               <p className="text-gray-600 text-lg">
-                Tier B — deployed and being iterated on toward broader launch.
+                Tier B, deployed and being iterated on toward broader launch.
               </p>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
@@ -386,7 +386,7 @@ export default function ProjectsPage() {
               </a>
               . FlashLearnAI, Wanderlearn, and Fly.WitUS plug into both via shared Supabase,
               shared Cloudinary, and the WitUS Inbox webhook bus. I think in platforms, not
-              features — and I have receipts.
+              features, and I have receipts.
             </p>
             <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono">
 {`B4C LLC / AwesomeWebStore.com   ← legal entity

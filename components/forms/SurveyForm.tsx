@@ -195,7 +195,7 @@ function SurveyFormInner() {
 
     if (!executeRecaptcha) {
       setStatus("error");
-      setStatusMessage("reCAPTCHA isn't ready yet — give it a second and try again.");
+      setStatusMessage("reCAPTCHA isn't ready yet. Give it a second and try again.");
       return;
     }
 
@@ -253,7 +253,7 @@ function SurveyFormInner() {
               Start a project
             </h1>
             <p className="text-lg text-gray-600">
-              Tell me about the app you want built. About 5 minutes — the more you share,
+              Tell me about the app you want built. About 5 minutes; the more you share,
               the more thoughtful my first response.
             </p>
           </div>
@@ -715,7 +715,7 @@ function SurveyFormInner() {
                 </button>
 
                 <p className="text-xs text-gray-500 text-center pt-2">
-                  Protected by reCAPTCHA — Google&apos;s{" "}
+                  Protected by reCAPTCHA, Google&apos;s{" "}
                   <a
                     href="https://policies.google.com/privacy"
                     className="underline hover:text-blue-600"
