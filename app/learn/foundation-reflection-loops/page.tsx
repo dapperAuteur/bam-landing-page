@@ -11,7 +11,7 @@ const SLUG = "foundation-reflection-loops";
 const course = getCourse(SLUG)!;
 
 export const metadata = getPageMetadata({
-  title: `${course.title} — Foundation Course`,
+  title: `${course.title}, Foundation Course`,
   description: course.pitch,
   path: `/learn/${SLUG}`,
 });
@@ -20,7 +20,7 @@ const MODULES = [
   {
     n: 1,
     title: "Why the first answer is the worst",
-    body: "Where single-pass generation fails, and why reliability — not capability — is usually the gap.",
+    body: "Where single-pass generation fails, and why reliability, not capability, is usually the gap.",
   },
   {
     n: 2,
@@ -30,12 +30,12 @@ const MODULES = [
   {
     n: 3,
     title: "Stopping criteria",
-    body: "When to stop reflecting — convergence, budgets, and guards against loops that revise forever.",
+    body: "When to stop reflecting, convergence, budgets, and guards against loops that revise forever.",
   },
   {
     n: 4,
     title: "Measuring reliability",
-    body: "Turn 'it feels better' into a number with LangSmith evals — datasets, scorers, and before/after deltas.",
+    body: "Turn 'it feels better' into a number with LangSmith evals, datasets, scorers, and before/after deltas.",
   },
   {
     n: 5,
@@ -179,7 +179,7 @@ export default function FoundationCoursePage() {
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800 font-medium"
                   >
-                    Repo — README outline ↗
+                    Repo, README outline ↗
                   </a>
                 </li>
               </ul>
@@ -193,7 +193,7 @@ export default function FoundationCoursePage() {
         <div className="container-max">
           <div className="max-w-4xl mx-auto bg-white border-2 border-amber-200 rounded-2xl p-8 md:p-10 shadow-md text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-              Not shipped yet — want a nudge when it is?
+              Not shipped yet, want a nudge when it is?
             </h2>
             <p className="text-gray-700 mb-6 text-lg leading-relaxed">
               The Foundation course ships ~{course.shipDate}. Send a quick note

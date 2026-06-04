@@ -77,7 +77,7 @@ function IntakeFormInner({ config }: { config: IntakeFormConfig }) {
 
     if (!executeRecaptcha) {
       setStatus("error");
-      setStatusMessage("reCAPTCHA isn't ready yet — give it a second and try again.");
+      setStatusMessage("reCAPTCHA isn't ready yet. Give it a second and try again.");
       return;
     }
 
@@ -293,7 +293,7 @@ function IntakeFormInner({ config }: { config: IntakeFormConfig }) {
                 </button>
 
                 <p className="text-xs text-gray-500 text-center pt-2">
-                  Protected by reCAPTCHA — Google&apos;s{" "}
+                  Protected by reCAPTCHA, Google&apos;s{" "}
                   <a
                     href="https://policies.google.com/privacy"
                     className="underline hover:text-blue-600"

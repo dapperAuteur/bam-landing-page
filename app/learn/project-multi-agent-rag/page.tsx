@@ -14,7 +14,7 @@ const course = getCourse(SLUG)!;
 const INTRO_VIDEO_URL: string | null = null;
 
 export const metadata = getPageMetadata({
-  title: `${course.title} — Project Course`,
+  title: `${course.title}, Project Course`,
   description: course.pitch,
   path: `/learn/${SLUG}`,
 });
@@ -28,7 +28,7 @@ const MODULES = [
   {
     n: 2,
     title: "Per-agent RAG",
-    body: "Give every specialist its own pgvector index — domain-scoped retrieval instead of one shared store that bleeds context.",
+    body: "Give every specialist its own pgvector index, domain-scoped retrieval instead of one shared store that bleeds context.",
   },
   {
     n: 3,
@@ -38,7 +38,7 @@ const MODULES = [
   {
     n: 4,
     title: "State and handoffs",
-    body: "Pass context between agents cleanly — shared state, reducers, and handoffs that don't leak one domain into another.",
+    body: "Pass context between agents cleanly, shared state, reducers, and handoffs that don't leak one domain into another.",
   },
   {
     n: 5,
@@ -52,7 +52,7 @@ const MODULES = [
   },
 ];
 
-// Papers the course rests on (APA 7, links resolve — Block 5 citation rule).
+// Papers the course rests on (APA 7, links resolve, Block 5 citation rule).
 const READING = [
   {
     cite: "Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks.",
@@ -112,7 +112,7 @@ export default function ProjectCoursePage() {
                     <span className="text-4xl" aria-hidden="true">
                       ▶
                     </span>
-                    <p className="font-semibold">Course intro video — coming soon</p>
+                    <p className="font-semibold">Course intro video, coming soon</p>
                     <p className="text-sm text-gray-400">
                       The recorded walkthrough is being uploaded.
                     </p>
@@ -121,8 +121,8 @@ export default function ProjectCoursePage() {
               </div>
               <figcaption className="mt-3 text-sm text-gray-600">
                 A walkthrough of the multi-agent architecture behind{" "}
-                <strong>Fit T. Cent</strong> — &ldquo;Get Fit and Learn
-                Tryin&rsquo;&rdquo; — the live coach inside CentenarianOS.
+                <strong>Fit T. Cent</strong>, &ldquo;Get Fit and Learn
+                Tryin&rsquo;&rdquo;, the live coach inside CentenarianOS.
               </figcaption>
             </figure>
           </div>
@@ -190,7 +190,7 @@ export default function ProjectCoursePage() {
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:text-blue-800 font-medium"
                     >
-                      Live coach — Fit T. Cent on CentenarianOS ↗
+                      Live coach, Fit T. Cent on CentenarianOS ↗
                     </a>
                   </li>
                 )}

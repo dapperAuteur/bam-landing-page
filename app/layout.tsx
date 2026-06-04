@@ -27,8 +27,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
     types: {
-      'application/rss+xml': [{ url: '/feed.xml', title: 'Brand Anthony McDonald — Blog' }],
-      'application/feed+json': [{ url: '/feed.json', title: 'Brand Anthony McDonald — Blog' }],
+      'application/rss+xml': [{ url: '/feed.xml', title: 'Brand Anthony McDonald: Blog' }],
+      'application/feed+json': [{ url: '/feed.json', title: 'Brand Anthony McDonald: Blog' }],
     },
   },
   robots: {

@@ -6,8 +6,8 @@ import { getPageMetadata } from "@/lib/seo";
 //
 // This `COURSES` array is the ONE place course status, ship dates, and links
 // live. Each per-course page (app/learn/<slug>/page.tsx) imports from here, so
-// flipping a course from "🟡 Coming soon" to "🟢 Live" — or correcting a ship
-// date — propagates to BOTH the /learn index and that course's landing page
+// flipping a course from "🟡 Coming soon" to "🟢 Live", or correcting a ship
+// date, propagates to BOTH the /learn index and that course's landing page
 // from a single edit. Do not duplicate this data anywhere else.
 // ---------------------------------------------------------------------------
 
@@ -18,9 +18,9 @@ export type CourseCard = {
   status: "🟢 Live" | "🟡 Coming soon";
   pitch: string; // one-line
   stack: string[];
-  shipDate?: string; // 🟡 only — rendered as "Ships ~<date>"
+  shipDate?: string; // 🟡 only, rendered as "Ships ~<date>"
   repoUrl: string; // canonical GitHub URL (publishes with the course)
-  deployedUrl?: string; // 🟢 only — live demo
+  deployedUrl?: string; // 🟢 only, live demo
 };
 
 const GH = "https://github.com/dapperAuteur";
@@ -32,7 +32,7 @@ export const COURSES: CourseCard[] = [
     tier: "Project",
     status: "🟢 Live",
     pitch:
-      "Build a supervisor that routes each question to a domain specialist — and give every specialist its own RAG index. The architecture behind the CentenarianOS multi-domain coach.",
+      "Build a supervisor that routes each question to a domain specialist, and give every specialist its own RAG index. The architecture behind the CentenarianOS multi-domain coach.",
     stack: ["LangGraph", "LangSmith", "pgvector", "LangSmith Deployment", "Drizzle"],
     repoUrl: `${GH}/centenarian-coach-multiagent`,
     deployedUrl: "https://centenarianos.com",
@@ -43,7 +43,7 @@ export const COURSES: CourseCard[] = [
     tier: "Quickstart",
     status: "🟡 Coming soon",
     pitch:
-      "Your human-in-the-loop agent silently loses its state when the worker restarts. Here's the 10-line fix — a Postgres checkpointer that survives the crash.",
+      "Your human-in-the-loop agent silently loses its state when the worker restarts. Here's the 10-line fix, a Postgres checkpointer that survives the crash.",
     stack: ["LangGraph", "Postgres", "LangSmith"],
     shipDate: "June 10, 2026",
     repoUrl: `${GH}/witus-triage-agent`,
@@ -54,7 +54,7 @@ export const COURSES: CourseCard[] = [
     tier: "Foundation",
     status: "🟡 Coming soon",
     pitch:
-      "An agent's first answer is usually its worst. Reflection loops let it critique and revise its own output — and let you measure the reliability gain instead of hoping for one.",
+      "An agent's first answer is usually its worst. Reflection loops let it critique and revise its own output, and let you measure the reliability gain instead of hoping for one.",
     stack: ["LangGraph", "LangSmith", "LangSmith Deployment", "Python", "TypeScript"],
     shipDate: "late July 2026",
     repoUrl: `${GH}/wanderlearn-field-reporter`,
@@ -69,7 +69,7 @@ export function getCourse(slug: string): CourseCard | undefined {
 // Shared presentational helpers (imported by per-course pages too)
 // ---------------------------------------------------------------------------
 
-/** Status pill driven by the `status` field — emoji + label, never invented. */
+/** Status pill driven by the `status` field, emoji + label, never invented. */
 export function CourseStatusBadge({
   status,
   className = "",
@@ -99,7 +99,7 @@ export function ToolChip({ label }: { label: string }) {
   );
 }
 
-/** "The rest of the portfolio" — links to the other two courses. */
+/** "The rest of the portfolio", links to the other two courses. */
 export function SiblingCourses({ currentSlug }: { currentSlug: string }) {
   const siblings = COURSES.filter((c) => c.slug !== currentSlug);
   return (
@@ -139,21 +139,21 @@ export function SiblingCourses({ currentSlug }: { currentSlug: string }) {
 const ECOSYSTEM = [
   {
     slug: "project-multi-agent-rag",
-    course: "Project — Multi-Agent RAG",
+    course: "Project, Multi-Agent RAG",
     product: "CentenarianOS",
     productUrl: "https://centenarianos.com",
-    line: "The per-agent-RAG supervisor this course builds is Fit T. Cent — “Get Fit and Learn Tryin’” — the multi-domain coach inside CentenarianOS.",
+    line: "The per-agent-RAG supervisor this course builds is Fit T. Cent, “Get Fit and Learn Tryin’”, the multi-domain coach inside CentenarianOS.",
   },
   {
     slug: "quickstart-durable-hitl",
-    course: "Quickstart — Durable HITL",
+    course: "Quickstart, Durable HITL",
     product: "WitUS Inbox",
     productUrl: "https://inbox.witus.online",
     line: "The Postgres-checkpointer pattern this course teaches is the durable human-in-the-loop behind the WitUS Inbox triage agent.",
   },
   {
     slug: "foundation-reflection-loops",
-    course: "Foundation — Reflection Loops",
+    course: "Foundation, Reflection Loops",
     product: "Wanderlearn",
     productUrl: "https://wanderlearn.witus.online",
     line: "The reflection loop this course measures is what produces and revises the field lessons inside Wanderlearn.",
@@ -161,7 +161,7 @@ const ECOSYSTEM = [
 ];
 
 // ---------------------------------------------------------------------------
-// Index card view — mirrors the /projects ProjectCardView card chrome.
+// Index card view, mirrors the /projects ProjectCardView card chrome.
 // ---------------------------------------------------------------------------
 
 function CourseCardView({ course }: { course: CourseCard }) {
@@ -198,9 +198,9 @@ function CourseCardView({ course }: { course: CourseCard }) {
 }
 
 export const metadata = getPageMetadata({
-  title: "Learn — Production Agent Engineering Courses",
+  title: "Learn, Production Agent Engineering Courses",
   description:
-    "Three courses on production agent engineering — Project, Quickstart, and Foundation tiers — each paired with a running WitUS product: CentenarianOS, WitUS Inbox, and Wanderlearn. Built on LangGraph and LangSmith.",
+    "Three courses on production agent engineering, Project, Quickstart, and Foundation tiers, each paired with a running WitUS product: CentenarianOS, WitUS Inbox, and Wanderlearn. Built on LangGraph and LangSmith.",
   path: "/learn",
 });
 
@@ -216,7 +216,7 @@ export default function LearnIndexPage() {
               ecosystem of running agents.
             </h1>
             <p className="text-xl text-blue-100 mb-2">
-              A Project, a Quickstart, and a Foundation course — each one teaches
+              A Project, a Quickstart, and a Foundation course, each one teaches
               a pattern that already runs in production.
             </p>
             <p className="text-lg text-blue-200">
@@ -227,7 +227,7 @@ export default function LearnIndexPage() {
         </div>
       </section>
 
-      {/* Section 1 — Courses */}
+      {/* Section 1, Courses */}
       <section id="courses" className="section-padding scroll-mt-20">
         <div className="container-max">
           <div className="max-w-6xl mx-auto">
@@ -236,7 +236,7 @@ export default function LearnIndexPage() {
                 The courses
               </h2>
               <p className="text-gray-600 text-lg">
-                One live now, two shipping soon. Status reflects course reality —
+                One live now, two shipping soon. Status reflects course reality;
                 this page is the source of truth.
               </p>
             </div>
@@ -249,7 +249,7 @@ export default function LearnIndexPage() {
         </div>
       </section>
 
-      {/* Section 2 — Ecosystem fit */}
+      {/* Section 2, Ecosystem fit */}
       <section id="ecosystem-fit" className="section-padding pt-0">
         <div className="container-max">
           <div className="max-w-5xl mx-auto">
@@ -259,7 +259,7 @@ export default function LearnIndexPage() {
               </h2>
               <p className="text-gray-600 text-lg">
                 These aren&apos;t demos built for a syllabus. Each course extracts
-                the pattern from a product that&apos;s already serving real users —
+                the pattern from a product that&apos;s already serving real users,
                 so the &quot;production&quot; in &quot;production agent engineering&quot;
                 is literal.
               </p>
@@ -311,7 +311,7 @@ export default function LearnIndexPage() {
         <div className="container-max">
           <div className="max-w-4xl mx-auto bg-white border-2 border-blue-200 rounded-2xl p-8 md:p-10 shadow-md text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Want to talk about agent engineering — or hire for it?
+              Want to talk about agent engineering, or hire for it?
             </h2>
             <p className="text-gray-700 mb-6 text-lg leading-relaxed">
               The courses are free and the repos are forkable. If you&apos;re
