@@ -11,7 +11,7 @@ const SLUG = "quickstart-durable-hitl";
 const course = getCourse(SLUG)!;
 
 export const metadata = getPageMetadata({
-  title: `${course.title} — Quickstart Course`,
+  title: `${course.title}, Quickstart Course`,
   description: course.pitch,
   path: `/learn/${SLUG}`,
 });
@@ -20,7 +20,7 @@ const LESSONS = [
   {
     n: 1,
     title: "The silent failure",
-    body: "Watch a human-in-the-loop agent lose its interrupt state the moment the worker restarts — and why in-memory state is the trap.",
+    body: "Watch a human-in-the-loop agent lose its interrupt state the moment the worker restarts, and why in-memory state is the trap.",
   },
   {
     n: 2,
@@ -30,7 +30,7 @@ const LESSONS = [
   {
     n: 3,
     title: "The 10-line fix",
-    body: "Swap the in-memory saver for a Postgres checkpointer — the whole change, wired and explained.",
+    body: "Swap the in-memory saver for a Postgres checkpointer, the whole change, wired and explained.",
   },
   {
     n: 4,
@@ -111,7 +111,7 @@ export default function QuickstartCoursePage() {
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800 font-medium"
                   >
-                    Repo — README outline ↗
+                    Repo, README outline ↗
                   </a>
                 </li>
               </ul>
@@ -125,7 +125,7 @@ export default function QuickstartCoursePage() {
         <div className="container-max">
           <div className="max-w-4xl mx-auto bg-white border-2 border-amber-200 rounded-2xl p-8 md:p-10 shadow-md text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-              Not shipped yet — want a nudge when it is?
+              Not shipped yet, want a nudge when it is?
             </h2>
             <p className="text-gray-700 mb-6 text-lg leading-relaxed">
               This Quickstart ships ~{course.shipDate}. Send a quick note and
