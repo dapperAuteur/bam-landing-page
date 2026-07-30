@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import * as Sentry from '@sentry/nextjs'
 
 // Last-resort boundary — catches errors thrown in the ROOT layout itself, where
 // the normal error.tsx can't render. It must supply its own <html>/<body> and
@@ -13,7 +14,11 @@ export default function GlobalError({
   reset: () => void
 }) {
   useEffect(() => {
+    // Surfaced in Vercel logs...
     console.error('[global-error]', error)
+    // ...plus Sentry for a real stack trace. A no-op when no DSN is configured, and the
+    // beforeSend scrub in lib/sentry-scrub.ts strips credentials before anything is sent.
+    Sentry.captureException(error)
   }, [error])
 
   return (
