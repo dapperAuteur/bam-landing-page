@@ -165,8 +165,6 @@ export default function ECSInfographic() {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
   const toggleModule = (moduleId: string) => {
     const newExpanded = new Set(expandedModules);
     if (newExpanded.has(moduleId)) {
@@ -178,7 +176,7 @@ export default function ECSInfographic() {
   };
 
   const sendMessage = async (message: string) => {
-    if (!message.trim() || !GEMINI_API_KEY) return;
+    if (!message.trim()) return;
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -192,28 +190,28 @@ export default function ECSInfographic() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' + GEMINI_API_KEY, {
+      // Calls our server proxy — the Gemini key stays server-side. This used to read
+      // process.env.GEMINI_API_KEY in the browser, which Next never inlines (only
+      // NEXT_PUBLIC_*), so the key was undefined and sendMessage early-returned:
+      // the chat did nothing at all.
+      const response = await fetch('/api/ai/gemini', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: `You are an expert on the Endocannabinoid System (ECS) helping ${userType === 'general' ? 'the general public' : userType === 'student' ? 'students' : 'healthcare professionals'} understand this important biological system. 
+          prompt: `You are an expert on the Endocannabinoid System (ECS) helping ${userType === 'general' ? 'the general public' : userType === 'student' ? 'students' : 'healthcare professionals'} understand this important biological system.
 
 Context: The ECS consists of cannabinoid receptors (CB1 and CB2), endocannabinoids (anandamide and 2-AG), and metabolic enzymes. It regulates homeostasis, wellness, learning, and aging processes.
 
 Please answer this question about the ECS: ${message}
 
 Respond appropriately for a ${userType} audience with accurate, evidence-based information. Keep responses conversational but scientifically accurate.`
-            }]
-          }]
         })
       });
 
       const data = await response.json();
-      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not process that request.';
+      const aiResponse = data.text || data.error || 'Sorry, I could not process that request.';
 
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),

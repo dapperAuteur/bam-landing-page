@@ -122,35 +122,25 @@ const Sik3Infographic = () => {
         };
     }, []);
 
-    // Function to call Gemini API
-    const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+    // Calls our server proxy — the Gemini key stays server-side.
     const callGeminiApi = async (promptText: string) => {
-        const apiKey = GEMINI_API_KEY; // Canvas will provide the key
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-        
-        const payload = { contents: [{ role: "user", parts: [{ text: promptText }] }] };
-
         try {
-            const response = await fetch(apiUrl, {
+            const response = await fetch('/api/ai/gemini', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify({ prompt: promptText, model: 'gemini-2.0-flash' })
             });
 
-            if (!response.ok) {
-                const errorBody = await response.text();
-                throw new Error(`API request failed with status ${response.status}: ${errorBody}`);
-            }
-            
             const result = await response.json();
 
-            if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
-                return result.candidates[0].content.parts[0].text;
-            } else if (result.promptFeedback?.blockReason) {
-                return `Blocked: ${result.promptFeedback.blockReason}. Please rephrase.`;
-            } else {
-                return "Sorry, I couldn't get a proper answer. The response was unexpected.";
+            if (!response.ok) {
+                throw new Error(result?.error || `API request failed with status ${response.status}`);
             }
+
+            if (result.text) {
+                return result.text;
+            }
+            return result.error || "Sorry, I couldn't get a proper answer. The response was unexpected.";
         } catch (error: unknown) {
             console.error("Gemini API call error:", error);
             return `An error occurred: ${(error as AppError).message}. Please try again.`;

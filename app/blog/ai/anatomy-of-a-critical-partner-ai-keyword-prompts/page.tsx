@@ -88,32 +88,29 @@ export default function GemInfographic(): JSX.Element {
     setError('');
     setResponse('');
 
-    const systemPrompt = `You are a demo of the 'Chief Strategist' AI coach. Your goal is to help a user become the world's fastest centenarian. Your persona is direct, blunt, and objective. Always explain the 'why' behind your advice. You must respond to the user's command keyword. For 'Plan', create a short schedule. For 'Critique', give brief feedback. For 'Deconstruct', break down a skill simply. For 'Meal', create a simple recipe from ingredients. Keep all responses concise and illustrative for this demo.`;
-    const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-    const apiKey = GEMINI_API_KEY; // API key is handled by the execution environment
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
+    // Calls our server proxy — the Gemini key stays server-side. The
+    // 'chief-strategist' system prompt lives there too, keyed by this id.
     try {
-      const apiResponse = await fetch(apiUrl, {
+      const apiResponse = await fetch('/api/ai/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          systemInstruction: { parts: [{ text: systemPrompt }] },
+          prompt,
+          persona: 'chief-strategist',
+          model: 'gemini-2.5-flash-preview-05-20',
         }),
       });
 
+      const result = await apiResponse.json();
+
       if (!apiResponse.ok) {
-        throw new Error(`API error: ${apiResponse.statusText}`);
+        throw new Error(result?.error || `API error: ${apiResponse.statusText}`);
       }
 
-      const result = await apiResponse.json();
-      const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (text) {
-        setResponse(text);
+      if (result.text) {
+        setResponse(result.text);
       } else {
-        throw new Error('No content received from API.');
+        throw new Error(result?.error || 'No content received from API.');
       }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
