@@ -15,7 +15,7 @@ export default function BlogPostWrapper({ post, children }: BlogPostWrapperProps
           <div className="flex items-center text-sm text-gray-600">
             <Link href="/" className="hover:text-blue-600">Home</Link>
             <span className="mx-2">/</span>
-            <Link href="/blog/legacy" className="hover:text-blue-600">Blog</Link>
+            <Link href="/blog" className="hover:text-blue-600">Blog</Link>
             <span className="mx-2">/</span>
             <span className="text-gray-900 font-medium">{post.title}</span>
           </div>
@@ -94,7 +94,7 @@ export default function BlogPostWrapper({ post, children }: BlogPostWrapperProps
         <div className="container-max">
           <div className="text-center">
             <Link 
-              href="/blog/legacy"
+              href="/blog"
               className="inline-flex items-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

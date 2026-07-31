@@ -17,13 +17,6 @@ const nextConfig = {
         destination: '/blog/penn-relays-2026-masters-50-plus-sprints',
         permanent: true,
       },
-      {
-        // The blog listing moved to /blog/legacy. Exact match — individual posts
-        // at /blog/<slug> are NOT affected.
-        source: '/blog',
-        destination: '/blog/legacy',
-        permanent: true,
-      },
     ]
   },
   // Next 16 defaults to Turbopack, which resolves Node built-ins for client

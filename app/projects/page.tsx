@@ -428,7 +428,7 @@ export default function ProjectsPage() {
                 Partner with me
               </Link>
               <Link
-                href="/blog/legacy"
+                href="/blog"
                 className="btn-secondary border-2 border-gray-300 text-gray-700 hover:border-gray-500"
               >
                 Read the blog
