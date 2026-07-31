@@ -27,6 +27,7 @@ A full-stack Next.js App Router application that combines a public portfolio + b
 - **SEO + a11y** — per-page metadata, Article JSON-LD, robots, sitemap, skip-link, single-`<main>` landmarks
 - **Graceful errors** — branded 404 (`not-found`) and 500 (`error` / `global-error`) pages that route users back into the app
 - **Analytics** — Vercel Analytics + per-project engagement tracking
+- **Error monitoring**: server, edge, and browser crashes report to Better Stack through the Sentry SDK, with a scrubber (`lib/sentry-scrub.ts`) that strips credentials and visitor PII before anything leaves the process. Inert until a DSN is set. See [Error monitoring](#error-monitoring).
 
 ## Tech Stack
 
@@ -43,6 +44,8 @@ A full-stack Next.js App Router application that combines a public portfolio + b
 | AI | Google Gemini API |
 | Ecosystem | WitUS Inbox + Outbox (HMAC-signed webhooks) |
 | Analytics | Vercel Analytics |
+| Error monitoring | Better Stack, via the Sentry SDK (`@sentry/nextjs`) |
+| Tests | Vitest |
 | UI | Radix UI, Lucide React |
 
 ## Getting Started
@@ -65,6 +68,13 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+Tests:
+
+```bash
+npm test        # one pass
+npm run test:watch
+```
+
 ### Environment Variables
 
 Copy **[`.env.example`](./.env.example)** to `.env.local` and fill it in — that file is the canonical, commented list. The groups are:
@@ -78,6 +88,41 @@ Copy **[`.env.example`](./.env.example)** to `.env.local` and fill it in — tha
 - **WitUS Inbox** — `INBOX_INGEST_URL`, `INBOX_INGEST_SECRET`, `INBOX_SOURCE_SLUG`
 - **WitUS Outbox** — `OUTBOX_INGEST_URL`, `OUTBOX_INGEST_SECRET`, `OUTBOX_SOURCE_SLUG`, `OUTBOX_TRIGGER_ENABLED`, `PRODUCT_OWNER_USER_ID`
 - **AI** — `GEMINI_API_KEY`
+- **Error monitoring (optional)**: `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN`, and optionally `SENTRY_ENVIRONMENT` / `NEXT_PUBLIC_SENTRY_ENVIRONMENT` / `SENTRY_ORG` / `SENTRY_PROJECT` / `SENTRY_AUTH_TOKEN`
+
+## Error monitoring
+
+Crash reporting goes to **Better Stack**, which ingests over the Sentry protocol, so the client is the
+standard `@sentry/nextjs` SDK. Wiring:
+
+| File | Runtime |
+|---|---|
+| `instrumentation.ts` | loads the server/edge config, plus `onRequestError` for App Router request failures |
+| `sentry.server.config.ts` | Node runtime (route handlers, RSC) |
+| `sentry.edge.config.ts` | edge runtime (`middleware.ts`, the admin guard) |
+| `instrumentation-client.ts` | browser, plus `onRouterTransitionStart` |
+| `app/global-error.tsx` | root-layout crashes, via `Sentry.captureException` |
+| `lib/sentry-scrub.ts` | the `beforeSend` scrub applied to all four runtimes |
+
+**It is inert until a DSN is set.** Every init is guarded on `SENTRY_DSN` (server/edge) or
+`NEXT_PUBLIC_SENTRY_DSN` (browser); with neither set the SDK never initializes and the site behaves
+exactly as it did before. Tracing and session replay are pinned to `0`: errors only, no performance
+spend, and no recording of a visitor's session on a site that has client galleries and a client portal.
+
+**What is scrubbed.** A crash report is a copy of whatever the process was holding when it broke, so
+`lib/sentry-scrub.ts` removes it before send: inline URI credentials (the Mongo connection string
+carries its password in the URL), secret query params in both `request.url` and the separate
+`request.query_string`, cookie and `Authorization` headers, forwarded-IP headers, JWTs, `Bearer`
+credentials, env-var-shaped labelled secrets (`NEXTAUTH_SECRET=...`), email addresses, and any
+secret-named key found anywhere in `extra`, `tags`, `contexts`, `breadcrumbs`, or a form body. It is
+deliberately key-aware and matches whole name segments, so `authorName`, `keyboard`, `design`,
+`state`, and `error.code` all survive: an unreadable report is not a safe report, it is just useless.
+`contexts.trace` is exempt because Sentry needs it to stitch an event together.
+
+`npm test` covers both directions (secret removed, context kept). If you change the scrubber, run it.
+
+Source maps upload only when `SENTRY_ORG`, `SENTRY_PROJECT`, and `SENTRY_AUTH_TOKEN` are all set;
+without them the build skips the upload and you get minified stack traces, not a failed build.
 
 ## Key Routes
 
