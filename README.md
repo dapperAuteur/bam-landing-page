@@ -28,6 +28,7 @@ A full-stack Next.js App Router application that combines a public portfolio + b
 - **Graceful errors** — branded 404 (`not-found`) and 500 (`error` / `global-error`) pages that route users back into the app
 - **Analytics** — Vercel Analytics + per-project engagement tracking
 - **Error monitoring**: server, edge, and browser crashes report to Better Stack through the Sentry SDK, with a scrubber (`lib/sentry-scrub.ts`) that strips credentials and visitor PII before anything leaves the process. Inert until a DSN is set. See [Error monitoring](#error-monitoring).
+- **Health check**: `/api/health` pings MongoDB on every request and is never cached, so an uptime monitor can tell a live app apart from a cached homepage. See [Health check](#health-check).
 
 ## Tech Stack
 
@@ -124,6 +125,39 @@ deliberately key-aware and matches whole name segments, so `authorName`, `keyboa
 Source maps upload only when `SENTRY_ORG`, `SENTRY_PROJECT`, and `SENTRY_AUTH_TOKEN` are all set;
 without them the build skips the upload and you get minified stack traces, not a failed build.
 
+## Health check
+
+**Point uptime monitors at `/api/health`, not at `/`.** The homepage can answer `200` straight out of
+the CDN cache while MongoDB is unreachable, so a monitor on `/` can stay green through an outage that
+breaks every page that reads data. `/api/health` cannot: it runs a real `ping` against MongoDB on
+every request and sets `Cache-Control: no-store` (plus `force-dynamic` and `revalidate = 0`).
+
+| | |
+|---|---|
+| Route | `GET /api/health` (also answers `HEAD` with the same status and no body) |
+| Auth | None. Public, so a monitor needs no credentials. |
+| Healthy | `200` · `{"ok":true,"checks":{"db":"ok"}}` |
+| Unhealthy | `503` · `{"ok":false,"error":"database_unreachable"}` |
+| Timeout | 4s. A database that has not answered by then counts as unreachable and returns `503`. |
+
+**What it checks: the database, and nothing else.** No Cloudinary, Gemini, SMTP, or WitUS
+Inbox/Outbox call happens here. Those are real dependencies, but a vendor outage must not turn the
+uptime monitor red while the site is still serving every page it owns.
+
+**What it tells an attacker: one bit.** The response carries no version, no env values, no counts,
+and no portal or client-gallery data. The failure body is a fixed literal and the handler's `catch`
+has no binding at all, because a Mongo error quotes the connection string and that string carries its
+password inline. For the same reason the failure log line is a bare constant with no error object
+interpolated: passing the error to `console.error` would only move the leak to the log sink. The
+tradeoff is real and deliberate: when this returns `503` you learn *that* the database is unreachable,
+never *why*, so diagnose the cause from Better Stack crash reports or the Mongo Atlas console.
+
+`npm test` covers both directions, including that a credential-bearing failure reaches neither the
+response nor the logs. If you change the handler, run it.
+
+The NextAuth middleware does not touch this route: its matcher is `/admin/:path*` and
+`/api/admin/:path*` only.
+
 ## Key Routes
 
 | Route | Description |
@@ -140,6 +174,7 @@ without them the build skips the upload and you get minified stack traces, not a
 | `/intake` · `/hire` · `/partner` | Client intake forms |
 | `/admin/*` | Admin dashboard (protected): `blog/posts`, `photos`, `galleries`, `approvals`, `projects`, `contact`, `logs` |
 | `/login` | Login page |
+| `/api/health` | Uptime probe: pings MongoDB, never cached. See [Health check](#health-check). |
 
 ## Docs
 
