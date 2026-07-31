@@ -19,7 +19,7 @@ const WORK: NavItem[] = [
 ]
 const LEARN: NavItem[] = [
   { href: '/learn', label: 'Courses' },
-  { href: '/blog/legacy', label: 'Blog' },
+  { href: '/blog', label: 'Blog' },
 ]
 const COMPANY: NavItem[] = [
   { href: '/#services', label: 'Services' },

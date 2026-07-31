@@ -24,7 +24,7 @@ export default function NotFound() {
             Back to home
           </Link>
           <Link
-            href="/blog/legacy"
+            href="/blog"
             className="rounded-md border border-gray-300 px-5 py-2.5 text-gray-700 font-medium hover:bg-gray-100 transition-colors"
           >
             Read the blog
