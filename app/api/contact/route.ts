@@ -11,6 +11,7 @@ import {
 import { Logger, LogContext, LogLevel } from './../../../lib/logging/logger'
 import { getClientIp } from '@/lib/utils/client'
 import { notifyInbox } from '@/lib/inbox/notifyInbox'
+import { verifyRecaptcha } from '@/lib/recaptcha/verify'
 
 // MongoDB connection
 let client: MongoClient
@@ -126,6 +127,26 @@ export async function POST(request: NextRequest) {
       projectDetails: sanitizeInput(body.projectDetails || ''),
       submittedAt: new Date(), // Initialize with a Date object
       status: 'closed'
+    }
+
+    // reCAPTCHA v3, matching the hire/partner/intake forms. The README has
+    // advertised this on the contact form for a while; until now it was only
+    // rate-limited.
+    const recaptcha = await verifyRecaptcha(body.recaptchaToken, 'contact_submit')
+    if (!recaptcha.ok) {
+      await logContactEvent({
+        request,
+        event: ContactEventType.FORM_FAILURE,
+        email: formData.email,
+        status: "failure",
+        reason: `reCAPTCHA rejected: ${recaptcha.reason}`,
+        metadata: { score: recaptcha.score }
+      })
+
+      return NextResponse.json({
+        success: false,
+        message: 'Could not verify the request. Please reload the page and try again.'
+      } as ContactFormResponse, { status: 400 })
     }
 
     // Check rate limiting first

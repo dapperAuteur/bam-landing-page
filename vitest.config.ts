@@ -15,6 +15,8 @@ const repoRoot = fileURLToPath(new URL(".", import.meta.url));
 export default defineConfig({
   resolve: {
     alias: [
+      // `server-only` is a build-time guard with no Node-resolvable entry point.
+      { find: /^server-only$/, replacement: `${repoRoot}lib/__tests__/stubs/server-only.ts` },
       { find: /^@\/lib\//, replacement: `${repoRoot}lib/` },
       { find: /^@\/components\//, replacement: `${repoRoot}components/` },
       { find: /^@\/models\//, replacement: `${repoRoot}models/` },

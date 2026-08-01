@@ -4,6 +4,7 @@ import clientPromise from "@/lib/db/mongodb";
 import { Logger, LogContext } from "@/lib/logging/logger";
 import { getClientIp, isValidEmail } from "@/lib/utils/client";
 import { verifyRecaptcha } from "@/lib/recaptcha/verify";
+import { checkFormRateLimit } from "@/lib/inbox/formRateLimit";
 import { submitToInbox } from "@/lib/inbox/signedFetch";
 
 export const SURVEY_FORM_TYPE = "client-intake";
@@ -203,6 +204,20 @@ export async function handleSurveySubmission(
     return NextResponse.json(
       { success: false, message: "Could not verify the request. Please reload and try again." },
       { status: 400 }
+    );
+  }
+
+  // After reCAPTCHA (a valid token is not a spend limit) and before the Inbox
+  // POST + email fan-out that an accepted submission triggers.
+  const rateLimit = await checkFormRateLimit(ipAddress, (body.email || "").trim().toLowerCase());
+  if (rateLimit.isLimited) {
+    await Logger.warning(LogContext.SYSTEM, "intake form: rate limited", {
+      request,
+      metadata: { reason: rateLimit.reason, nextAllowedTime: rateLimit.nextAllowedTime },
+    });
+    return NextResponse.json(
+      { success: false, message: "Too many submissions. Please try again later." },
+      { status: 429 }
     );
   }
 
