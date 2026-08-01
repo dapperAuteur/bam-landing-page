@@ -8,14 +8,20 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  * BAM, since reCAPTCHA still stands in front).
  */
 
-const counts = { hourlyByIp: 0, dailyByIp: 0, dailyByEmail: 0 };
-let shouldThrow = false;
-
-const countDocuments = vi.fn(async (query: Record<string, unknown>) => {
-  if (shouldThrow) throw new Error("mongo down");
-  if ("payload.email" in query) return counts.dailyByEmail;
-  // IP queries differ only by window; the hourly check runs first.
-  return countDocuments.mock.calls.length === 1 ? counts.hourlyByIp : counts.dailyByIp;
+// vi.hoisted so the mock factory below (which vitest hoists above the imports)
+// can reach these without a top-level await on a dynamic import -- tsc rejects
+// top-level await under this project's compiler target.
+const { counts, state, countDocuments } = vi.hoisted(() => {
+  const counts = { hourlyByIp: 0, dailyByIp: 0, dailyByEmail: 0 };
+  const state = { shouldThrow: false, ipCalls: 0 };
+  const countDocuments = vi.fn(async (query: Record<string, unknown>) => {
+    if (state.shouldThrow) throw new Error("mongo down");
+    if ("payload.email" in query) return counts.dailyByEmail;
+    // The two IP queries differ only by window; the hourly check runs first.
+    state.ipCalls += 1;
+    return state.ipCalls === 1 ? counts.hourlyByIp : counts.dailyByIp;
+  });
+  return { counts, state, countDocuments };
 });
 
 vi.mock("@/lib/db/mongodb", () => ({
@@ -24,14 +30,19 @@ vi.mock("@/lib/db/mongodb", () => ({
   }),
 }));
 
-const { checkFormRateLimit, HOUR_LIMIT_PER_IP, DAY_LIMIT_PER_IP, DAY_LIMIT_PER_EMAIL } =
-  await import("../inbox/formRateLimit");
+import {
+  checkFormRateLimit,
+  HOUR_LIMIT_PER_IP,
+  DAY_LIMIT_PER_IP,
+  DAY_LIMIT_PER_EMAIL,
+} from "../inbox/formRateLimit";
 
 beforeEach(() => {
   counts.hourlyByIp = 0;
   counts.dailyByIp = 0;
   counts.dailyByEmail = 0;
-  shouldThrow = false;
+  state.shouldThrow = false;
+  state.ipCalls = 0;
   countDocuments.mockClear();
 });
 
@@ -74,7 +85,7 @@ describe("checkFormRateLimit", () => {
   });
 
   it("fails open when Mongo is unavailable", async () => {
-    shouldThrow = true;
+    state.shouldThrow = true;
     expect((await checkFormRateLimit("1.2.3.4", "a@example.com")).isLimited).toBe(false);
   });
 });
