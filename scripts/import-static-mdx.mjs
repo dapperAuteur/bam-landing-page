@@ -5,6 +5,7 @@
 //
 //   node scripts/import-static-mdx.mjs            # apply all .mdx in scripts/migrations/
 //   node scripts/import-static-mdx.mjs --dry      # show what would change, write nothing
+//   node scripts/import-static-mdx.mjs --only=my-slug   # just one post (safest for a new post)
 //
 // Filenames map to slugs by replacing '__' with '/'. e.g.
 //   scripts/migrations/workouts__lphc.mdx  ->  slug "workouts/lphc"
@@ -38,6 +39,11 @@ config({ path: '.env.local' })
 config()
 
 const DRY = process.argv.includes('--dry')
+// --only=<slug> limits the run to one post. Without it every .mdx in the
+// directory is re-applied, which overwrites the DB copy of posts that may have
+// been edited in the admin since their .mdx was written. Prefer --only when
+// publishing a single new post.
+const ONLY = (process.argv.find(a => a.startsWith('--only=')) || '').slice('--only='.length)
 const DIR = join(process.cwd(), 'scripts', 'migrations')
 const uri = process.env.MONGODB_URI
 if (!uri) { console.error('MONGODB_URI not set (load .env.local)'); process.exit(1) }
@@ -69,8 +75,14 @@ function parseFrontmatter(raw) {
 
 const META_KEYS = ['title', 'description', 'excerpt', 'category', 'tags', 'readTime', 'publishDate', 'featured']
 
-const files = readdirSync(DIR).filter(f => f.endsWith('.mdx'))
-if (files.length === 0) { console.log('No .mdx files in scripts/migrations/'); process.exit(0) }
+const files = readdirSync(DIR)
+  .filter(f => f.endsWith('.mdx'))
+  .filter(f => !ONLY || f.replace(/\.mdx$/, '').replace(/__/g, '/') === ONLY)
+if (files.length === 0) {
+  console.log(ONLY ? `No .mdx in scripts/migrations/ matching --only=${ONLY}` : 'No .mdx files in scripts/migrations/')
+  process.exit(0)
+}
+if (ONLY) console.log(`Limiting to --only=${ONLY}\n`)
 
 const client = new MongoClient(uri)
 await client.connect()
