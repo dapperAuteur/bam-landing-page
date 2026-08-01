@@ -17,6 +17,7 @@ import {
   Bar
 } from 'recharts';
 import { ChevronDown, ChevronUp, MessageCircle, X, Send, User, Stethoscope, GraduationCap } from 'lucide-react';
+import { ECS_QUESTIONS, type EcsQa } from '@/lib/blog/insights/ecs';
 
 // Type definitions
 type UserType = 'general' | 'student' | 'healthcare';
@@ -162,8 +163,6 @@ export default function ECSInfographic() {
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
   const [showChat, setShowChat] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-  const [inputMessage, setInputMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const toggleModule = (moduleId: string) => {
     const newExpanded = new Set(expandedModules);
@@ -175,64 +174,12 @@ export default function ECSInfographic() {
     setExpandedModules(newExpanded);
   };
 
-  const sendMessage = async (message: string) => {
-    if (!message.trim()) return;
-
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      text: message,
-      sender: 'user',
-      timestamp: new Date()
-    };
-
-    setChatMessages(prev => [...prev, userMessage]);
-    setInputMessage('');
-    setIsLoading(true);
-
-    try {
-      // Calls our server proxy — the Gemini key stays server-side. This used to read
-      // process.env.GEMINI_API_KEY in the browser, which Next never inlines (only
-      // NEXT_PUBLIC_*), so the key was undefined and sendMessage early-returned:
-      // the chat did nothing at all.
-      const response = await fetch('/api/ai/gemini', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: `You are an expert on the Endocannabinoid System (ECS) helping ${userType === 'general' ? 'the general public' : userType === 'student' ? 'students' : 'healthcare professionals'} understand this important biological system.
-
-Context: The ECS consists of cannabinoid receptors (CB1 and CB2), endocannabinoids (anandamide and 2-AG), and metabolic enzymes. It regulates homeostasis, wellness, learning, and aging processes.
-
-Please answer this question about the ECS: ${message}
-
-Respond appropriately for a ${userType} audience with accurate, evidence-based information. Keep responses conversational but scientifically accurate.`
-        })
-      });
-
-      const data = await response.json();
-      const aiResponse = data.text || data.error || 'Sorry, I could not process that request.';
-
-      const aiMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        text: aiResponse,
-        sender: 'ai',
-        timestamp: new Date()
-      };
-
-      setChatMessages(prev => [...prev, aiMessage]);
-    } catch (error) {
-      console.error('Error calling Gemini API:', error);
-      const errorMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        text: 'Sorry, there was an error processing your request. Please try again.',
-        sender: 'ai',
-        timestamp: new Date()
-      };
-      setChatMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
+  const askPreset = (qa: EcsQa) => {
+    setChatMessages(prev => [
+      ...prev,
+      { id: `${qa.id}-q`, text: qa.question, sender: 'user', timestamp: new Date() },
+      { id: `${qa.id}-a`, text: qa.answer, sender: 'ai', timestamp: new Date() },
+    ]);
   };
 
   const renderChart = (module: ModuleData) => {
@@ -421,8 +368,8 @@ Respond appropriately for a ${userType} audience with accurate, evidence-based i
             
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {chatMessages.length === 0 && (
-                <div className="text-gray-500 text-center">
-                  Ask me anything about the endocannabinoid system!
+                <div className="text-gray-500 text-center text-sm">
+                  Pick a question below to see the answer.
                 </div>
               )}
               {chatMessages.map((message) => (
@@ -436,33 +383,20 @@ Respond appropriately for a ${userType} audience with accurate, evidence-based i
                   </div>
                 </div>
               ))}
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-gray-200 text-gray-800 px-3 py-2 rounded-lg">
-                    Thinking...
-                  </div>
-                </div>
-              )}
             </div>
             
-            <div className="p-4 border-t">
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && sendMessage(inputMessage)}
-                  placeholder="Type your question..."
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  disabled={isLoading}
-                />
-                <button
-                  onClick={() => sendMessage(inputMessage)}
-                  disabled={isLoading || !inputMessage.trim()}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
+            <div className="border-t p-3">
+              <div className="flex flex-wrap gap-2">
+                {ECS_QUESTIONS.map(qa => (
+                  <button
+                    key={qa.id}
+                    type="button"
+                    onClick={() => askPreset(qa)}
+                    className="rounded-full border border-blue-300 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-800 transition-colors hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {qa.question}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
