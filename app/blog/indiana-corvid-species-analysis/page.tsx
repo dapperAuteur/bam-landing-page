@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Chart, registerables, TooltipItem } from 'chart.js';
-import { AppError } from '../../../types/errors';
+import InsightModal from '@/components/blog/InsightModal';
+import { CORVID_INSIGHTS } from '@/lib/blog/insights/corvids';
+import { findInsight, type Insight } from '@/lib/blog/insights/types';
 
 Chart.register(...registerables);
 
@@ -93,8 +95,7 @@ const corvidData = [
 // Main Component
 const CorvidInfographic = () => {
   const [selectedCorvid, setSelectedCorvid] = useState<Corvid | null>(corvidData[0]);
-  const [aiSummary, setAiSummary] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [openInsight, setOpenInsight] = useState<Insight | null>(null);
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart | null>(null);
 
@@ -188,45 +189,12 @@ const CorvidInfographic = () => {
 
   const handleSelectCorvid = (corvid: Corvid) => {
     setSelectedCorvid(corvid);
-    setAiSummary('');
+    setOpenInsight(null);
   };
 
-  const generateSummary = async () => {
+  const showSpeciesProfile = () => {
     if (!selectedCorvid) return;
-    setIsLoading(true);
-    setAiSummary('');
-
-    const prompt = `
-        Based on the following data for the corvid species "${selectedCorvid.species}", generate a concise, engaging summary (2-3 sentences) suitable for an infographic.
-        - Mass: ${selectedCorvid.mass}g
-        - Size: ${selectedCorvid.size}cm
-        - Wingspan: ${selectedCorvid.wingspan}cm
-        - Habitat: ${selectedCorvid.habitat}
-        - Key Features: ${selectedCorvid.vocalization}, ${selectedCorvid.socialBehavior}, ${selectedCorvid.flightStyle}.
-        Highlight its most distinctive characteristics.
-    `;
-    
-    // Calls our server proxy — the Gemini key stays server-side. This used to read
-    // process.env.GEMINI_API_KEY in the browser, which Next never inlines (only
-    // NEXT_PUBLIC_*), so the key was undefined and this feature never worked.
-    try {
-        const response = await fetch('/api/ai/gemini', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt, model: 'gemini-2.0-flash' })
-        });
-        const result = await response.json();
-        if (result.text) {
-            setAiSummary(result.text);
-        } else {
-            setAiSummary(result.error || 'Could not generate summary.');
-        }
-    } catch (error: unknown) {
-        console.error("Gemini API error:", error);
-        setAiSummary(`Error generating summary: ${(error as AppError).message}`);
-    } finally {
-        setIsLoading(false);
-    }
+    setOpenInsight(findInsight(CORVID_INSIGHTS, selectedCorvid.species)?.insight ?? null);
   };
 
   return (
@@ -290,25 +258,19 @@ const CorvidInfographic = () => {
 
                 <div>
                   <button
-                    onClick={generateSummary}
-                    disabled={isLoading}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:bg-gray-500"
+                    onClick={showSpeciesProfile}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
                   >
-                    {isLoading ? 'Generating...' : '✨ Generate AI Summary'}
+                    Read the full species profile
                   </button>
                 </div>
-                
-                {aiSummary && (
-                   <div className="mt-4 p-4 bg-gray-700 rounded-lg">
-                       <h4 className="font-bold text-blue-300">AI-Generated Overview</h4>
-                       <p className="text-gray-300 text-sm mt-2">{aiSummary}</p>
-                   </div>
-                )}
               </div>
             )}
           </div>
         </div>
       </div>
+
+      <InsightModal insight={openInsight} onClose={() => setOpenInsight(null)} />
     </div>
   );
 };

@@ -1,8 +1,10 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
 import { Chart, registerables, TooltipItem } from 'chart.js';
+import InsightModal from '@/components/blog/InsightModal';
+import { SHORT_SLEEP_QUESTIONS, SHORT_SLEEP_DIRECTIONS } from '@/lib/blog/insights/short-sleep';
+import { findInsight, type Insight } from '@/lib/blog/insights/types';
 Chart.register(...registerables);
-import { AppError } from '../../../types/errors';
 
 
 // Helper function to wrap long labels for charts
@@ -32,14 +34,7 @@ const Sik3Infographic = () => {
     const chartInstanceRef = useRef<Chart | null>(null);
 
     // State for AI Modal
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [aiQuestion, setAiQuestion] = useState('');
-    const [aiAnswer, setAiAnswer] = useState('AI\'s answer will appear here.');
-    const [isAiLoading, setIsAiLoading] = useState(false);
 
-    // State for Hypothesis Generation
-    const [hypothesis, setHypothesis] = useState('');
-    const [isHypothesisLoading, setIsHypothesisLoading] = useState(false);
 
     // Effect to create and destroy the chart
     useEffect(() => {
@@ -122,53 +117,14 @@ const Sik3Infographic = () => {
         };
     }, []);
 
-    // Calls our server proxy — the Gemini key stays server-side.
-    const callGeminiApi = async (promptText: string) => {
-        try {
-            const response = await fetch('/api/ai/gemini', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: promptText, model: 'gemini-2.0-flash' })
-            });
+    const [openInsight, setOpenInsight] = useState<Insight | null>(null);
 
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result?.error || `API request failed with status ${response.status}`);
-            }
-
-            if (result.text) {
-                return result.text;
-            }
-            return result.error || "Sorry, I couldn't get a proper answer. The response was unexpected.";
-        } catch (error: unknown) {
-            console.error("Gemini API call error:", error);
-            return `An error occurred: ${(error as AppError).message}. Please try again.`;
-        }
-    };
-    
-    // Handler for "Ask AI"
-    const handleAskAi = async () => {
-        if (!aiQuestion.trim()) {
-            setAiAnswer("Please enter a question.");
-            return;
-        }
-        setIsAiLoading(true);
-        setAiAnswer("Thinking...");
-        const context = `You are a helpful assistant explaining scientific concepts from a report about the genetics of sleep. The user is asking about Natural Short Sleep (NSS), the SIK3 gene, and the SIK3-N783Y mutation. Based on this context, answer the following question clearly and concisely. Question: "${aiQuestion}"`;
-        const answer = await callGeminiApi(context);
-        setAiAnswer(answer);
-        setIsAiLoading(false);
+    const askQuestion = (id: string) => {
+        setOpenInsight(findInsight(SHORT_SLEEP_QUESTIONS, id)?.insight ?? null);
     };
 
-    // Handler for "Generate Hypothesis"
-    const handleGenerateHypothesis = async () => {
-        setIsHypothesisLoading(true);
-        setHypothesis('');
-        const prompt = `Based on the understanding that the SIK3-N783Y mutation diminishes SIK3 kinase activity but leads to shorter, more intense sleep (higher delta power), generate one novel, testable research hypothesis. The hypothesis should explore the downstream molecular consequences or potential therapeutic applications. Avoid simply restating known facts. For example, "Hypothesis: Specific inhibition of SIK3's phosphorylation of synaptic protein X will replicate the sleep efficiency gains of the N783Y mutation without impacting global sleep duration."`;
-        const newHypothesis = await callGeminiApi(prompt);
-        setHypothesis(newHypothesis);
-        setIsHypothesisLoading(false);
+    const showDirection = (id: string) => {
+        setOpenInsight(findInsight(SHORT_SLEEP_DIRECTIONS, id)?.insight ?? null);
     };
 
     return (
@@ -178,11 +134,21 @@ const Sik3Infographic = () => {
                 <header className="text-center mb-12 md:mb-16">
                     <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-2">The Genetics of Efficient Sleep</h1>
                     <p className="text-lg md:text-xl font-semibold text-indigo-600">An Interactive Analysis of the SIK3-N783Y Mutation</p>
-                    <button 
-                        onClick={() => setIsModalOpen(true)}
-                        className="mt-6 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-lg">
-                        ✨ Ask AI About Sleep Science
-                    </button>
+                    <div className="mt-8 mx-auto max-w-3xl">
+                        <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Common questions</p>
+                        <div className="grid gap-2 sm:grid-cols-2">
+                            {SHORT_SLEEP_QUESTIONS.map(option => (
+                                <button
+                                    key={option.id}
+                                    type="button"
+                                    onClick={() => askQuestion(option.id)}
+                                    className="rounded-lg border border-slate-300 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 transition-colors hover:border-indigo-400 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                >
+                                    {option.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                 </header>
 
                 <main className="space-y-12">
@@ -250,26 +216,26 @@ const Sik3Infographic = () => {
                     
                     {/* Section 4: Future Outlook */}
                     <section className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-                        <h2 className="text-3xl font-bold text-slate-800 text-center mb-8">4. Future Outlook & AI-Generated Hypothesis</h2>
+                        <h2 className="text-3xl font-bold text-slate-800 text-center mb-8">4. Future Outlook & Open Questions</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="text-slate-600 text-lg">
                                 <p className="mb-4">The SIK3-N783Y variant offers a blueprint for new sleep therapies. Instead of inducing sleep, future drugs could mimic this mutation to enhance sleep *quality* and *efficiency*.</p>
                                 <p>This opens doors to treatments for sleep disorders and provides insights into healthy aging, where efficient cellular repair during sleep is crucial.</p>
                             </div>
                             <div className="bg-teal-50 border border-teal-200 p-6 rounded-lg">
-                                <h3 className="font-bold text-teal-800 text-xl mb-4">Generate a Novel Research Idea</h3>
-                                <button
-                                    onClick={handleGenerateHypothesis}
-                                    disabled={isHypothesisLoading}
-                                    className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md w-full disabled:bg-gray-400"
-                                >
-                                    {isHypothesisLoading ? 'Generating...' : '✨ Generate with AI'}
-                                </button>
-                                {hypothesis && (
-                                    <div className="mt-4 p-4 bg-white rounded shadow text-sm">
-                                        <p><strong className="text-teal-700">AI Hypothesis:</strong> {hypothesis}</p>
-                                    </div>
-                                )}
+                                <h3 className="font-bold text-teal-800 text-xl mb-4">Open research questions</h3>
+                                <div className="space-y-2">
+                                    {SHORT_SLEEP_DIRECTIONS.map(option => (
+                                        <button
+                                            key={option.id}
+                                            type="button"
+                                            onClick={() => showDirection(option.id)}
+                                            className="w-full rounded-lg border border-teal-300 bg-white px-4 py-3 text-left text-sm font-medium text-teal-900 transition-colors hover:border-teal-500 hover:bg-teal-50 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                        >
+                                            {option.label}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -277,41 +243,8 @@ const Sik3Infographic = () => {
 
             </div>
 
-            {/* AI Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-lg shadow-2xl p-6 w-full max-w-lg max-h-full overflow-y-auto">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-2xl font-bold text-slate-900">Ask AI About Sleep Science</h3>
-                            <button onClick={() => setIsModalOpen(false)} className="text-3xl text-slate-500 hover:text-slate-800">&times;</button>
-                        </div>
-                        <p className="text-sm text-slate-600 mb-4">Ask a question about SIK3, sleep genetics, or related concepts from the report.</p>
-                        <textarea
-                            value={aiQuestion}
-                            onChange={(e) => setAiQuestion(e.target.value)}
-                            rows={3}
-                            className="w-full p-2 border border-slate-300 rounded-md mb-4 focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="e.g., Explain why lower SIK3 activity leads to less sleep."
-                        />
-                        <button
-                            onClick={handleAskAi}
-                            disabled={isAiLoading}
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 w-full disabled:bg-gray-400"
-                        >
-                            {isAiLoading ? 'Getting Answer...' : 'Submit Question'}
-                        </button>
-                        <div className="mt-6 p-4 bg-slate-50 rounded-md min-h-[100px] text-slate-700">
-                            {isAiLoading ? (
-                                <div className="flex justify-center items-center h-full">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-                                </div>
-                            ) : (
-                                <p>{aiAnswer}</p>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
+
+            <InsightModal insight={openInsight} onClose={() => setOpenInsight(null)} />
         </div>
     );
 };

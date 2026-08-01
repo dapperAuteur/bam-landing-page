@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement, BubbleController, ChartOptions } from 'chart.js';
-import { AppError } from '../../../types/errors';
 import { Radar, Bubble, Bar } from 'react-chartjs-2';
+import { TRADITION_REFLECTIONS } from '@/lib/blog/insights/african-traditions';
 
 // Register Chart.js components
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement, BubbleController);
@@ -86,23 +86,13 @@ const TraditionCard = ({ children, className }: { children: React.ReactNode; cla
     </div>
 );
 
-const AIGeneratorButton = ({ onClick, isLoading, children }: { onClick: () => void; isLoading: boolean; children?: React.ReactNode }) => (
+const AIGeneratorButton = ({ onClick, children }: { onClick: () => void; children?: React.ReactNode }) => (
      <button
+        type="button"
         onClick={onClick}
-        disabled={isLoading}
-        className="mt-4 w-full flex items-center justify-center px-4 py-2 bg-[#FF884B] text-white font-semibold rounded-lg shadow-md hover:bg-[#E57A42] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF884B] transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        className="mt-4 w-full flex items-center justify-center px-4 py-2 bg-[#FF884B] text-white font-semibold rounded-lg shadow-md hover:bg-[#E57A42] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF884B] transition-all duration-300"
     >
-        {isLoading ? (
-            <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Generating...
-            </>
-        ) : (
-            children
-        )}
+        {children}
     </button>
 );
 
@@ -212,45 +202,15 @@ const IgboBarChart = () => {
 
 export default function AfricanSpiritualityInfographic() {
     const [aiOutputs, setAiOutputs] = useState<{ [key: string]: string }>({});
-    const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
     
-    const handleAIGenerate = async (traditionKey: string, type: string) => {
+    const revealReflection = (traditionKey: string, type: string) => {
         const uniqueId = `${traditionKey}-${type}`;
-        setLoadingStates(prev => {
-            return ({ ...prev, [uniqueId]: true })
-    });
-
-        const { aiPromptContext } = spiritualData[traditionKey];
-        let prompt;
-
-        if (type === 'proverb') {
-            prompt = `Based on the core ideas of the ${aiPromptContext}, generate one short, insightful proverb that reflects this tradition's worldview. The proverb should sound authentic but be an original creation. Example format: "The river that forgets its source will soon run dry."`;
-        } else { // reflection
-            prompt = `Based on the core ideas of the ${aiPromptContext}, generate one thought-provoking, open-ended question for personal reflection. The question should encourage deep thinking about the tradition's values. Example format: "How does the idea of a personal destiny (Ori) influence your view of life's challenges?"`;
-        }
-        
-        // Calls our server proxy — the Gemini key stays server-side. This used to
-        // read process.env.GEMINI_API_KEY in the browser, which Next never inlines
-        // (only NEXT_PUBLIC_*), so the key was undefined and this feature never worked.
-        try {
-            const response = await fetch('/api/ai/gemini', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt, model: 'gemini-2.0-flash' })
-            });
-            const result = await response.json();
-
-            if (result.text) {
-                setAiOutputs(prev => ({ ...prev, [uniqueId]: result.text.trim() }));
-            } else {
-                 setAiOutputs(prev => ({ ...prev, [uniqueId]: result.error || "The AI scribe is resting. Please try again later." }));
-            }
-        } catch (error: unknown) {
-            console.error("Gemini API call failed:", error);
-            setAiOutputs(prev => ({ ...prev, [uniqueId]: `Could not connect to the AI scribe: ${(error as AppError).message}` }));
-        } finally {
-            setLoadingStates(prev => ({ ...prev, [uniqueId]: false }));
-        }
+        const entry = TRADITION_REFLECTIONS[traditionKey];
+        if (!entry) return;
+        setAiOutputs(prev => ({
+            ...prev,
+            [uniqueId]: type === 'proverb' ? entry.concept : entry.reflection,
+        }));
     };
 
     return (
@@ -280,9 +240,9 @@ export default function AfricanSpiritualityInfographic() {
                             <p className="text-sm font-semibold text-gray-500 mb-4">{spiritualData.yoruba.region}</p>
                             <p className="text-gray-700 mb-6 flex-grow">{spiritualData.yoruba.description}</p>
                             <div className="chart-container mt-auto"><YorubaRadarChart /></div>
-                            <AIGeneratorButton onClick={() => handleAIGenerate('yoruba', 'proverb')} isLoading={loadingStates['yoruba-proverb']}>✨ Generate Proverb</AIGeneratorButton>
+                            <AIGeneratorButton onClick={() => revealReflection('yoruba', 'proverb')}>Core teaching</AIGeneratorButton>
                             <AIOutputCard content={aiOutputs['yoruba-proverb']} />
-                             <AIGeneratorButton onClick={() => handleAIGenerate('yoruba', 'reflection')} isLoading={loadingStates['yoruba-reflection']}>🤔 Generate Reflection</AIGeneratorButton>
+                             <AIGeneratorButton onClick={() => revealReflection('yoruba', 'reflection')}>A question to sit with</AIGeneratorButton>
                             <AIOutputCard content={aiOutputs['yoruba-reflection']} />
                         </TraditionCard>
                         
@@ -299,9 +259,9 @@ export default function AfricanSpiritualityInfographic() {
                                     <div className="bg-[#005086] text-white py-2 px-4 rounded-b-lg font-semibold text-sm">Amadlozi (Ancestors)</div>
                                 </div>
                             </div>
-                            <AIGeneratorButton onClick={() => handleAIGenerate('zulu', 'proverb')} isLoading={loadingStates['zulu-proverb']}>✨ Generate Proverb</AIGeneratorButton>
+                            <AIGeneratorButton onClick={() => revealReflection('zulu', 'proverb')}>Core teaching</AIGeneratorButton>
                             <AIOutputCard content={aiOutputs['zulu-proverb']} />
-                             <AIGeneratorButton onClick={() => handleAIGenerate('zulu', 'reflection')} isLoading={loadingStates['zulu-reflection']}>🤔 Generate Reflection</AIGeneratorButton>
+                             <AIGeneratorButton onClick={() => revealReflection('zulu', 'reflection')}>A question to sit with</AIGeneratorButton>
                             <AIOutputCard content={aiOutputs['zulu-reflection']} />
                         </TraditionCard>
                         
@@ -319,9 +279,9 @@ export default function AfricanSpiritualityInfographic() {
                                     <span className="absolute -left-12 text-xs font-semibold text-[#3D3B8E]">Musoni (Spirit)</span>
                                 </div>
                             </div>
-                            <AIGeneratorButton onClick={() => handleAIGenerate('kongo', 'proverb')} isLoading={loadingStates['kongo-proverb']}>✨ Generate Proverb</AIGeneratorButton>
+                            <AIGeneratorButton onClick={() => revealReflection('kongo', 'proverb')}>Core teaching</AIGeneratorButton>
                             <AIOutputCard content={aiOutputs['kongo-proverb']} />
-                             <AIGeneratorButton onClick={() => handleAIGenerate('kongo', 'reflection')} isLoading={loadingStates['kongo-reflection']}>🤔 Generate Reflection</AIGeneratorButton>
+                             <AIGeneratorButton onClick={() => revealReflection('kongo', 'reflection')}>A question to sit with</AIGeneratorButton>
                             <AIOutputCard content={aiOutputs['kongo-reflection']} />
                         </TraditionCard>
                         
@@ -330,9 +290,9 @@ export default function AfricanSpiritualityInfographic() {
                             <p className="text-sm font-semibold text-gray-500 mb-4">{spiritualData.san.region}</p>
                             <p className="text-gray-700 mb-6 flex-grow">{spiritualData.san.description}</p>
                             <div className="chart-container mt-auto"><SanBubbleChart/></div>
-                            <AIGeneratorButton onClick={() => handleAIGenerate('san', 'proverb')} isLoading={loadingStates['san-proverb']}>✨ Generate Proverb</AIGeneratorButton>
+                            <AIGeneratorButton onClick={() => revealReflection('san', 'proverb')}>Core teaching</AIGeneratorButton>
                             <AIOutputCard content={aiOutputs['san-proverb']} />
-                             <AIGeneratorButton onClick={() => handleAIGenerate('san', 'reflection')} isLoading={loadingStates['san-reflection']}>🤔 Generate Reflection</AIGeneratorButton>
+                             <AIGeneratorButton onClick={() => revealReflection('san', 'reflection')}>A question to sit with</AIGeneratorButton>
                             <AIOutputCard content={aiOutputs['san-reflection']} />
                         </TraditionCard>
 
@@ -341,9 +301,9 @@ export default function AfricanSpiritualityInfographic() {
                             <p className="text-sm font-semibold text-gray-500 mb-4">{spiritualData.igbo.region}</p>
                             <p className="text-gray-700 mb-6 flex-grow">{spiritualData.igbo.description}</p>
                             <div className="chart-container mt-auto"><IgboBarChart/></div>
-                             <AIGeneratorButton onClick={() => handleAIGenerate('igbo', 'proverb')} isLoading={loadingStates['igbo-proverb']}>✨ Generate Proverb</AIGeneratorButton>
+                             <AIGeneratorButton onClick={() => revealReflection('igbo', 'proverb')}>Core teaching</AIGeneratorButton>
                             <AIOutputCard content={aiOutputs['igbo-proverb']} />
-                             <AIGeneratorButton onClick={() => handleAIGenerate('igbo', 'reflection')} isLoading={loadingStates['igbo-reflection']}>🤔 Generate Reflection</AIGeneratorButton>
+                             <AIGeneratorButton onClick={() => revealReflection('igbo', 'reflection')}>A question to sit with</AIGeneratorButton>
                             <AIOutputCard content={aiOutputs['igbo-reflection']} />
                         </TraditionCard>
                         
@@ -365,9 +325,9 @@ export default function AfricanSpiritualityInfographic() {
                                     <h4 className="font-semibold">Denkyem</h4><p className="text-xs">&quot;Siamese crocodiles&quot;</p>
                                 </div>
                             </div>
-                            <AIGeneratorButton onClick={() => handleAIGenerate('akan', 'proverb')} isLoading={loadingStates['akan-proverb']}>✨ Generate Proverb</AIGeneratorButton>
+                            <AIGeneratorButton onClick={() => revealReflection('akan', 'proverb')}>Core teaching</AIGeneratorButton>
                             <AIOutputCard content={aiOutputs['akan-proverb']} />
-                             <AIGeneratorButton onClick={() => handleAIGenerate('akan', 'reflection')} isLoading={loadingStates['akan-reflection']}>🤔 Generate Reflection</AIGeneratorButton>
+                             <AIGeneratorButton onClick={() => revealReflection('akan', 'reflection')}>A question to sit with</AIGeneratorButton>
                             <AIOutputCard content={aiOutputs['akan-reflection']} />
                         </TraditionCard>
 

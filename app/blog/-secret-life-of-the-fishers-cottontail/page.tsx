@@ -3,6 +3,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Chart as ChartJS, registerables, TooltipItem, ChartType } from 'chart.js';
+import InsightModal from '@/components/blog/InsightModal';
+import { COTTONTAIL_GARDEN_INSIGHTS, COTTONTAIL_PODCAST_INSIGHTS } from '@/lib/blog/insights/cottontail';
+import { findInsight, type Insight } from '@/lib/blog/insights/types';
 ChartJS.register(...registerables);
 
 // Helper function to wrap long labels for charts
@@ -43,9 +46,8 @@ const topicData = {
 
 // Main Infographic Component
 export default function FishersRabbitInfographic() {
-    const [modalState, setModalState] = useState({ isOpen: false, title: '', content: '' });
-    const [isLoading, setIsLoading] = useState(false);
-    const [gardenProblem, setGardenProblem] = useState('');
+    const [openInsight, setOpenInsight] = useState<Insight | null>(null);
+    const [gardenProblem, setGardenProblem] = useState<string>(COTTONTAIL_GARDEN_INSIGHTS[0].id);
     const [podcastTopic, setPodcastTopic] = useState<PodcastTopic>('diet');
 
 
@@ -103,102 +105,19 @@ export default function FishersRabbitInfographic() {
         };
     }, []);
 
-    const callGeminiAPI = async (prompt: string) => {
-        setIsLoading(true);
-        // Calls our server proxy — the Gemini key stays server-side. This used to
-        // read process.env.GEMINI_API_KEY in the browser, which Next never inlines
-        // (only NEXT_PUBLIC_*), so the key was undefined and this feature never worked.
-        try {
-            const response = await fetch('/api/ai/gemini', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt, model: 'gemini-2.0-flash' })
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result?.error || `API call failed with status: ${response.status}`);
-            }
-
-            if (result.text) {
-                setModalState(prev => ({ ...prev, content: result.text }));
-            } else {
-                setModalState(prev => ({ ...prev, content: result.error || "Sorry, I couldn't generate a response. The model returned empty content." }));
-            }
-        } catch (error: unknown) {
-            console.error("Gemini API Error:", error);
-            let errorMessage = "An unknown error occurred. Please check the console for details.";
-            if (error instanceof Error) {
-                errorMessage = `An error occurred: ${error.message}. Please check the console for details.`;
-            }
-            setModalState(prev => ({ ...prev, content: errorMessage }));
-        } finally {
-            setIsLoading(false);
-        }
+    const showGardenPlan = () => {
+        const option = findInsight(COTTONTAIL_GARDEN_INSIGHTS, gardenProblem);
+        if (option) setOpenInsight(option.insight);
     };
 
-    const handleGardenAdvice = () => {
-        if (!gardenProblem.trim()) {
-            alert('Please describe your garden problem first.');
-            return;
-        }
-        setModalState({ isOpen: true, title: 'Your Personalized Garden Plan', content: '' });
-        const prompt = `You are an expert in humane wildlife management for suburban gardens in the American Midwest, specializing in Eastern Cottontails. A user in Fishers, Indiana, has a problem. Based on the following established principles, generate a friendly, step-by-step action plan formatted in HTML with headings and lists. The plan must ONLY include humane methods.
-        
-        Principles:
-        1. Exclusion is most effective (e.g., 2ft tall chicken wire, buried).
-        2. Habitat modification is good (e.g., removing brush piles, tall weeds near gardens).
-        3. Repellents are least reliable but can be part of a strategy.
-        4. Planting rabbit-resistant plants (strong scents like herbs/marigolds; fuzzy textures like lamb's ear; toxic plants like daffodils) is a good long-term strategy.
-        5. Rabbits favor tender plants (beans, peas, tulips) and bark of young trees.
-        
-        User's specific problem: "${gardenProblem}"`;
-        callGeminiAPI(prompt);
+    const showPodcastScript = () => {
+        const option = findInsight(COTTONTAIL_PODCAST_INSIGHTS, podcastTopic);
+        if (option) setOpenInsight(option.insight);
     };
 
-    const handlePodcastScript = () => {
-        if (!podcastTopic) {
-            alert('Please select a topic first.');
-            return;
-        } else {
-            console.log('podcastTopic :>> ', podcastTopic);
-        
-        }
-        setModalState({ isOpen: true, title: 'Your Podcast Script Segment', content: '' });
-        const prompt = `You are the host of a friendly, engaging nature podcast called 'Suburban Wildlife'. Your tone is curious and educational. Based *only* on the following information, write a short, conversational podcast script (about 150-200 words). Format it with HTML paragraphs. Start with a hook to grab the listener's attention and make it sound natural, not like a list.
-        
-        Topic Information: "${topicData[podcastTopic]}"`;
-        callGeminiAPI(prompt);
-    };
-
-    
-
-
-    const closeModal = () => setModalState({ isOpen: false, title: '', content: '' });
 
     return (
         <div className="bg-[#F8F5F2] text-gray-700 antialiased font-sans">
-            {/* Modal */}
-            {modalState.isOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 max-w-2xl w-full relative">
-                        <button onClick={closeModal} className="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        </button>
-                        <h3 className="text-2xl font-bold text-[#2A3F54] mb-4 font-serif">{modalState.title}</h3>
-                        <div className="prose prose-sm md:prose-base max-w-none text-gray-700 max-h-[60vh] overflow-y-auto pr-4">
-                            {isLoading ? (
-                                <div className="flex justify-center items-center py-8">
-                                    <div className="loader border-4 border-gray-200 border-t-4 border-t-[#6C5B7B] rounded-full w-12 h-12 animate-spin"></div>
-                                </div>
-                            ) : (
-                                <div dangerouslySetInnerHTML={{ __html: modalState.content }} />
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
 
             <div className="container mx-auto p-4 md:p-8 max-w-7xl">
                 <header className="text-center my-12">
@@ -258,10 +177,15 @@ export default function FishersRabbitInfographic() {
                         <h2 className="text-3xl font-bold text-center mb-8 text-[#2A3F54] font-serif">Backyard Coexistence</h2>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                             <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                                <h3 className="font-bold text-xl mb-2 text-gray-800 font-serif">✨ Personalized Garden Advisor</h3>
-                                <p className="text-sm text-gray-600 mb-4">Describe your specific rabbit problem below, and our AI assistant will generate a custom, humane action plan.</p>
-                                <textarea value={gardenProblem} onChange={(e) => setGardenProblem(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg mb-4 h-24 focus:ring-2 focus:ring-[#6C5B7B] focus:border-transparent" placeholder="e.g., 'Rabbits are eating my bean sprouts and chewing the bark of my new apple tree.'"></textarea>
-                                <button onClick={handleGardenAdvice} className="w-full bg-[#6C5B7B] text-white font-bold py-3 px-4 rounded-lg hover:bg-[#355C7D] transition-colors flex items-center justify-center">Get My Action Plan</button>
+                                <h3 className="font-bold text-xl mb-2 text-gray-800 font-serif">Garden Advisor</h3>
+                                <p className="text-sm text-gray-600 mb-4">Pick the problem closest to yours for a humane action plan built on the hierarchy of deterrents below.</p>
+                                <label htmlFor="garden-problem" className="sr-only">Your rabbit problem</label>
+                                <select id="garden-problem" value={gardenProblem} onChange={(e) => setGardenProblem(e.target.value)} className="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-[#6C5B7B] focus:border-transparent">
+                                    {COTTONTAIL_GARDEN_INSIGHTS.map(option => (
+                                        <option key={option.id} value={option.id}>{option.label}</option>
+                                    ))}
+                                </select>
+                                <button onClick={showGardenPlan} className="w-full bg-[#6C5B7B] text-white font-bold py-3 px-4 rounded-lg hover:bg-[#355C7D] transition-colors flex items-center justify-center">Show my action plan</button>
                             </div>
                             <div>
                                 <h3 className="font-bold text-xl mb-2 text-gray-800 font-serif">Hierarchy of Humane Deterrents</h3>
@@ -322,7 +246,7 @@ export default function FishersRabbitInfographic() {
                     {/* Podcast Generator */}
                     <section className="bg-white rounded-2xl shadow-lg p-6 md:p-8 text-center">
                         <h2 className="text-3xl font-bold text-[#2A3F54] mb-2 font-serif">Become the Storyteller</h2>
-                        <p className="text-gray-600 mb-6 max-w-2xl mx-auto">Ready to create your podcast episode? Select a topic, and our AI will instantly write an engaging script segment for you.</p>
+                        <p className="text-gray-600 mb-6 max-w-2xl mx-auto">Ready to create your podcast episode? Pick a topic to read a written script segment.</p>
                         <div className="flex flex-col md:flex-row items-center justify-center gap-4">
                             <select value={podcastTopic} onChange={(e) => setPodcastTopic(e.target.value as PodcastTopic)} className="p-3 border border-gray-300 rounded-lg w-full md:w-auto focus:ring-2 focus:ring-[#6C5B7B] focus:border-transparent">
                                 <option value="diet">Seasonal Diet & Coprophagy</option>
@@ -331,15 +255,17 @@ export default function FishersRabbitInfographic() {
                                 <option value="coexistence">Gardener&apos;s Guide to Coexistence</option>
                                 <option value="habitat">The &quot;Edge Habitat&quot; Advantage</option>
                             </select>
-                            <button onClick={handlePodcastScript} className="w-full md:w-auto bg-[#C06C84] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#E84A5F] transition-colors flex items-center justify-center">✨ Generate Podcast Script</button>
+                            <button onClick={showPodcastScript} className="w-full md:w-auto bg-[#C06C84] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#E84A5F] transition-colors flex items-center justify-center">Read the script segment</button>
                         </div>
                     </section>
                 </main>
 
                 <footer className="text-center mt-16 pt-8 border-t border-gray-300">
+                    <p className="text-sm text-gray-600">This interactive application synthesizes data from the &quot;Hopping Through Hoosier Suburbia&quot; research report.</p>
                 </footer>
-                    <p className="text-sm text-gray-600">This interactive application synthesizes data from the &quot;Hopping Through Hoosier Suburbia&quot; research report. Interactive features are powered by the Gemini API.</p>
             </div>
+
+            <InsightModal insight={openInsight} onClose={() => setOpenInsight(null)} />
         </div>
     );
 }

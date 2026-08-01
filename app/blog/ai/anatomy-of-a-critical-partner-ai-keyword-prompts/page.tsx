@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useState, useRef, FC, ReactNode, SVGProps } from 'react';
+import React, { useState, FC, ReactNode, SVGProps } from 'react';
+import InsightModal from '@/components/blog/InsightModal';
+import { CHIEF_STRATEGIST_INSIGHTS } from '@/lib/blog/insights/chief-strategist';
+import type { Insight } from '@/lib/blog/insights/types';
 
 // --- TYPE DEFINITIONS for strict TypeScript ---
 
@@ -73,60 +76,7 @@ const BenefitItem: FC<BenefitItemProps> = ({ icon, title, children }) => (
 // --- MAIN INFOGRAPHIC COMPONENT ---
 
 export default function GemInfographic(): JSX.Element {
-  const [prompt, setPrompt] = useState<string>('');
-  const [response, setResponse] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
-
-  const responseRef = useRef<HTMLDivElement>(null);
-
-  const handlePromptSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-    if (!prompt.trim() || isLoading) return;
-
-    setIsLoading(true);
-    setError('');
-    setResponse('');
-
-    // Calls our server proxy — the Gemini key stays server-side. The
-    // 'chief-strategist' system prompt lives there too, keyed by this id.
-    try {
-      const apiResponse = await fetch('/api/ai/gemini', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt,
-          persona: 'chief-strategist',
-          model: 'gemini-2.5-flash-preview-05-20',
-        }),
-      });
-
-      const result = await apiResponse.json();
-
-      if (!apiResponse.ok) {
-        throw new Error(result?.error || `API error: ${apiResponse.statusText}`);
-      }
-
-      if (result.text) {
-        setResponse(result.text);
-      } else {
-        throw new Error(result?.error || 'No content received from API.');
-      }
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
-      setError(errorMessage);
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  // Auto-scroll to response
-  React.useEffect(() => {
-    if (response || error) {
-      responseRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [response, error]);
+  const [openInsight, setOpenInsight] = useState<Insight | null>(null);
 
   return (
     <div className="bg-gray-900 text-white font-sans antialiased">
@@ -177,39 +127,29 @@ export default function GemInfographic(): JSX.Element {
         {/* INTERACTIVE DEMO SECTION */}
         <div className="mt-20 max-w-3xl mx-auto">
             <div className="bg-gray-800/50 p-8 rounded-2xl border border-cyan-500/50">
-                <h2 className="text-2xl font-bold text-center">Take it for a Test Drive</h2>
-                <p className="text-center text-gray-400 mt-2">Try one of the commands above to see how the Chief Strategist responds.</p>
-                <form onSubmit={handlePromptSubmit} className="mt-6 flex gap-2">
-                    <input
-                        type="text"
-                        value={prompt}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPrompt(e.target.value)}
-                        placeholder='e.g., "Deconstruct Handstand" or "Meal from eggs, spinach"'
-                        className="flex-grow bg-gray-700 text-white rounded-md px-4 py-3 border border-gray-600 focus:ring-2 focus:ring-cyan-400 focus:outline-none transition-all"
-                        disabled={isLoading}
-                    />
-                    <button type="submit" className="bg-cyan-500 text-black font-semibold rounded-md px-4 py-3 flex items-center justify-center hover:bg-cyan-400 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors" disabled={isLoading}>
-                        {isLoading ? (
-                            <div className="w-6 h-6 border-2 border-black/50 border-t-black rounded-full animate-spin"></div>
-                        ) : (
-                            <SendIcon className="w-6 h-6" />
-                        )}
-                    </button>
-                </form>
+                <h2 className="text-2xl font-bold text-center">See the commands in action</h2>
+                <p className="text-center text-gray-400 mt-2">Pick a command to see exactly how the Chief Strategist responds.</p>
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                    {CHIEF_STRATEGIST_INSIGHTS.map(option => (
+                        <button
+                            key={option.id}
+                            type="button"
+                            onClick={() => setOpenInsight(option.insight)}
+                            className="rounded-md border border-gray-600 bg-gray-700/60 px-4 py-3 text-left transition-colors hover:border-cyan-400 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                        >
+                            <span className="block font-semibold text-cyan-300">{option.label}</span>
+                            {option.hint && (
+                                <span className="mt-0.5 block text-xs text-gray-400">{option.hint}</span>
+                            )}
+                        </button>
+                    ))}
+                </div>
                  <div className="mt-4 text-center">
                     <p className="text-xs text-gray-500">
-                        Disclaimer: This is a lightweight demo for entertainment purposes only. The AI's responses are illustrative and not from the fully configured Gem.
+                        These are worked examples of what each command produces, written out in full so the demo reads the same every time.
                     </p>
                 </div>
             </div>
-            
-            {(response || error || isLoading) && (
-                 <div ref={responseRef} className="mt-4 bg-gray-800/50 p-6 rounded-xl border border-gray-700 min-h-[100px]">
-                    {isLoading && <p className="text-gray-400 animate-pulse">Chief Strategist is thinking...</p>}
-                    {error && <p className="text-red-400">Error: {error}</p>}
-                    {response && <div className="prose prose-invert prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: response.replace(/\n/g, '<br />') }} />}
-                </div>
-            )}
         </div>
         
         <div className="text-center mt-20">
@@ -223,6 +163,8 @@ export default function GemInfographic(): JSX.Element {
         </div>
         
       </div>
+
+      <InsightModal insight={openInsight} onClose={() => setOpenInsight(null)} />
     </div>
   );
 }
