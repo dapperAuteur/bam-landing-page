@@ -1,6 +1,7 @@
 // middleware.ts
 
 import { withAuth } from "next-auth/middleware"
+import { isAuthorized } from "@/lib/auth/authorize"
 
 export default withAuth(
   function middleware(req) {
@@ -8,13 +9,7 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token, req }) => {
-        // Protect admin routes
-        if (req.nextUrl.pathname.startsWith("/admin")) {
-          return token?.role === "admin"
-        }
-        return !!token
-      },
+      authorized: ({ token, req }) => isAuthorized(token, req.nextUrl.pathname),
     },
   }
 )
