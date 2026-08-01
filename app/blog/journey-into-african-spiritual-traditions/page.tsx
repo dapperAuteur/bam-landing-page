@@ -229,27 +229,21 @@ export default function AfricanSpiritualityInfographic() {
             prompt = `Based on the core ideas of the ${aiPromptContext}, generate one thought-provoking, open-ended question for personal reflection. The question should encourage deep thinking about the tradition's values. Example format: "How does the idea of a personal destiny (Ori) influence your view of life's challenges?"`;
         }
         
-        const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-        const payload = { contents: chatHistory };
-        const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-        const apiKey = GEMINI_API_KEY; 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
+        // Calls our server proxy — the Gemini key stays server-side. This used to
+        // read process.env.GEMINI_API_KEY in the browser, which Next never inlines
+        // (only NEXT_PUBLIC_*), so the key was undefined and this feature never worked.
         try {
-            const response = await fetch(apiUrl, {
+            const response = await fetch('/api/ai/gemini', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify({ prompt, model: 'gemini-2.0-flash' })
             });
             const result = await response.json();
-            
-            if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
-                const text = result.candidates[0].content.parts[0].text;
-                setAiOutputs(prev => {
-                    return ({ ...prev, [uniqueId]: text.trim() })
-            });
+
+            if (result.text) {
+                setAiOutputs(prev => ({ ...prev, [uniqueId]: result.text.trim() }));
             } else {
-                 setAiOutputs(prev => ({ ...prev, [uniqueId]: "The AI scribe is resting. Please try again later." }));
+                 setAiOutputs(prev => ({ ...prev, [uniqueId]: result.error || "The AI scribe is resting. Please try again later." }));
             }
         } catch (error: unknown) {
             console.error("Gemini API call failed:", error);

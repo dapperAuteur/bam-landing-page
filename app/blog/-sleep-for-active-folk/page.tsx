@@ -60,32 +60,26 @@ const SleepInfographic = () => {
 
         const prompt = `You are a helpful sleep science expert specializing in advice for highly active individuals and athletes. A user has a question or a common myth about sleep. User's query: "${aiQuery}". Provide a concise, evidence-based explanation or debunking based on general sleep science principles (2-4 sentences). If it's a myth, clearly state that and explain why. If it's a question, provide a direct answer. Do not give medical advice, suggest specific products/supplements, or recommend specific sleep durations. Focus on facts and established science. Format the answer as a clear paragraph.`;
         
+        // Calls our server proxy — the Gemini key stays server-side. This used to
+        // read process.env.GEMINI_API_KEY in the browser, which Next never inlines
+        // (only NEXT_PUBLIC_*), so the key was undefined and this feature never worked.
         try {
-            const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-            const payload = { contents: chatHistory };
-            const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-            const apiKey = GEMINI_API_KEY; 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            
-            const response = await fetch(apiUrl, {
+            const response = await fetch('/api/ai/gemini', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify({ prompt, model: 'gemini-2.0-flash' })
             });
 
+            const result = await response.json();
+
             if (!response.ok) {
-                const errorData = await response.json();
-                console.error("API Error Details:", errorData);
-                throw new Error(`API request failed: ${response.statusText}`);
+                throw new Error(result?.error || `API request failed: ${response.statusText}`);
             }
 
-            const result = await response.json();
-            
-            if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
-                const text = result.candidates[0].content.parts[0].text;
-                setAiInsight(text.trim());
+            if (result.text) {
+                setAiInsight(result.text.trim());
             } else {
-                throw new Error("Could not generate an insight. The AI returned an empty response.");
+                throw new Error(result?.error || "Could not generate an insight. The AI returned an empty response.");
             }
 
         } catch (err: unknown) {

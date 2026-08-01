@@ -206,25 +206,20 @@ const CorvidInfographic = () => {
         Highlight its most distinctive characteristics.
     `;
     
-    const chatHistory = [];
-    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-    const payload = { contents: chatHistory };
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-    const apiKey = GEMINI_API_KEY; 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
+    // Calls our server proxy — the Gemini key stays server-side. This used to read
+    // process.env.GEMINI_API_KEY in the browser, which Next never inlines (only
+    // NEXT_PUBLIC_*), so the key was undefined and this feature never worked.
     try {
-        const response = await fetch(apiUrl, {
+        const response = await fetch('/api/ai/gemini', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({ prompt, model: 'gemini-2.0-flash' })
         });
         const result = await response.json();
-        if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts.length > 0) {
-            const text = result.candidates[0].content.parts[0].text;
-            setAiSummary(text);
+        if (result.text) {
+            setAiSummary(result.text);
         } else {
-            setAiSummary('Could not generate summary.');
+            setAiSummary(result.error || 'Could not generate summary.');
         }
     } catch (error: unknown) {
         console.error("Gemini API error:", error);

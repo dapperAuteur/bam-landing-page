@@ -132,34 +132,31 @@ export default function GemInfographic(): JSX.Element {
     setError('');
     setResponse('');
 
-    const SYSTEM_PROMPT = process.env.SYSTEM_PROMPT;
-    const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-    const apiKey = GEMINI_API_KEY; // API key is handled by the execution environment
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-    console.log('SYSTEM_PROMPT :>> ', SYSTEM_PROMPT);
-
+    // Calls our server proxy — the Gemini key stays server-side. The system
+    // prompt is read from SYSTEM_PROMPT there; this component used to read
+    // process.env.SYSTEM_PROMPT in the browser, where it is always undefined,
+    // so the persona never actually reached the model.
     try {
-      console.log('SYSTEM_PROMPT :>> ', SYSTEM_PROMPT);
-      const apiResponse = await fetch(apiUrl, {
+      const apiResponse = await fetch('/api/ai/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          prompt,
+          persona: 'keyword-coach',
+          model: 'gemini-2.5-flash-preview-05-20',
         }),
       });
 
+      const result = await apiResponse.json();
+
       if (!apiResponse.ok) {
-        throw new Error(`API error: ${apiResponse.statusText}`);
+        throw new Error(result?.error || `API error: ${apiResponse.statusText}`);
       }
 
-      const result = await apiResponse.json();
-      const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (text) {
-        setResponse(text);
+      if (result.text) {
+        setResponse(result.text);
       } else {
-        throw new Error('No content received from API.');
+        throw new Error(result?.error || 'No content received from API.');
       }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
