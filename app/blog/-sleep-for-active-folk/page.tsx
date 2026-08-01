@@ -1,7 +1,9 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
 import { Chart, registerables, TooltipItem } from 'chart.js';
-import { AppError } from '../../../types/errors';
+import InsightModal from '@/components/blog/InsightModal';
+import { SLEEP_MYTHS } from '@/lib/blog/insights/sleep-myths';
+import { findInsight, type Insight } from '@/lib/blog/insights/types';
 Chart.register(...registerables);
 
 // Chosen Palette: Brilliant Blues (as per previous infographic)
@@ -43,51 +45,11 @@ const SleepInfographic = () => {
     const performanceChartRef = useRef<HTMLCanvasElement | null>(null);
     const longevityChartRef = useRef<HTMLCanvasElement | null>(null);
     
-    const [aiQuery, setAiQuery] = useState('');
-    const [aiInsight, setAiInsight] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
 
-    const handleGetAiInsight = async () => {
-        if (!aiQuery.trim()) {
-            setError("Please type your sleep question or myth first.");
-            return;
-        }
+    const [openInsight, setOpenInsight] = useState<Insight | null>(null);
 
-        setIsLoading(true);
-        setError('');
-        setAiInsight('');
-
-        const prompt = `You are a helpful sleep science expert specializing in advice for highly active individuals and athletes. A user has a question or a common myth about sleep. User's query: "${aiQuery}". Provide a concise, evidence-based explanation or debunking based on general sleep science principles (2-4 sentences). If it's a myth, clearly state that and explain why. If it's a question, provide a direct answer. Do not give medical advice, suggest specific products/supplements, or recommend specific sleep durations. Focus on facts and established science. Format the answer as a clear paragraph.`;
-        
-        // Calls our server proxy — the Gemini key stays server-side. This used to
-        // read process.env.GEMINI_API_KEY in the browser, which Next never inlines
-        // (only NEXT_PUBLIC_*), so the key was undefined and this feature never worked.
-        try {
-            const response = await fetch('/api/ai/gemini', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt, model: 'gemini-2.0-flash' })
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result?.error || `API request failed: ${response.statusText}`);
-            }
-
-            if (result.text) {
-                setAiInsight(result.text.trim());
-            } else {
-                throw new Error(result?.error || "Could not generate an insight. The AI returned an empty response.");
-            }
-
-        } catch (err: unknown) {
-            console.error("Error fetching AI insight:", err);
-            setError((err as AppError).message || "An unexpected error occurred. Please try again.");
-        } finally {
-            setIsLoading(false);
-        }
+    const showMyth = (id: string) => {
+        setOpenInsight(findInsight(SLEEP_MYTHS, id)?.insight ?? null);
     };
 
     useEffect(() => {
@@ -311,31 +273,20 @@ const SleepInfographic = () => {
                 
                 {/* Section 6: AI Myth Debunker */}
                 <section className="mb-16 bg-white p-6 md:p-10 rounded-lg shadow-2xl">
-                    <h2 style={tekoFont} className="text-4xl md:text-5xl text-center font-bold mb-2">✨ SLEEP MYTH DEBUNKER & FACT CHECKER</h2>
-                    <p className="text-center text-lg max-w-3xl mx-auto mb-6">Heard something about sleep you&apos;re not sure is true? Type it below and let our AI assistant provide a science-backed insight.</p>
-                    <div className="max-w-2xl mx-auto">
-                        <textarea 
-                            value={aiQuery}
-                            onChange={(e) => setAiQuery(e.target.value)}
-                            className="w-full p-3 border-2 border-[#33B5E5] rounded-lg text-lg text-black focus:ring-2 focus:ring-[#00A1E4] focus:border-transparent 
-                            rows=3 
-                            placeholder='e.g.', 'Can you catch up on sleep on weekends?'"
-                        ></textarea>
-                        <button 
-                            onClick={handleGetAiInsight}
-                            disabled={isLoading}
-                            className="mt-4 w-full bg-[#00A1E4] text-white font-bold text-xl py-3 px-6 rounded-lg hover:bg-opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {isLoading ? 'ANALYZING...' : 'GET AI INSIGHT'}
-                        </button>
-                        {isLoading && <div className="ai-loader"></div>}
-                        {error && <p className="mt-4 text-red-600 text-sm text-center">{error}</p>}
-                        {aiInsight && !isLoading && (
-                            <div className="mt-6 p-4 border border-[#00A1E4] rounded-lg bg-blue-50 text-[#003366]">
-                                <h4 style={tekoFont} className="text-2xl font-bold text-[#00A1E4] mb-2">AI Sleep Insight:</h4>
-                                <p className="text-md">{aiInsight}</p>
-                            </div>
-                        )}
+                    <h2 style={tekoFont} className="text-4xl md:text-5xl text-center font-bold mb-2">SLEEP MYTH DEBUNKER & FACT CHECKER</h2>
+                    <p className="text-center text-lg max-w-3xl mx-auto mb-6">Six things people repeat about sleep, and what the science actually says. Pick one.</p>
+                    <div className="max-w-2xl mx-auto grid gap-3 sm:grid-cols-2">
+                        {SLEEP_MYTHS.map(myth => (
+                            <button
+                                key={myth.id}
+                                type="button"
+                                onClick={() => showMyth(myth.id)}
+                                className="rounded-lg border-2 border-[#33B5E5] bg-white px-4 py-3 text-left transition-colors hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-[#00A1E4]"
+                            >
+                                <span className="block font-bold text-[#003366]">{myth.label}</span>
+                                {myth.hint && <span className="mt-0.5 block text-xs text-[#00A1E4]">{myth.hint}</span>}
+                            </button>
+                        ))}
                     </div>
                 </section>
 
@@ -374,6 +325,8 @@ const SleepInfographic = () => {
                     <p>Infographic based on sleep science analysis. AI insights are for informational purposes only.</p>
                 </footer>
             </div>
+
+            <InsightModal insight={openInsight} onClose={() => setOpenInsight(null)} />
         </div>
     );
 };
