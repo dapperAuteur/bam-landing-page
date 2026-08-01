@@ -42,7 +42,7 @@ A full-stack Next.js App Router application that combines a public portfolio + b
 | Auth | NextAuth v4 + JWT |
 | Storage / media | Cloudinary |
 | Email | Nodemailer over SMTP (Mailgun in production) |
-| AI | Google Gemini API |
+| AI | Google Gemini API (proxy route only; no page calls it, see `plans/2026-08-01-ai-proxy-disposition.md`) |
 | Ecosystem | WitUS Inbox + Outbox (HMAC-signed webhooks) |
 | Analytics | Vercel Analytics |
 | Error monitoring | Better Stack, via the Sentry SDK (`@sentry/nextjs`) |
@@ -58,7 +58,7 @@ A full-stack Next.js App Router application that combines a public portfolio + b
 - Cloudinary account
 - Google reCAPTCHA v3 keys
 - An SMTP provider (Mailgun in production) for outbound email
-- Google Gemini API key
+- Google Gemini API key (optional: only if you keep the unused `/api/ai/gemini` proxy)
 
 ### Install & Run
 
