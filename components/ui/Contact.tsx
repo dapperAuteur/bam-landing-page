@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { ContactFormData, ContactFormResponse } from '../../types/contact'
 
 // Client-side logger for contact form
@@ -35,7 +36,8 @@ interface FormErrors {
   projectDetails?: string
 }
 
-export default function Contact() {
+function ContactInner() {
+  const { executeRecaptcha } = useGoogleReCaptcha()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -190,16 +192,26 @@ export default function Contact() {
       return
     }
 
+    if (!executeRecaptcha) {
+      setSubmitStatus('error')
+      setSubmitMessage(
+        "Spam protection isn't ready yet. Give it a second and try again, or email contact@brandanthonymcdonald.com directly."
+      )
+      return
+    }
+
     setIsSubmitting(true)
     setSubmitStatus('idle')
 
     try {
+      const recaptchaToken = await executeRecaptcha('contact_submit')
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, recaptchaToken }),
       })
 
       const result: ContactFormResponse = await response.json()
@@ -490,5 +502,27 @@ export default function Contact() {
         </div>
       </div>
     </section>
+  )
+}
+
+/**
+ * reCAPTCHA v3 wrapper, mirroring components/forms/IntakeForm.tsx.
+ *
+ * With no site key configured there is no provider, so executeRecaptcha stays
+ * undefined and submits are blocked client-side with the direct-email fallback.
+ * That matches the server, which rejects a tokenless submission anyway -- the
+ * form degrades to "email me instead" rather than silently posting unprotected.
+ */
+export default function Contact() {
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+
+  if (!recaptchaSiteKey) {
+    return <ContactInner />
+  }
+
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={recaptchaSiteKey}>
+      <ContactInner />
+    </GoogleReCaptchaProvider>
   )
 }

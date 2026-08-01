@@ -16,7 +16,7 @@ A full-stack Next.js App Router application that combines a public portfolio + b
 
 ## Features
 
-- **Landing page** — Hero, services, about, portfolio, contact form with reCAPTCHA v3
+- **Landing page** — Hero, services, about, portfolio, contact form with reCAPTCHA v3 and rate limiting
 - **Blog (MDX CMS)** — 70+ posts in a unified `blog_posts` collection; authored in the admin MDX editor; rendered via `@mdx-js/mdx` with a closed component registry (`<Chart>`, `<Carousel>`, `<CodeBlock>`, `<YouTubeEmbed>`, …); ISR-cached. See [docs/MANAGE_BLOG.md](./docs/MANAGE_BLOG.md).
 - **Feeds** — `/feed.xml` (RSS 2.0) and `/feed.json` (JSON Feed), auto-updating from the same data layer
 - **Photo library** — upload once at `/admin/photos`, reuse across galleries, blog, and portfolio (Cloudinary-backed)
@@ -83,7 +83,7 @@ Copy **[`.env.example`](./.env.example)** to `.env.local` and fill it in — tha
 - **Database** — `MONGODB_URI` (plus legacy aliases `MONGODB_CONNECTION_STRING` / `MONGO_URI` / `DATABASE_URL`, kept in sync)
 - **Auth** — `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `JWT_SECRET`
 - **Admin** — `ADMIN_EMAIL`, `ADMIN_API_KEY`
-- **reCAPTCHA v3** — `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`
+- **reCAPTCHA v3** — `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`. Required: every public form (contact, hire, partner, intake, education, guest speaker, workout feedback) verifies a token server-side and rejects submissions without one.
 - **Email (SMTP / Mailgun)** — `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
 - **Cloudinary** — `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
 - **WitUS Inbox** — `INBOX_INGEST_URL`, `INBOX_INGEST_SECRET`, `INBOX_SOURCE_SLUG`
