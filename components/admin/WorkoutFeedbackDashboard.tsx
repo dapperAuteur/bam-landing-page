@@ -434,8 +434,8 @@ export default function WorkoutFeedbackDashboard() {
                   <p className="text-xs font-bold text-gray-500 uppercase">Activity</p>
                   <p className="text-sm text-gray-900">
                     {CATEGORY_LABELS[selectedSubmission.activity.category] || selectedSubmission.activity.category}
-                    {selectedSubmission.activity.duration && ` — ${selectedSubmission.activity.duration} min`}
-                    {selectedSubmission.activity.frictionScenarioIndex !== undefined && ` — Scenario ${selectedSubmission.activity.frictionScenarioIndex + 1}`}
+                    {selectedSubmission.activity.duration && ` · ${selectedSubmission.activity.duration} min`}
+                    {selectedSubmission.activity.frictionScenarioIndex !== undefined && ` · Scenario ${selectedSubmission.activity.frictionScenarioIndex + 1}`}
                   </p>
                 </div>
                 <div>

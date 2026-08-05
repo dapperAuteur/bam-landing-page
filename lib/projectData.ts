@@ -21,7 +21,7 @@ export const projects: Project[] = [
   },
   {
     title: "Foundations of Fitness and Health Metrics",
-    description: "A comprehensive 5-week curriculum integrating peer-reviewed research, collaborative learning, and practical application to transform health data into actionable longevity insights.",
+    description: "A 5-week curriculum that combines peer-reviewed research, collaborative learning, and hands-on practice to turn health data into longevity decisions.",
     type: "Online Self-Paced Class",
     technologies: ["LMS Integration", "Automation", "Curriculum Design", "Peer-Reviewed Research", "Collaborative Learning"],
     impact: "Helping students take control of their fitness and health.",
@@ -30,7 +30,7 @@ export const projects: Project[] = [
   },
   {
     title: "Endocannabinoid System Curriculum",
-    description: "A comprehensive 5-week curriculum integrating peer-reviewed research, collaborative learning, and practical application to understand and activate the ECS.",
+    description: "A 5-week curriculum that combines peer-reviewed research, collaborative learning, and hands-on practice to understand and activate the ECS.",
     type: "Online Self-Paced Class",
     technologies: ["LMS Integration", "Automation", "Curriculum Design", "Peer-Reviewed Research", "Collaborative Learning"],
     impact: "Helping students find alternatives to cannabis use.",

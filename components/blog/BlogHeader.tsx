@@ -10,9 +10,9 @@ export default function BlogHeader() {
             From Technical Innovations to Cultural Explorations
           </p>
           <p className="text-lg text-purple-200 max-w-3xl mx-auto">
-            Dive into interactive stories, technical deep-dives, business insights, and 
-            explorations of history and culture. Each post is crafted to educate, inspire, 
-            and connect us to the world around us.
+            Interactive stories, technical deep-dives, business notes, and
+            explorations of history and culture. I write each post to teach
+            something useful and connect it to the world around us.
           </p>
         </div>
       </div>

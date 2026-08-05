@@ -24,7 +24,7 @@ export default function Error({
         <p className="text-6xl font-bold text-blue-600">500</p>
         <h1 className="mt-4 text-2xl font-bold text-gray-900">Something went wrong</h1>
         <p className="mt-2 text-gray-600">
-          A hiccup on our end interrupted that request. You can try again, or head back to the app.
+          A hiccup on my end interrupted that request. You can try again, or head back to the app.
         </p>
         {error?.digest && (
           <p className="mt-2 text-xs text-gray-400">Reference: {error.digest}</p>

@@ -106,7 +106,7 @@ export default function Navigation() {
     <nav className="bg-white shadow-lg fixed w-full z-50 ">
       <div className="mx-2 container-max">
         <div className="flex justify-between items-center py-4">
-          <Link href="/" className="flex items-center" aria-label="Brand Anthony McDonald — Home">
+          <Link href="/" className="flex items-center" aria-label="Brand Anthony McDonald: Home">
             <Image
               src="/flywitus-platypus-logo.png"
               alt="Brand Anthony McDonald"

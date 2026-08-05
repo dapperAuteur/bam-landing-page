@@ -14,11 +14,11 @@ export async function GET() {
 
   const feed = {
     version: 'https://jsonfeed.org/version/1.1',
-    title: 'Brand Anthony McDonald — Blog',
+    title: 'Brand Anthony McDonald: Blog',
     home_page_url: `${baseUrl}/blog`,
     feed_url: `${baseUrl}/feed.json`,
     description:
-      'Longevity, athletics, software, and the WitUS ecosystem — essays by Brand Anthony McDonald.',
+      'Essays by Brand Anthony McDonald on longevity, athletics, software, and the WitUS ecosystem.',
     language: 'en-us',
     authors: [{ name: 'Brand Anthony McDonald', url: baseUrl }],
     items: ordered.map((post) => ({

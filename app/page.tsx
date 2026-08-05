@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Brand Anthony McDonald',
-    description: 'Developer Relations, voiceover, and business consulting — full-stack builder shipping the WitUS ecosystem.',
+    description: 'Developer Relations, voiceover, and business consulting from a full-stack builder shipping the WitUS ecosystem.',
   },
 }
 

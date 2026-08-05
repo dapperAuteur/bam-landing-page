@@ -219,6 +219,6 @@ export async function handleIntakeSubmission(
   return NextResponse.json({
     success: true,
     message:
-      "Thanks — your message is in. I respond personally within 24 hours during the work week.",
+      "Thanks, your message is in. I respond personally within 24 hours during the work week.",
   });
 }

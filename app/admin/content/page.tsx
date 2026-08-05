@@ -116,7 +116,7 @@ export default function AdminContentPage() {
             onClick={() => syncFromCode(true)}
             disabled={syncing}
             className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 disabled:opacity-50"
-            title="Insert new rows as hidden — does NOT fire outbox triggers."
+            title="Insert new rows as hidden. Does NOT fire outbox triggers."
           >
             {syncing ? 'Syncing...' : 'Backfill (hidden)'}
           </button>
@@ -124,7 +124,7 @@ export default function AdminContentPage() {
             onClick={() => syncFromCode(false)}
             disabled={syncing}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
-            title="Insert new rows as visible — FIRES outbox triggers per new row (project/experience only)."
+            title="Insert new rows as visible. FIRES outbox triggers per new row (project/experience only)."
           >
             {syncing ? 'Syncing...' : `Sync ${tabLabels[activeTab]} from Code`}
           </button>
@@ -174,7 +174,7 @@ export default function AdminContentPage() {
               onClick={() => syncFromCode(true)}
               disabled={syncing}
               className="bg-gray-200 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-300 disabled:opacity-50"
-              title="Insert new rows as hidden — does NOT fire outbox triggers."
+              title="Insert new rows as hidden. Does NOT fire outbox triggers."
             >
               {syncing ? 'Syncing...' : 'Backfill as Hidden (no triggers)'}
             </button>
@@ -182,7 +182,7 @@ export default function AdminContentPage() {
               onClick={() => syncFromCode(false)}
               disabled={syncing}
               className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 disabled:opacity-50"
-              title="Insert new rows as visible — FIRES outbox triggers per new row."
+              title="Insert new rows as visible. FIRES outbox triggers per new row."
             >
               {syncing ? 'Syncing...' : 'Sync from Code to Get Started'}
             </button>

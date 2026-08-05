@@ -68,12 +68,12 @@ export const experiences: Experience[] = [
     title: "Brand Ambassador Professional",
     company: "Various Clients",
     type: "Brand Ambassador",
-    description: "Dynamic professional with proven expertise in technical product demonstrations, live event engagement, and audience education.",
+    description: "Technical product demonstrations, live event engagement, and audience education for client brands.",
     achievements: [
       "Led product demonstrations for technical tools to audiences of 10-25 people monthly",
       "Managed live events including workshops, presentations, and community gatherings",
       "Coordinated contractors and volunteers for technical demonstrations",
-      "Built authentic relationships with community members through genuine passion for technology"
+      "Built lasting relationships with community members at every event"
     ],
     technologies: ["Event Management", "Product Demonstrations", "Public Speaking", "Community Engagement"]
   }

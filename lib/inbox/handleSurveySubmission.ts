@@ -317,6 +317,6 @@ export async function handleSurveySubmission(
   return NextResponse.json({
     success: true,
     message:
-      "Thanks — your intake is in. I'll review and come back with a thoughtful first response within 24 hours during the work week.",
+      "Thanks, your intake is in. I'll review and come back with a thoughtful first response within 24 hours during the work week.",
   });
 }

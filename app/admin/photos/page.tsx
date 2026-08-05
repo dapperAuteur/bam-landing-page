@@ -64,7 +64,7 @@ export default function AdminPhotosPage() {
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-2xl font-bold text-gray-900 mb-1">Photo Library</h1>
-      <p className="text-sm text-gray-500 mb-6">Central library — reuse photos across galleries, the blog, and the portfolio.</p>
+      <p className="text-sm text-gray-500 mb-6">Central library: reuse photos across galleries, the blog, and the portfolio.</p>
 
       {/* Upload */}
       <div className="rounded-lg border bg-white p-4 mb-6">

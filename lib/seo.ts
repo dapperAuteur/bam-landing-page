@@ -63,7 +63,7 @@ export function getBlogMetadata(slug: string): Metadata {
   if (!post) {
     return getPageMetadata({
       title: slugToTitle(slug),
-      description: `${slugToTitle(slug)} — a post by Brand Anthony McDonald.`,
+      description: `${slugToTitle(slug)}, a post by Brand Anthony McDonald.`,
       path: `/blog/${slug}`,
       type: "article",
     });

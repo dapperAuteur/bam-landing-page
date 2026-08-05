@@ -8,9 +8,9 @@ export default function About() {
               About Brand Anthony McDonald
             </h2>
             <p className="text-lg text-gray-600 mb-6">
-              I'm building something unique: the world's smallest conglomerate while training to become 
-              the world's fastest centenarian. This isn't just about longevity. It's about optimizing 
-              every aspect of life and business for peak performance and sustainable success.
+              I'm building the world's smallest conglomerate while training to become
+              the world's fastest centenarian. The point goes beyond longevity: I want
+              every part of my life and business tuned to perform well for a long time.
             </p>
             <p className="text-lg text-gray-600 mb-6">
               My background spans developer relations, education, content creation, and health 
@@ -31,7 +31,7 @@ export default function About() {
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 mb-2">Community Focus</h3>
-                <p className="text-gray-600">Helping others achieve their goals and build success</p>
+                <p className="text-gray-600">Helping others reach their goals and build businesses that last</p>
               </div>
             </div>
           </div>

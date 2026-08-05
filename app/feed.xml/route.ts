@@ -47,10 +47,10 @@ export async function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Brand Anthony McDonald — Blog</title>
+    <title>Brand Anthony McDonald: Blog</title>
     <link>${baseUrl}/blog</link>
     <atom:link href="${baseUrl}/feed.xml" rel="self" type="application/rss+xml" />
-    <description>Longevity, athletics, software, and the WitUS ecosystem — essays by Brand Anthony McDonald.</description>
+    <description>Essays by Brand Anthony McDonald on longevity, athletics, software, and the WitUS ecosystem.</description>
     <language>en-us</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
 ${items}

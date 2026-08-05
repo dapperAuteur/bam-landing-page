@@ -27,7 +27,7 @@ const tierAProjects: ProjectCard[] = [
     status: "🟢",
     tagline: "Parent brand site for the WitUS ecosystem, philosophy-first landing page connecting CentenarianOS and Work.WitUS under \"Live Long. Work Free.\"",
     stack: "Next.js 16 · Tailwind v4 · Vercel · fully static",
-    detail: "Solo build. Required vercel.json for framework auto-detection, a real operational detail worth noting.",
+    detail: "Solo build. Required vercel.json for framework auto-detection, the kind of operational detail that only shows up in production.",
   },
   {
     name: "CentenarianOS",

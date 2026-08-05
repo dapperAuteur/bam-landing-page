@@ -1,4 +1,4 @@
-# BAM — Brand Anthony McDonald
+# BAM: Brand Anthony McDonald
 
 Personal brand platform and portfolio for Brand Anthony McDonald: developer advocate, voiceover artist, business consultant, and content creator. Lives at **[brandanthonymcdonald.com](https://brandanthonymcdonald.com)** and is part of the WitUS ecosystem.
 
@@ -16,17 +16,17 @@ A full-stack Next.js App Router application that combines a public portfolio + b
 
 ## Features
 
-- **Landing page** — Hero, services, about, portfolio, contact form with reCAPTCHA v3 and rate limiting
-- **Blog (MDX CMS)** — 70+ posts in a unified `blog_posts` collection; authored in the admin MDX editor; rendered via `@mdx-js/mdx` with a closed component registry (`<Chart>`, `<Carousel>`, `<CodeBlock>`, `<YouTubeEmbed>`, …); ISR-cached. See [docs/MANAGE_BLOG.md](./docs/MANAGE_BLOG.md).
-- **Feeds** — `/feed.xml` (RSS 2.0) and `/feed.json` (JSON Feed), auto-updating from the same data layer
-- **Photo library** — upload once at `/admin/photos`, reuse across galleries, blog, and portfolio (Cloudinary-backed)
-- **Galleries** — private **client** galleries (access code, downloads, like/comment, **per-photo approve/reject**) and public **marketing** galleries at `/galleries`; admin can **send the gallery link to the client by email** and review approvals at `/admin/approvals`
-- **Client portal** — project-based access at `/portal/[projectId]` with JWT-authenticated sessions
-- **Admin dashboard** — manage blog posts, photos, galleries, projects, contacts, education submissions, and workout feedback
-- **Ecosystem integration** — signed-webhook dispatch to the WitUS Inbox (client/contact activity) and Outbox (social drafts)
-- **SEO + a11y** — per-page metadata, Article JSON-LD, robots, sitemap, skip-link, single-`<main>` landmarks
-- **Graceful errors** — branded 404 (`not-found`) and 500 (`error` / `global-error`) pages that route users back into the app
-- **Analytics** — Vercel Analytics + per-project engagement tracking
+- **Landing page**: Hero, services, about, portfolio, contact form with reCAPTCHA v3 and rate limiting
+- **Blog (MDX CMS)**: 70+ posts in a unified `blog_posts` collection; authored in the admin MDX editor; rendered via `@mdx-js/mdx` with a closed component registry (`<Chart>`, `<Carousel>`, `<CodeBlock>`, `<YouTubeEmbed>`, …); ISR-cached. See [docs/MANAGE_BLOG.md](./docs/MANAGE_BLOG.md).
+- **Feeds**: `/feed.xml` (RSS 2.0) and `/feed.json` (JSON Feed), auto-updating from the same data layer
+- **Photo library**: upload once at `/admin/photos`, reuse across galleries, blog, and portfolio (Cloudinary-backed)
+- **Galleries**: private **client** galleries (access code, downloads, like/comment, **per-photo approve/reject**) and public **marketing** galleries at `/galleries`; admin can **send the gallery link to the client by email** and review approvals at `/admin/approvals`
+- **Client portal**: project-based access at `/portal/[projectId]` with JWT-authenticated sessions
+- **Admin dashboard**: manage blog posts, photos, galleries, projects, contacts, education submissions, and workout feedback
+- **Ecosystem integration**: signed-webhook dispatch to the WitUS Inbox (client/contact activity) and Outbox (social drafts)
+- **SEO + a11y**: per-page metadata, Article JSON-LD, robots, sitemap, skip-link, single-`<main>` landmarks
+- **Graceful errors**: branded 404 (`not-found`) and 500 (`error` / `global-error`) pages that route users back into the app
+- **Analytics**: Vercel Analytics + per-project engagement tracking
 - **Error monitoring**: server, edge, and browser crashes report to Better Stack through the Sentry SDK, with a scrubber (`lib/sentry-scrub.ts`) that strips credentials and visitor PII before anything leaves the process. Inert until a DSN is set. See [Error monitoring](#error-monitoring).
 - **Health check**: `/api/health` pings MongoDB on every request and is never cached, so an uptime monitor can tell a live app apart from a cached homepage. See [Health check](#health-check).
 
@@ -78,17 +78,17 @@ npm run test:watch
 
 ### Environment Variables
 
-Copy **[`.env.example`](./.env.example)** to `.env.local` and fill it in — that file is the canonical, commented list. The groups are:
+Copy **[`.env.example`](./.env.example)** to `.env.local` and fill it in; that file is the canonical, commented list. The groups are:
 
-- **Database** — `MONGODB_URI` (plus legacy aliases `MONGODB_CONNECTION_STRING` / `MONGO_URI` / `DATABASE_URL`, kept in sync)
-- **Auth** — `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `JWT_SECRET`
-- **Admin** — `ADMIN_EMAIL`, `ADMIN_API_KEY`
-- **reCAPTCHA v3** — `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`. Required: every public form (contact, hire, partner, intake, education, guest speaker, workout feedback) verifies a token server-side and rejects submissions without one.
-- **Email (SMTP / Mailgun)** — `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
-- **Cloudinary** — `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
-- **WitUS Inbox** — `INBOX_INGEST_URL`, `INBOX_INGEST_SECRET`, `INBOX_SOURCE_SLUG`
-- **WitUS Outbox** — `OUTBOX_INGEST_URL`, `OUTBOX_INGEST_SECRET`, `OUTBOX_SOURCE_SLUG`, `OUTBOX_TRIGGER_ENABLED`, `PRODUCT_OWNER_USER_ID`
-- **AI** — `GEMINI_API_KEY`
+- **Database**: `MONGODB_URI` (plus legacy aliases `MONGODB_CONNECTION_STRING` / `MONGO_URI` / `DATABASE_URL`, kept in sync)
+- **Auth**: `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `JWT_SECRET`
+- **Admin**: `ADMIN_EMAIL`, `ADMIN_API_KEY`
+- **reCAPTCHA v3**: `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`. Required: every public form (contact, hire, partner, intake, education, guest speaker, workout feedback) verifies a token server-side and rejects submissions without one.
+- **Email (SMTP / Mailgun)**: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
+- **Cloudinary**: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
+- **WitUS Inbox**: `INBOX_INGEST_URL`, `INBOX_INGEST_SECRET`, `INBOX_SOURCE_SLUG`
+- **WitUS Outbox**: `OUTBOX_INGEST_URL`, `OUTBOX_INGEST_SECRET`, `OUTBOX_SOURCE_SLUG`, `OUTBOX_TRIGGER_ENABLED`, `PRODUCT_OWNER_USER_ID`
+- **AI**: `GEMINI_API_KEY`
 - **Error monitoring (optional)**: `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN`, and optionally `SENTRY_ENVIRONMENT` / `NEXT_PUBLIC_SENTRY_ENVIRONMENT` / `SENTRY_ORG` / `SENTRY_PROJECT` / `SENTRY_AUTH_TOKEN`
 
 ## Error monitoring
@@ -180,9 +180,9 @@ The NextAuth middleware does not touch this route: its matcher is `/admin/:path*
 
 See the [`/docs`](./docs/) directory for site-management guides:
 
-- [MANAGE_BLOG.md](./docs/MANAGE_BLOG.md) — Authoring posts in the MDX CMS admin
-- [MANAGE_SITE.md](./docs/MANAGE_SITE.md) — Adding experiences, projects, and skills
-- [MANAGE_SHARE.md](./docs/MANAGE_SHARE.md) — Social sharing features
+- [MANAGE_BLOG.md](./docs/MANAGE_BLOG.md): Authoring posts in the MDX CMS admin
+- [MANAGE_SITE.md](./docs/MANAGE_SITE.md): Adding experiences, projects, and skills
+- [MANAGE_SHARE.md](./docs/MANAGE_SHARE.md): Social sharing features
 
 ## Privacy
 
