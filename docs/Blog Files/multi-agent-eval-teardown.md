@@ -1,6 +1,6 @@
 <!--
 Draft for the bam-landing-page blog. Paste the body into app/admin/blog and use:
-Title:   I Built an Adversarial Eval for My Multi-Agent Coach. It Passed the Traps I Designed and Failed the Basics.
+Title:   I Built an Adversarial Eval for My Multi-Agent Coach. It Passed the Traps I Designed: And Failed the Basics.
 Slug:    multi-agent-eval-teardown
 Excerpt: 21 property-based test cases, an opus-class judge, a frozen baseline.
          The contradiction traps I engineered all passed. The thing that failed
@@ -10,7 +10,7 @@ Tags:    Evals, AI Agents, LangGraph, Multi-agent, Citations, Teardown
 Series:  Fit T. Cent Eval Findings (finale)
 -->
 
-# I Built an Adversarial Eval for My Multi-Agent Coach. It Passed the Traps I Designed and Failed the Basics.
+# I Built an Adversarial Eval for My Multi-Agent Coach. It Passed the Traps I Designed: And Failed the Basics.
 
 I run a multi-agent health coach in production: a supervisor routes each question to up to four specialists (nutrition, workout, recovery, corrective exercise), each with its own retrieval library and tools, and a synthesizer weaves their findings into one cited answer. It's built on LangGraph, observable in LangSmith, and, until recently, tested mostly by me reading transcripts and nodding.
 
