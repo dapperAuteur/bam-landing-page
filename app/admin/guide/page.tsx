@@ -54,7 +54,7 @@ export default function AdminGuidePage() {
           <section id="gallery" className="bg-white rounded-lg shadow p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Gallery System</h2>
             <p className="text-gray-600 mb-6">
-              Create media galleries for clients with photos, videos, and documents. Clients access galleries via a unique link — optionally password-protected.
+              Create media galleries for clients with photos, videos, and documents. Clients access galleries via a unique link, optionally password-protected.
             </p>
 
             <div className="space-y-6">
@@ -65,11 +65,11 @@ export default function AdminGuidePage() {
                   <li>Click <strong>&quot;Create New Gallery&quot;</strong></li>
                   <li>Fill in client details:
                     <ul className="list-disc list-inside ml-6 mt-1 space-y-1 text-gray-600">
-                      <li><strong>Client Name</strong> — who the gallery is for</li>
-                      <li><strong>Client Email</strong> — for communication</li>
-                      <li><strong>Event Name</strong> — title displayed on the gallery</li>
-                      <li><strong>Event Date</strong> — displayed in gallery header</li>
-                      <li><strong>Description</strong> — optional context for the client</li>
+                      <li><strong>Client Name</strong>: who the gallery is for</li>
+                      <li><strong>Client Email</strong>: for communication</li>
+                      <li><strong>Event Name</strong>: title displayed on the gallery</li>
+                      <li><strong>Event Date</strong>: displayed in gallery header</li>
+                      <li><strong>Description</strong>: optional context for the client</li>
                     </ul>
                   </li>
                   <li>Click <strong>&quot;Create&quot;</strong> to save the gallery</li>
@@ -80,11 +80,11 @@ export default function AdminGuidePage() {
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">Admin: Uploading Media</h3>
                 <ol className="list-decimal list-inside space-y-2 text-gray-700">
                   <li>Open an existing gallery and click <strong>&quot;Upload Media&quot;</strong></li>
-                  <li>Select files — supports multiple file types:
+                  <li>Select files (multiple file types supported):
                     <ul className="list-disc list-inside ml-6 mt-1 space-y-1 text-gray-600">
-                      <li><strong>Images</strong> (up to 20MB) — JPG, PNG, WebP, etc.</li>
-                      <li><strong>Videos</strong> (up to 100MB) — MP4, MOV, etc.</li>
-                      <li><strong>Documents</strong> (up to 50MB) — PDF, PPTX, DOCX, XLSX</li>
+                      <li><strong>Images</strong> (up to 20MB): JPG, PNG, WebP, etc.</li>
+                      <li><strong>Videos</strong> (up to 100MB): MP4, MOV, etc.</li>
+                      <li><strong>Documents</strong> (up to 50MB): PDF, PPTX, DOCX, XLSX</li>
                     </ul>
                   </li>
                   <li>Files upload to Cloudinary with automatic thumbnail generation</li>
@@ -96,14 +96,14 @@ export default function AdminGuidePage() {
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">Admin: Gallery Settings</h3>
                 <p className="text-gray-600 mb-2">Edit a gallery to configure these options:</p>
                 <ul className="list-disc list-inside space-y-2 text-gray-700 ml-2">
-                  <li><strong>Allow Downloads</strong> — let clients download individual files</li>
-                  <li><strong>Allow Full-Size Access</strong> — show original resolution images</li>
-                  <li><strong>Require Password</strong> — protect with an access code</li>
-                  <li><strong>Access Code</strong> — the password clients must enter</li>
-                  <li><strong>Show Metadata</strong> — display file info on media cards</li>
-                  <li><strong>Enable Social Sharing</strong> — allow sharing links from gallery</li>
-                  <li><strong>Layout Mode</strong> — grid, masonry, or slideshow</li>
-                  <li><strong>Expiration Date</strong> — auto-disable gallery after this date</li>
+                  <li><strong>Allow Downloads</strong>: let clients download individual files</li>
+                  <li><strong>Allow Full-Size Access</strong>: show original resolution images</li>
+                  <li><strong>Require Password</strong>: protect with an access code</li>
+                  <li><strong>Access Code</strong>: the password clients must enter</li>
+                  <li><strong>Show Metadata</strong>: display file info on media cards</li>
+                  <li><strong>Enable Social Sharing</strong>: allow sharing links from gallery</li>
+                  <li><strong>Layout Mode</strong>: grid, masonry, or slideshow</li>
+                  <li><strong>Expiration Date</strong>: auto-disable gallery after this date</li>
                 </ul>
               </div>
 
@@ -125,12 +125,12 @@ export default function AdminGuidePage() {
                 <ul className="list-disc list-inside space-y-2 text-gray-700 ml-2">
                   <li><strong>Enter access code</strong> if the gallery is password-protected</li>
                   <li><strong>Browse media</strong> in a responsive grid layout</li>
-                  <li><strong>Filter by type</strong> — Images, Videos, or Documents tabs</li>
-                  <li><strong>Open lightbox</strong> — click any item for full-screen viewing with navigation</li>
-                  <li><strong>Like items</strong> — click the heart icon on any media card</li>
-                  <li><strong>Comment</strong> — add comments on individual items</li>
+                  <li><strong>Filter by type</strong>: Images, Videos, or Documents tabs</li>
+                  <li><strong>Open lightbox</strong>: click any item for full-screen viewing with navigation</li>
+                  <li><strong>Like items</strong>: click the heart icon on any media card</li>
+                  <li><strong>Comment</strong>: add comments on individual items</li>
                   <li><strong>Download individual files</strong> (if downloads enabled)</li>
-                  <li><strong>Download all files</strong> — batch download button in header</li>
+                  <li><strong>Download all files</strong>: batch download button in header</li>
                 </ul>
               </div>
             </div>
@@ -152,12 +152,12 @@ export default function AdminGuidePage() {
                   <li>Fill in project details:
                     <ul className="list-disc list-inside ml-6 mt-1 space-y-1 text-gray-600">
                       <li><strong>Client Name &amp; Email</strong></li>
-                      <li><strong>Project Name</strong> — title displayed on the proposal</li>
-                      <li><strong>Description</strong> — brief overview</li>
-                      <li><strong>Service Category</strong> — Voiceover, AI Consulting, Business Consulting, Sports Photography, Photography, Content Creation, Dev Relations, or Combination</li>
-                      <li><strong>Project Type</strong> — Proposal, Gallery, Deliverable, or Mixed</li>
-                      <li><strong>Access Code</strong> — optional password for portal access</li>
-                      <li><strong>Brand Color</strong> — custom hex color for the client-facing portal</li>
+                      <li><strong>Project Name</strong>: title displayed on the proposal</li>
+                      <li><strong>Description</strong>: brief overview</li>
+                      <li><strong>Service Category</strong>: Voiceover, AI Consulting, Business Consulting, Sports Photography, Photography, Content Creation, Dev Relations, or Combination</li>
+                      <li><strong>Project Type</strong>: Proposal, Gallery, Deliverable, or Mixed</li>
+                      <li><strong>Access Code</strong>: optional password for portal access</li>
+                      <li><strong>Brand Color</strong>: custom hex color for the client-facing portal</li>
                     </ul>
                   </li>
                   <li>The project starts in <strong>Draft</strong> status</li>
@@ -172,12 +172,12 @@ export default function AdminGuidePage() {
                   <div className="border border-gray-200 rounded-md p-4">
                     <h4 className="font-semibold text-gray-800 mb-2">Tab 1: Proposal Content</h4>
                     <ul className="list-disc list-inside space-y-1 text-gray-700">
-                      <li><strong>Cover Letter</strong> — introduction text (supports markdown)</li>
-                      <li><strong>Scope of Work</strong> — detailed project description (markdown)</li>
-                      <li><strong>Deliverables</strong> — add items with name, description, due date, and status (pending / in-progress / completed / delivered)</li>
-                      <li><strong>Pricing</strong> — line items with description, quantity, unit price. Totals auto-calculate. Optional tax field</li>
-                      <li><strong>Timeline</strong> — phases with name, description, start/end dates, and status indicators</li>
-                      <li><strong>Terms &amp; Conditions</strong> — legal text (markdown)</li>
+                      <li><strong>Cover Letter</strong>: introduction text (supports markdown)</li>
+                      <li><strong>Scope of Work</strong>: detailed project description (markdown)</li>
+                      <li><strong>Deliverables</strong>: add items with name, description, due date, and status (pending / in-progress / completed / delivered)</li>
+                      <li><strong>Pricing</strong>: line items with description, quantity, unit price. Totals auto-calculate. Optional tax field</li>
+                      <li><strong>Timeline</strong>: phases with name, description, start/end dates, and status indicators</li>
+                      <li><strong>Terms &amp; Conditions</strong>: legal text (markdown)</li>
                     </ul>
                     <p className="text-sm text-gray-500 mt-2">Click &quot;Save Proposal&quot; after editing.</p>
                   </div>
@@ -186,7 +186,7 @@ export default function AdminGuidePage() {
                     <h4 className="font-semibold text-gray-800 mb-2">Tab 2: Media</h4>
                     <ul className="list-disc list-inside space-y-1 text-gray-700">
                       <li>Upload images, videos, and documents related to the project</li>
-                      <li>Media displays in a grid — delete individual items as needed</li>
+                      <li>Media displays in a grid; delete individual items as needed</li>
                       <li>Uploaded media appears in the client&apos;s portal view</li>
                     </ul>
                   </div>
@@ -194,14 +194,14 @@ export default function AdminGuidePage() {
                   <div className="border border-gray-200 rounded-md p-4">
                     <h4 className="font-semibold text-gray-800 mb-2">Tab 3: Settings</h4>
                     <ul className="list-disc list-inside space-y-1 text-gray-700">
-                      <li><strong>Allow Downloads</strong> — clients can download media</li>
-                      <li><strong>Allow Comments</strong> — clients can leave notes</li>
-                      <li><strong>Allow Approval</strong> — show approve/decline buttons</li>
-                      <li><strong>Show Pricing</strong> — display pricing section to clients</li>
-                      <li><strong>Show Timeline</strong> — display timeline section</li>
-                      <li><strong>Require Password</strong> — protect with access code</li>
-                      <li><strong>Brand Color</strong> — custom accent color on portal</li>
-                      <li><strong>Company Name</strong> — displayed in portal header</li>
+                      <li><strong>Allow Downloads</strong>: clients can download media</li>
+                      <li><strong>Allow Comments</strong>: clients can leave notes</li>
+                      <li><strong>Allow Approval</strong>: show approve/decline buttons</li>
+                      <li><strong>Show Pricing</strong>: display pricing section to clients</li>
+                      <li><strong>Show Timeline</strong>: display timeline section</li>
+                      <li><strong>Require Password</strong>: protect with access code</li>
+                      <li><strong>Brand Color</strong>: custom accent color on portal</li>
+                      <li><strong>Company Name</strong>: displayed in portal header</li>
                     </ul>
                   </div>
                 </div>
@@ -226,9 +226,9 @@ export default function AdminGuidePage() {
                 </div>
                 <ul className="list-disc list-inside space-y-1 text-gray-700">
                   <li>Projects start as <strong>Draft</strong> while you build the proposal</li>
-                  <li>Click <strong>&quot;Send to Client&quot;</strong> to change status to <strong>Sent</strong> — this sends an email notification to the client with the portal link and access code</li>
+                  <li>Click <strong>&quot;Send to Client&quot;</strong> to change status to <strong>Sent</strong>: this sends an email notification to the client with the portal link and access code</li>
                   <li>Status auto-updates to <strong>Viewed</strong> when the client opens the portal</li>
-                  <li>Client can <strong>Approve</strong>, <strong>Decline</strong>, or <strong>Request Revision</strong> — each triggers an email notification to you</li>
+                  <li>Client can <strong>Approve</strong>, <strong>Decline</strong>, or <strong>Request Revision</strong>: each triggers an email notification to you</li>
                 </ul>
               </div>
 
@@ -239,13 +239,13 @@ export default function AdminGuidePage() {
                     Click <strong>&quot;Analytics&quot;</strong> on any project to see engagement data:
                   </p>
                   <ul className="list-disc list-inside space-y-1 text-gray-700">
-                    <li><strong>Total Views</strong> — how many times the portal was opened</li>
-                    <li><strong>Time Spent</strong> — total time client spent viewing</li>
-                    <li><strong>Media Views</strong> — individual media item engagement</li>
-                    <li><strong>Downloads</strong> — number of files downloaded</li>
-                    <li><strong>Views Over Time</strong> — chart showing access patterns</li>
-                    <li><strong>Section Engagement</strong> — which parts of the proposal got the most attention</li>
-                    <li><strong>Recent Activity</strong> — timestamped feed of all portal events</li>
+                    <li><strong>Total Views</strong>: how many times the portal was opened</li>
+                    <li><strong>Time Spent</strong>: total time client spent viewing</li>
+                    <li><strong>Media Views</strong>: individual media item engagement</li>
+                    <li><strong>Downloads</strong>: number of files downloaded</li>
+                    <li><strong>Views Over Time</strong>: chart showing access patterns</li>
+                    <li><strong>Section Engagement</strong>: which parts of the proposal got the most attention</li>
+                    <li><strong>Recent Activity</strong>: timestamped feed of all portal events</li>
                   </ul>
                 </div>
               </div>
@@ -259,9 +259,9 @@ export default function AdminGuidePage() {
                   <li>Proposal sections displayed in order: Cover Letter, Scope of Work, Deliverables (with status badges), Pricing Table, Timeline (with phase status), Media Gallery, Terms &amp; Conditions</li>
                   <li>At the bottom, they can respond:
                     <ul className="list-disc list-inside ml-6 mt-1 space-y-1 text-gray-600">
-                      <li><strong>Approve</strong> (green) — accepts the proposal</li>
-                      <li><strong>Request Revision</strong> (yellow) — asks for changes with notes</li>
-                      <li><strong>Decline</strong> (red) — rejects the proposal with optional note</li>
+                      <li><strong>Approve</strong> (green): accepts the proposal</li>
+                      <li><strong>Request Revision</strong> (yellow): asks for changes with notes</li>
+                      <li><strong>Decline</strong> (red): rejects the proposal with optional note</li>
                     </ul>
                   </li>
                   <li>Each response triggers an email notification to the admin</li>
@@ -272,14 +272,14 @@ export default function AdminGuidePage() {
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">New Features</h3>
                 <div className="bg-purple-50 border border-purple-200 rounded-md p-4">
                   <ul className="list-disc list-inside space-y-2 text-gray-700">
-                    <li><strong>Email Notifications</strong> — automatic emails on send and client response</li>
-                    <li><strong>Analytics Dashboard</strong> — full engagement tracking with charts</li>
-                    <li><strong>Brand Customization</strong> — custom colors, company name, and logo for client portals</li>
-                    <li><strong>Deliverable Status Tracking</strong> — mark deliverables as pending, in-progress, completed, or delivered</li>
-                    <li><strong>Status History</strong> — full audit trail of all status changes with timestamps</li>
-                    <li><strong>Media Gallery in Proposals</strong> — embed photos, videos, and documents directly in proposals</li>
-                    <li><strong>Client Session Management</strong> — secure cookie-based sessions for password-protected portals</li>
-                    <li><strong>Expiration Dates</strong> — proposals can auto-expire after a set date</li>
+                    <li><strong>Email Notifications</strong>: automatic emails on send and client response</li>
+                    <li><strong>Analytics Dashboard</strong>: full engagement tracking with charts</li>
+                    <li><strong>Brand Customization</strong>: custom colors, company name, and logo for client portals</li>
+                    <li><strong>Deliverable Status Tracking</strong>: mark deliverables as pending, in-progress, completed, or delivered</li>
+                    <li><strong>Status History</strong>: full audit trail of all status changes with timestamps</li>
+                    <li><strong>Media Gallery in Proposals</strong>: embed photos, videos, and documents directly in proposals</li>
+                    <li><strong>Client Session Management</strong>: secure cookie-based sessions for password-protected portals</li>
+                    <li><strong>Expiration Dates</strong>: proposals can auto-expire after a set date</li>
                   </ul>
                 </div>
               </div>
@@ -296,9 +296,9 @@ export default function AdminGuidePage() {
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">Three Sub-Tabs</h3>
                 <ul className="list-disc list-inside space-y-2 text-gray-700 ml-2">
-                  <li><strong>Contact Forms</strong> — general inquiries submitted via the contact page</li>
-                  <li><strong>Education Forms</strong> — submissions from the education interest form</li>
-                  <li><strong>Guest Speakers</strong> — guest speaker booking requests</li>
+                  <li><strong>Contact Forms</strong>: general inquiries submitted via the contact page</li>
+                  <li><strong>Education Forms</strong>: submissions from the education interest form</li>
+                  <li><strong>Guest Speakers</strong>: guest speaker booking requests</li>
                 </ul>
               </div>
               <p className="text-gray-600">
@@ -311,7 +311,7 @@ export default function AdminGuidePage() {
           <section id="blog" className="bg-white rounded-lg shadow p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Blog Management</h2>
             <p className="text-gray-600 mb-4">
-              Manage blog post metadata from the admin panel. Blog post content lives as TSX component files — the admin UI controls visibility, featured status, and metadata.
+              Manage blog post metadata from the admin panel. Blog post content lives as TSX component files; the admin UI controls visibility, featured status, and metadata.
             </p>
             <div className="space-y-4">
               <div>
@@ -345,7 +345,7 @@ export default function AdminGuidePage() {
           <section id="content" className="bg-white rounded-lg shadow p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Portfolio & Site Content</h2>
             <p className="text-gray-600 mb-4">
-              Manage portfolio projects, experience entries, and skills from the admin panel. Like blog posts, the source data lives in TypeScript files — the admin UI controls visibility and metadata overrides.
+              Manage portfolio projects, experience entries, and skills from the admin panel. Like blog posts, the source data lives in TypeScript files; the admin UI controls visibility and metadata overrides.
             </p>
             <div className="space-y-4">
               <div>
@@ -362,9 +362,9 @@ export default function AdminGuidePage() {
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">Content Source Files</h3>
                 <ul className="list-disc list-inside space-y-1 text-gray-700 ml-2">
-                  <li><strong>Projects</strong> — <span className="font-mono text-sm bg-gray-100 px-1 rounded">lib/projectData.ts</span></li>
-                  <li><strong>Experience</strong> — <span className="font-mono text-sm bg-gray-100 px-1 rounded">lib/experienceData.ts</span></li>
-                  <li><strong>Skills</strong> — <span className="font-mono text-sm bg-gray-100 px-1 rounded">lib/skillCategoryData.ts</span></li>
+                  <li><strong>Projects</strong>: <span className="font-mono text-sm bg-gray-100 px-1 rounded">lib/projectData.ts</span></li>
+                  <li><strong>Experience</strong>: <span className="font-mono text-sm bg-gray-100 px-1 rounded">lib/experienceData.ts</span></li>
+                  <li><strong>Skills</strong>: <span className="font-mono text-sm bg-gray-100 px-1 rounded">lib/skillCategoryData.ts</span></li>
                 </ul>
                 <p className="text-gray-600 mt-2 text-sm">
                   To add entirely new items, add them to the source files and click &quot;Sync from Code&quot; in admin.

@@ -10,9 +10,9 @@ export default function ExperienceHeader() {
             15+ Years of Technical Problem-Solving & Community Building
           </p>
           <p className="text-lg text-indigo-200 max-w-3xl mx-auto">
-            Empowering developers through empathetic technical problem-solving, automation, 
-            creative storytelling, and AI/ML expertise. Leading communities, building tools, 
-            and creating educational content that transforms how people learn technology.
+            I help developers solve hard problems with empathy, automation,
+            creative storytelling, and AI/ML expertise. I lead communities, build tools,
+            and write educational content that makes technology easier to learn.
           </p>
         </div>
       </div>

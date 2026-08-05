@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   keywords: 'corvids education, elementary science, Indiana wildlife, educational curriculum, K-5 activities',
   alternates: { canonical: 'https://brandanthonymcdonald.com/education/corvids-ebook-download' },
   openGraph: {
-    title: 'Corvids of Fishers Educational Series — Download',
+    title: 'Corvids of Fishers Educational Series: Download',
     description: 'Access the complete Corvids of Fishers K-5 educational curriculum package.',
     url: 'https://brandanthonymcdonald.com/education/corvids-ebook-download',
     siteName: 'Brand Anthony McDonald',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Corvids of Fishers Educational Series — Download',
+    title: 'Corvids of Fishers Educational Series: Download',
     description: 'Complete K-5 curriculum package on local corvid wildlife.',
   },
   robots: { index: false, follow: false },
@@ -52,7 +52,7 @@ export default function CorvidEbookDownload() {
                 Your Complete Education Package
               </h2>
               <p className="text-gray-600 mb-6">
-                Download the comprehensive marketing eBook with full curriculum details, 
+                Download the eBook with full curriculum details,
                 implementation guides, and standards alignment information.
               </p>
               
@@ -95,7 +95,7 @@ export default function CorvidEbookDownload() {
             
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-white rounded-lg p-6">
-                <h3 className="font-bold text-lg text-gray-900 mb-3">📧 Check Your Email</h3>
+                <h3 className="font-bold text-lg text-gray-900 mb-3">Check Your Email</h3>
                 <p className="text-gray-600 mb-4">
                   You'll receive additional resources and implementation support within 24 hours, including:
                 </p>
@@ -108,9 +108,9 @@ export default function CorvidEbookDownload() {
               </div>
               
               <div className="bg-white rounded-lg p-6">
-                <h3 className="font-bold text-lg text-gray-900 mb-3">🎯 Implementation Support</h3>
+                <h3 className="font-bold text-lg text-gray-900 mb-3">Implementation Support</h3>
                 <p className="text-gray-600 mb-4">
-                  Need help getting started? We provide:
+                  Need help getting started? I provide:
                 </p>
                 <ul className="list-disc list-inside text-gray-600 space-y-1">
                   <li>Teacher training webinars</li>
@@ -128,11 +128,11 @@ export default function CorvidEbookDownload() {
               Questions about implementation or custom content creation?
             </p>
             <p className="text-gray-700">
-              Contact us at <a href="mailto:contact@brandanthonymcdonald.com" className="text-blue-600 underline hover:text-blue-700">contact@brandanthonymcdonald.com</a> or 
+              Contact me at <a href="mailto:contact@brandanthonymcdonald.com" className="text-blue-600 underline hover:text-blue-700">contact@brandanthonymcdonald.com</a> or 
               <span className="text-blue-600"> (602) 456-9335</span>
             </p>
             <p className="text-sm text-gray-500 mt-4">
-              Join 500+ educators already transforming science education with local wildlife content
+              Join 500+ educators teaching science with local wildlife content
             </p>
           </div>
         </div>

@@ -16,14 +16,14 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "gitkraken-accidental-rebase",
-    title: "GitKraken and Accidental Rebases — Not as Scary as You Think",
+    title: "GitKraken and Accidental Rebases: Not as Scary as You Think",
     description: "One click in the GitKraken UI, a wave of panic, then thirty seconds with git reflog. A practical walkthrough of why accidental rebases are usually recoverable in under a minute.",
     publishDate: "2026-04-27",
     readTime: "5 min read",
     category: "Software Development",
     featured: true,
     tags: ["Git", "GitKraken", "Developer Experience", "Reflog", "Recovery"],
-    excerpt: "I had this exact moment last week — the wrong button in GitKraken, history rewritten, mild panic. Here's why it took less time to fix than to spike my heart rate, and how to make the reflog second nature."
+    excerpt: "I had this exact moment last week: the wrong button in GitKraken, history rewritten, mild panic. Here's why it took less time to fix than to spike my heart rate, and how to make the reflog second nature."
   },
   {
     slug: "why-i-track-every-step-toward-100",
@@ -50,13 +50,13 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "workouts/mai/longevity-protocol-v0",
     title: "Nomad Longevity OS: A Traveler's Phase 1 Protocol",
-    description: "A modular 5/15/30/45/60-minute training system for nomads — AM priming, PM recovery, and metabolic engine work for hotel or full-gym access. Built on the NASM OPT Phase 1 model with a strict 4/2/1/1 tempo.",
+    description: "A modular 5/15/30/45/60-minute training system for nomads: AM priming, PM recovery, and metabolic engine work for hotel or full-gym access. Built on the NASM OPT Phase 1 model with a strict 4/2/1/1 tempo.",
     publishDate: "2026-04-22",
     readTime: "8 min read",
     category: "Performance",
     featured: true,
     tags: ["Longevity", "Travel Fitness", "NASM", "OPT Model", "Mobility", "Recovery", "Biohacking"],
-    excerpt: "Environmental friction derails most travelers' training. Nomad Longevity OS is a beta case-study protocol that replaces willpower with pre-planned If/Then responses — modular routines for AM, PM, hotel, and full gym, plus a Friction Protocol for airport gaps and late hotel arrivals."
+    excerpt: "Environmental friction derails most travelers' training. Nomad Longevity OS is a beta case-study protocol that replaces willpower with pre-planned If/Then responses: modular routines for AM, PM, hotel, and full gym, plus a Friction Protocol for airport gaps and late hotel arrivals."
   },
   // {
   //   slug: "the-intensity-minutes-that-changed-everything",

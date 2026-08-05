@@ -40,11 +40,11 @@ export default function Services() {
       <div className="container-max">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Services That Build Success
+            What I Do
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Combining developer advocacy, technical education, voiceover artistry, and strategic business consulting
-            to help individuals and organizations achieve their goals.
+            I combine developer advocacy, technical education, voiceover work, and business consulting
+            to help individuals and organizations hit their goals.
           </p>
         </div>
 

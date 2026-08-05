@@ -87,7 +87,7 @@ export function getGalleryShareTemplate({
     </div>
     <div class="card">
       <p>Hi ${clientName},</p>
-      <p>Your gallery for <strong>${eventName}</strong> is ready to view${accessCode ? ' (it\'s password protected — see the code below)' : ''}.</p>
+      <p>Your gallery for <strong>${eventName}</strong> is ready to view${accessCode ? ' (it\'s password protected; see the code below)' : ''}.</p>
       ${message ? `<div class="note">${message}</div>` : ''}
       <p>You can browse the photos, mark favorites, leave a comment on any image, and approve or request changes right from the gallery.</p>
       <div style="text-align: center;">
@@ -99,7 +99,7 @@ export function getGalleryShareTemplate({
           <small>You'll need this code to open the gallery.</small>
         </div>
       ` : ''}
-      <p>Just reply to this email if you have any questions — your messages come straight to me.</p>
+      <p>Just reply to this email if you have any questions. Your messages come straight to me.</p>
       <p>Best regards,<br>Brand Anthony McDonald</p>
     </div>
   `)

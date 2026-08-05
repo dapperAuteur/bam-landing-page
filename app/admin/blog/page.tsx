@@ -153,7 +153,7 @@ export default function AdminBlogPage() {
             onClick={() => syncFromCode(true)}
             disabled={syncing}
             className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 disabled:opacity-50"
-            title="Insert new posts as hidden — does NOT fire outbox triggers. Use Hide → Show on each post to publish individually."
+            title="Insert new posts as hidden. Does NOT fire outbox triggers. Use Hide → Show on each post to publish individually."
           >
             {syncing ? 'Syncing...' : 'Backfill (hidden)'}
           </button>
@@ -161,7 +161,7 @@ export default function AdminBlogPage() {
             onClick={() => syncFromCode(false)}
             disabled={syncing}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
-            title="Insert new posts as visible — FIRES outbox triggers (3 drafts per new post)."
+            title="Insert new posts as visible. FIRES outbox triggers (3 drafts per new post)."
           >
             {syncing ? 'Syncing...' : 'Sync from Code'}
           </button>
@@ -191,7 +191,7 @@ export default function AdminBlogPage() {
               onClick={() => syncFromCode(true)}
               disabled={syncing}
               className="bg-gray-200 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-300 disabled:opacity-50"
-              title="Insert new posts as hidden — does NOT fire outbox triggers."
+              title="Insert new posts as hidden. Does NOT fire outbox triggers."
             >
               {syncing ? 'Syncing...' : 'Backfill as Hidden (no triggers)'}
             </button>
@@ -199,7 +199,7 @@ export default function AdminBlogPage() {
               onClick={() => syncFromCode(false)}
               disabled={syncing}
               className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 disabled:opacity-50"
-              title="Insert new posts as visible — FIRES outbox triggers per new post."
+              title="Insert new posts as visible. FIRES outbox triggers per new post."
             >
               {syncing ? 'Syncing...' : 'Sync from Code to Get Started'}
             </button>

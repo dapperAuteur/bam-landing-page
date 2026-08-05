@@ -40,8 +40,8 @@ export default function Portfolio() {
             Portfolio & Projects
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            A showcase of voiceover work, business consulting projects, and innovative solutions 
-            across multiple industries and disciplines.
+            Voiceover work, business consulting projects, and software I&apos;ve
+            shipped across several industries.
           </p>
         </div>
         

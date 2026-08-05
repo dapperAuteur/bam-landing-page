@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Client Gallery | Brand Anthony McDonald",
-  description: "Private client gallery — access requires the per-gallery link.",
+  description: "Private client gallery. Access requires the per-gallery link.",
   robots: { index: false, follow: false },
 };
 
