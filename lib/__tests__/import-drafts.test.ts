@@ -101,6 +101,13 @@ describe('buildDraftDoc', () => {
     expect(doc.description).toBe(doc.excerpt) // excerpt doubles as description fallback
   })
 
+  it('maps an optional FeaturedOrder header key onto the document (null when absent)', () => {
+    const withOrder = parseDraftHeader('<!--\nTitle: T\nSlug: s\nFeaturedOrder: 2\n-->\nBody.')!
+    expect(buildDraftDoc(withOrder, 'Body.', now).featuredOrder).toBe(2)
+    const without = parseDraftHeader(SPECIMEN)!
+    expect(buildDraftDoc(without, 'Body.', now).featuredOrder).toBeNull()
+  })
+
   it('estimates readTime from the body length', () => {
     expect(estimateReadTime('word '.repeat(400))).toBe('2 min read')
     expect(estimateReadTime('short body')).toBe('1 min read')

@@ -11,6 +11,10 @@ interface PostRow {
   status?: 'draft' | 'published'
   contentSource?: 'static' | 'cms'
   featured?: boolean
+  // Position in the featured rail. null = no order chosen (sorts after
+  // ordered posts, newest first). 999 is the legacy "unset" sentinel and is
+  // treated the same as null.
+  featuredOrder?: number | null
 }
 
 // Lightweight fuzzy matcher — case-insensitive subsequence with bonuses for
@@ -59,6 +63,26 @@ export default function MdxBlogPostsDashboard() {
       setError(e instanceof Error ? e.message : 'Failed to load posts')
     } finally {
       setLoading(false)
+    }
+  }
+
+  // Inline featured-rail ordering: commit on blur / Enter. Blank clears the
+  // order (the post falls back to the newest-first tail of the rail).
+  async function saveOrder(id: string, value: string) {
+    const trimmed = value.trim()
+    const parsed = trimmed === '' ? null : Number.parseInt(trimmed, 10)
+    const order = parsed !== null && Number.isNaN(parsed) ? null : parsed
+    const prev = posts.find(p => p.id === id)?.featuredOrder ?? null
+    if (order === prev) return
+    setPosts(ps => ps.map(p => (p.id === id ? { ...p, featuredOrder: order } : p)))
+    const res = await fetch(`/api/admin/blog/posts/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ featuredOrder: order }),
+    })
+    if (!res.ok) {
+      setPosts(ps => ps.map(p => (p.id === id ? { ...p, featuredOrder: prev } : p)))
+      alert('Saving the featured order failed')
     }
   }
 
@@ -155,6 +179,21 @@ export default function MdxBlogPostsDashboard() {
                   <span className={`text-xs px-2 py-0.5 rounded-full ${p.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>{p.status ?? 'draft'}</span>
                   {p.contentSource === 'static' && <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">static</span>}
                   {p.featured && <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">featured</span>}
+                  {p.featured && (
+                    <label className="flex items-center gap-1 text-xs text-gray-500">
+                      <span className="sr-only">Featured order for {p.title}</span>
+                      <input
+                        type="number"
+                        min={1}
+                        placeholder="order"
+                        title="Featured rail position (1 = first). Leave blank for no chosen order."
+                        defaultValue={p.featuredOrder == null || p.featuredOrder === 999 ? '' : p.featuredOrder}
+                        onBlur={e => void saveOrder(p.id, e.target.value)}
+                        onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
+                        className="w-16 rounded-md border border-gray-300 px-2 py-0.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </label>
+                  )}
                 </div>
                 <div className="text-xs text-gray-500 truncate">/blog/{p.slug} · {p.category}</div>
               </div>

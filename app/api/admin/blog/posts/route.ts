@@ -63,7 +63,9 @@ export async function POST(request: NextRequest) {
     readTime: body.readTime ?? '',
     publishDate: body.publishDate ?? now.slice(0, 10),
     featured: !!body.featured,
-    featuredOrder: typeof body.featuredOrder === 'number' ? body.featuredOrder : 999,
+    // Nullable: null = no featured-rail position chosen (sorts after ordered
+    // posts, newest first). See lib/blog/featuredSort.ts.
+    featuredOrder: typeof body.featuredOrder === 'number' ? body.featuredOrder : null,
     featuredImage: body.featuredImage ?? null,
     photoIds: Array.isArray(body.photoIds) ? body.photoIds : [],
     content: body.content ?? '',

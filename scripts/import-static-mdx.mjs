@@ -23,6 +23,7 @@
 //   readTime: 5 min read
 //   publishDate: 2026-04-27
 //   featured: false
+//   featuredOrder: 2   (optional; featured-rail position, 1 = first; omit for none)
 //   ---
 //   ## Body in MDX...
 //
@@ -65,6 +66,11 @@ function parseFrontmatter(raw) {
       val = val.replace(/^\[|\]$/g, '').split(',').map(s => s.trim().replace(/^["']|["']$/g, '')).filter(Boolean)
     } else if (val === 'true' || val === 'false') {
       val = val === 'true'
+    } else if (key === 'featuredOrder') {
+      // Nullable int: position in the featured rail (1 = first). Anything
+      // non-numeric means "no order chosen" and is stored as null.
+      const n = Number.parseInt(val, 10)
+      val = Number.isNaN(n) ? null : n
     } else {
       val = val.replace(/^["']|["']$/g, '')
     }
@@ -73,7 +79,7 @@ function parseFrontmatter(raw) {
   return { data, body }
 }
 
-const META_KEYS = ['title', 'description', 'excerpt', 'category', 'tags', 'readTime', 'publishDate', 'featured']
+const META_KEYS = ['title', 'description', 'excerpt', 'category', 'tags', 'readTime', 'publishDate', 'featured', 'featuredOrder']
 
 const files = readdirSync(DIR)
   .filter(f => f.endsWith('.mdx'))
@@ -116,7 +122,7 @@ for (const file of files) {
       readTime: data.readTime ?? '',
       publishDate: data.publishDate ?? now.slice(0, 10),
       featured: data.featured === true,
-      featuredOrder: 999,
+      featuredOrder: data.featuredOrder ?? null,
       content: body,
       contentSource: 'cms',
       status: 'published',
