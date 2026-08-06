@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "node scripts/import-drafts.mjs --if-vercel-prod",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
