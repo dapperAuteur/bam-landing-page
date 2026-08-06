@@ -28,7 +28,8 @@ interface FormState {
   readTime: string
   publishDate: string
   featured: boolean
-  featuredOrder: number
+  // Featured rail position as typed; '' = no order chosen (saved as null).
+  featuredOrder: string
   featuredImage: FeaturedImage | null
   content: string // MDX source
   status: 'draft' | 'published'
@@ -44,7 +45,7 @@ const EMPTY: FormState = {
   readTime: '',
   publishDate: '',
   featured: false,
-  featuredOrder: 999,
+  featuredOrder: '',
   featuredImage: null,
   content: '',
   status: 'draft',
@@ -121,7 +122,8 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
           readTime: post.readTime ?? '',
           publishDate: post.publishDate ?? '',
           featured: !!post.featured,
-          featuredOrder: post.featuredOrder ?? 999,
+          // 999 is the legacy "no order chosen" sentinel; show it as blank.
+          featuredOrder: post.featuredOrder == null || post.featuredOrder === 999 ? '' : String(post.featuredOrder),
           featuredImage: post.featuredImage ?? null,
           content: post.content ?? '',
           status: post.status === 'published' ? 'published' : 'draft',
@@ -147,7 +149,9 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
         status,
         slug: form.slug || slugify(form.title),
         tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
-        featuredOrder: Number(form.featuredOrder) || 999,
+        featuredOrder: form.featuredOrder.trim() === '' || Number.isNaN(Number(form.featuredOrder))
+          ? null
+          : Number(form.featuredOrder),
       }
       const res = await fetch(
         isNew ? '/api/admin/blog/posts' : `/api/admin/blog/posts/${postId}`,
@@ -234,7 +238,15 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
           </label>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-700">Order</span>
-            <input className={`${input} w-20`} type="number" value={form.featuredOrder} onChange={e => set('featuredOrder', Number(e.target.value))} />
+            <input
+              className={`${input} w-20`}
+              type="number"
+              min={1}
+              placeholder="none"
+              title="Featured rail position (1 = first). Leave blank for no chosen order."
+              value={form.featuredOrder}
+              onChange={e => set('featuredOrder', e.target.value)}
+            />
           </div>
         </div>
       </div>

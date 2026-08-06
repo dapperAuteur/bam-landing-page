@@ -827,7 +827,10 @@ export const getPostsByCategory = (category: string) => blogPosts.filter(post =>
 export const getAllCategories = () => Array.from(new Set(blogPosts.map(post => post.category)))
 export const getPostBySlugSync = (slug: string) => blogPosts.find(post => post.slug === slug)
 
-export type BlogPostWithMeta = BlogPost & { hidden?: boolean; featuredOrder?: number }
+// featuredOrder is a nullable int: null/undefined = BAM has not chosen a spot
+// for this post in the featured rail. (Legacy rows may carry the old 999
+// sentinel; lib/blog/featuredSort.ts treats that as unset too.)
+export type BlogPostWithMeta = BlogPost & { hidden?: boolean; featuredOrder?: number | null }
 
 // SINGLE SOURCE OF TRUTH (server components / API routes only).
 // Merges three inputs, deduped by slug:
@@ -846,7 +849,7 @@ export async function getAllBlogPosts(): Promise<BlogPostWithMeta[]> {
     const overrideMap = new Map(overrides.map(o => [o.slug, o]))
     const staticMerged: BlogPostWithMeta[] = blogPosts.map(post => {
       const override = overrideMap.get(post.slug)
-      if (!override) return { ...post, hidden: false, featuredOrder: 999, contentSource: 'static' as const }
+      if (!override) return { ...post, hidden: false, featuredOrder: null, contentSource: 'static' as const }
 
       const ovr = override.overrides || {}
       return {
@@ -860,7 +863,7 @@ export async function getAllBlogPosts(): Promise<BlogPostWithMeta[]> {
         ...(ovr.readTime ? { readTime: override.readTime } : {}),
         ...(ovr.publishDate ? { publishDate: override.publishDate } : {}),
         hidden: override.hidden || false,
-        featuredOrder: override.featuredOrder ?? 999,
+        featuredOrder: override.featuredOrder ?? null,
         contentSource: 'static' as const,
       }
     })
@@ -869,11 +872,11 @@ export async function getAllBlogPosts(): Promise<BlogPostWithMeta[]> {
     const cmsRows = await db.collection(COLLECTIONS.blogPosts).find({}).toArray()
     const cmsPosts: BlogPostWithMeta[] = cmsRows.map(row => {
       const { _id, ...rest } = row as Record<string, unknown>
-      const post = rest as unknown as BlogPost & { status?: string; featuredOrder?: number }
+      const post = rest as unknown as BlogPost & { status?: string; featuredOrder?: number | null }
       return {
         ...post,
         hidden: post.status === 'draft',
-        featuredOrder: post.featuredOrder ?? 999,
+        featuredOrder: post.featuredOrder ?? null,
         contentSource: post.contentSource ?? 'cms',
       }
     })
@@ -883,15 +886,17 @@ export async function getAllBlogPosts(): Promise<BlogPostWithMeta[]> {
     for (const p of staticMerged) bySlug.set(p.slug, p)
     for (const p of cmsPosts) bySlug.set(p.slug, { ...bySlug.get(p.slug), ...p })
 
+    // Deterministic base order: newest first. Featured rails apply their own
+    // ordering via lib/blog/featuredSort.ts (featuredOrder asc, nulls last,
+    // then publishDate desc). The old comparator here returned 0 for any pair
+    // that was not featured+featured, which is not a total order, so the
+    // resulting sequence was engine-dependent.
     return Array.from(bySlug.values())
       .filter(post => !post.hidden)
-      .sort((a, b) => {
-        if (a.featured && b.featured) return (a.featuredOrder || 999) - (b.featuredOrder || 999)
-        return 0
-      })
+      .sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime())
   } catch {
     // Fallback to hardcoded data if DB unavailable
-    return blogPosts.map(p => ({ ...p, hidden: false, featuredOrder: 999, contentSource: 'static' as const }))
+    return blogPosts.map(p => ({ ...p, hidden: false, featuredOrder: null, contentSource: 'static' as const }))
   }
 }
 

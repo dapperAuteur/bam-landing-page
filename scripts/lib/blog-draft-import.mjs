@@ -101,7 +101,8 @@ export function buildDraftDoc(header, body, now = new Date().toISOString()) {
     readTime: estimateReadTime(body),
     publishDate: now.slice(0, 10),
     featured: false,
-    featuredOrder: null,
+    // Optional FeaturedOrder header key; null = no rail position chosen.
+    featuredOrder: header.featuredOrder ?? null,
     featuredImage: null,
     photoIds: [],
     content: body,

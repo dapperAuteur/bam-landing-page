@@ -4,6 +4,7 @@ import BlogHeader from '@/components/blog/BlogHeader'
 import FeaturedPost from '@/components/blog/FeaturedPost'
 import BlogCategoryFilter from '@/components/blog/BlogCategoryFilter'
 import { getAllBlogPosts } from '@/lib/blogData'
+import { sortFeatured } from '@/lib/blog/featuredSort'
 
 // ISR so newly published CMS posts appear without a redeploy.
 export const revalidate = 3600
@@ -16,7 +17,8 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   const allPosts = await getAllBlogPosts()
-  const featuredPosts = allPosts.filter(post => post.featured)
+  // BAM's chosen order: featuredOrder asc, unset last, then newest first.
+  const featuredPosts = sortFeatured(allPosts.filter(post => post.featured))
   const recentPosts = [...allPosts].sort(
     (a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
   )

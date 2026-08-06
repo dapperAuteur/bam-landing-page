@@ -3,6 +3,7 @@ import BlogHeader from '../../../components/blog/BlogHeader'
 import FeaturedPost from '../../../components/blog/FeaturedPost'
 import BlogCategoryFilter from '../../../components/blog/BlogCategoryFilter'
 import { getBlogPostsWithOverrides } from '../../../lib/blogData'
+import { sortFeatured } from '../../../lib/blog/featuredSort'
 
 export const metadata: Metadata = {
   title: 'Legacy Blog | Brand Anthony McDonald',
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function LegacyBlogPage() {
   const allPosts = await getBlogPostsWithOverrides()
-  const featuredPosts = allPosts.filter(post => post.featured)
+  const featuredPosts = sortFeatured(allPosts.filter(post => post.featured))
   const recentPosts = allPosts.slice(0, 26)
   const categories = Array.from(new Set(allPosts.map(post => post.category)))
 
