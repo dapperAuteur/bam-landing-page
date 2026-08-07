@@ -76,6 +76,21 @@ The next decision, and it's a product decision rather than an engineering one: i
 
 One more thing that failed, for completeness: halfway through the verification runs, my API credit balance hit zero and the second provider leg died 13 cases deep with a billing error. The eval loop's most sophisticated failure mode remains "forgot to top up the account." Auto-reload is now on the operator checklist.
 
+
+## What happened next: I made the scoreboard stricter and my score collapsed
+
+The verifier-versus-judge disagreement above was not rhetorical. I acted on it. Specialists now emit claim-level inline citation markers, so every substantive sentence points at the numbered source that grounds it, and the offline rubric was upgraded to judge that instead of mere support-somewhere.
+
+The first run under the new rubric scored citation discipline at **4.8%**, down from 66.7%.
+
+That number needs its context stated plainly, because three things changed at once: the rubric (claim-level traceability instead of support), the judge (a free model instead of claude-opus-5), and the provider under test. Cross-line comparison is fiction, which is the same lesson the 47-point judge disagreement taught earlier in this post, now applied to my own headline metric.
+
+Here is what the run does prove on its own terms. The markers ship: 273 of them across 21 answers, 13 per answer on average, with exactly one answer carrying none. The feature works. What changed is the difficulty of the question. Under v2 a single unmarked closing sentence, or one marker whose source does not actually support the claim it sits beside, fails the whole case. By that bar the coach clears 1 of 21, with the failures splitting between wrong-source markers and residual unmarked transitional claims. Everything else held: routing 100%, namespace isolation 100%, no contradiction 95.2%, scope safety 90.5%, synthesis faithfulness 85.7%, zero runner errors.
+
+I could have kept the old rubric and a comfortable 66.7%. The old rubric asked whether a claim had support somewhere in the retrieval set. The new one asks whether a reader can trace this sentence to that source, which is what a cited health coach actually promises. So 4.8% is not a regression. It is the first honest measurement of the harder question, and it is where the next round of work starts.
+
+That is the whole argument for evals in one move: the number went down because the standard went up, and I can prove which is which.
+
 ## What I'd tell you to steal
 
 - **Properties, not golden answers.** Non-deterministic systems can't be tested for exact outputs; they can be tested for invariants.
