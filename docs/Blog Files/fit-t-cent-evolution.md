@@ -133,7 +133,28 @@ const result = await db.execute(
 );
 ```
 
-I want to be honest about what I can and cannot claim here. I have no evaluation comparing version two to version three. None exists. The code is the only documentation of the difference, and anyone reading this should treat my "the answers got better" as a judgment, not a measurement. `[METRIC: a scored v2-versus-v3.0 answer-quality comparison, which I have not run]`
+For a long time I could not tell you whether that rebuild worked. I said "the answers got better" and that was a judgment, not a measurement. So I measured it.
+
+I rebuilt version two's shape as a test arm: one model call, version two's actual system prompt copied out of the route, no retrieval. Then I ran both arms through the same 21 questions, on the same model, graded by the same judge. Only the architecture differed. Twenty of the 21 cases counted; one errored on the current build, and an errored case is not evidence about an agent, so it is excluded from both arms.
+
+| What the judge checked | v2 shape | Current |
+|---|---|---|
+| Answers every domain the question raises | 50.0% | **95.0%** |
+| Flags medical risk to a professional | 75.0% | 80.0% |
+| Gives you something specific to do | 65.0% | **55.0%** |
+| All three at once | 25.0% | 45.0% |
+
+The rebuild worked. Completeness nearly doubled.
+
+Then the same table told me two things I did not want to hear.
+
+**I had been telling the story wrong for a year.** My README said version two fell apart on cross-domain questions, the ones spanning training and nutrition and recovery at once. Split the result by question type and that is not what happened. On single-domain questions the old shape scored 46.7%; on multi-domain ones it scored 60.0%. It was worse at the easy questions. The rebuild took single-domain answers to 100% and multi-domain only to 80%. My diagnosis had been backwards, and nobody could have caught it from the code, because the code cannot tell you what it is bad at.
+
+**And the rebuild broke something.** Answers got more complete and less useful. Ten of twenty current answers failed to land on a number, a rep range, a frequency, or a decision rule, where the old single-call version managed it more often. Four specialists each produce specifics, then a supervisor merges them into one answer, and specificity is the first thing that dies under compression. I would not have found that if I had only measured the thing I expected to win. The comparison carried a deliberate counterweight criterion for exactly this reason: an architecture can score beautifully on completeness by touching every subject and committing to nothing.
+
+That regression is open, unfixed, and written down.
+
+The honest summary is not "I rebuilt it and it got better." It is that the rebuild fixed a real problem, that I was wrong about which problem it was, and that it introduced a new one I only saw because I built the instrument to look.
 
 ## 4.0: the receipt, closed
 
