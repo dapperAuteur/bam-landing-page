@@ -31,14 +31,17 @@ function Pre({ children }: { children?: React.ReactNode }) {
 }
 
 function Anchor({ href = '', ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+  // Persistent underline (not just on hover) so inline links are distinguishable
+  // from body text without relying on color alone — WCAG "link-in-text-block".
+  const cls = 'text-blue-700 underline underline-offset-2 hover:text-blue-800'
   if (href.startsWith('/')) {
-    return <Link href={href} className="text-blue-600 hover:underline" {...props} />
+    return <Link href={href} className={cls} {...props} />
   }
   const external = href.startsWith('http')
   return (
     <a
       href={href}
-      className="text-blue-600 hover:underline"
+      className={cls}
       {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
       {...props}
     />
