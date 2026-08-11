@@ -4,7 +4,7 @@ Title:   Why My Flashcard App Now Speaks MCP: The Ecosystem Case
 Slug:    why-flashlearn-speaks-mcp
 Excerpt: FlashLearnAI had a real public API for two years: keys, metered
          billing, OpenAPI. Then the way software consumes software changed.
-         Here is why the first MCP server in my 22-product ecosystem wraps
+         Here is why the first MCP server in my 21-product ecosystem wraps
          this app, what it buys the whole platform, and the pattern I plan
          to repeat.
 Tags:    MCP, Ecosystem, Strategy, FlashLearnAI, API Design, WitUS
@@ -12,7 +12,7 @@ Tags:    MCP, Ecosystem, Strategy, FlashLearnAI, API Design, WitUS
 
 # Why My Flashcard App Now Speaks MCP: The Ecosystem Case
 
-I run a 22-product ecosystem under the WitUS brand, and as of this week one of those products has a new front door. FlashLearnAI, my spaced-repetition flashcard platform, now ships an MCP server: a small package that lets any AI assistant (Claude Code, Claude Desktop, and a growing list of others) generate decks, run study sessions, and check usage with one line of configuration.
+I run a 21-product ecosystem under the WitUS brand, and as of this week one of those products has a new front door. FlashLearnAI, my spaced-repetition flashcard platform, now ships an MCP server: a small package that lets any AI assistant (Claude Code, Claude Desktop, and a growing list of others) generate decks, run study sessions, and check usage with one line of configuration.
 
 The build itself was an evening of work, and I wrote up the engineering in a separate post. This one answers the question that matters more: why this product, why this protocol, and what it buys the rest of the ecosystem.
 
@@ -26,7 +26,7 @@ MCP (the Model Context Protocol) is the industry's answer to that gap: an open s
 
 ## Why FlashLearnAI got it first
 
-Picking the first MCP surface in a 22-product ecosystem was a deliberate choice, not an accident of enthusiasm.
+Picking the first MCP surface in a 21-product ecosystem was a deliberate choice, not an accident of enthusiasm.
 
 **It had the strongest contract to wrap.** An MCP server is only as trustworthy as the API beneath it. FlashLearnAI's API already had authentication, rate limits, quotas, and a spec. Wrapping a mature contract meant the MCP work was translation, not invention. Starting with the weakest API would have meant building two things at once and doing both badly.
 
