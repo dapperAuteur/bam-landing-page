@@ -1,7 +1,7 @@
 <!--
 Draft for the bam-landing-page blog. Paste the body into app/admin/blog and use:
-Title:   2,080 Tests, and None of Them Opens the Front Door
-Slug:    what-2080-tests-do-not-cover
+Title:   2,085 Tests, and None of Them Opens the Front Door
+Slug:    what-my-tests-do-not-cover
 Excerpt: I read all 22 repositories in my ecosystem and counted every test I
          had written. Then I counted how many of them could fail a deploy.
          The second number is the post. Here is what my tests are genuinely
@@ -9,11 +9,11 @@ Excerpt: I read all 22 repositories in my ecosystem and counted every test I
 Tags:    Testing, QA, End-to-End, Accessibility, CI, Engineering Judgment
 -->
 
-# 2,080 Tests, and None of Them Opens the Front Door
+# 2,085 Tests, and None of Them Opens the Front Door
 
 I spent a day reading my own test suites. Not running them, reading them: every `package.json`, every runner config, every workflow file, every test file across 22 repositories I build and operate by myself.
 
-The first number is 2,080 declared test cases across 251 test files. That is a floor, not a total. It counts `it(` and `test(` declarations in source, and several suites generate their cases at run time, so the real number is higher. One accessibility spec in my travel-learning app declares a single test inside nested loops over four paths and eight viewport widths, which is 32 actual tests from one counted line.
+The first number is 2,085 declared test cases across 252 test files. That is a floor, not a total. It counts `it(` and `test(` declarations in source, and several suites generate their cases at run time, so the real number is higher. One accessibility spec in my travel-learning app declares a single test inside nested loops over four paths and eight viewport widths, which is 32 actual tests from one counted line.
 
 The second number is one. One repository out of 22 runs its test suite in continuous integration on a pull request. Zero run tests in a pre-commit hook. Zero run tests in the build command that deploys.
 
@@ -73,7 +73,7 @@ If I stopped there I would be selling something, so here is the boundary.
 
 Everything in the first section stays where it is. The source-reading invariants have no browser surface: `no-unscoped-reads` and the `force-static` guard are static analysis wearing a test runner's clothes. The scrubber tests assert that a string is absent from a serialized object, and no user ever sees that object. My content lint scripts read authored markdown before it renders, and one of them fails a quiz bank when too many correct answers sit at the same option position, which requires reading the whole bank at once and is not visible on any page.
 
-Hundreds of my 2,080 cases are pure functions: spaced-repetition scheduling, money arithmetic, contrast ratios, half-open date ranges so two back-to-back hotel stays never overlap. They run in milliseconds. Driving them through a user interface would be slower, less precise, and flakier, and "flaky" is the word that kills a suite, because a test that fails at random teaches you to ignore failures.
+Hundreds of my 2,085 cases are pure functions: spaced-repetition scheduling, money arithmetic, contrast ratios, half-open date ranges so two back-to-back hotel stays never overlap. They run in milliseconds. Driving them through a user interface would be slower, less precise, and flakier, and "flaky" is the word that kills a suite, because a test that fails at random teaches you to ignore failures.
 
 My agent evaluation harness is a different testing model entirely. The output is non-deterministic, so the assertions are properties instead of expected strings, scored against a frozen numeric baseline.
 
@@ -85,7 +85,7 @@ The honest summary is that a plain-English end-to-end layer would fill a real an
 
 Back to the two numbers.
 
-2,080 tests and one repository that can fail a build is not a coverage story. Coverage is the thing I have. What I do not have is a connection between the tests and the deploy, and a test that nothing runs is documentation. Good documentation, sometimes: the middleware suite in my tour app opens by naming the exact defect it exists for. That is institutional memory. It is not a gate.
+2,085 tests and one repository that can fail a build is not a coverage story. Coverage is the thing I have. What I do not have is a connection between the tests and the deploy, and a test that nothing runs is documentation. Good documentation, sometimes: the middleware suite in my tour app opens by naming the exact defect it exists for. That is institutional memory. It is not a gate.
 
 I have 21 pre-commit hooks that check a branch name and zero that run a test. I built the enforcement habit and pointed it at the cheapest possible thing to enforce.
 
@@ -93,6 +93,6 @@ The fix is not architectural. The one repository with working CI has a workflow 
 
 I have not done it yet. I am writing that down on purpose, because the version of this post where I describe the fix and imply it shipped is the version a reader cannot verify against my repositories. The gap is not a mystery and it is not a disagreement. It is a queue position.
 
-If you want the architecture that produced this shape, including what I chose to share across 21 products and what that sharing cost the day it broke, that is a separate post: [One Identity Provider, 21 Products, and 2,080 Tests That Cannot Fail a Deploy](/blog/witus-ecosystem-journey).
+If you want the architecture that produced this shape, including what I chose to share across 21 products and what that sharing cost the day it broke, that is a separate post: [One Identity Provider, 21 Products, and 2,085 Tests That Cannot Fail a Deploy](/blog/witus-ecosystem-journey).
 
 The lesson I would hand anyone counting their own tests: run the count twice. Once for how many tests you have, and once for how many can stop you from shipping. The distance between those two numbers is your actual test strategy, whatever the first number says.
