@@ -22,7 +22,7 @@ async function requireAdmin(): Promise<{ userId: string } | null> {
 }
 
 /**
- * GET — the distinct categories in use, with post counts, count descending then
+ * GET: the distinct categories in use, with post counts, count descending then
  * alphabetical.
  *
  * Read-only. This route exists so the editor can show the author what already exists
