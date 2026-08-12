@@ -3,11 +3,11 @@ Draft for the bam-landing-page blog. Paste the body into app/admin/blog and use:
 Title:   I Kept a Receipt of My Own AI Being Wrong, Then Spent Two Years Building the Thing That Catches It
 Slug:    fit-t-cent-evolution
 Excerpt: In December 2024 my fitness RAG confidently told me the NASM OPT model
-         was physical therapy exam prep. I saved the answer to a public repo
-         instead of deleting it. Four versions later, the coach has a step
-         whose only job is to catch that exact failure. Here is the arc, with
-         the code.
-Tags:    AI Agents, RAG, LangGraph, Evaluation, Fit T. Cent, Engineering Judgment
+         was physical therapy exam prep. I saved the answer instead of deleting
+         it. Four versions later I measured the rebuild, published a number
+         about my own work, and had to withdraw it. Here is the arc, the code,
+         and the retraction.
+Tags:    AI Agents, RAG, LangGraph, Evaluation, Retraction, Fit T. Cent, Engineering Judgment
 -->
 
 # I Kept a Receipt of My Own AI Being Wrong, Then Spent Two Years Building the Thing That Catches It
@@ -135,26 +135,42 @@ const result = await db.execute(
 
 For a long time I could not tell you whether that rebuild worked. I said "the answers got better" and that was a judgment, not a measurement. So I measured it.
 
-I rebuilt version two's shape as a test arm: one model call, version two's actual system prompt copied out of the route, no retrieval. Then I ran both arms through the same 21 questions, on the same model, graded by the same judge. Only the architecture differed. Twenty of the 21 cases counted; one errored on the current build, and an errored case is not evidence about an agent, so it is excluded from both arms.
+I rebuilt version two's shape as a test arm: one model call, version two's actual system prompt copied out of the route, no retrieval. Then I ran both arms through the same 21 questions, graded by the same judge. Twenty of the 21 cases counted; one errored on the current build, and an errored case is not evidence about an agent, so it is excluded from both arms.
 
-| What the judge checked | v2 shape | Current |
-|---|---|---|
-| Answers every domain the question raises | 50.0% | **95.0%** |
-| Flags medical risk to a professional | 75.0% | 80.0% |
-| Gives you something specific to do | 65.0% | **55.0%** |
-| All three at once | 25.0% | 45.0% |
+| What the judge checked | v2 shape | Current | |
+|---|---|---|---|
+| Answers every domain the question raises | 50.0% | **95.0%** | holds |
+| Flags medical risk to a professional | 75.0% | 80.0% | never a finding, too small |
+| Gives you something specific to do | 65.0% | 55.0% | **withdrawn, see below** |
+| All three at once | 25.0% | 45.0% | contains the withdrawn row |
 
-The rebuild worked. Completeness nearly doubled.
+The rebuild worked. Completeness nearly doubled, and a 45-point gap is far too large to be an accident of grading.
 
-Then the same table told me two things I did not want to hear.
+Then the table told me something I did not want to hear, and later it told me something worse about the table itself.
 
 **I had been telling the story wrong for a year.** My README said version two fell apart on cross-domain questions, the ones spanning training and nutrition and recovery at once. Split the result by question type and that is not what happened. On single-domain questions the old shape scored 46.7%; on multi-domain ones it scored 60.0%. It was worse at the easy questions. The rebuild took single-domain answers to 100% and multi-domain only to 80%. My diagnosis had been backwards, and nobody could have caught it from the code, because the code cannot tell you what it is bad at.
 
-**And the rebuild broke something.** Answers got more complete and less useful. Ten of twenty current answers failed to land on a number, a rep range, a frequency, or a decision rule, where the old single-call version managed it more often. Four specialists each produce specifics, then a supervisor merges them into one answer, and specificity is the first thing that dies under compression. I would not have found that if I had only measured the thing I expected to win. The comparison carried a deliberate counterweight criterion for exactly this reason: an architecture can score beautifully on completeness by touching every subject and committing to nothing.
+**And the rebuild appeared to break something.** Answers looked more complete and less useful: ten of twenty current answers failed to land on a number, a rep range, a frequency, or a decision rule, where the old single-call version managed it more often. I published that as a 10-point regression. It was the self-critical part of the write-up, the bit that made the rest look credible.
 
-That regression is open, unfixed, and written down.
+I have since withdrawn it.
 
-The honest summary is not "I rebuilt it and it got better." It is that the rebuild fixed a real problem, that I was wrong about which problem it was, and that it introduced a new one I only saw because I built the instrument to look.
+## The number I published and then took back
+
+Going after the cause of that 10-point drop is what killed it. Two problems turned up, both mine.
+
+**The judge could not hold still.** I re-ran five of those cases on a configuration I had not changed at all. Same agent, same prompts, same questions. It passed three of five where the first run passed zero of five. A grader that disagrees with itself that violently cannot resolve a ten-point difference between two systems. It also failed outright on one judgment in ten. It was a free model, chosen because evaluation runs are expensive and I was being frugal in the one place frugality costs you the answer.
+
+**And one side may not have run on the model I said it did.** A fallback setting meant that if a call to the paid model failed inside a specialist, a free model answered instead, silently. The single-call arm had no such fallback. "Same model on both arms" was my intention, and I reported it as a fact without checking.
+
+The completeness result survives both problems: forty-five points is nowhere near that noise. The ten-point one does not survive either of them.
+
+So I pulled it. Not softened, not hedged into "preliminary." Removed from a README that had already been merged, and then from every other place I had repeated it, which turned out to be six more documents, because a number that useful gets quoted everywhere it fits.
+
+**What I found instead was a real bug**, and it is the better story. Retrieval was throwing away the answers. It deduplicated results by page label rather than by chunk, so when several pieces of one page came back, only the top-ranked piece reached the model. Prescriptive content in my corpus lives in flattened tables, and tables rank below the prose sitting next to them. On one question about beginner programming, the retrieved page contained "~12-20 repetitions, ~1-3 sets, ~50-70% 1RM" and the model was handed the paragraph beside it. That is fixed, with tests that fail if it comes back.
+
+The honest summary is not "I rebuilt it and it got better." It is that the rebuild fixed a real problem, that I was wrong for a year about which problem, that I then published a second finding my own instrument was too shaky to support, and that chasing my own bad number is what uncovered the bug worth fixing.
+
+If there is a lesson, it is not the comfortable one about publishing your failures. It is that publishing a failure you have not verified is still publishing something untrue, and it buys you credibility you have not earned.
 
 ## 4.0: the receipt, closed
 
