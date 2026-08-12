@@ -122,9 +122,13 @@ export function buildDraftDoc(header, body, now = new Date().toISOString()) {
  * The safety rule: a slug that already exists in blog_posts is NEVER touched.
  * The admin DB is the authority after first import; repo files are birth
  * certificates, not ongoing mirrors. A merge must not clobber admin edits.
+ *
+ * `reapply` is the one exception, and it is opt-in per slug: pass a list of
+ * slugs to overwrite the body and title of an EXISTING DRAFT from its repo
+ * file. Published posts are refused. Nothing re-applies unless named.
  */
-export async function importDrafts({ entries, col, dry = false, log = console.log, now = new Date().toISOString() }) {
-  const summary = { inserted: 0, skippedExisting: 0, skippedInvalid: 0, slugsInserted: [] }
+export async function importDrafts({ entries, col, dry = false, log = console.log, now = new Date().toISOString(), reapply = [] }) {
+  const summary = { inserted: 0, skippedExisting: 0, skippedInvalid: 0, reapplied: 0, slugsInserted: [], slugsReapplied: [] }
 
   for (const { file, raw } of entries) {
     const header = parseDraftHeader(raw)
@@ -136,6 +140,36 @@ export async function importDrafts({ entries, col, dry = false, log = console.lo
 
     const existing = await col.findOne({ slug: header.slug })
     if (existing) {
+      // Opt-in re-apply for a DRAFT whose repo file has since been corrected.
+      //
+      // The insert-only rule below is right for the common case and stays the
+      // default. It has one failure mode this handles: a draft imported on
+      // merge, then corrected in the repo, keeps the ORIGINAL text forever, so
+      // publishing from the dashboard publishes the stale version. That is not
+      // hypothetical. A withdrawn claim survived in a draft after the file that
+      // stated it had been retracted.
+      //
+      // Never touches a published post, because republishing is an outward
+      // action and re-firing the outbox is not a cleanup. Never runs in hook
+      // mode. Only the slugs named on the command line.
+      if (reapply.includes(header.slug)) {
+        if (existing.status !== 'draft') {
+          log(`  REFUSE ${header.slug}: status is '${existing.status}', not 'draft'. Re-apply only touches drafts.`)
+          summary.skippedExisting++
+          continue
+        }
+        const body = extractBody(raw, header.title)
+        log(`  ${dry ? '[dry] ' : ''}REAPPLY ${header.slug}: overwriting draft body and title (${existing.content?.length ?? 0} -> ${body.length} chars)`)
+        if (!dry) {
+          await col.updateOne(
+            { slug: header.slug, status: 'draft' },
+            { $set: { title: header.title, excerpt: header.excerpt, tags: header.tags, content: body, updatedAt: now } },
+          )
+        }
+        summary.reapplied++
+        summary.slugsReapplied.push(header.slug)
+        continue
+      }
       log(`  SKIP ${header.slug}: already in blog_posts (admin DB is the authority; file not re-applied)`)
       summary.skippedExisting++
       continue

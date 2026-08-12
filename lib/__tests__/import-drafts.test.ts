@@ -156,3 +156,66 @@ describe('importDrafts insert-only semantics', () => {
     expect(col.inserted).toHaveLength(0)
   })
 })
+
+describe("--reapply: correcting a draft whose repo file changed", () => {
+  // The gap this closes, found 2026-08-12: a draft imported on merge keeps its
+  // original text forever, so a post corrected in the repo afterwards still
+  // publishes the stale version from the dashboard. That is not hypothetical.
+  // A withdrawn claim survived in a draft after the file stating it had been
+  // retracted, and would have been published from the admin UI.
+  const file = "p.md";
+  const raw =
+    "<!--\nTitle:   New Title\nSlug:    p\nExcerpt: New excerpt\nTags:    A, B\n-->\n\n# New Title\n\nCorrected body.\n";
+
+  function col(existing: Record<string, unknown> | null) {
+    const updates: unknown[] = [];
+    return {
+      updates,
+      findOne: async () => existing,
+      insertOne: async () => {
+        throw new Error("must not insert over an existing slug");
+      },
+      updateOne: async (filter: unknown, update: unknown) => {
+        updates.push({ filter, update });
+        return { modifiedCount: 1 };
+      },
+    };
+  }
+
+  it("overwrites an existing DRAFT when its slug is named", async () => {
+    const c = col({ slug: "p", status: "draft", content: "old" });
+    const s = await importDrafts({
+      entries: [{ file, raw }],
+      col: c as never,
+      log: () => {},
+      reapply: ["p"],
+    });
+    expect(s.reapplied).toBe(1);
+    expect(c.updates).toHaveLength(1);
+  });
+
+  // Republishing is an outward action and re-firing the outbox is not cleanup.
+  it("refuses a published post even when named", async () => {
+    const c = col({ slug: "p", status: "published", content: "old" });
+    const s = await importDrafts({
+      entries: [{ file, raw }],
+      col: c as never,
+      log: () => {},
+      reapply: ["p"],
+    });
+    expect(s.reapplied).toBe(0);
+    expect(c.updates).toHaveLength(0);
+  });
+
+  it("leaves an existing draft alone when not named", async () => {
+    const c = col({ slug: "p", status: "draft", content: "old" });
+    const s = await importDrafts({
+      entries: [{ file, raw }],
+      col: c as never,
+      log: () => {},
+    });
+    expect(s.reapplied).toBe(0);
+    expect(s.skippedExisting).toBe(1);
+    expect(c.updates).toHaveLength(0);
+  });
+});
