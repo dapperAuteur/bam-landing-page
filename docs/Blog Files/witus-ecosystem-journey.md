@@ -1,6 +1,6 @@
 <!--
 Draft for the bam-landing-page blog. Paste the body into app/admin/blog and use:
-Title:   One Identity Provider, 21 Products, and 2,080 Tests That Cannot Fail a Deploy
+Title:   One Identity Provider, 21 Products, and 2,085 Tests That Cannot Fail a Deploy
 Slug:    witus-ecosystem-journey
 Excerpt: I build and run 21 interlinked products by myself. This is not a tour
          of them. It is the story of what I decided to share between them,
@@ -9,7 +9,7 @@ Excerpt: I build and run 21 interlinked products by myself. This is not a tour
 Tags:    Architecture, Solo Engineering, Multi-tenancy, OIDC, Testing, Engineering Judgment
 -->
 
-# One Identity Provider, 21 Products, and 2,080 Tests That Cannot Fail a Deploy
+# One Identity Provider, 21 Products, and 2,085 Tests That Cannot Fail a Deploy
 
 There are 21 products in my ecosystem. I know that because they live in one TypeScript file, `gemini/witus/lib/products.ts`, and that file is the registry every other list in the system has to agree with. Counting folders on my hard drive gives a different number and always has. The file is the answer.
 
@@ -61,7 +61,7 @@ None of these is clever. That is the point. "Make illegal states unrepresentable
 
 ## The part that is not finished
 
-I surveyed all 22 repositories and counted. 2,080 declared test cases across 251 test files.
+I surveyed all 22 repositories and counted. 2,085 declared test cases across 252 test files.
 
 One repository runs its suite in continuous integration on a pull request. One.
 
