@@ -127,6 +127,16 @@ export function buildDraftDoc(header, body, now = new Date().toISOString()) {
  * slugs to overwrite the body and title of an EXISTING DRAFT from its repo
  * file. Published posts are refused. Nothing re-applies unless named.
  */
+/**
+ * @param {{
+ *   entries: Array<{ file: string, raw: string }>,
+ *   col: any,
+ *   dry?: boolean,
+ *   log?: (msg: string) => void,
+ *   now?: string,
+ *   reapply?: string[],
+ * }} options
+ */
 export async function importDrafts({ entries, col, dry = false, log = console.log, now = new Date().toISOString(), reapply = [] }) {
   const summary = { inserted: 0, skippedExisting: 0, skippedInvalid: 0, reapplied: 0, slugsInserted: [], slugsReapplied: [] }
 
