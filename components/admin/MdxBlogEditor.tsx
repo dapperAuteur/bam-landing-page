@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import PhotoPicker from '@/components/ui/PhotoPicker'
+import CategoryCombobox from '@/components/admin/CategoryCombobox'
+import type { CategoryOption } from '@/lib/blog/categories'
 import type { Photo } from '@/types/photo'
 
 interface MdxBlogEditorProps {
@@ -65,6 +67,8 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
   const [slugTouched, setSlugTouched] = useState(false)
   const [pickerOpen, setPickerOpen] = useState(false)
   const [pickerMode, setPickerMode] = useState<'single' | 'carousel' | 'featured'>('single')
+  const [categories, setCategories] = useState<CategoryOption[]>([])
+  const [categoriesLoading, setCategoriesLoading] = useState(true)
   const contentRef = useRef<HTMLTextAreaElement>(null)
 
   function insertAtCursor(text: string) {
@@ -104,6 +108,26 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
       .join(',\n')
     insertAtCursor(`\n\n<Carousel images={[\n${images}\n]} />\n\n`)
   }
+
+  // Categories already in use, fetched once so the picker can show what exists before a
+  // near-duplicate gets typed. A failure here leaves the picker empty, which degrades to
+  // the old free-text behavior rather than blocking the editor.
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res = await fetch('/api/admin/blog/categories')
+        if (!res.ok) return
+        const data = await res.json()
+        if (!cancelled && Array.isArray(data.categories)) setCategories(data.categories)
+      } catch {
+        // Non-fatal: the author can still type a category.
+      } finally {
+        if (!cancelled) setCategoriesLoading(false)
+      }
+    })()
+    return () => { cancelled = true }
+  }, [])
 
   useEffect(() => {
     if (isNew) return
@@ -208,8 +232,18 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
           />
         </div>
         <div>
-          <label className={label}>Category</label>
-          <input className={input} value={form.category} onChange={e => set('category', e.target.value)} />
+          <label className={label} id="category-label">Category</label>
+          <CategoryCombobox
+            value={form.category}
+            onChange={value => set('category', value)}
+            options={categories}
+            loading={categoriesLoading}
+            inputClassName={input}
+            labelId="category-label"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            One category per post. Type to filter what already exists; tags handle the rest.
+          </p>
         </div>
         <div className="md:col-span-2">
           <label className={label}>Description</label>
