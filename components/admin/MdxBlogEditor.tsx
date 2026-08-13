@@ -306,6 +306,25 @@ export default function MdxBlogEditor({ postId }: MdxBlogEditorProps) {
             <button type="button" onClick={() => set('featuredImage', null)} className="text-sm text-red-600 hover:text-red-800">Remove</button>
           )}
         </div>
+        {form.featuredImage && (
+          <div className="mt-3">
+            <label className="block text-xs font-medium text-gray-600 mb-1" htmlFor="featured-alt">
+              Alt text
+            </label>
+            <input
+              id="featured-alt"
+              value={form.featuredImage.alt || ''}
+              onChange={e =>
+                set('featuredImage', { ...form.featuredImage!, alt: e.target.value })
+              }
+              placeholder="Describe the image for screen readers and search engines"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Defaults to the uploaded file name, which is rarely a useful description. Worth a sentence.
+            </p>
+          </div>
+        )}
         <p className="text-xs text-gray-500 mt-1">Shown as the post hero and as the Open Graph / Twitter card image when shared.</p>
       </div>
 
