@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { 
-  MagnifyingGlassIcon, 
-  XMarkIcon, 
-  CheckIcon
+import {
+  MagnifyingGlassIcon,
+  XMarkIcon,
+  CheckIcon,
+  ArrowUpTrayIcon
 } from '@heroicons/react/24/outline'
-import { Photo } from './../../types/photo'
+import { Photo, PhotoCategory } from './../../types/photo'
 
 interface PhotoPickerProps {
   isOpen: boolean
@@ -30,13 +31,20 @@ export default function PhotoPicker({
   filterTags,
   excludeGalleries = false,
   title = 'Select Photos',
-  description = 'Choose photos from your library'
+  description = 'Choose from your library, or upload a new photo'
 }: PhotoPickerProps) {
   const [photos, setPhotos] = useState<Photo[]>([])
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedPhotos, setSelectedPhotos] = useState<Photo[]>([])
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
+  const [isDragging, setIsDragging] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  // Counts nested dragenter/dragleave so moving over a child element does not
+  // flicker the drop highlight off.
+  const dragDepth = useRef(0)
 
   const categories = ['all', 'sports', 'events', 'portraits', 'products', 'other']
 
@@ -103,6 +111,76 @@ export default function PhotoPicker({
     }
   }
 
+  /**
+   * Upload straight into the library from wherever the picker was opened, so
+   * "use a photo I haven't uploaded yet" doesn't mean leaving the post you're
+   * editing, going to /admin/photos, uploading, and coming back.
+   *
+   * Files are filed under the category currently filtered to, falling back to
+   * 'other' when the filter is "all" — matching where the user is already
+   * looking, so the new photo doesn't upload into a category they then have to
+   * go find.
+   */
+  const uploadFiles = async (fileList: FileList | File[]) => {
+    const files = Array.from(fileList).filter(f => f.type.startsWith('image/'))
+    if (files.length === 0) {
+      setUploadError('Those files are not images.')
+      return
+    }
+
+    setUploading(true)
+    setUploadError('')
+
+    try {
+      const category: PhotoCategory =
+        selectedCategory !== 'all' ? (selectedCategory as PhotoCategory) : 'other'
+
+      const body = new FormData()
+      // Single-select callers only need one; sending just the first keeps the
+      // "upload then immediately use it" flow unambiguous.
+      const toSend = allowMultiple ? files : files.slice(0, 1)
+      toSend.forEach(f => body.append('files', f))
+      body.append('category', category)
+      body.append('tags', JSON.stringify(filterTags?.length ? filterTags : []))
+      body.append('portfolio', 'false')
+
+      const res = await fetch('/api/photos', { method: 'POST', body })
+      if (!res.ok) {
+        const detail = await res.json().catch(() => null)
+        throw new Error(detail?.error || `Upload failed (${res.status})`)
+      }
+
+      const data = await res.json()
+      const uploaded: Photo[] = data.photos || []
+      if (uploaded.length === 0) throw new Error('Upload returned no photos.')
+
+      // Show them at the top immediately rather than refetching, so the new
+      // photo is visible even if it would sort below the fold.
+      setPhotos(prev => [...uploaded, ...prev])
+
+      if (allowMultiple) {
+        setSelectedPhotos(prev => [...prev, ...uploaded])
+      } else {
+        // Uploading in single-select mode means "I want this one".
+        onSelect?.(uploaded[0])
+        onClose()
+      }
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Upload failed.')
+    } finally {
+      setUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    dragDepth.current = 0
+    setIsDragging(false)
+    if (uploading) return
+    if (e.dataTransfer.files?.length) uploadFiles(e.dataTransfer.files)
+  }
+
   const handleConfirmSelection = () => {
     if (allowMultiple && onSelectMultiple && selectedPhotos.length > 0) {
       onSelectMultiple(selectedPhotos)
@@ -154,7 +232,29 @@ export default function PhotoPicker({
                 </option>
               ))}
             </select>
+
+            <label
+              className={`flex items-center gap-2 rounded-md px-4 py-2 text-white whitespace-nowrap ${
+                uploading ? 'bg-gray-400 cursor-wait' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+              }`}
+            >
+              <ArrowUpTrayIcon className="h-5 w-5" aria-hidden="true" />
+              {uploading ? 'Uploading…' : 'Upload new'}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple={allowMultiple}
+                className="hidden"
+                disabled={uploading}
+                onChange={e => e.target.files?.length && uploadFiles(e.target.files)}
+              />
+            </label>
           </div>
+
+          {uploadError && (
+            <p role="alert" className="mt-2 text-sm text-red-600">{uploadError}</p>
+          )}
 
           {allowMultiple && (
             <div className="mt-3 flex justify-between items-center">
@@ -173,8 +273,25 @@ export default function PhotoPicker({
           )}
         </div>
 
-        {/* Photo Grid */}
-        <div className="flex-1 overflow-y-auto p-4">
+        {/* Photo Grid — doubles as a drop target for uploads */}
+        <div
+          className={`relative flex-1 overflow-y-auto p-4 ${isDragging ? 'ring-2 ring-inset ring-blue-500 bg-blue-50/50' : ''}`}
+          onDragEnter={(e) => { e.preventDefault(); dragDepth.current += 1; setIsDragging(true) }}
+          onDragOver={(e) => e.preventDefault()}
+          onDragLeave={(e) => {
+            e.preventDefault()
+            dragDepth.current -= 1
+            if (dragDepth.current <= 0) { dragDepth.current = 0; setIsDragging(false) }
+          }}
+          onDrop={onDrop}
+        >
+          {isDragging && (
+            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+              <p className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-lg">
+                Drop to upload
+              </p>
+            </div>
+          )}
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -182,6 +299,9 @@ export default function PhotoPicker({
           ) : filteredPhotos.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500">No photos found</p>
+              <p className="mt-1 text-sm text-gray-400">
+                Drag an image here, or use &ldquo;Upload new&rdquo; above.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">

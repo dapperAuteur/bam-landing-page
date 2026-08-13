@@ -13,7 +13,7 @@ export default function FeaturedPost({ post }: FeaturedPostProps) {
           // eslint-disable-next-line @next/next/no-img-element
           <img src={post.featuredImage.url} alt={post.featuredImage.alt || post.title} className="w-full h-56 object-cover" />
         )}
-        <div className="p-8">
+        <div className="p-6 sm:p-8">
         <div className="flex items-center gap-4 mb-4">
           <span className="bg-yellow-100 text-yellow-800 text-sm px-3 py-1 rounded-full font-bold">
             FEATURED

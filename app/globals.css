@@ -7,6 +7,45 @@
     scroll-behavior: smooth;
   }
 
+  /* No horizontal scrolling at any viewport width.
+   *
+   * Three layers, because one is not enough:
+   *
+   * 1. `overflow-wrap: break-word` lets long unbreakable strings — bare URLs in
+   *    a post's References section, long product names — wrap instead of
+   *    pushing the page sideways. This is the single biggest cause here, since
+   *    blog bodies are authored freely and can contain anything.
+   *
+   * 2. `min-width: 0` on flex/grid children. Their default `min-width: auto`
+   *    refuses to shrink below their content, so one long word in a card blows
+   *    out the whole row. This is the fix people usually reach for one
+   *    component too late.
+   *
+   * 3. `overflow-x: clip` on the root as a backstop for anything future
+   *    content throws at us. `clip` rather than `hidden` on purpose: `hidden`
+   *    creates a scroll container, which silently breaks `position: sticky`
+   *    descendants. `clip` does not.
+   *
+   * Deliberately NOT relying on 3 alone — clipping hides content instead of
+   * fixing it, so 1 and 2 do the real work and 3 only catches what slips past.
+   * Wide *blocks* (tables, code) are handled separately: they scroll inside
+   * their own container in lib/mdx/registry.tsx, which keeps them reachable.
+   */
+  html,
+  body {
+    overflow-x: clip;
+  }
+
+  body {
+    overflow-wrap: break-word;
+  }
+
+  /* Scoped to the layout modes where `min-width: auto` actually bites. */
+  .flex > *,
+  .grid > * {
+    min-width: 0;
+  }
+
   /* Ensure keyboard focus is always visible — unaffected by mouse interaction */
   :focus-visible {
     outline: 2px solid #6366f1;

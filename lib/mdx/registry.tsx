@@ -33,7 +33,9 @@ function Pre({ children }: { children?: React.ReactNode }) {
 function Anchor({ href = '', ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   // Persistent underline (not just on hover) so inline links are distinguishable
   // from body text without relying on color alone — WCAG "link-in-text-block".
-  const cls = 'text-blue-700 underline underline-offset-2 hover:text-blue-800'
+  // break-words so a bare URL in a References list wraps instead of pushing
+  // the page sideways on a phone.
+  const cls = 'text-blue-700 underline underline-offset-2 hover:text-blue-800 break-words'
   if (href.startsWith('/')) {
     return <Link href={href} className={cls} {...props} />
   }
