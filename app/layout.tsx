@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Inter } from 'next/font/google'
 import {Providers} from "@/components/providers/SessionProvider"
 import PublicLayout from '@/components/layout/PublicLayout'
+import { PostHogProvider } from '@/lib/analytics/posthog-provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -77,6 +78,16 @@ export default function RootLayout({
       <Analytics />
       <Providers>
         <body className={inter.className}>
+          {/* Renders nothing — it only initialises PostHog and reports route views.
+              The key is read HERE, in the Server Component, and passed down; `?? null`
+              is what puts the provider in its supported keyless state (local dev, and
+              any deploy before NEXT_PUBLIC_POSTHOG_KEY is set) rather than initialising
+              with undefined. Sits at the root so route tracking covers every page.
+              Separate from <Analytics /> above, which is Vercel's own and untouched. */}
+          <PostHogProvider
+            apiKey={process.env.NEXT_PUBLIC_POSTHOG_KEY ?? null}
+            apiHost="/ingest"
+          />
           <PublicLayout>
             {children}
           </PublicLayout>
