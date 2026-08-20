@@ -8,6 +8,8 @@ import {
   useGoogleReCaptcha,
 } from "react-google-recaptcha-v3";
 import { AlertTriangle, CheckCircle } from "lucide-react";
+import { capture } from "@/lib/analytics/capture";
+import { EVENTS } from "@/lib/analytics/events";
 
 export type IntakeFormType = "hire" | "partner";
 
@@ -109,6 +111,13 @@ function IntakeFormInner({ config }: { config: IntakeFormConfig }) {
         setStatusMessage(result.message);
         setFormData(initialState);
         setErrors({});
+        // The conversion event for this site. Fired only on the API's success
+        // branch, so it counts completions and not attempts — a reCAPTCHA rejection
+        // or a validation failure is deliberately not a submission. `capture` is
+        // wrapped and no-ops when PostHog never initialised, so this cannot affect
+        // the success UI. Only the form type is sent: no name, email, company, or
+        // message text goes to a third party.
+        capture(EVENTS.formSubmitted, { form: config.formType });
       } else {
         setStatus("error");
         setStatusMessage(result.message || "Something went wrong. Please try again.");
