@@ -20,6 +20,61 @@ Having built a nine-course wellness-coaching program, I wanted to know what I ha
 3. Attack the assessment: what does it fail to test?
 4. Attack the learner's experience: where would someone stall?
 
+### What actually gets pasted in
+
+The outline is **generated from the committed course data**, not written by hand. That distinction is
+the whole reason the exercise is worth anything: a hand-written summary drifts from the course, and
+then the reviewer attacks a description instead of the thing.
+
+```bash
+pnpm gen:outline --series well-wellness-coaching > review/01-outline.md
+```
+
+What comes out, per lesson, is the claim structure rather than the prose:
+
+```markdown
+### Section 3 · The coach in the room
+
+- **11 · Implicit bias, taught from the null results**
+  - Beats: Scope note, stated first because it matters · The claim in its strong form ·
+    Claim 1: healthcare professionals show it · Claim 2: the standard measure predicts behavior ·
+    Claim 3: training changes the measure · So the honest summary · What follows for a coach
+  - Vocabulary: Implicit measure, Mediation, Network meta-analysis, Structural response
+  - Sources (4): FitzGerald, C., & Hurst, S. (2017)... | Oswald, F. L., et al. (2013)... |
+    Forscher, P. S., et al. (2019)... | Lai, C. K., et al. (2016)...
+  - Self-checks: "Separate the four claims about implicit bias and give the verdict on each."
+- **14 · Knowledge check: the coach in the room**: QUIZ, 100 question(s) pooled, 5 served, pass 80%
+```
+
+Because it is generated, the pool sizes and passing scores travel with it — which is how the
+assessment-attack prompt gets something real to bite on.
+
+### The four prompts, verbatim
+
+One per session. A model given four jobs does all four badly.
+
+```text
+1. Coverage.  "Here is the full outline of a program that claims to prepare someone for <the
+   standard>. What would an examiner say is missing? Cite the specific competency or requirement,
+   verbatim, with its locator in the published document."
+
+2. Evidence.  "Attack the evidence. For each bold claim, say whether it is stated accurately,
+   overstated, out of date, or contradicted, and give the source that settles it with its
+   identifier."
+
+3. Assessment.  "Look only at the quizzes. Where can a learner pass without having read the lesson?
+   Where is something taught but never assessed? Where does a question test recall of a number
+   rather than understanding of a mechanism?"
+
+4. The course's own risk.  Write this one yourself. Every course has a specific way it could be
+   wrong that matters more than the others.
+```
+
+Note what prompt 1 demands: **the locator**. "You are missing X" is unfalsifiable. "You are missing
+competency 3.9.9, which reads *adapt goals or action plans to address the impact of social
+determinants of health*" can be checked in about a minute, and that is the difference between a
+finding and a vibe.
+
 It produced a lot. Roughly 130 KB of findings. Reading it cold, it was devastating: a program with structural non-compliance, misread case law, and coverage gaps across the credential it benchmarks against.
 
 Almost none of the first half survived checking. The second half changed how I build assessments.

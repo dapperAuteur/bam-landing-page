@@ -23,6 +23,26 @@ Every course starts as a **dossier**: a file with five fixed sections. Section 1
 
 **Only Section 4 may enter a lesson.** That is the whole architecture. Everything else is bookkeeping designed to make the rule enforceable.
 
+The verification log is the section that does the work, and it is deliberately boring:
+
+```markdown
+## 3. Verification log
+
+| # | Primary URL actually read | What it actually supports | Verdict |
+|---|---|---|---|
+| 1 | pubmed.ncbi.nlm.nih.gov/26832439/ | Constrained TEE; 332 adults; plateau at the high end | verified |
+| 2 | pubmed.ncbi.nlm.nih.gov/35174010/ | 83% / 58% / 37% adverse events, NOT "essentially no risk" | corrected |
+| 3 | (none found)                       | claim as given matches no paper I can locate       | unverifiable |
+```
+
+- `verified` means the primary says what the claim says.
+- `corrected` means the primary says something adjacent, and the corrected version is what moves to
+  Section 4.
+- `replaced` means the claim was right but the citation was not.
+- `unverifiable` means it does not enter a lesson at all.
+
+That last verdict is the one people skip, and it is the one that keeps the file honest.
+
 ## The spot check
 
 Late in the process I ran an adversarial review pass (that is post 2 in this series). It produced a long list of "you omitted this paper" findings, each with an author, a year, a journal, and a PubMed ID.
@@ -43,6 +63,43 @@ PubMed IDs are checkable. NCBI runs a free API that turns a PMID into a record. 
 | 33427509 | Knee-ligament finite-element modelling |
 
 One was correct. One more was correct but described wrongly.
+
+### The check, in one command
+
+This is the whole verification step. NCBI's E-utilities API turns a PubMed ID into a record, free, no
+key required:
+
+```bash
+curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=26832443,26832439" \
+  | python3 -c "
+import json,sys
+d = json.load(sys.stdin)['result']
+for i in d['uids']:
+    r = d[i]
+    print(f\"{i}  {r['source']} {r['pubdate']}  {r['title'][:78]}\")
+"
+```
+
+```
+26832443  Curr Biol 2016 Feb 22  NuMA Phosphorylation by Aurora-A Orchestrates Spindle Orientation.
+26832439  Curr Biol 2016 Feb 8   Constrained Total Energy Expenditure and Metabolic Adaptation to Physical Acti
+```
+
+Look at what those two lines share. **Same journal. Same month.** The identifier I was handed missed
+by four, and landed on a real paper published two weeks later in the same issue window of *Current
+Biology*. That is why the failure is invisible at a glance: the wrong answer is not far-fetched, it
+is adjacent.
+
+To check a batch, the same call takes a comma-separated list:
+
+```bash
+ids="26832443,22029761,12127713,23589320,34000382"
+curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=$ids" \
+  | python3 -c "import json,sys; d=json.load(sys.stdin)['result']; [print(i, d[i]['title'][:70]) for i in d['uids']]"
+```
+
+Ten identifiers, one round trip, about two seconds. That is the entire cost of the step that caught
+eight fabrications.
 
 Here is the part that should worry you more than a hallucinated link would. **These are not dead links.** Every one resolves. Every one returns a real paper, in a real journal, with real authors. If you click it and glance, you see a citation that exists, and you move on. A 404 announces itself. This does not.
 
