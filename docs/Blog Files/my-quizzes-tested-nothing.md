@@ -33,6 +33,51 @@ Nine courses. For each, I walked the lesson list in order, grouped by section, a
 | 07 Movement & novelty | 10 | 2 | 14 → 10 | 3 of 5 |
 | 99 Capstone | 13 | 2 | 15 → 10 | 2 of 4 |
 
+### The script, in the part that matters
+
+There is no cleverness in it. It groups lessons by section, asks which sections contain a quiz, and
+asks which lessons are named by a question's `sourceLessonSlug`:
+
+```ts
+// A section that teaches and never assesses.
+if (!quiz && teachingLessons.length > 0) {
+  findings.push({
+    kind: "section-without-quiz",
+    detail: `"${name}" has ${teachingLessons.length} teaching lesson(s) and no quiz`,
+  });
+}
+
+// A lesson no question anywhere in the course points at.
+for (const lesson of teaching) {
+  const cites = citedBy.get(lesson.slug) ?? [];
+  if (cites.length === 0) {
+    findings.push({ kind: "lesson-never-assessed", detail: `${lesson.slug} is taught and never tested` });
+    continue;
+  }
+  // Assessed, but only from outside its own section: a learner may meet it once, in a random draw.
+  const own = lesson.section;
+  if (own && cites.every((c) => c.section !== own)) {
+    findings.push({ kind: "final-only-lesson", detail: `${lesson.slug} is only assessed in ${cites[0].quiz}` });
+  }
+}
+```
+
+It is now a command in the repo, and running it on a finished course looks like this:
+
+```
+$ pnpm audit:course well-context-equity --spec
+well-context-equity: Wellness Coaching 08: Context, Equity, and the Coaching Agreement
+  15 teaching lesson(s), 5 quiz(zes), 334 pooled question(s)
+
+  section                                        lessons   words  reveals    pool  served  target
+  Section 1 · The context a plan lands in           3    1978        7      57       5      57
+  Section 2 · Being understood                      3    1936        6      55       5      55
+  Section 3 · The coach in the room                 5    3632       10     100       5     100
+  Section 4 · The agreement and the practice        4    2868        8      82       5      82
+
+  No structural findings.
+```
+
 Four findings, in ascending order of how much they bothered me.
 
 **1. Every course's last section had no quiz. Nine out of nine.** Six were also missing a first-section quiz. This is not a bug anyone introduces on purpose. It is what happens when you finish writing a course's content, feel finished, and ship.
@@ -78,6 +123,30 @@ Two fixes, both legitimate, and I have now used both:
 - **Trim the correct answer.** Say the same thing in fewer words.
 - **Give distractors real specificity** — a date, a mechanism, a named qualifier — so they earn their length.
 
+Concretely, the same question before and after. The qualifier moves into the explanation, which no
+guard measures and every learner reads only after answering:
+
+```diff
+   prompt: "What are 'stop conditions', and what do they prevent?",
+   options: [
+-    "Circumstances decided in advance under which elements pause or hold; they let a protocol bend rather than shatter",
++    "Pauses and holds decided in advance",
+     "Signs the protocol should be abandoned; they prevent wasted effort",
+     "Safety limits beyond which elements are contraindicated",
+     "The point at which coaching should conclude",
+   ],
+   correctIndex: 0,
+-  explanation: "Injury, illness, a new job, a family crisis.",
++  explanation: "Injury, illness, a new job, a family crisis. It is the difference between a protocol that bends and one that shatters.",
+```
+
+Nothing was lost. The correct answer went from the longest option to the shortest, and the sentence
+that made it worth reading is still there, one click later.
+
+**The real lesson is about authoring order, not repair.** Once I started writing correct options
+short and distractors long *by design*, the next four courses cleared the guard on the first run with
+zero post-hoc edits. The three written the natural way needed 47 trims between them.
+
 What you must not do is pad distractors with filler. That trades a length tell for a vagueness tell, and a learner will find the new one just as fast.
 
 ## What I have changed, with numbers
@@ -87,6 +156,36 @@ The repair is underway and it is large. The program went from **310 pooled quest
 Sizing rule: pool = words of lesson prose ÷ 35, clamped between 40 and 100, every section serving 5. That last number is the one people get wrong. **Freshness comes from pool ÷ served, not pool size.** Serving 5 from a pool of 40 gives roughly a 12% chance any given item repeats on a retake. Serving 10 from 100 gives 10%. Nearly identical, at 40% of the authoring cost.
 
 I had originally been asked for a flat 100 per section. Measured against the actual corpus — 62,000 words across 112 lessons — that works out to one question per 17 words, and in the thinnest section one per 5. At that density you are not writing assessment, you are writing trivia, and the length guard would have caught the padding anyway.
+
+## Postscript: what the measurement found next
+
+Turning the script loose on the whole catalog rather than the nine courses found something bigger.
+**929 questions across eight migrated courses carried no `sourceLessonSlug` at all** — no link from a
+wrong answer back to the lesson that teaches it. The learner was told they were wrong and nothing
+else.
+
+```
+$ pnpm audit:course --all
+Audited 237 course(s): 2387 finding(s).
+   1089  lesson-never-assessed
+    674  final-only-lesson
+    614  section-without-quiz
+      8  question-without-source
+      2  orphan-source
+```
+
+Those two `orphan-source` findings were the sharpest: two questions cited a lesson that does not
+exist in their course, so the "reread this lesson" link resolved to nothing. Both were mine.
+
+The 929 are now fixed — 809 by a matcher that assigns the lesson when the evidence is clear, 120 by
+hand where it was not — and the count is zero. What remains is the structural backlog: 839 lessons no
+question assesses, 677 assessed only in a final. Those need questions written, which is work rather
+than tooling.
+
+The point of the postscript is not the numbers. It is that **the script kept paying**. It was written
+to answer one question about nine courses, and it has since found a broken link class, a metadata
+gap two orders of magnitude larger than the original finding, and a spec I had failed to meet. An
+hour of counting is still the best hour I have spent on this project.
 
 ## Three things worth stealing
 
