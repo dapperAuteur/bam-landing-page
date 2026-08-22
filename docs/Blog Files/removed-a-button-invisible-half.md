@@ -53,6 +53,19 @@ Both halves now come from a single switch: a list of which languages are finishe
 
 The header button reads it. The `hreflang` tags read it. When Spanish is ready, I add one word to that list and both come back at once.
 
+```ts
+// Locales finished enough to advertise publicly. Spanish is NOT here yet.
+export const publicLocales: readonly Locale[] = ["en"];
+
+/** True when more than one locale is public, so a switcher has somewhere to go. */
+export const localeSwitcherEnabled = publicLocales.length > 1;
+```
+
+The header reads it. So do the `hreflang` tags, through one shared helper every route already calls.
+
+![The site header: the Wanderlust wordmark, five navigation links, and a Sign in button, with no language switcher](/blog/removed-a-button-invisible-half/header-no-language-toggle.png)
+*The visible half of the change. The half that mattered leaves no trace in a screenshot.*
+
 That's deliberate. If they were two separate settings, some future version of me would flip one and forget the other, and I'd be right back in a state where the visible and invisible answers to "do you speak Spanish?" disagree. They're one decision, so they're one switch.
 
 ## What I did *not* do

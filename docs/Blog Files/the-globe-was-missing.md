@@ -25,6 +25,9 @@ The best thing on the homepage is a spinning 3D globe. You drag it, it turns, pi
 
 In all four homepage screenshots, it was a black rectangle.
 
+![The globe section of the homepage, showing an empty black rectangle where the Earth should be](/blog/the-globe-was-missing/globe-missing.png)
+*What fifty-two "successful" screenshots looked like. Reproduced here by holding back the Earth texture, which puts the page in exactly the state the originals caught: the canvas has mounted, nothing has been drawn into it.*
+
 No error. The program reported success. The file was there, the right size, the rest of the page perfect. Just a void where the globe should be.
 
 Here's why. My screenshot program waits for the page to be "done loading" before it shoots. That sounds like it means what you'd want. It doesn't.
@@ -38,7 +41,26 @@ Here's why. My screenshot program waits for the page to be "done loading" before
 
 My program was shooting between steps 1 and 2. It photographed a canvas that existed and was empty, which is exactly what an empty canvas looks like: a black rectangle.
 
-The fix is small — look for a drawing surface on the page, and if there is one, wait a few more seconds for it to actually paint. What I want to point at is not the fix but the failure mode.
+The fix is small — look for a drawing surface on the page, and if there is one, wait a few more seconds for it to actually paint:
+
+```ts
+// Probe briefly for a canvas. One that is going to mount is in the tree within
+// a beat of hydration; the long wait afterwards is for TEXTURE loading, not
+// mounting. A generous probe here would instead cost its full timeout on each
+// of the ~11 routes that have no canvas at all.
+const hasCanvas = await page
+  .locator("canvas")
+  .first()
+  .waitFor({ state: "visible", timeout: 2_000 })
+  .then(() => true)
+  .catch(() => false);
+
+await page.waitForTimeout(hasCanvas ? 4_000 : 800);
+```
+
+Same region, same page, after that change:
+
+![The globe section with the Earth fully rendered, oceans and continents and cloud cover](/blog/the-globe-was-missing/globe-rendered.png) What I want to point at is not the fix but the failure mode.
 
 **The program did not fail. It succeeded at the wrong thing.** It was asked "is the network quiet" and answered correctly. I had assumed that question was a proxy for "does the page look right," and it isn't.
 

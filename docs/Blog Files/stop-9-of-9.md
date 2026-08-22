@@ -23,6 +23,9 @@ Then I took a screenshot of it on a real tour and it said:
 
 > **STOP 9 OF 9 · 8 LEFT**
 
+![A tour viewer with a strip of scene cards beneath it. The counter reads STOP 9 OF 9 on the left and 8 left on the right; the highlighted current stop is card 9, Front Door Outside](/blog/stop-9-of-9/stop-9-of-9.png)
+*Both numbers are correct. Together they are nonsense.*
+
 On arrival. Before you'd moved.
 
 ## Why a computer said something that stupid
@@ -55,6 +58,9 @@ And put yourself in the visitor's position. You arrive somewhere new. The interf
 
 The correct fix is not to remove the number. It's to make it true.
 
+![The same strip, now reading STOP 1 OF 9 with Front Door Outside highlighted as the first card, followed by Front Door Inside, Painting 1 and so on](/blog/stop-9-of-9/stop-1-of-9.png)
+*Same tour, same data, ordered the way you actually walk it.*
+
 ## The fix: walk the map, don't read the list
 
 Instead of numbering scenes by upload order, I number them by **the order you'd actually walk them**.
@@ -62,6 +68,35 @@ Instead of numbering scenes by upload order, I number them by **the order you'd 
 The tour already knows which scenes connect to which — that's what the arrows are. So: start at the start scene, look at every scene it links to, then every scene *those* link to, and so on outward. It's the same way you'd explore a building: everything one room away, then everything two rooms away.
 
 The front door is where the tour begins, so it's stop 1. Then "Front Door Inside," then the paintings, in the order the arrows lead you.
+
+The whole change is one small pure function — walk outward from the start along the links, then append anything nothing points at:
+
+```ts
+export function walkOrderFromStart(input: TourGraphInput): string[] {
+  const ordered: string[] = [];
+  const seen = new Set<string>();
+
+  if (input.startSceneId && inSet.has(input.startSceneId)) {
+    const queue = [input.startSceneId];
+    seen.add(input.startSceneId);
+    while (queue.length > 0) {
+      const current = queue.shift()!;
+      ordered.push(current);
+      for (const next of adjacency.get(current) ?? []) {
+        if (seen.has(next)) continue;
+        seen.add(next);
+        queue.push(next);
+      }
+    }
+  }
+
+  // Unreachable scenes are APPENDED, never dropped: a total that quietly
+  // excluded them would be a smaller version of the same lie.
+  for (const id of input.sceneIds) if (!seen.has(id)) ordered.push(id);
+
+  return ordered;
+}
+```
 
 Two details I want to call out because both are judgement, not mechanics:
 
