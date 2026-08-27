@@ -2,11 +2,11 @@
 Draft for the bam-landing-page blog. Paste the body into app/admin/blog and use:
 Title:   "Write Good Quizzes" Is Not a Specification. A Failing Build Is.
 Slug:    guards-beat-instructions
-Excerpt: Every agent brief I wrote said never make the correct answer the
-         obvious one. Every agent complied. Then I measured: 307 of 355 quiz
-         banks could be passed by clicking the longest option without reading
-         the question. The instruction was in the prompt. The property was not
-         in the build.
+Excerpt: My course-authoring guides covered distractor design from the
+         repository's second day. Nobody ignored them. Four weeks later I
+         measured, and 307 of 355 quiz banks could be passed by clicking the
+         longest option without reading the question. The instruction was
+         written down. The property was not in the build.
 Tags:    AI Agents, Testing, Assessment, Quality, Engineering Judgment, WitUS
 Series:  Building an LMS With Agents (1 of 4)
 -->
@@ -15,9 +15,9 @@ Series:  Building an LMS With Agents (1 of 4)
 
 I have spent about two months building Learn.WitUS.Online, a multi-tenant LMS, mostly with AI agents working in parallel. The repository is at 1,947 commits since its first one on 2026-06-28. As of today it audits 260 courses.
 
-Every agent brief carried the same non-negotiables. One of them was a rule about quizzes: the correct answer must not be the obvious one. Every agent complied, in the sense that none of them ever wrote a question with three joke distractors and one real answer.
+Distractor design was in the course-authoring guides from 2026-06-29, the repository's second day (commit `ce9a73c`), and every agent brief since has carried a set of non-negotiables that includes the quiz rules. Nobody ignored any of it. Not one agent ever wrote a question with three joke distractors and one real answer.
 
-Then I measured, and 307 of 355 quiz banks could be passed by a learner who clicked the longest option without reading the question.
+Four weeks later I measured, and 307 of 355 quiz banks could be passed by a learner who clicked the longest option without reading the question.
 
 ## The thing an instruction cannot do
 

@@ -106,7 +106,7 @@ const POSITIONAL_EXPLANATION =
 
 Every clause in those two comments is a false positive I found by running the draft over the corpus and reading what it caught. The definite article, the excluded noun "answer", the case sensitivity on the letter: three narrowings, each one costing real recall, each one bought by looking at output instead of reasoning about it.
 
-The same sentence about the tariff threat appears in both comments because it is the sentence that broke both drafts. There is exactly one of it in the catalog, and it was worth two rule changes.
+The same sentence about the tariff threat appears in both comments because it is the sentence that broke both drafts. It is a quiz explanation in `scripts/data/labor-mexico-course.ts`, there is exactly one of it in the whole catalog, and it was worth two rule changes.
 
 ## What the surviving four actually check
 
