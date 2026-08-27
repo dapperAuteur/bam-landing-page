@@ -46,6 +46,14 @@ Now read that again from my side.
 
 I am changing my address. To your device, my app at the new address is **indistinguishable from a phishing site**. It's a different address asking for a key that was stamped for a different one. Your device does exactly what it was designed to do, which is refuse.
 
+In my code the whole thing is one line, and the danger is how ordinary it looks:
+
+```ts
+// The address stamped onto every passkey, derived from the app's own URL.
+// So changing the URL silently changes which passkeys are valid.
+rpID: new URL(env.BETTER_AUTH_URL).hostname,
+```
+
 I can't override that. There's no setting. If I *could* override it, passkeys wouldn't work, because a scammer could override it too.
 
 So: everyone re-registers. Password and email sign-in still work, so nobody is locked out. It's an annoyance, not an outage. But it's an unavoidable one, and the honest thing is to say so up front rather than let people discover it.

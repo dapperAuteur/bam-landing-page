@@ -45,6 +45,24 @@ So if I rename the folder, one of two things happens, and both are bad. If Cloud
 
 Either way, the same outcome: every photograph in every live tour stops loading. Not a subtle degradation. Grey boxes where the museum used to be.
 
+In code it is three lines and a warning:
+
+```ts
+/**
+ * DO NOT RENAME THESE FOLDERS TO "wanderlust".
+ *
+ * A Cloudinary folder is part of every asset's `public_id`, and the public_id
+ * is what every delivery URL is built from. Renaming does not move existing
+ * assets; it sends NEW uploads elsewhere while every already-published tour,
+ * poster and transcript keeps pointing at URLs under the old path.
+ */
+export function folderFor(kind: UploadKind): string {
+  if (kind === "screenshot" || kind === "screen_recording") return "wanderlearn/support";
+  if (kind === "transcript") return "wanderlearn/transcripts";
+  return "wanderlearn/media";
+}
+```
+
 The folder is an address. It stays.
 
 ### 2. The bag of unsent work on your phone

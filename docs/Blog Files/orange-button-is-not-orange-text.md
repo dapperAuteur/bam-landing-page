@@ -36,12 +36,31 @@ These aren't opinions. There's a formula. You can compute it before you draw any
 
 My tangerine on my cream measures **3.38:1**.
 
+Here is the app before it had any brand colour at all, and after:
+
+![The homepage in monochrome: black headline on white, a black button, grey body text](/blog/orange-button-is-not-orange-text/before-monochrome.png)
+*Before. Two colours defined in the entire stylesheet.*
+
+![The same homepage in the new palette: warm cream page, deep indigo slab-serif headline, tangerine button](/blog/orange-button-is-not-orange-text/after-passport-stamp.png)
+*After. The tangerine appears only as a fill — never as a word.*
+
 Which means: fine as a *background* behind dark text. Fine as the edge of a control. **A failure as text.** Not because it's ugly — it isn't — but because for a meaningful number of people, including anyone with reduced contrast sensitivity, which increasingly includes everyone as they age, it is genuinely hard to read.
 
 The fix is not to abandon the colour. It's to accept that **one colour cannot do both jobs**, and ship two:
 
 - `--brand` — the bright tangerine. Fills shapes. Never forms letters.
 - `--brand-text` — a darkened version, `#B8410A`. Forms letters. Measures 5.23:1. Passes.
+
+```css
+:root {
+  /* Brand: tangerine. Fill vs text are different values on purpose. */
+  --brand: #e8590c;      /* fill — 3.38:1 vs background (UI/non-text only) */
+  --brand-text: #b8410a; /* text and links — 5.23:1 */
+  --on-brand: #1b1a2e;   /* the label ON a --brand fill — 4.75:1 */
+}
+```
+
+The ratios live in the file, beside the values. A number with no context is a number someone will change.
 
 They read as the same colour to a casual eye. They are not interchangeable, and the system now makes that explicit, because "use the orange" is ambiguous in a way that silently produces failures.
 

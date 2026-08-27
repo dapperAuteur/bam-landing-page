@@ -21,6 +21,16 @@ There wasn't one.
 
 Not "it was clunky." Not "it was buried." There was no share control on any learner-facing screen. None.
 
+There was worse news underneath. Testing the new share button turned up link previews that had been broken the whole time — every tour and every course anyone had ever shared previewed like this:
+
+![A social preview card: blank cream with the words Tour not found centred on it](/blog/nobody-could-share-a-finished-tour/og-not-found.png)
+*HTTP 200. A valid PNG. Correct dimensions. The wrong picture.*
+
+When it should have looked like this:
+
+![A social preview card showing the tour name, its location, a short description, and a 360 degree photograph of the venue bleeding off the right edge](/blog/nobody-could-share-a-finished-tour/og-with-photo.png)
+*The same route after a one-word fix. The photograph is the peak scene the creator marked.*
+
 What did exist: share tools for **creators**, so a museum can distribute a tour it made. And a completion certificate — which is a **PDF**, which requires an account and an enrolment, and which does not preview in a group chat. It downloads. Nobody has ever forwarded a PDF to their cousin and had it land well.
 
 So the single mechanism my entire growth plan rested on was absent, and I'd been carrying the assumption for months.
