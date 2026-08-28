@@ -8,7 +8,7 @@ Excerpt: My personal OS grew to 365 API routes and 198 migrations across nine
          four modules I had marked for removal feeding the pages I had just
          called the entire point of the app.
 Tags:    Architecture, Monolith, Refactoring, Postgres, Next.js, Technical Debt
-Series:  Decomposing a Monolith (1 of 3)
+Series:  Decomposing a Monolith (1 of 4)
 -->
 
 # Deciding What Not to Split

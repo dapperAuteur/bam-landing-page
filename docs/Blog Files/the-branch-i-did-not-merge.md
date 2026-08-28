@@ -7,7 +7,7 @@ Excerpt: Consolidating four stale branches turned up one that was five months
          subscription tier from a CHECK constraint on a database two apps
          share. Plus why my additive-only rule did not catch it.
 Tags:    Git, Postgres, Migrations, Shared Database, Technical Debt, Code Review
-Series:  Decomposing a Monolith (3 of 3)
+Series:  Decomposing a Monolith (3 of 4)
 -->
 
 # The Branch I Did Not Merge
@@ -141,3 +141,5 @@ git push origin --delete feat/annual-plan-after-founders
 Three parts in, the actual code change is small: a corrected README, a fixed CSV export, a footer link pointed at the right domain. The real output is different. I know what this app's one job is, I know which four modules are load-bearing for it despite being scheduled to leave, and I know the export I planned to migrate with does not silently lie anymore.
 
 The carve-outs come next. They will go faster because the expensive part, figuring out which parts of a monolith are actually holding it up, is done.
+
+In [Part 4](/blog/the-module-i-did-not-build), I run the same test in the opposite direction: not what should leave, but where a brand new module should go. The answer was that three systems already owned most of it, and the migration I approved instead turned out to be five times the size my own plan claimed.

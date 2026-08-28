@@ -8,7 +8,7 @@ Excerpt: I was one commit from telling users to export their library and move
          shipped, for the destination app and for my own importer, returning
          200 OK the whole time.
 Tags:    Debugging, CSV, Data Migration, API Design, Silent Failure, Postgres
-Series:  Decomposing a Monolith (2 of 3)
+Series:  Decomposing a Monolith (2 of 4)
 -->
 
 # The Export That Imported Nothing
