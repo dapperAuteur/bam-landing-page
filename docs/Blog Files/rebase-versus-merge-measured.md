@@ -8,7 +8,7 @@ Excerpt: Same branch, same day. The merge put six conflicted files on my desk
          evening the rebase replayed the same ten commits, stopped three
          times, and finished in four minutes and seven seconds.
 Tags:    Git, Rebase, Merge, AI Agents, Developer Workflow, WitUS
-Series:  Standards, Conflicts and Sources (2 of 4)
+Series:  Standards, Conflicts and Sources (2 of 5)
 -->
 
 # Six Conflicts at Once, or Three Stops in Four Minutes

@@ -9,7 +9,7 @@ Excerpt: Two agents independently created a framework with the same id. It
          three items were claimed and the other said three items were
          claimed, and the truth was four.
 Tags:    Git, AI Agents, Data Modeling, Testing, Education Standards, Engineering Judgment, WitUS
-Series:  Standards, Conflicts and Sources (1 of 4)
+Series:  Standards, Conflicts and Sources (1 of 5)
 -->
 
 # A Merge Conflict in a Dataset Teachers Read
@@ -165,7 +165,7 @@ That is the argument in one artifact. **A merge tool can restore syntax. It cann
 
 ## What is still wrong
 
-The Georgia duplicate is live. Two states, West Virginia and Illinois, still carry non-personal-finance claims citing document versions that have since been renumbered. The West Virginia file measures its own damage in a header comment and deliberately does not fix it:
+The Georgia duplicate was live when I wrote this, and is fixed now: the last post in this series is [what fixing it taught me](/blog/the-post-found-the-bug), including the fact that the cause I put in the fix commit was wrong. Two states, West Virginia and Illinois, still carry non-personal-finance claims citing document versions that have since been renumbered. The West Virginia file measures its own damage in a header comment and deliberately does not fix it:
 
 > Fourteen of the twenty did not; six did, and two of those six matter ... This is NOT fixed here on purpose: repairing it means re-transcribing the Civics and Economics entries from the current rule and re-deciding coverage on each, which is a pass of its own. The check stays open and now carries a measurement instead of a suspicion.
 
