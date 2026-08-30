@@ -1,73 +1,74 @@
 <!--
 Draft for the bam-landing-page blog. Paste the body into app/admin/blog and use:
-Title:   One Rule, Copied Six Times. Every Copy Skipped the Same Step.
+Title:   One Rule, Copied Six Times, and Every Copy Skipped the Same Step
 Slug:    one-rule-copied-six-times
-Excerpt: My media library names a file in three steps. Six other screens each kept
-         their own copy of that rule, and every single copy skipped the middle
-         step — so most of my images had one name in the library and "Untitled"
-         everywhere else. Here's why duplicated rules rot quietly.
-Tags:    Engineering Judgment, Refactoring, Duplication, Data, Beginners, Wanderlust
+Excerpt: One file in my media library was called IMG_20260622_125751_00_509.jpg
+         on one screen and "Untitled" on six others — the same file, under two
+         names. Two thirds of the options in the picker were affected. Here is
+         why a rule written down six times drifts one copy at a time.
+Tags:    Engineering Judgment, Refactoring, Duplication, Bugs, Beginners, Wanderlust
 -->
 
-# One Rule, Copied Six Times. Every Copy Skipped the Same Step.
+# One Rule, Copied Six Times, and Every Copy Skipped the Same Step
 
-Every photograph, video and audio file in my app lives in one place — a media library. Thousands of files, all of which need a name a human can read.
+My app is built around real places captured in 360°, which means it is, underneath, a media library. Panoramas, posters, map pins, audio, little icons. And it has a lot of screens where you go and pick something out of that library — choose the hero image for a tour, choose the icon for a category, choose the audio for a scene.
 
-The rule for what that name should be is three steps long, and it's the obvious rule:
+Every one of those screens has to show you a name for each file. So there is a rule for what a file is called.
 
-1. Use the name you typed when you uploaded it.
-2. If you didn't type one, use the filename your camera or phone gave it.
-3. If there isn't one of those either, say "Untitled".
+## The rule, and the reception desk
 
-The library itself follows all three steps. So a 360° panorama you uploaded in a hurry, without stopping to name it, appears in the library as `IMG_20260622_125751_00_509.jpg`. Ugly, but honest. It's your file, and you'd recognise it.
+Imagine a reception desk with a rule for greeting arrivals. Use the name they gave when they booked. If they didn't give one, read the name off their ID. If they haven't got either, say "Guest."
 
-Now go somewhere else in the app — the screen where you pick a hero image for a tour, say — and the same file is listed as **Untitled**.
+Three steps, in order, each one a fallback for the last. Nothing clever about it.
 
-Same file. Two names. Depending which screen you're standing on.
+My media library had exactly that rule:
 
-## Why that's worse than it sounds
+1. The **display name** you typed when you uploaded the file.
+2. If you didn't type one, the **original filename** the camera gave it.
+3. If somehow there is neither, a **placeholder**.
 
-If it were one file, you'd shrug and move on.
+The library page followed all three steps. The six picker components followed step one and step three.
 
-I wanted to know how common it was, so I counted against the real database rather than guessing. On the hero-image picker, **67 of 133 options** were affected. On the icon picker, **9 of 11**.
+Every one of them skipped the middle.
 
-That's not an edge case. That is the ordinary condition of an uploaded file, because most people don't stop to type a name — they upload eight panoramas from a shoot and get on with building the tour. Typing a name is the exception. The camera filename is the normal state of the world.
+## What that looked like
 
-So the picker didn't show a couple of Untitleds among the properly-named ones. It showed a wall of them.
+You upload a photo from a 360° camera and don't bother typing a name, because why would you — you're in a hurry and you can see the thumbnail.
 
-And a wall of identical labels breaks the one job a picker has. Picture a coat check that hands out tickets, and two thirds of the tickets say "coat". You still have your coat somewhere in there. Good luck.
+The camera named it `IMG_20260622_125751_00_509.jpg`. Ugly, but it is a name, and it is *yours*: it encodes the date and time you stood there and pressed the button.
 
-The specific failure is the worst version of it: you upload a file, you go to use it, and it is now indistinguishable from every other file you've ever uploaded without a name. The thing you did ten seconds ago is the hardest thing to find.
+Open the media library and that is what you see. Correct.
 
-## Why six screens all got it wrong the same way
+Open any picker — the one for choosing a tour's hero image, say — and that same file is listed as **Untitled**. So is the one you uploaded before it. So is the one before that.
 
-Here's the part I find genuinely interesting, because it isn't carelessness.
+The same file, in the same app, under two different names, depending on which screen you were standing on.
 
-There is no single "picker" in my app. There are six of them, written at different times, for different jobs — pick a hero image, pick an icon, pick a poster, and so on. Each one, when it was built, needed a small answer to a small question: *what word do I put next to this thumbnail?*
+The practical damage isn't aesthetic. It's that the moment you most need to find a file is *right after you uploaded it*, and that is exactly the moment it has no typed name yet. So the flow was: upload the thing, go to attach it, and get a list of identical Untitleds with no way to tell which one you just made.
 
-And each time, whoever was writing it — me, every time — reached for the obvious two-step version. Do they have a name? Use it. No? Say Untitled.
+I ran the numbers against the real database rather than guessing:
 
-That version is not wrong-looking. It reads as complete. You'd approve it in a code review. The middle step is missing, but a missing step doesn't announce itself — the code quietly does slightly less than it should, and everything it does do is correct.
+- **67 of 133** hero-image options were affected.
+- **9 of 11** icon options were affected.
 
-Meanwhile the full three-step rule existed, written properly, in the library. It lived in a file nobody building a picker had any reason to open. The good version and the six weak copies never met.
+That is not an edge case. A file with no typed name is the *default state* of an uploaded file. I had built the naming rule around the exception and broken it for the norm.
 
-That's how this shape of bug always happens. Not one bad decision copied six times — six separate reasonable decisions that happened to land in the same slightly-short place.
+## Why this was possible
 
-## Rules don't drift all at once
+Here is the honest part: I wrote all six of those pickers, and every one of them was a copy of the last one that worked.
 
-The thing I want to hold onto is about *duplication*, and it's a bit counter-intuitive.
+That is how the second, third, fourth and fifth picker got built. Not by anyone deciding to duplicate a rule — by someone (me) needing a picker on a Tuesday, finding a picker that already existed, copying it, and changing the bits that were obviously specific to the new job. The naming line looked generic. It looked like plumbing. So it came along for the ride, unread, five more times.
 
-The usual argument against copying a rule into six places is that when the rule changes you have to update six places and you'll miss one. True — but that's the visible failure. You'd notice.
+And the rule was never written down as a rule anywhere. It wasn't a function with a name. It was a habit, expressed inline, in six files, none of which mentioned the others.
 
-The real failure is slower. Six copies don't drift together — they drift **one copy at a time**, in whichever direction the person writing that copy happened to need that day. Each divergence is small and locally sensible. Nothing breaks. Nothing errors. There's no crash to investigate.
+Which brings me to the thing I actually want to say about duplication.
 
-And the copy that has drifted is invisible from wherever you happen to be standing. Open the library and the naming is perfect. Open the picker and it's wrong — but I'm never comparing, because I only look at one screen at a time. The two views of the same file are never in front of me at once.
+**Duplicated rules don't drift all at once.** If all six copies were wrong the same day I'd have noticed within a week, because the app would have looked broken everywhere. Instead one copy got the middle step and five never had it, and each file was internally consistent and read perfectly well on its own screen. Nothing looked wrong. You only see the disagreement if you open two of the six side by side and compare them line by line, and nobody does that, because there is no reason to — until someone reports that a file has two names.
 
-So a system can hold contradictory answers to the same question for months, and the only way anyone finds out is when a user does the thing I never do: uploads without naming, then goes straight off to use it.
+The drifted copy is invisible **by design**. That's not a failure of attention. It's a structural property of writing the same rule down more than once.
 
-## The fix is boring, which is the point
+## The fix
 
-One shared function. Every picker calls it. The library calls it too.
+Move the rule to one place and have all six screens ask it.
 
 ```ts
 export function mediaLabel(
@@ -83,18 +84,18 @@ export function mediaLabel(
 }
 ```
 
-That's the whole thing. The rule now exists once, so there is nothing left to drift.
+Two details worth pointing at, because both are judgement rather than mechanics.
 
-Two small details in there that I think are worth naming:
+The helper has **one more rung** than the rule I described above. Some screens carry their own sensible fallback — the row the file is attached to already knows what it is — so that gets a turn before the placeholder does. Writing the rule down properly, once, was the first time I had to decide the full order of preference on purpose instead of by accident.
 
-**The trims matter.** A name that is a single space character is not a name. Without trimming, an accidental space beats a perfectly good camera filename, and you're back to Untitled with an extra step. Real user data is full of stray whitespace.
+And the placeholder is **passed in** rather than baked in. Different screens word it differently, and that difference is legitimate. What is not legitimate is six screens disagreeing about the *order of the steps*. The shared helper fixes the part that must be identical and leaves the part that is allowed to vary as a knob.
 
-**"Untitled" is passed in, not baked in.** The app runs in English and Spanish, and the placeholder is a word a human reads. Hard-coding it inside the rule would mean the rule quietly decides your language for you — a small thing that becomes an annoying thing the moment someone wants it translated.
+That distinction is the whole trick, really. Sharing code is not about removing repetition for tidiness. It's about deciding which parts of a rule are the rule.
 
 ## What I'd take from this
 
-**Count it before you judge it.** My instinct was that this was cosmetic and rare. Two queries told me it was the default state of two thirds of my images. The instinct was wrong in the direction that always costs you: it made a common problem look like an uncommon one.
+**Copy-paste is a decision, and it's made at the worst possible moment.** You duplicate a file when you are busy, focused on something else, and treating the thing you copied as furniture. That is precisely when you are least equipped to notice you have just made a second copy of a rule that will now age separately.
 
-**A rule written in six places is six rules.** Not one rule in six locations — six independent rules that currently agree. That distinction sounds pedantic right up until they stop agreeing.
+**Check the default case, not the tidy one.** Every file I would have invented for a test would have had a name typed on it, because that's the tidy way to imagine a media library. Real uploads mostly don't. The bug lived entirely in the case I never pictured.
 
-**The bug you can't see from your own screen is the one to go looking for.** I would never have hit this myself, because I name my test uploads. Every bug that only bites people who are in a hurry is invisible to the person who built the thing, by definition — the builder is never in a hurry in their own app.
+**Count it before you argue about it.** "Some files show as Untitled" is a shrug. "67 of 133" is a decision. It took one query to turn a vague annoyance into an obvious priority, and I nearly skipped it because I already knew the fix.

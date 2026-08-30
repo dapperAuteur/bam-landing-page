@@ -1,75 +1,72 @@
 <!--
 Draft for the bam-landing-page blog. Paste the body into app/admin/blog and use:
-Title:   Refusing Is Kinder Than Half-Doing
+Title:   Refusing Is Kinder Than Half-Doing It
 Slug:    refusing-is-kinder-than-half-doing
-Excerpt: I built a way to swap one media file for another everywhere it's used.
-         Some of those places can legally take the new file and some can't, in
-         the same click. The friendly-sounding option — do what fits, report the
-         rest — is the one that leaves someone with a mess they didn't design.
-Tags:    Engineering Judgment, Error Handling, UX, Product, Beginners, Wanderlust
+Excerpt: I built a feature to swap one media file for another everywhere it is
+         used. Sometimes a swap is valid for three of a file's five uses and
+         invalid for the other two. I had three ways to handle that, and the
+         friendliest-sounding option was the worst one.
+Tags:    Engineering Judgment, UX, Error Handling, Product Decisions, Wanderlust
 -->
 
-# Refusing Is Kinder Than Half-Doing
+# Refusing Is Kinder Than Half-Doing It
 
 Here is a small feature with a genuinely hard decision inside it.
 
-A creator uploads a better version of a photo — the panorama reshot with the lights on, the logo redrawn, the audio narration re-recorded without the traffic noise. They want the new file to take the old one's place. Everywhere.
+You have a photo in my media library. You've since taken a better version of the same shot. You want the new one to take the old one's place everywhere it is currently used, without hunting through every tour to find them.
 
-"Everywhere" is doing a lot of work in that sentence.
+Straightforward request. The complication is what "everywhere" means.
 
-## One file, many jobs
+## One file, five frames
 
-A single file in my app can be doing several unrelated jobs at once.
+Think of a photograph you have hanging in five frames around the house. One in the hallway, one on the landing, one on the piano.
 
-One 360° photograph might be the panorama a visitor stands inside for a particular scene, *and* the still poster image shown for that same scene before it loads, *and* the hero image at the top of the whole tour. Three jobs, one file, all live at the same time.
+Now imagine two of those frames are the very wide panoramic kind, and one of them isn't a frame at all — it's a speaker.
 
-That's not unusual. Checking against the real database, **80 files are currently doing more than one kind of job.** It's the sensible thing for a creator to do — you shot one good picture of the courtyard, so you use it for the courtyard.
+That's roughly the situation. A single media file can occupy several different *kinds* of place at once. One image can be a scene's 360° panorama, **and** the poster thumbnail for that same scene, **and** the hero image at the top of the tour, all simultaneously. In my real database, 80 files sit in more than one kind of slot.
 
-I call each of those jobs a slot. And the awkward fact underneath this whole feature is that **slots are not interchangeable.**
+And the slots are not interchangeable. A panorama has to be a genuine 360° photo — an ordinary snapshot wrapped around a sphere looks like a smeared mess. A map pin has to be a flat image. Scene audio has to be audio; you cannot put a photograph in a speaker.
 
-A panorama slot needs a 360° photo — a flat photograph put there doesn't render, it just breaks the room. A map pin icon needs a small flat image; a 360° panorama squeezed into a pin is nonsense. A scene's audio narration needs an audio file. These aren't preferences. They're what the slot physically is.
+So when you say "replace this file with that one," the honest answer is often: **that works for three of its five places and not the other two.**
 
-So here's the situation the feature has to handle. You pick a file that's in five slots. You pick its replacement. And the replacement is perfectly legal for three of those slots and illegal for the other two.
+## Three ways to handle a partial fit
 
-Not because anyone did anything wrong. Because a file's uses are various and a replacement is one thing.
+I had three options, and I want to lay them out fairly, because the one I rejected is the one that sounds nicest.
 
-## Three ways to handle it
+**Apply what fits, report the rest.** Swap the three that work, leave the two that don't, and show a summary explaining what happened.
 
-**Option one: do what fits, report the rest.** Swap the three legal slots, skip the two illegal ones, hand back a summary saying what happened.
+**All-or-nothing.** Try everything, and if any part fails, undo the whole lot.
 
-**Option two: all or nothing.** Try everything, and if any part fails, undo the whole thing and report the failure.
+**Refuse upfront.** Before doing anything, check every place the user selected. If any of them can't take the new file, do nothing at all and say which ones and why.
 
-**Option three: refuse upfront.** Before touching anything, check every selected slot. If even one can't take the file, do nothing at all and say which ones.
+I went with refusing upfront.
 
-My first instinct was option one. It sounds generous. It sounds like the software being helpful instead of pedantic — *I got most of it done for you.* Being told "no" by a computer is annoying, and I generally try not to do it.
+## Why "apply what fits" is the trap
 
-I picked option three anyway, and I want to lay out the argument, because I think it generalises well beyond this feature.
+It sounds generous. It's the option that gets the most work done. It never makes you do a task twice.
 
-## Why "do what fits" is the unkind one
+But look at where it leaves you.
 
-Think about hiring a van to move house. You've listed everything that needs to go.
+Your file is now **half-swapped**. Three places have the new photo, two have the old one. That state is not something you asked for and not something anyone designed. It is a leftover.
 
-The considerate-sounding version is the driver who loads what fits, drives off, and posts you a receipt saying seven items were moved. You are now standing in a house that is neither packed nor unpacked, holding a list, trying to work out what's still here by subtracting the receipt from your memory.
+To understand what you now own, you have to read a summary and reconstruct the state of your own content from it. Not look at your tours — read a report *about* your tours and build a mental model. And you have to do that immediately, while you still have the report, because the moment you close it the information is gone and the only way to recover it is to inspect every scene by hand.
 
-That's option one. It doesn't fail. It produces a state.
+Then it gets worse, because you will probably want to retry the two that failed. And a retry now has to reason about a situation nobody thought about: a file that is partly replaced, where some of the places you're about to touch are already holding the new thing and some are holding the old thing. Every subsequent operation inherits that mess.
 
-And that state has three costs that all land on the creator, not on me.
+Refusing gives you exactly two possible outcomes:
 
-**They have to reconstruct the half.** The only record of which slots got swapped and which didn't is the summary message I hand back. If they close that message, misread it, or get interrupted, the information is gone and the only way to recover it is to go and look at every scene in the tour by eye.
+- Nothing changed.
+- Everything you picked changed.
 
-**A retry has to reason about a situation nobody designed.** If they fix the problem and run the replacement again, the system is now starting from a half-swapped state. Some slots hold the new file, some hold the old one. Every subsequent question — what does "replace everywhere" mean now? — has an answer I never sat down and thought about.
+Each of those is describable in one sentence, needs no report to understand, and leaves nothing for the next action to reason around. You may have to do the job twice — once for the images, once for the audio — but at no point do you have to hold a partial state in your head.
 
-**The result doesn't fit in a sentence.** With option three there are exactly two possible outcomes: *nothing changed*, or *everything you picked changed*. Both are one short sentence, and both are states the creator can hold in their head while doing something else.
+That is the trade. The friendlier-sounding option buys you fewer clicks and sells you an unknown state. I'll take the clicks.
 
-Option two — attempt it, then undo on failure — gets you the same two clean outcomes, and it's a perfectly respectable choice. I preferred refusing upfront for one reason: it tells you before it costs you anything. Undoing work is a promise you have to keep correctly under conditions that are, by definition, already going wrong.
+## Rejections have names, not counts
 
-## Say which ones. Don't say how many.
+The second decision is smaller and, I think, more often got wrong.
 
-The other half of the decision is what the refusal actually says, and this is where I think a lot of software gets lazy.
-
-It would be much easier to return "3 slots could not accept this file." It's true. It's also useless — it sends someone hunting through their own tour trying to work out which three, with no idea whether they're looking for a panorama, an icon, or a piece of audio.
-
-A count tells you a problem exists. A name tells you where it is. Only one of those is help.
+When the check fails, the response says **which** places were rejected. By name. Not how many. Here is the top of that refusal:
 
 ```ts
 if (allowed.length !== parsed.data.selections.length) {
@@ -81,15 +78,28 @@ if (allowed.length !== parsed.data.selections.length) {
     ok: false,
     error: "Some of those places cannot take this file",
     code: "ineligible_slots",
-    // Named, not counted. "3 slots failed" sends the creator hunting.
 ```
 
-The work in there is unglamorous: take what was allowed, subtract it from what was asked for, and carry the difference back out as a list of actual things rather than a number. That's four extra lines to turn a dead end into a to-do list.
+The whole point of that block is the middle of it: build the list of what was rejected, so it can be handed back with the refusal.
+
+"3 slots failed" is a sentence that sends a person hunting. They now have to go and find three things among however many they selected, with no clue which. It is technically true and practically useless — it converts a precise piece of knowledge the program already had into a scavenger hunt for the human.
+
+The program knows. It knew the moment it did the check. Throwing that away and replacing it with a number is a small act of vandalism that costs the user real minutes.
+
+The rule I'd generalise: **if your system knows a specific thing and reports a count instead, you have deliberately made the message worse.** Counts are for dashboards. People fixing a problem need names.
+
+## The bit I want to be honest about
+
+My first instinct was "apply what fits." I had it half-built before I stopped.
+
+It felt like the accommodating choice, and I think that's the actual failure mode here: refusing feels rude, so you write software that would rather do something wrong than say no. The generosity is real but it's aimed at the wrong moment. Being agreeable at the click is what makes you unhelpful an hour later.
+
+Refusing is not the app being difficult. It's the app declining to leave you holding something you didn't ask for.
 
 ## What I'd take from this
 
-**"Helpful" and "partial" are not the same thing.** Software that does most of what you asked and tells you about the rest has moved the hard part — working out where you now stand — from itself to you. It feels friendlier and costs more.
+**Count the outcomes your feature can produce.** Not the happy path — all of them. "Apply what fits" has as many outcomes as there are combinations of successes and failures. "Refuse upfront" has two. That number is a design property you can measure before writing a line, and it predicts almost everything about how hard the feature will be to explain, support, and build on.
 
-**Count the possible end states, not the possible actions.** The question I found useful wasn't "what should this do?" but "how many different situations can a person be left standing in when this finishes?" Two is a good number. Two is explainable. As soon as the answer is *it depends how far it got*, you're designing a mess.
+**A summary is not a substitute for a simple state.** If your error handling requires the user to read a report to know what they now have, the problem is the state, not the report.
 
-**Refusing is only kind if the refusal is specific.** "No" with a reason and a location is respectful of someone's time. "No" with a tally is just a door closing.
+**Say which, not how many.** Every time.

@@ -1,78 +1,82 @@
 <!--
 Draft for the bam-landing-page blog. Paste the body into app/admin/blog and use:
-Title:   The Share Link That Always Pointed at the Front Door
+Title:   My Share Link Always Pointed at the Front Door
 Slug:    share-link-always-pointed-at-the-front-door
-Excerpt: My tours have a quick link that drops someone straight into the 360°
-         experience. It was worked out once, when the page loaded, and it always
-         meant "start at the beginning" — so no matter how far you walked, you
-         shared the doorway. The fix was easy. The plumbing was the story.
-Tags:    UX, Sharing, Front-end Architecture, Engineering Judgment, Beginners, Wanderlust
+Excerpt: A visitor could walk nine rooms into one of my 360° tours, press share,
+         and hand their friend the front door. The fix was small. The
+         interesting part is why the plumbing was awkward, and why I kept the
+         layout that made it awkward.
+Tags:    UX, Sharing, Component Design, Engineering Judgment, Beginners, Wanderlust
 -->
 
-# The Share Link That Always Pointed at the Front Door
+# My Share Link Always Pointed at the Front Door
 
-My app builds courses around real places captured in 360°. You stand in a room, look around, and follow arrows on the floor into the next one.
+My app builds courses around real places captured in 360°. You stand in a gallery, or a courtyard, and look around. Arrows on the floor take you through.
 
-There's a share panel underneath the viewer, and in it there's a quick link — a web address that drops whoever you send it to straight into the tour, rather than onto a menu asking which scene they'd like. Fewer decisions, more standing-in-the-room. That was the whole point of it.
+Underneath the viewer there's a share panel, and in it a thing I call the quick link. A normal link to a tour drops your friend on a chooser screen — here are the scenes, pick one. The quick link skips that. Follow it and you are simply *in* the tour, looking around, no menu in between. It exists because the chooser is a speed bump, and speed bumps are where shared links go to die.
 
-It worked. It also always sent people to the same place.
+The quick link worked perfectly. It just always sent people to the same place.
 
-You could walk through eleven rooms of a gallery, find the one painting that made the whole thing worth it, hit share — and your friend would open the link and be standing outside the front door.
+## The postcard problem
 
-## Why the link was wrong in a way that never looked wrong
+Say you walk into a building, go up three floors, through a courtyard, and end up in a room with the thing worth seeing in it. You take a photo. You send it to a friend with a link.
 
-The link wasn't broken. It was **stale**, which is a much sneakier condition.
+Your friend opens the link and is standing on the pavement outside, looking at the front door.
 
-When you open a tour page, my server assembles the page and sends it to your browser, finished. Part of assembling it is working out that share link. At that moment — the moment of arrival — the correct answer really is the front door, because that's genuinely where you are. So the server wrote a link carrying an instruction that meant, in effect, *open this tour at its starting scene*, and printed it into the page.
+That was my share button. However far a visitor had walked — nine scenes deep, past the bit that made them want to tell someone — the link they copied said "open this tour at the beginning."
 
-And then you walked off, and the link stayed exactly where it was.
+Not a mistake in the sense of a broken line. The link was correct, well-formed, and did exactly what it said. It said the wrong thing.
 
-It's the difference between a photograph and a window. The link looked like a live window onto "where you are". It was a photograph of where you were when you arrived, and photographs don't update.
+## Why it couldn't have known
 
-That's why nothing ever flagged it. No error, no failure, no moment where anything goes wrong — every part of the system did its job correctly, once, at the beginning. The bug lives entirely in the gap between "correct when computed" and "still correct now", and that gap has no symptom on the screen you're looking at. You'd only catch it by sending yourself a link from deep inside a tour and noticing where you landed.
+Here is the part worth explaining properly, because it's a shape that recurs.
 
-## Two live patches on a dead page
+The page containing a tour is put together on my server before it reaches you. The server assembles the whole thing — the title, the description, the viewer, the share panel — and sends it down as a finished document. That happens *once*, at the moment you arrive.
 
-Here's where it gets architecturally awkward, and I think this part is worth explaining properly, because it's a very common shape and it's usually invisible from the outside.
+At that moment, the only scene that exists as a fact is the tour's starting scene. You haven't moved. You haven't even seen it yet.
 
-Most of my tour page isn't interactive. It's assembled on the server and sent down as a finished document — headings, descriptions, credits, the lot. That's deliberate: it's fast, and someone on a bad signal in a museum basement gets something readable immediately.
+So the quick link was built into the page like a line printed in a theatre programme. The programme is accurate when it's printed, and it goes on saying the same thing all evening no matter what happens on stage. Walking around the tour changed the stage. It could not change the programme.
 
-But two things on that page *are* alive.
+The fix is to stop printing the link and start writing it as you leave: whatever scene you are currently looking at is the scene the link points to.
 
-**The viewer** — the 360° panorama you drag around, which knows perfectly well which scene it's currently showing, because that's its entire job.
+Small change. Obviously correct. And it took a surprising amount of plumbing, for a reason I think is more interesting than the bug.
 
-**The share panel** — the buttons, the copy-link control, the quick link.
+## Two shops and no shared back office
 
-They are separate components. Neither contains the other. And the thing that contains both — the page — isn't interactive, so it can't hold a piece of changing information like *which scene are we in right now*. A printed poster can't remember anything.
+The share button sits **below** the tour viewer. That is deliberate and I'd defend it: you share a place *having seen it*, not on arrival. Putting a share button above the thing you haven't looked at yet is asking someone to recommend a restaurant from the pavement.
 
-Normally, when two components need to agree on something, you put it in whichever component contains them both and hand the value down to each. That's the standard move, and it requires a shared parent that can remember things. Here there wasn't one.
+But it creates a structural awkwardness.
 
-## The layout is not the problem, even though it caused the problem
+The viewer is an interactive component — it responds to you, it has moving parts, it knows things that change. The share button is also an interactive component, separately. And the page that holds them both is *not* interactive. It's assembled on the server and shipped as a static document.
 
-The obvious escape route is to move the share panel inside the viewer, or wrap both in something interactive, and be done.
+In ordinary software you solve "two things need to agree on a fact" by putting the fact in whatever contains them both. The parent holds it, the children read it. Standard.
 
-I didn't, and I want to be clear that this was a decision rather than an oversight.
+Here there is no such parent. The thing containing both of them is a printed page. It doesn't hold state; it doesn't run; it can't be told anything.
 
-The share panel sits *below* the viewer on purpose. You share a place having seen it, not on arrival. A share button at the top asks people to recommend something they haven't experienced yet — a worse conversion and a slightly rude thing to do. The order of the page follows the order of the emotion: look, be somewhere, then think of someone you'd send it to.
+So the viewer and the button are like two shops in the same mall with no shared back office. They're twenty metres apart. Neither can walk into the other. The building's management is asleep.
 
-Wrapping the whole page in an interactive shell to solve a plumbing problem would mean shipping more code to every visitor, including the ones on the basement connection, in exchange for nothing they can see. The layout is right for the reader, and the layout is what makes the wiring awkward. Both true; only one of them worth changing.
+What you do in that situation is use the mall's public address system. The viewer, every time you move, announces to the page: **now showing — the courtyard**. It doesn't know or care who's listening. The share button listens for those announcements, and each time it hears one, it rewrites its link.
 
-## Announce it to the room
+Nobody is anybody's parent. Nothing new sits in the middle. One component talks to the room; the other one pays attention.
 
-The fix is the thing you do when two people can't pass a note directly: one of them says it out loud, and the other listens.
+## The rearrangement I nearly did instead
 
-The viewer already knew which scene was on screen. Now, every time you move, it announces the change — not to any particular component, just out loud, to the page. The share panel listens for that announcement and rebuilds its link.
+I want to flag the wrong turn, because it was tempting for about ten minutes.
 
-Nobody has to contain anybody. The viewer doesn't know the share panel exists, and the share panel doesn't know where the announcement came from. Either one can be moved, redesigned, or removed without the other noticing.
+The easy fix is to move the share button up beside the viewer, inside the same interactive boundary, so they can share state the normal way. Ten seconds of work. All the awkwardness disappears.
 
-There's a nice bit of history here. When I built the progress rail — the strip that tells you which stop you're on — [I found that the viewer had been making this announcement all along](/blog/stop-9-of-9), and a wrapper in the middle was quietly throwing it away before anything could hear it. The signal existed. Nothing was listening. Once that was fixed, this share problem stopped being an architecture question and became about four lines of listening.
+And it would have made the page worse for every visitor, forever, in order to make one file tidier for me once.
 
-Which is often how it goes: the second feature that needs a piece of information is dramatically cheaper than the first, and it's tempting to judge the first one as slow when it was actually paying for both.
+That's the trade I want to name. Layout decisions that are right for the reader will sometimes make state-sharing awkward, because the reader's ideal ordering and the code's ideal ordering are answering different questions. The reader's ordering asks "what should someone encounter first?" The code's asks "what contains what?" There is no reason those should agree.
+
+When they disagree, the cost of the extra plumbing is nearly always smaller than the cost of rearranging the page. The plumbing is paid once, by me, in a file. The rearrangement is paid by everyone, every visit.
+
+And the announcement approach isn't a hack around the layout — it's a better description of what is actually happening. The viewer really is the only thing that knows where you are. Anything else on the page that ever needs to know can now listen too, without me touching the viewer again.
 
 ## What I'd take from this
 
-**"Correct when computed" is not a property that lasts.** Anything worked out once, at page load, about a thing that moves, is a photograph pretending to be a window. It's worth keeping a mental list of those in any product — they never announce themselves, because nothing ever fails.
+**A value computed once will keep being right about a moment that has passed.** Anything decided at page-assembly time is a snapshot. If the thing it describes can change afterwards, the snapshot becomes a confident lie with no error attached to it.
 
-**Test the share link from the middle, not the start.** Every share feature I've ever built, I've tested by loading the page and clicking share. That's the one path where a stale link is indistinguishable from a correct one.
+**Let the layout win.** If your components are in the order a reader needs and that makes them hard to wire together, wire them together the hard way. Moving the furniture to suit the cabling is how pages slowly become about their own implementation.
 
-**Sometimes the right layout makes the code harder, and you pay it.** Rearranging a page so the components nest more conveniently optimises the thing nobody sees at the expense of the thing everybody does.
+**Check the feature from the far end of the journey.** Every time I tested sharing, I tested it from the scene I'd just loaded — because that's where you are when you're testing. The bug lived exclusively nine rooms in, which is where every real visitor was standing.
