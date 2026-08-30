@@ -139,7 +139,7 @@ That one has a good answer: the Internet Archive's byte-faithful snapshot of the
 
 > "The course publishes NO distribution figure. **The omission is deliberate: the BLS page refused automated retrieval when the lesson was written on 28 August 2026, and the fetch-or-do-not-cite rule then forbids the number.**"
 
-The check that records this names the human step that would close it: open the page in a browser, because automated fetches return 403.
+The check that records this names the human step that would close it: open the page in a browser, because automated fetches return 403. That file is the other half of this system, and I have written about [why a hedge has to become a row somewhere or it is permanent](/blog/verification-is-the-bottleneck).
 
 **Social Security.** Not a 403, but the same shape of problem, and the honest version of it in the research check:
 

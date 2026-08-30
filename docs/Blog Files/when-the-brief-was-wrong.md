@@ -107,7 +107,7 @@ None of them came from a guard. My repository has a good set of them, and I have
 
 Three things did produce them, and only one is technical.
 
-**A standing instruction to report refusals.** Every brief I write ends with the same line: report back what you refused to state, and why. I have called it the highest-value sentence in any brief I have written, and these three are the reason. Without it, a model's uncertainty gets smoothed into prose. With it, the uncertainty arrives on my desk as a list.
+**A standing instruction to report refusals.** Every brief I write ends with the same line: report back what you refused to state, and why. I have called it [the highest-value sentence in any brief I have written](/blog/verification-is-the-bottleneck), and these three are the reason. Without it, a model's uncertainty gets smoothed into prose. With it, the uncertainty arrives on my desk as a list.
 
 **A hard rule that a claim requires the fetched text.** All three corrections came from opening the actual document: the enrolled statute on govinfo, the CRS brief, the survey table as the CRS reproduced it. None came from reasoning about what the source probably says.
 
