@@ -187,8 +187,12 @@ export default function RabbitHolePart4Story() {
             <p className="text-green-800 mb-4 text-sm">
               What if the gap isn't a bug? What if it's an opportunity to create something better?
             </p>
+            {/* The two `//` lines below are a DISPLAYED code sample inside a font-mono block,
+                not stray comments. react/jsx-no-comment-textnodes cannot tell the difference. */}
             <div className="bg-green-100 rounded p-3 font-mono text-xs text-green-700">
+              {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
               setLastCardResult('correct');<br/>
+              {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
               // Show feedback screen<br/>
               // User controls next card
             </div>
