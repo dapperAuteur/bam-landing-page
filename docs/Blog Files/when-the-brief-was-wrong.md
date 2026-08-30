@@ -9,7 +9,7 @@ Excerpt: I write the briefs, and the brief is the one document nobody checks.
          contestable, and a clause in the Morrill Act that binds somebody
          other than who I thought.
 Tags:    AI Agents, Verification, Primary Sources, Research, Curriculum Design, WitUS
-Series:  Standards, Conflicts and Sources (4 of 4)
+Series:  Standards, Conflicts and Sources (4 of 5)
 -->
 
 # Three Times My Own Brief Was Wrong and the Agent Went to the Statute
@@ -143,3 +143,5 @@ Audited 268 course(s), 1 unreadable (generated modules not on disk): 1666 findin
 495 lessons are taught and never assessed. The citation checker reports 1,332 citations across 38 of 40 staged courses, and 131 registered courses that are not staged for citation checking at all. None of those 1,332 citations has been verified by a human yet.
 
 The briefs are better than they were. The queue is longer than it was.
+
+Last in this series: [an agent checking the examples for the first post found a live bug nobody had filed](/blog/the-post-found-the-bug), and the fix commit I wrote about it got the cause wrong.

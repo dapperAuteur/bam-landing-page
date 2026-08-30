@@ -9,7 +9,7 @@ Excerpt: The rule is that a standard may be claimed only if its actual text
          changed thirteen of them. The interesting part is what stayed
          refused, and the three errors we found in the states' own documents.
 Tags:    AI Agents, Verification, Primary Sources, Education Standards, Research, Trust, WitUS
-Series:  Standards, Conflicts and Sources (3 of 4)
+Series:  Standards, Conflicts and Sources (3 of 5)
 -->
 
 # Nineteen States Were Told We Taught Them Nothing
@@ -171,7 +171,7 @@ Four kinds of thing, and only the first is obvious.
 
 Every number below I measured today.
 
-**The dataset carries defects I have not fixed.** Wyoming's SS12.3.4 is claimed in two different frameworks with two different notes that disagree about whether credit and debt are taught. Georgia has two rejection entries with identical headings and contradictory bodies, [which the previous post is about](/blog/conflicts-in-curated-data). Georgia's own note repeats "the Equal Housing Act" as if it were a statute, without the flag that sits in my planning file. West Virginia's rejection list still says three appendix items are claimed while the framework above it claims four.
+**The dataset carries defects I have not fixed.** Wyoming's SS12.3.4 is claimed in two different frameworks with two different notes that disagree about whether credit and debt are taught. Georgia has two rejection entries with identical headings and contradictory bodies, [which the previous post is about](/blog/conflicts-in-curated-data) and [which the last post in this series fixes](/blog/the-post-found-the-bug). Georgia's own note repeats "the Equal Housing Act" as if it were a statute, without the flag that sits in my planning file. West Virginia's rejection list still says three appendix items are claimed while the framework above it claims four.
 
 **Two states show two editions at once.** Illinois and West Virginia both re-fetched one framework and left the rest citing a superseded document. Both are filed as high-severity research checks. Illinois's own file says it plainly:
 
@@ -183,4 +183,4 @@ Every number below I measured today.
 
 None of that is an argument against the rule. It is what the rule looks like when it is running: a list of specific, named, checkable things that are wrong, instead of a page that looks complete.
 
-The last post in this series is about the input to all of it: [three times my own brief was wrong](/blog/when-the-brief-was-wrong), and what corrected it was opening the statute.
+The next post in this series is about the input to all of it: [three times my own brief was wrong](/blog/when-the-brief-was-wrong), and what corrected it was opening the statute.
