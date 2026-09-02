@@ -6,7 +6,14 @@ import ShareButton from '../share/ShareButton'
 import ConsoltoChat from '../ConsoltoChat'
 import Footer from '../ui/Footer'
 
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
+export default function PublicLayout({
+  children,
+  witusEndSessionUrl = null,
+}: {
+  children: React.ReactNode
+  /** Server-resolved IdP endsession URL, threaded from app/layout.tsx to the nav's Logout. */
+  witusEndSessionUrl?: string | null
+}) {
   const pathname = usePathname()
   // /admin keeps the bare shell; /login now gets the full nav + footer so it's
   // navigable like any public page.
@@ -24,7 +31,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       >
         Skip to content
       </a>
-      <Navigation />
+      <Navigation witusEndSessionUrl={witusEndSessionUrl} />
       <div id="main-content">
         {children}
       </div>

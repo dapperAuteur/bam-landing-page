@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
+import SignOutButton from '@/components/auth/SignOutButton'
 import { Linkedin, Github, ChevronDown } from 'lucide-react'
 
 type NavItem = { href: string; label: string }
@@ -91,16 +92,20 @@ function MobileGroup({
   )
 }
 
-export default function Navigation() {
+export default function Navigation({
+  witusEndSessionUrl = null,
+}: {
+  /**
+   * Server-resolved IdP endsession URL (app/layout.tsx -> PublicLayout -> here). When set,
+   * Logout ends the shared WitUS session AFTER destroying the local one, so signing out here
+   * signs you out of every WitUS app (BAM, 2026-08-30). `null` = today's local-only sign-out.
+   */
+  witusEndSessionUrl?: string | null
+} = {}) {
   const [isOpen, setIsOpen] = useState(false)
   const { data: session } = useSession()
 
   const close = () => setIsOpen(false)
-
-  const handleLogout = async () => {
-    await signOut()
-    setIsOpen(false)
-  }
 
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50 ">
@@ -164,12 +169,11 @@ export default function Navigation() {
                       {item.label}
                     </Link>
                   ))}
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 border-t border-gray-100 mt-1"
-                  >
-                    Logout
-                  </button>
+                  <SignOutButton
+                    endSessionUrl={witusEndSessionUrl}
+                    onSignedOut={close}
+                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 border-t border-gray-100 mt-1 disabled:opacity-60"
+                  />
                 </div>
               </div>
             ) : (
@@ -221,12 +225,11 @@ export default function Navigation() {
                     Signed in as {session?.user?.name}
                   </p>
                   <MobileGroup heading="Admin" items={ADMIN} onNavigate={close} />
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left py-2 pl-1 text-red-600 hover:text-red-800"
-                  >
-                    Logout
-                  </button>
+                  <SignOutButton
+                    endSessionUrl={witusEndSessionUrl}
+                    onSignedOut={close}
+                    className="block w-full text-left py-2 pl-1 text-red-600 hover:text-red-800 disabled:opacity-60"
+                  />
                 </>
               ) : (
                 <Link
