@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google'
 import {Providers} from "@/components/providers/SessionProvider"
 import PublicLayout from '@/components/layout/PublicLayout'
 import { PostHogProvider } from '@/lib/analytics/posthog-provider'
+import { witusEndSessionUrl } from '@/lib/auth/witus-config'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -88,7 +89,12 @@ export default function RootLayout({
             apiKey={process.env.NEXT_PUBLIC_POSTHOG_KEY ?? null}
             apiHost="/ingest"
           />
-          <PublicLayout>
+          {/* `witusEndSessionUrl` is read HERE, in the Server Component, for the same
+              reason as the PostHog key above: a client component cannot see a non-
+              NEXT_PUBLIC env var. It reaches the nav's Logout button, which uses it to end
+              the shared WitUS session after destroying the local one. `null` when this
+              deploy is not a configured OIDC client, which keeps sign-out purely local. */}
+          <PublicLayout witusEndSessionUrl={witusEndSessionUrl}>
             {children}
           </PublicLayout>
         </body>
