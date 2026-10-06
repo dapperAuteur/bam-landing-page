@@ -10,7 +10,7 @@ Tags:    Buying Software, Security, Quality, Hiring, Plain Talk, WitUS
 
 # The Security Test Passed Because Nothing Changed
 
-Two of my apps share one database. In it, each person has a profile: their name, their settings, and also which plan they pay for.
+Two of my apps shared one database at the time. In it, each person has a profile: their name, their settings, and also which plan they pay for.
 
 This month I found out that a signed-in person could change their own plan. Not by paying, just by asking the database directly. They could also change their own role. And anyone, signed in or not, could read every profile, including the billing reference numbers.
 
