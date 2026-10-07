@@ -45,7 +45,7 @@ Here is the honest cost.
 
 **I can lock myself out.** If my phone is lost, my admin tools stop working until I recover. If I had turned this on before setting up the code app, every admin panel would have gone blank. The pages would show a notice and nothing else.
 
-So the order mattered. First I set up the code app on the admin account. Then I saved the recovery codes somewhere safe, away from my phone. Only then did I turn on the rule.
+So the order mattered. First I set up the code app on the admin account. Then I saved the code app's setup key somewhere safe, away from my phone. The app gives out no recovery codes. That key lets me set up the code app again on a new phone. Only then did I turn on the rule.
 
 Why strict anyway? Because "the risky actions" is a list I would have to keep right forever. Every new admin feature would need a choice. One day I would get one wrong. A rule with no exceptions is easier to keep.
 
