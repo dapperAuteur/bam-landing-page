@@ -33,7 +33,7 @@ Every admin back room now asks both questions. Is this the admin? And did they p
 
 Before, each admin file had its own copy of the "is this the admin?" check. There were 68 of those files. Now they all use one shared guard. One guard is easier to get right than 68 copies. It is also easier to check. I added an automatic test that fails if any admin file forgets to use it.
 
-One job still runs with no person at all. Every night, a timer resets the demo account. It uses its own secret key instead of a sign-in. That was true before, and I left it that way on purpose.
+Two jobs still run with no person at all. Every night, a timer resets the demo account, and a setup script builds the demo accounts. Each uses its own secret key instead of a sign-in. That was true before, and I left it that way on purpose.
 
 ## The trade-off I chose
 
