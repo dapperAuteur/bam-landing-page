@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '../../../../../lib/db/mongodb'
 import { v2 as cloudinary } from 'cloudinary';
+import { releaseGalleryReference } from '@/lib/photos/references'
 
 export async function PUT(request: NextRequest, props: { params: Promise<{ galleryId: string }> }) {
   const params = await props.params;
@@ -40,6 +41,9 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ ga
 
   // Delete from database
   await db.collection('client_galleries').deleteOne({ galleryId: params.galleryId })
+  // Library photos keep their files (they live outside this gallery's folder);
+  // only drop this gallery from their usage.
+  await releaseGalleryReference(db, params.galleryId)
 
   // Delete from Cloudinary folder
   await cloudinary.api.delete_resources_by_prefix(`bam-photography/galleries/${params.galleryId}`)

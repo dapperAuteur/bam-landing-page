@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth/authOptions'
 import { v2 as cloudinary } from 'cloudinary'
 import clientPromise from '../../../../../../../lib/db/mongodb'
+import { isLibraryAsset, releaseGalleryReference } from '@/lib/photos/references'
 
 export async function DELETE(
   request: NextRequest,
@@ -45,8 +46,12 @@ export async function DELETE(
       return NextResponse.json({ error: 'Photo not found in gallery' }, { status: 404 })
     }
 
-    // Clean up Cloudinary asset
-    if (cloudinaryId) {
+    // A photo added "from library" shares the library's Cloudinary file, which
+    // other galleries, posts and /photography still show. Release this gallery's
+    // reference and keep the file; destroy only files this gallery uploaded.
+    if (cloudinaryId && (await isLibraryAsset(db, cloudinaryId))) {
+      await releaseGalleryReference(db, params.galleryId, cloudinaryId)
+    } else if (cloudinaryId) {
       cloudinary.config({
         cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
         api_key: process.env.CLOUDINARY_API_KEY,
