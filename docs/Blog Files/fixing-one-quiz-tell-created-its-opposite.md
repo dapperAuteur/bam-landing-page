@@ -83,7 +83,7 @@ The goal in the guard's header is not "never an extreme." It is that "across a b
 
 The baseline was worse than either earlier guard: 547 of 1,018 banks over the line, in 129 files, all recorded. The rough estimate is about 12,400 edits. The shortest-only campaign folded into this one, since its 70 files were a subset of the 129.
 
-## Where it stands
+## Where it stands on 2026-10-14
 
 | | Files off the list | Questions | Options edited | Second-reader repairs | Banks still over |
 |---|---|---|---|---|---|
