@@ -25,17 +25,17 @@ My real estate tours let a buyer walk through a house in 360 degrees. Now a room
 - **In the tour,** the buyer switches the room between times and keeps looking around.
 - **On the listing page,** each changed room has a switch between its times, and a button that opens the tour right there, at that time. That is for buyers who never open a 360 tour at all.
 
-## The hard part: lining them up
+## Lining them up
 
-You only learn this by trying: two 360 photos of the same room almost never face the same way. The camera got set down a little turned. So when you switch from "Before" to "After," the room seems to spin, and you lose your place.
+Two 360 photos of the same room almost never face the same way, so switching times can make the room seem to spin. The agent turns the old photo until the doorways line up, and then switching feels like the room changed around you. I built this first for my travel tour app, and wrote up how it works, and the plan I changed on the way, in [One Place, Seen at Different Times](/blog/one-place-seen-at-different-times).
 
-So the agent gets a simple tool: turn the old photo until the doorway and the window sit where they sit in the new one. Once they line up, switching times feels like the room changed around you, which is the whole point.
+What is new for real estate is what the feature is **for**.
 
 ## The old photos must be real
 
 This feature only works if people can trust it. So there is one firm rule: every photo, old and new, is a real photo that a person took. The software never makes up a "before" picture or "fixes" an old one with computer-made content.
 
-Old photos also tend to have people in them: the last owners, their kids, the work crew. So the tool for hiding people now works on old photos too. I wrote about how that works in "A Blur You Can Peel Off Is Not a Blur."
+Old photos also tend to have people in them: the last owners, their kids, the work crew. So the tool for hiding people now works on old photos too. I wrote about how that works in [A Blur You Can Peel Off Is Not a Blur](/blog/a-blur-you-can-peel-off).
 
 ## The question to ask
 
@@ -52,7 +52,7 @@ Two questions for anyone who builds features like this:
 - "What would make a user stop trusting this feature, and how do we prevent it?"
 - "What did you only learn by trying it with real photos?"
 
-A good answer to the first names a rule, like "no made-up photos." A good answer to the second has a story, like the spinning room.
+A good answer to the first names a rule, like "no made-up photos." A good answer to the second has a story, like a room that seemed to spin until the photos were lined up.
 
 ## Where this stands
 

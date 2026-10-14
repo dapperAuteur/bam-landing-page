@@ -5,8 +5,8 @@ Slug:    a-blur-you-can-peel-off
 Excerpt: A 360 photo of a house sees everything, including people who never
          agreed to be in an ad. Many tools hide them with a blur anyone can
          remove in seconds. How my real estate tours hide people for real, the
-         hole I found in my own version while writing this, and the one
-         question that tells you which kind you are buying.
+         hole I found in my own version while writing this, what I did about
+         buyers who saw the room first, and the questions to ask a vendor.
 Tags:    Buying Software, Privacy, Plain Talk, RealEstate.WitUS
 -->
 
@@ -25,11 +25,9 @@ Those people never agreed to be in an ad.
 
 ## The tool
 
-In my real estate tour app, the agent can open any room and hide things before buyers see it:
+In my real estate tour app, the agent can open any room and hide things before buyers see it: faces, boxes drawn over anything else, and the floor under the camera, where the tripod stands. The floor can even get a patch with the agency's logo on it.
 
-- **Faces.** The photo service finds faces and blurs them. It will not find every face, so you still look.
-- **Boxes.** Draw a box over anything else: a name on a mailbox, a picture on the wall.
-- **The floor.** Cover the spot under the camera, where the tripod stands.
+I compared every way to do this, with what each one really hides, in [Seven Ways to Hide Someone in a 360 Photo](/blog/seven-ways-to-hide-someone-in-a-360-photo). This post is about one trap that sits under all of them.
 
 ## The easy way, and why I did not use it
 
@@ -56,7 +54,18 @@ The edited copy needs a name. The app named it after the original, plus the word
 
 It is fixed. The copy's name is now made from letters that say nothing about the original. And there is a test that fails if a copy's name ever points back again.
 
-One honest limit: if a room was shown to buyers before the agent hid anything, those buyers were already sent the clear photo. Nobody can call that back. So the editor now says it plainly: hide things before the room goes live.
+## Then I went one step further
+
+Fixing the name raised a harder question. What about buyers who saw the room **before** the agent hid anything? Their browsers were sent the clear photo's address. Could they open it again later?
+
+They could. So now, the first time an agent hides something in a room, the app moves the original to a new, random address that is never sent to a buyer. The old address stops working within minutes, along with every resized version of it.
+
+Two more rules came with that:
+
+- When an agent changes an edit, the old edited copy is deleted. It might show something the new edit hides.
+- If someone asks to be removed completely, the agent can tick **Also delete the original for good**. Then the edited photo is the only copy left.
+
+One honest limit remains. If a buyer saved the photo or took a screenshot, nobody can call that back. So the editor still says it plainly: hide things before the room goes live.
 
 ## Before and after photos too
 
@@ -73,6 +82,10 @@ When a vendor says their software can blur faces, ask:
 > "After I blur something, can anyone get the clear photo back from what the public sees?"
 
 Then ask them to show you the web address of a blurred photo. If the blur is spelled out in the address, or the original's name is, you have your answer.
+
+And one more:
+
+> "If someone saw the room before I blurred it, can they still open the clear photo?"
 
 ## What this means when you hire
 
