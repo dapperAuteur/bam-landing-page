@@ -90,6 +90,45 @@ Copy **[`.env.example`](./.env.example)** to `.env.local` and fill it in; that f
 - **WitUS Outbox**: `OUTBOX_INGEST_URL`, `OUTBOX_INGEST_SECRET`, `OUTBOX_SOURCE_SLUG`, `OUTBOX_TRIGGER_ENABLED`, `PRODUCT_OWNER_USER_ID`
 - **AI**: `GEMINI_API_KEY`
 - **Error monitoring (optional)**: `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN`, and optionally `SENTRY_ENVIRONMENT` / `NEXT_PUBLIC_SENTRY_ENVIRONMENT` / `SENTRY_ORG` / `SENTRY_PROJECT` / `SENTRY_AUTH_TOKEN`
+- **Ecosystem SSO (optional)**: `WITUS_OIDC_CLIENT_ID`, `WITUS_OIDC_CLIENT_SECRET`, and optionally `WITUS_OIDC_DISCOVERY_URL`. See [Sign in with WitUS](#sign-in-with-witus).
+
+## Sign in with WitUS
+
+`/login` offers **two** ways into the admin: the email + password form, and — when
+`WITUS_OIDC_CLIENT_ID` is set — "Sign in with WitUS", the ecosystem IdP at
+`accounts.witus.online` as a NextAuth v4 OIDC provider (registered there as slug `bam`,
+client_id `witus-bam`, callback `/api/auth/callback/witus`).
+
+**SSO sits alongside the password login; it does not replace it.** The credentials provider
+is unchanged and stays the primary, first-rendered path. An IdP outage, a rotated secret, or a
+revoked OIDC client must never be able to lock the site owner out of his own admin, so the
+password form works with nothing but `NEXTAUTH_SECRET` and MongoDB reachable. Unset
+`WITUS_OIDC_CLIENT_ID` and the whole feature goes dark, cleanly.
+
+**Signing in with a WitUS account does not grant admin.** Both providers resolve the role the
+same way: the email must have a `bam_portfolio.users` document with `role: "admin"`, and
+[`lib/auth/authorize.ts`](./lib/auth/authorize.ts) gates `/admin/*` and `/api/admin/*` on
+`token.role === "admin"`. A WitUS sign-in for an address with no such record is refused
+outright, and the JWT callback re-reads the role from this database rather than trusting any
+claim from the IdP. The IdP proves *who* you are; this database decides *whether* you are an
+admin here.
+
+Two behaviours come with it:
+
+- **"Continue as &lt;name&gt;"** — the login page renders immediately as always, and in parallel
+  asks the IdP over CORS whether this browser already has a WitUS session. If it answers, the
+  button's label changes. A failed, blocked, or timed-out probe is completely invisible: no
+  error, no spinner, no layout shift. Safari ITP and Firefox Total Cookie Protection block the
+  third-party cookie and correctly answer nothing. The name is display copy and never a
+  credential — clicking runs the real OIDC code flow.
+- **Global sign-out** — Logout destroys the local session **first**, then hands off to the
+  IdP's endsession endpoint, so signing out here signs you out of every WitUS app. The order is
+  the safety property: if the IdP is unreachable, you are still signed out here.
+
+Implementation: [`lib/auth/witus-sso.ts`](./lib/auth/witus-sso.ts) (pure helpers, unit-tested),
+[`lib/auth/witus-config.ts`](./lib/auth/witus-config.ts) (server-resolved URLs),
+[`lib/auth/authOptions.ts`](./lib/auth/authOptions.ts) (provider + the admin check), and
+`components/auth/`.
 
 ## Error monitoring
 
@@ -173,7 +212,7 @@ The NextAuth middleware does not touch this route: its matcher is `/admin/:path*
 | `/portal/[projectId]` | Client project portal |
 | `/intake` · `/hire` · `/partner` | Client intake forms |
 | `/admin/*` | Admin dashboard (protected): `blog/posts`, `photos`, `galleries`, `approvals`, `projects`, `contact`, `logs` |
-| `/login` | Login page |
+| `/login` | Login page: email + password, plus "Sign in with WitUS" when ecosystem SSO is configured |
 | `/api/health` | Uptime probe: pings MongoDB, never cached. See [Health check](#health-check). |
 
 ## Docs
