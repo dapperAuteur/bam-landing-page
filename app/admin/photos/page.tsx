@@ -57,8 +57,13 @@ export default function AdminPhotosPage() {
   async function remove(id: string, title?: string) {
     if (!confirm(`Delete "${title || 'photo'}"? This removes it from Cloudinary too.`)) return
     const res = await fetch(`/api/photos/${id}`, { method: 'DELETE' })
-    if (res.ok) setPhotos(prev => prev.filter(p => p.id !== id))
-    else alert('Delete failed')
+    if (res.ok) {
+      setPhotos(prev => prev.filter(p => p.id !== id))
+      return
+    }
+    // A 409 names the posts and galleries still using the photo.
+    const data = await res.json().catch(() => ({}))
+    setError(typeof data.error === 'string' ? data.error : 'Delete failed')
   }
 
   return (
