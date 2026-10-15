@@ -5,7 +5,8 @@
 //   - its body compiles as MDX (the same compiler and remark-gfm the site uses),
 //   - its prose has no em dash, en dash, or double hyphen used as a dash,
 //   - its prose has none of the AI-writing-tells phrases (HIGH, MED or LOW).
-// Code (fenced and inline) and URLs are not prose, so dashes there are fine.
+// Code (fenced and inline), URLs and the References section are not prose, so
+// dashes there are fine.
 //
 // Usage:
 //   node scripts/check-blog-drafts.mjs                 # every draft; exit 1 if any fail
@@ -24,9 +25,14 @@ const VERBOSE = process.argv.includes('--verbose')
 const args = process.argv.slice(2).filter(a => !a.startsWith('--'))
 const files = args.length > 0 ? args : readdirSync(DIR).filter(f => f.endsWith('.md')).map(f => join(DIR, f))
 
-/** Prose only: drop fenced code, inline code, URLs, and MDX/HTML comments. */
+/**
+ * Prose only: drop fenced code, inline code, URLs, MDX/HTML comments, and the
+ * References section (citations print a source's title as published, and APA
+ * page ranges take an en dash, so neither is the author's punctuation).
+ */
 function prose(text) {
   return text
+    .replace(/^#{1,6}\s+References\s*$[\s\S]*/m, ' ')
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/`[^`\n]*`/g, ' ')
     .replace(/https?:\/\/\S+/g, ' ')

@@ -11,9 +11,9 @@ Tags:    Design, Accessibility, WCAG, Colour, Beginners, Wanderlust
 
 # An Orange Button Is Not Orange Text
 
-Until last week my app had no brand colour. Not a restrained palette — *none*. Two colours were defined: the background and the text. Everything else had been picked ad hoc as I built each screen, which is why there was a stray green in the footer and an unexplained amber somewhere in the admin.
+Until last week my app had no brand colour. Not a restrained palette: *none*. Two colours were defined: the background and the text. Everything else had been picked ad hoc as I built each screen, which is why there was a stray green in the footer and an unexplained amber somewhere in the admin.
 
-Renaming the product was the moment to fix it. I picked a palette — tangerine and deep indigo on warm cream, with a stamp gold as a third note — and applied it.
+Renaming the product was the moment to fix it. I picked a palette (tangerine and deep indigo on warm cream, with a stamp gold as a third note) and applied it.
 
 The interesting part wasn't choosing colours. It was the three things I got wrong first.
 
@@ -23,9 +23,9 @@ The palette's main colour is a tangerine: `#E8590C`. Warm, energetic, exactly ri
 
 I put it on a button. Lovely. Then I used it for a link. And a small heading. Still lovely, to me.
 
-It fails accessibility. Not marginally — clearly.
+It fails accessibility. Not marginally. Clearly.
 
-Here's the concept, and it's arithmetic, not taste. **Contrast ratio** measures how different two colours are in brightness. Not hue — brightness. It runs from 1:1 (identical, invisible) to 21:1 (pure black on pure white).
+Here's the concept, and it's arithmetic, not taste. **Contrast ratio** measures how different two colours are in brightness. Not hue, but brightness. It runs from 1:1 (identical, invisible) to 21:1 (pure black on pure white).
 
 The international accessibility standard sets thresholds:
 
@@ -42,14 +42,14 @@ Here is the app before it had any brand colour at all, and after:
 *Before. Two colours defined in the entire stylesheet.*
 
 ![The same homepage in the new palette: warm cream page, deep indigo slab-serif headline, tangerine button](/blog/orange-button-is-not-orange-text/after-passport-stamp.png)
-*After. The tangerine appears only as a fill — never as a word.*
+*After. The tangerine appears only as a fill, never as a word.*
 
-Which means: fine as a *background* behind dark text. Fine as the edge of a control. **A failure as text.** Not because it's ugly — it isn't — but because for a meaningful number of people, including anyone with reduced contrast sensitivity, which increasingly includes everyone as they age, it is genuinely hard to read.
+Which means: fine as a *background* behind dark text. Fine as the edge of a control. **A failure as text.** Not because it's ugly (it isn't) but because for a meaningful number of people, including anyone with reduced contrast sensitivity, which increasingly includes everyone as they age, it is genuinely hard to read.
 
 The fix is not to abandon the colour. It's to accept that **one colour cannot do both jobs**, and ship two:
 
-- `--brand` — the bright tangerine. Fills shapes. Never forms letters.
-- `--brand-text` — a darkened version, `#B8410A`. Forms letters. Measures 5.23:1. Passes.
+- `--brand`: the bright tangerine. Fills shapes. Never forms letters.
+- `--brand-text`: a darkened version, `#B8410A`. Forms letters. Measures 5.23:1. Passes.
 
 ```css
 :root {
@@ -70,7 +70,7 @@ I did the same split for the accent gold, which is worse: `#F2B705` on cream is 
 
 Here's the part I'd recommend to anyone designing anything.
 
-I computed every contrast pair **before** committing to the palette. Not after. Every combination the design would actually use — body text on background, muted text on background, the label colour on a filled button, white on the secondary colour — in both light and dark mode.
+I computed every contrast pair **before** committing to the palette. Not after. Every combination the design would actually use (body text on background, muted text on background, the label colour on a filled button, white on the secondary colour) in both light and dark mode.
 
 That's maybe twenty numbers. It took a few minutes.
 
@@ -82,13 +82,13 @@ The ratios are now written in the code as comments, next to each colour, so that
 
 The palette is called "Passport Stamp." The idea is travel documents: perforated edges, dashed lines, ink stamps.
 
-So for the featured-course card I built a real perforation — those little semicircular notches punched along a stamp's edge, made by cutting scallops of the *page* colour out of the *card*.
+So for the featured-course card I built a real perforation: those little semicircular notches punched along a stamp's edge, made by cutting scallops of the *page* colour out of the *card*.
 
 It looked great in dark mode. Genuinely nice.
 
 In light mode it was invisible.
 
-Obvious in hindsight. The card is white. The page is warm cream. Those two are about two percent apart in brightness — deliberately, because that's what makes the palette feel warm and soft rather than harsh. Notches cut in one and revealed as the other are a two-percent difference. There is nothing to see.
+Obvious in hindsight. The card is white. The page is warm cream. Those two are about two percent apart in brightness. That's deliberate, because it's what makes the palette feel warm and soft rather than harsh. Notches cut in one and revealed as the other are a two-percent difference. There is nothing to see.
 
 I had a decision: make the card darker so the notches showed, or drop the effect.
 
@@ -106,7 +106,7 @@ I left every one of them.
 
 Two reasons. The first is risk: repainting a hundred-odd controls across screens I wasn't otherwise touching is a lot of surface area to break for a rename.
 
-The second is better. The neutral token now resolves to deep ink on warm cream — it inherited the new palette automatically. So those screens don't look *unstyled*; they look deliberately utilitarian. Which is correct! The admin is a tool. The learner-facing pages are the product.
+The second is better. The neutral token now resolves to deep ink on warm cream; it inherited the new palette automatically. So those screens don't look *unstyled*; they look deliberately utilitarian. Which is correct! The admin is a tool. The learner-facing pages are the product.
 
 Making every admin button tangerine would actively hurt, because if everything is the brand colour then the brand colour stops meaning "this is the thing to press."
 
@@ -116,7 +116,7 @@ A full conversion is a separate job with its own accessibility re-check. Scoping
 
 I run automated accessibility tests on every change. They pass. Fifty checks, zero serious problems.
 
-They cannot tell me the palette is any good. They can tell me the numbers clear the bar — which is exactly the sort of thing a machine is better at than I am, and worth automating for that reason.
+They cannot tell me the palette is any good. They can tell me the numbers clear the bar, which is exactly the sort of thing a machine is better at than I am, and worth automating for that reason.
 
 They cannot tell me tangerine and indigo belong together, or that a travel-document metaphor suits a place-based learning product, or that the perforation was a nice idea badly executed.
 

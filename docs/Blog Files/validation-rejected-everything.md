@@ -11,7 +11,7 @@ Tags:    Debugging, TypeScript, Validation, Error Messages, Beginners, Wanderlus
 
 # The Validation I Wrote Rejected Everything
 
-I added a small feature to my 360° tour app: attach a sound to a scene. Stand in the courtyard, hear the courtyard — distant traffic, birds, the particular hum a room has when nobody is talking. It's one of the cheapest ways to make a photograph feel like a place.
+I added a small feature to my 360° tour app: attach a sound to a scene. Stand in the courtyard, hear the courtyard: distant traffic, birds, the particular hum a room has when nobody is talking. It's one of the cheapest ways to make a photograph feel like a place.
 
 Then every attempt to attach a sound failed. Every file. Every format. Every scene. Every time.
 
@@ -25,7 +25,7 @@ It was correct. I had written it. I had also, an hour earlier, written the exact
 
 Here's the setup, from zero.
 
-When you fill in a form on a website and press Save, the browser sends what you typed to a server somewhere. The server does not trust it — anything can send a request pretending to be my form, and even honest browsers send half-finished nonsense sometimes. So the first thing it does is check against a list of what must be present and what shape each thing must be: this must be a web address, this must be a number between 0 and 1, this must be true or false. Anything that doesn't match gets rejected before it goes near the database.
+When you fill in a form on a website and press Save, the browser sends what you typed to a server somewhere. The server does not trust it. Anything can send a request pretending to be my form, and even honest browsers send half-finished nonsense sometimes. So the first thing it does is check against a list of what must be present and what shape each thing must be: this must be a web address, this must be a number between 0 and 1, this must be true or false. Anything that doesn't match gets rejected before it goes near the database.
 
 That list is called a schema, and mine looked roughly like this after my change:
 
@@ -90,9 +90,9 @@ Earlier the same day I'd fixed something unrelated and slightly boring: the page
 
 The server had said "Invalid input." The page threw that away and substituted the friendly generic.
 
-The first person to hit this bug — before that morning's fix — got the generic. And "try again" is not a weak message, it's a *wrong* one. It makes a specific claim: this failure is temporary, the fix is repetition, have another go. None of which was true. The failure was deterministic. Trying again was guaranteed to fail, and did, and the message calmly recommended it every time.
+The first person to hit this bug, before that morning's fix, got the generic. And "try again" is not a weak message, it's a *wrong* one. It makes a specific claim: this failure is temporary, the fix is repetition, have another go. None of which was true. The failure was deterministic. Trying again was guaranteed to fail, and did, and the message calmly recommended it every time.
 
-So they did the sensible next thing and opened the browser's developer console to look for the real cause. What they found there was a pile of errors from a browser extension — nothing to do with my app, not emitted by my code, not capable of being emitted by my code. That sent an hour in a direction with no bug at the end of it. (That mess is its own post.)
+So they did the sensible next thing and opened the browser's developer console to look for the real cause. What they found there was a pile of errors from a browser extension: nothing to do with my app, not emitted by my code, not capable of being emitted by my code. That sent an hour in a direction with no bug at the end of it. (That mess is its own post.)
 
 Then the swallowing got fixed, and the very next attempt returned the server's own words:
 
@@ -106,8 +106,8 @@ The gap between those two messages is not politeness. "Please try again" points 
 
 **A wrong error message costs more than the bug it hides.** The bug was a missing line. The message turned it into an afternoon, and sent someone into a browser console to read another vendor's problems.
 
-**Rank the outcomes honestly.** A specific true error is best. Silence is second. A confident wrong explanation is last, and it is not close — it doesn't merely fail to help, it spends someone's time in the wrong place and their trust along with it.
+**Rank the outcomes honestly.** A specific true error is best. Silence is second. A confident wrong explanation is last, and it is not close. It doesn't merely fail to help, it spends someone's time in the wrong place and their trust along with it.
 
 **Generic error handling is written once, early, and degrades everything after it.** Nobody sits down to write "hide the reason." You write a friendly fallback on day one for the one case you'd imagined, and it silently eats every real diagnosis for the rest of the product's life. Mine had been doing that for months. I found out because it ate mine.
 
-**And the mechanical lesson, for completeness:** a schema and the object you hand it are two lists that must agree, and nothing on earth enforces that they do. Types can't see it. The only thing that catches it is exercising the real form once — filling it in, pressing the button, watching what happens. Which took ninety seconds, after I'd finally been told what to look at.
+**And the mechanical lesson, for completeness:** a schema and the object you hand it are two lists that must agree, and nothing on earth enforces that they do. Types can't see it. The only thing that catches it is exercising the real form once: filling it in, pressing the button, watching what happens. Which took ninety seconds, after I'd finally been told what to look at.

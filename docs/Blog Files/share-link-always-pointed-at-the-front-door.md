@@ -13,7 +13,7 @@ Tags:    UX, Sharing, Component Design, Engineering Judgment, Beginners, Wanderl
 
 My app builds courses around real places captured in 360°. You stand in a gallery, or a courtyard, and look around. Arrows on the floor take you through.
 
-Underneath the viewer there's a share panel, and in it a thing I call the quick link. A normal link to a tour drops your friend on a chooser screen — here are the scenes, pick one. The quick link skips that. Follow it and you are simply *in* the tour, looking around, no menu in between. It exists because the chooser is a speed bump, and speed bumps are where shared links go to die.
+Underneath the viewer there's a share panel, and in it a thing I call the quick link. A normal link to a tour drops your friend on a chooser screen: here are the scenes, pick one. The quick link skips that. Follow it and you are simply *in* the tour, looking around, no menu in between. It exists because the chooser is a speed bump, and speed bumps are where shared links go to die.
 
 The quick link worked perfectly. It just always sent people to the same place.
 
@@ -23,7 +23,7 @@ Say you walk into a building, go up three floors, through a courtyard, and end u
 
 Your friend opens the link and is standing on the pavement outside, looking at the front door.
 
-That was my share button. However far a visitor had walked — nine scenes deep, past the bit that made them want to tell someone — the link they copied said "open this tour at the beginning."
+That was my share button. However far a visitor had walked (nine scenes deep, past the bit that made them want to tell someone), the link they copied said "open this tour at the beginning."
 
 Not a mistake in the sense of a broken line. The link was correct, well-formed, and did exactly what it said. It said the wrong thing.
 
@@ -31,7 +31,7 @@ Not a mistake in the sense of a broken line. The link was correct, well-formed, 
 
 Here is the part worth explaining properly, because it's a shape that recurs.
 
-The page containing a tour is put together on my server before it reaches you. The server assembles the whole thing — the title, the description, the viewer, the share panel — and sends it down as a finished document. That happens *once*, at the moment you arrive.
+The page containing a tour is put together on my server before it reaches you. The server assembles the whole thing: the title, the description, the viewer, the share panel. Then it sends it down as a finished document. That happens *once*, at the moment you arrive.
 
 At that moment, the only scene that exists as a fact is the tour's starting scene. You haven't moved. You haven't even seen it yet.
 
@@ -47,7 +47,7 @@ The share button sits **below** the tour viewer. That is deliberate and I'd defe
 
 But it creates a structural awkwardness.
 
-The viewer is an interactive component — it responds to you, it has moving parts, it knows things that change. The share button is also an interactive component, separately. And the page that holds them both is *not* interactive. It's assembled on the server and shipped as a static document.
+The viewer is an interactive component: it responds to you, it has moving parts, it knows things that change. The share button is also an interactive component, separately. And the page that holds them both is *not* interactive. It's assembled on the server and shipped as a static document.
 
 In ordinary software you solve "two things need to agree on a fact" by putting the fact in whatever contains them both. The parent holds it, the children read it. Standard.
 
@@ -55,7 +55,7 @@ Here there is no such parent. The thing containing both of them is a printed pag
 
 So the viewer and the button are like two shops in the same mall with no shared back office. They're twenty metres apart. Neither can walk into the other. The building's management is asleep.
 
-What you do in that situation is use the mall's public address system. The viewer, every time you move, announces to the page: **now showing — the courtyard**. It doesn't know or care who's listening. The share button listens for those announcements, and each time it hears one, it rewrites its link.
+What you do in that situation is use the mall's public address system. The viewer, every time you move, announces to the page: **now showing the courtyard**. It doesn't know or care who's listening. The share button listens for those announcements, and each time it hears one, it rewrites its link.
 
 Nobody is anybody's parent. Nothing new sits in the middle. One component talks to the room; the other one pays attention.
 
@@ -71,7 +71,7 @@ That's the trade I want to name. Layout decisions that are right for the reader 
 
 When they disagree, the cost of the extra plumbing is nearly always smaller than the cost of rearranging the page. The plumbing is paid once, by me, in a file. The rearrangement is paid by everyone, every visit.
 
-And the announcement approach isn't a hack around the layout — it's a better description of what is actually happening. The viewer really is the only thing that knows where you are. Anything else on the page that ever needs to know can now listen too, without me touching the viewer again.
+And the announcement approach isn't a hack around the layout; it's a better description of what is actually happening. The viewer really is the only thing that knows where you are. Anything else on the page that ever needs to know can now listen too, without me touching the viewer again.
 
 ## What I'd take from this
 
@@ -79,4 +79,4 @@ And the announcement approach isn't a hack around the layout — it's a better d
 
 **Let the layout win.** If your components are in the order a reader needs and that makes them hard to wire together, wire them together the hard way. Moving the furniture to suit the cabling is how pages slowly become about their own implementation.
 
-**Check the feature from the far end of the journey.** Every time I tested sharing, I tested it from the scene I'd just loaded — because that's where you are when you're testing. The bug lived exclusively nine rooms in, which is where every real visitor was standing.
+**Check the feature from the far end of the journey.** Every time I tested sharing, I tested it from the scene I'd just loaded, because that's where you are when you're testing. The bug lived exclusively nine rooms in, which is where every real visitor was standing.

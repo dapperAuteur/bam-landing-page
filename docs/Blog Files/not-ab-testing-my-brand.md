@@ -3,7 +3,7 @@ Draft for the bam-landing-page blog. Paste the body into app/admin/blog and use:
 Title:   I Had Three Designs and the Tools to A/B Test Them. I Picked One Instead.
 Slug:    not-ab-testing-my-brand
 Excerpt: Splitting traffic three ways sounds rigorous. At my traffic, with a
-         colour change, it's a test that can never conclude — while making
+         colour change, it's a test that can never conclude, and it makes
          every screenshot and partner deck hedge on which brand you'd see.
          The arithmetic, and what to test instead.
 Tags:    Experimentation, A/B Testing, Statistics, Product Decisions, Beginners
@@ -33,11 +33,11 @@ The number of people you need depends on how big the real difference is. A huge 
 
 ## Two numbers that made my answer obvious
 
-**How big is the effect?** I'm changing colours. Not the offer, not the price, not the headline — the palette. That's a small-effect change. Real, probably, but small.
+**How big is the effect?** I'm changing colours. Not the offer, not the price, not the headline: the palette. That's a small-effect change. Real, probably, but small.
 
 **How much traffic do I have?** I'm pre-launch. Not "modest." Not much at all.
 
-Small effect plus small sample is the combination where a test cannot resolve. Not "takes a while" — *cannot*. You run it, you get a difference, and you have no way to know whether it's the design or the weather. The honest read of the result is "inconclusive," and you were always going to get that.
+Small effect plus small sample is the combination where a test cannot resolve. Not "takes a while," but *cannot*. You run it, you get a difference, and you have no way to know whether it's the design or the weather. The honest read of the result is "inconclusive," and you were always going to get that.
 
 And splitting **three** ways rather than two makes it a third worse, because each version now gets a third of an already-small number.
 
@@ -47,9 +47,9 @@ Even granting all that, you might say: so what? Leave it running, it costs nothi
 
 It doesn't cost nothing, and the cost is specific to what I'm doing.
 
-To run the test I'd have to **fully build all three palettes** — apply each across the header, footer, buttons, cards, error pages, share images. That's three times the work of shipping one, and two thirds of it gets deleted.
+To run the test I'd have to **fully build all three palettes**: apply each across the header, footer, buttons, cards, error pages, share images. That's three times the work of shipping one, and two thirds of it gets deleted.
 
-Worse, while it runs, my brand is genuinely indeterminate. Every screenshot I take, every image that appears when someone shares a link, every deck I put in front of a museum — all of them have to hedge on which version that person happens to see. A partner clicks the link in my proposal and sees a different product than the one in the proposal.
+Worse, while it runs, my brand is genuinely indeterminate. Every screenshot I take, every image that appears when someone shares a link, every deck I put in front of a museum: all of them have to hedge on which version that person happens to see. A partner clicks the link in my proposal and sees a different product than the one in the proposal.
 
 The whole point of this rebrand is to look like a serious, coherent thing to institutions deciding whether to work with me. "We're currently three different products, depending" is the opposite of that.
 
@@ -71,7 +71,7 @@ Then I did three things that keep the option open:
 
 There's a version of rigour that's really just deferral. "Let's test it" can mean *I want evidence*, and it can mean *I don't want to be the one who decided*. Those feel identical from the inside.
 
-The test that can't reach significance is the worst of both. You paid for the process, you carry the cost of indecision, and at the end you still choose on taste — except now several months later, with the design work tripled.
+The test that can't reach significance is the worst of both. You paid for the process, you carry the cost of indecision, and at the end you still choose on taste, except now several months later, with the design work tripled.
 
 Better: **decide, write down why, and write down what would change your mind.** That last part is what makes it a decision rather than a preference. Mine is written down with actual numbers, and when the traffic clears them I'll run the test properly.
 
@@ -87,4 +87,4 @@ The rule is effect size. At small samples you can only detect large differences,
 
 All of those are cheap to build, and all of them can produce differences big enough to see through the noise of a small audience.
 
-The general shape: at low traffic, test things that might change behaviour a lot. Save the fine-tuning for when you have the crowd to measure it. Testing a subtle change with a small sample isn't rigour — it's a coin flip with extra steps and a spreadsheet.
+The general shape: at low traffic, test things that might change behaviour a lot. Save the fine-tuning for when you have the crowd to measure it. Testing a subtle change with a small sample isn't rigour. It's a coin flip with extra steps and a spreadsheet.
