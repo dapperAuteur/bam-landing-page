@@ -19,7 +19,7 @@ A full-stack Next.js App Router application that combines a public portfolio + b
 - **Landing page**: Hero, services, about, portfolio, contact form with reCAPTCHA v3 and rate limiting
 - **Blog (MDX CMS)**: 70+ posts in a unified `blog_posts` collection; authored in the admin MDX editor; rendered via `@mdx-js/mdx` with a closed component registry (`<Chart>`, `<Carousel>`, `<CodeBlock>`, `<YouTubeEmbed>`, …); ISR-cached. See [docs/MANAGE_BLOG.md](./docs/MANAGE_BLOG.md).
 - **Feeds**: `/feed.xml` (RSS 2.0) and `/feed.json` (JSON Feed), auto-updating from the same data layer
-- **Photo library**: upload once at `/admin/photos`, reuse across galleries, blog, and portfolio (Cloudinary-backed)
+- **Photo library**: upload once at `/admin/photos`, reuse across galleries, blog, and portfolio (Cloudinary-backed). Deleting a photo is refused while any post or gallery still shows it, and removing a library photo from one gallery keeps its file for everywhere else
 - **Galleries**: private **client** galleries (access code, downloads, like/comment, **per-photo approve/reject**) and public **marketing** galleries at `/galleries`; admin can **send the gallery link to the client by email** and review approvals at `/admin/approvals`
 - **Client portal**: project-based access at `/portal/[projectId]` with JWT-authenticated sessions
 - **Admin dashboard**: manage blog posts, photos, galleries, projects, contacts, education submissions, and workout feedback

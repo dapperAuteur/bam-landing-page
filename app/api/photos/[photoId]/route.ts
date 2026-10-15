@@ -4,6 +4,7 @@ import { v2 as cloudinary } from 'cloudinary'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '@/lib/db/mongodb'
+import { describeReferences, findPhotoReferences } from '@/lib/photos/references'
 
 export const dynamic = 'force-dynamic'
 
@@ -61,6 +62,13 @@ export async function DELETE(_req: NextRequest, props: { params: Promise<{ photo
     const db = client.db('bam_portfolio')
     const photo = await db.collection('photos').findOne(byId(params.photoId))
     if (!photo) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+    // Deleting also destroys the Cloudinary file, so refuse while any post or
+    // gallery still shows it. Checked live: the cached usedIn is incomplete.
+    const references = await findPhotoReferences(db, photo)
+    if (references.blogs.length > 0 || references.galleries.length > 0) {
+      return NextResponse.json({ error: describeReferences(references), references }, { status: 409 })
+    }
 
     await db.collection('photos').deleteOne({ _id: photo._id })
 
