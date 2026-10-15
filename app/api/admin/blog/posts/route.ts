@@ -6,6 +6,7 @@ import clientPromise from '@/lib/db/mongodb'
 import { fireOutboxDrafts } from '@/lib/outbox-trigger'
 import { buildBlogCaption } from '@/lib/blog/caption'
 import { BLOG_DB, COLLECTIONS } from '@/lib/db/collections'
+import { recordPostPhotoUsage } from '@/lib/photos/references'
 
 export const dynamic = 'force-dynamic'
 
@@ -79,6 +80,7 @@ export async function POST(request: NextRequest) {
   }
 
   const result = await collection.insertOne(doc)
+  await recordPostPhotoUsage(db, doc)
 
   if (status === 'published') {
     fireOutboxDrafts({

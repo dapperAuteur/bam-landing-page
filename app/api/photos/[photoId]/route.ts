@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '@/lib/db/mongodb'
 import { describeReferences, findPhotoReferences } from '@/lib/photos/references'
+import { redactPhotoUsage } from '@/lib/photos/usage'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,7 +26,8 @@ export async function GET(_req: NextRequest, props: { params: Promise<{ photoId:
     const db = client.db('bam_portfolio')
     const photo = await db.collection('photos').findOne(byId(params.photoId))
     if (!photo) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-    return NextResponse.json({ photo: { ...photo, id: photo._id.toString() } })
+    const result = { ...photo, id: photo._id.toString() }
+    return NextResponse.json({ photo: (await isAdmin()) ? result : redactPhotoUsage(result) })
   } catch (error) {
     console.error('Photo fetch error:', error)
     return NextResponse.json({ error: 'Failed to fetch photo' }, { status: 500 })

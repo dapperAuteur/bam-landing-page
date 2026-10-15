@@ -10,11 +10,16 @@
 // Values stored in `usedIn.blogs` are post SLUGS, not ids, so the admin UI can
 // name the posts without a second lookup.
 
-/** The parts of a blog post that can show library photos. */
+/**
+ * The parts of a blog post that can show library photos. The index signature
+ * lets a raw Mongo document be passed as-is (an all-optional interface would
+ * otherwise reject it as sharing no properties).
+ */
 export interface PhotoReferencingPost {
   featuredImage?: unknown
   photoIds?: unknown
   content?: unknown
+  [field: string]: unknown
 }
 
 /** A library photo, reduced to what identifies it inside a post or gallery. */
@@ -173,4 +178,14 @@ export function describePhotoUsage(usedIn: PhotoUsage | null | undefined): {
     total: blogs.length + galleries.length,
     summary: parts.length === 0 ? 'Not used anywhere' : `Used in ${parts.join(', ')}`,
   }
+}
+
+/**
+ * A photo as the public API returns it. `usedIn` names draft post slugs (some
+ * held back on purpose) and private client gallery ids, so only the portfolio
+ * flag survives for anyone who is not an admin.
+ */
+export function redactPhotoUsage<T extends object>(photo: T): Omit<T, 'usedIn'> & { usedIn: { portfolio: boolean } } {
+  const usedIn = (photo as { usedIn?: PhotoUsage | null }).usedIn
+  return { ...photo, usedIn: { portfolio: usedIn?.portfolio === true } }
 }
