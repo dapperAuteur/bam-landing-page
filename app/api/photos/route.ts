@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '@/lib/db/mongodb'
 import { uploadToCloudinary, getThumbnailUrl } from '@/lib/cloudinary'
+import { redactPhotoUsage } from '@/lib/photos/usage'
 import type { Photo, PhotoCategory } from '@/types/photo'
 
 export const dynamic = 'force-dynamic'
@@ -38,8 +39,12 @@ export async function GET(request: NextRequest) {
       .limit(limit)
       .toArray()
 
+    const admin = await isAdmin()
     return NextResponse.json({
-      photos: photos.map(p => ({ ...p, id: p._id?.toString() || p.id })),
+      photos: photos.map(p => {
+        const photo = { ...p, id: p._id?.toString() || p.id }
+        return admin ? photo : redactPhotoUsage(photo)
+      }),
     })
   } catch (error) {
     console.error('Photos fetch error:', error)

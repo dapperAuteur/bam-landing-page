@@ -7,6 +7,7 @@ import clientPromise from '@/lib/db/mongodb'
 import { fireOutboxDrafts } from '@/lib/outbox-trigger'
 import { buildBlogCaption } from '@/lib/blog/caption'
 import { BLOG_DB, COLLECTIONS } from '@/lib/db/collections'
+import { recordPostPhotoUsage, releasePostPhotoUsage } from '@/lib/photos/references'
 
 export const dynamic = 'force-dynamic'
 
@@ -60,6 +61,8 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ id: s
   if (willPublish) set.firstPublishedAt = now
 
   await collection.updateOne({ _id: existing._id }, { $set: set })
+  // Partial updates keep the stored fields, so merge before reading photos.
+  await recordPostPhotoUsage(db, { ...existing, ...set }, existing.slug)
 
   const slug = (updates.slug as string) ?? existing.slug
   if (willPublish) {
@@ -100,6 +103,7 @@ export async function DELETE(_req: NextRequest, props: { params: Promise<{ id: s
   if (!existing) return NextResponse.json({ error: 'Post not found' }, { status: 404 })
 
   await db.collection(COLLECTIONS.blogPosts).deleteOne({ _id: existing._id })
+  await releasePostPhotoUsage(db, existing.slug)
   revalidatePath('/blog')
   revalidatePath(`/blog/${existing.slug}`)
   revalidatePath('/feed.xml')

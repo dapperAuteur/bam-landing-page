@@ -3,7 +3,8 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth/authOptions'
 import clientPromise from '../../../../../lib/db/mongodb'
 import { v2 as cloudinary } from 'cloudinary';
-import { releaseGalleryReference } from '@/lib/photos/references'
+import { libraryFilesUnder, releaseGalleryReference } from '@/lib/photos/references'
+import { galleryFilesToDelete } from '@/lib/photos/usage'
 
 export async function PUT(request: NextRequest, props: { params: Promise<{ galleryId: string }> }) {
   const params = await props.params;
@@ -39,14 +40,28 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ ga
   const client = await clientPromise
   const db = client.db('bam_portfolio')
 
-  // Delete from database
+  const folder = `bam-photography/galleries/${params.galleryId}`
+  const gallery = await db
+    .collection('client_galleries')
+    .findOne({ galleryId: params.galleryId }, { projection: { photos: 1 } })
+  const libraryOwned = await libraryFilesUnder(db, folder)
+
+  // Delete from database, and drop this gallery from library photos' usage.
   await db.collection('client_galleries').deleteOne({ galleryId: params.galleryId })
-  // Library photos keep their files (they live outside this gallery's folder);
-  // only drop this gallery from their usage.
   await releaseGalleryReference(db, params.galleryId)
 
-  // Delete from Cloudinary folder
-  await cloudinary.api.delete_resources_by_prefix(`bam-photography/galleries/${params.galleryId}`)
+  // Delete from Cloudinary. A library photo made from one of this gallery's
+  // uploads still lives in its folder, so when one exists, delete only the
+  // gallery's own files by id instead of purging the whole folder.
+  if (libraryOwned.size === 0) {
+    // Trailing slash: a bare prefix would also purge gallery `g10` when deleting `g1`.
+    await cloudinary.api.delete_resources_by_prefix(`${folder}/`)
+  } else {
+    const files = galleryFilesToDelete(gallery?.photos, folder, libraryOwned)
+    for (let i = 0; i < files.length; i += 100) {
+      await cloudinary.api.delete_resources(files.slice(i, i + 100))
+    }
+  }
 
   return NextResponse.json({ success: true })
 }
