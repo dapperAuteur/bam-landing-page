@@ -44,7 +44,7 @@ Now the part that made it invisible. The source comment said:
 
 > The probe carries the IdP's cookie as a THIRD-PARTY cookie, so it answers on Chrome/Edge and returns nothing under Safari ITP or Firefox Total Cookie Protection. That is fine and it is the design: a probe that answers nothing renders nothing.
 
-Every clause of that is well-reasoned. Safari and Firefox really do block third-party cookies, the feature really is designed to degrade silently, and a probe that answers nothing really should render nothing. The paragraph is correct about everything except the one thing that mattered, which is that the "degraded" case was not one browser's behaviour. It was all of them.
+Every clause of that is well-reasoned. Safari and Firefox really do block third-party cookies, the feature really is designed to degrade silently, and a probe that answers nothing really should render nothing. The paragraph is correct about everything except the one thing that mattered, which is that the "degraded" case was not one browser's behavior. It was all of them.
 
 **The feature had documented its own failure mode as an intended partial degradation.** That is what made it unfalsifiable. "The button says Sign in with WitUS" was a listed, expected, blessed outcome. There is no observation you could make on a Safari laptop that would distinguish the feature working as designed from the feature never having executed.
 
@@ -70,13 +70,13 @@ return tenantOutcome === "none";
 
 Show the WitUS button only if credentials are configured, and the request arrived on the branded host, and **no tenant resolved**. Above it, this comment:
 
-> The tenant check is redundant today — the branded host should never be in `tenant_domains` — but it means that if it ever is, making the branded host serve a hotel, the button disappears rather than appearing on a white-labelled page.
+> `The tenant check is redundant today — the branded host should never be in tenant_domains — but it means that if it ever is, making the branded host serve a hotel, the button disappears rather than appearing on a white-labelled page.`
 
 The branded host is in `tenant_domains`. The seed script puts it there on line 42, registering `stay.witus.online` as a domain of the platform tenant. The database schema says so too, in a comment eighty lines above the one I just quoted: *"stay.witus.online itself is the seeded 'platform' tenant."*
 
 So on the branded host a tenant always resolved, the outcome was always `"tenant"`, and the gate always returned false. The button rendered on no host at all. Dead on arrival, in code written that morning.
 
-And again, invisible. On every hotel domain, no button is correct. On the platform host, no button is a bug. Same screen. There was even a passing test pinning the broken behaviour as intended:
+And again, invisible. On every hotel domain, no button is correct. On the platform host, no button is a bug. Same screen. There was even a passing test pinning the broken behavior as intended:
 
 ```ts
 it("HIDES when a tenant resolves on the branded host", () => {
@@ -114,7 +114,7 @@ Not by testing. I had an agent wiring the same gate into RealEstate.WitUS, which
 
 That was false, and it was the only reason anyone looked at Stay. **Its adaptation was right and its justification was wrong**, and I only found a two-hour-old bug because I checked a confident claim that turned out to be decoration on a correct decision.
 
-I have started treating a delegate's *reasoning* as a separate artifact from its *output*, worth auditing even when the output is good. A right answer for a wrong reason is a right answer that does not generalise, and here it was pointing directly at a bug in a repository the agent had never opened.
+I have started treating a delegate's *reasoning* as a separate artifact from its *output*, worth auditing even when the output is good. A right answer for a wrong reason is a right answer that does not generalize, and here it was pointing directly at a bug in a repository the agent had never opened.
 
 ## What I'd tell you to take away
 

@@ -21,11 +21,11 @@ Straightforward request. The complication is what "everywhere" means.
 
 Think of a photograph you have hanging in five frames around the house. One in the hallway, one on the landing, one on the piano.
 
-Now imagine two of those frames are the very wide panoramic kind, and one of them isn't a frame at all — it's a speaker.
+Now imagine two of those frames are the very wide panoramic kind, and one of them isn't a frame at all. It's a speaker.
 
 That's roughly the situation. A single media file can occupy several different *kinds* of place at once. One image can be a scene's 360° panorama, **and** the poster thumbnail for that same scene, **and** the hero image at the top of the tour, all simultaneously. In my real database, 80 files sit in more than one kind of slot.
 
-And the slots are not interchangeable. A panorama has to be a genuine 360° photo — an ordinary snapshot wrapped around a sphere looks like a smeared mess. A map pin has to be a flat image. Scene audio has to be audio; you cannot put a photograph in a speaker.
+And the slots are not interchangeable. A panorama has to be a genuine 360° photo; an ordinary snapshot wrapped around a sphere looks like a smeared mess. A map pin has to be a flat image. Scene audio has to be audio; you cannot put a photograph in a speaker.
 
 So when you say "replace this file with that one," the honest answer is often: **that works for three of its five places and not the other two.**
 
@@ -49,7 +49,7 @@ But look at where it leaves you.
 
 Your file is now **half-swapped**. Three places have the new photo, two have the old one. That state is not something you asked for and not something anyone designed. It is a leftover.
 
-To understand what you now own, you have to read a summary and reconstruct the state of your own content from it. Not look at your tours — read a report *about* your tours and build a mental model. And you have to do that immediately, while you still have the report, because the moment you close it the information is gone and the only way to recover it is to inspect every scene by hand.
+To understand what you now own, you have to read a summary and reconstruct the state of your own content from it. Not look at your tours, but read a report *about* your tours and build a mental model. And you have to do that immediately, while you still have the report, because the moment you close it the information is gone and the only way to recover it is to inspect every scene by hand.
 
 Then it gets worse, because you will probably want to retry the two that failed. And a retry now has to reason about a situation nobody thought about: a file that is partly replaced, where some of the places you're about to touch are already holding the new thing and some are holding the old thing. Every subsequent operation inherits that mess.
 
@@ -58,7 +58,7 @@ Refusing gives you exactly two possible outcomes:
 - Nothing changed.
 - Everything you picked changed.
 
-Each of those is describable in one sentence, needs no report to understand, and leaves nothing for the next action to reason around. You may have to do the job twice — once for the images, once for the audio — but at no point do you have to hold a partial state in your head.
+Each of those is describable in one sentence, needs no report to understand, and leaves nothing for the next action to reason around. You may have to do the job twice (once for the images, once for the audio), but at no point do you have to hold a partial state in your head.
 
 That is the trade. The friendlier-sounding option buys you fewer clicks and sells you an unknown state. I'll take the clicks.
 
@@ -82,11 +82,11 @@ if (allowed.length !== parsed.data.selections.length) {
 
 The whole point of that block is the middle of it: build the list of what was rejected, so it can be handed back with the refusal.
 
-"3 slots failed" is a sentence that sends a person hunting. They now have to go and find three things among however many they selected, with no clue which. It is technically true and practically useless — it converts a precise piece of knowledge the program already had into a scavenger hunt for the human.
+"3 slots failed" is a sentence that sends a person hunting. They now have to go and find three things among however many they selected, with no clue which. It is technically true and practically useless: it converts a precise piece of knowledge the program already had into a scavenger hunt for the human.
 
 The program knows. It knew the moment it did the check. Throwing that away and replacing it with a number is a small act of vandalism that costs the user real minutes.
 
-The rule I'd generalise: **if your system knows a specific thing and reports a count instead, you have deliberately made the message worse.** Counts are for dashboards. People fixing a problem need names.
+The rule I'd generalize: **if your system knows a specific thing and reports a count instead, you have deliberately made the message worse.** Counts are for dashboards. People fixing a problem need names.
 
 ## The bit I want to be honest about
 
@@ -98,7 +98,7 @@ Refusing is not the app being difficult. It's the app declining to leave you hol
 
 ## What I'd take from this
 
-**Count the outcomes your feature can produce.** Not the happy path — all of them. "Apply what fits" has as many outcomes as there are combinations of successes and failures. "Refuse upfront" has two. That number is a design property you can measure before writing a line, and it predicts almost everything about how hard the feature will be to explain, support, and build on.
+**Count the outcomes your feature can produce.** Not the happy path. All of them. "Apply what fits" has as many outcomes as there are combinations of successes and failures. "Refuse upfront" has two. That number is a design property you can measure before writing a line, and it predicts almost everything about how hard the feature will be to explain, support, and build on.
 
 **A summary is not a substitute for a simple state.** If your error handling requires the user to read a report to know what they now have, the problem is the state, not the report.
 
