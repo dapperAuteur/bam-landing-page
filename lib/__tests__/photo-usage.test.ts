@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { describePhotoUsage, diffPhotoUsage, photoIdsForPost } from '../photos/usage'
+import { computePhotoUsage, describePhotoUsage, libraryPhotoIdsInPost, photoIdsForPost } from '../photos/usage'
 
 describe('photoIdsForPost', () => {
   it('collects the featured image id and the inline photo ids', () => {
@@ -46,21 +46,65 @@ describe('photoIdsForPost', () => {
   })
 })
 
-describe('diffPhotoUsage', () => {
-  it('reports added and removed ids', () => {
-    expect(diffPhotoUsage(['a', 'b'], ['b', 'c'])).toEqual({ added: ['c'], removed: ['a'] })
+const LIB = [
+  { id: 'p1', originalUrl: 'https://res.cloudinary.com/demo/image/upload/v1/one.jpg', cloudinaryId: 'lib/one' },
+  { id: 'p2', originalUrl: 'https://res.cloudinary.com/demo/image/upload/v1/two.jpg', cloudinaryId: 'lib/two' },
+  { id: 'p3' }, // no URL: can only be found by id
+]
+
+describe('libraryPhotoIdsInPost', () => {
+  it('finds a photo inserted in the body by URL, as the editor does', () => {
+    const content = `Intro\n\n![a runner](${LIB[0].originalUrl})\n`
+    expect(libraryPhotoIdsInPost({ content }, LIB)).toEqual(['p1'])
   })
 
-  it('reports nothing when the references are unchanged, regardless of order', () => {
-    expect(diffPhotoUsage(['a', 'b'], ['b', 'a'])).toEqual({ added: [], removed: [] })
+  it('finds every photo in a carousel', () => {
+    const content = `<Carousel images={[\n  { url: "${LIB[0].originalUrl}", alt: "" },\n  { url: "${LIB[1].originalUrl}", alt: "" }\n]} />`
+    expect(libraryPhotoIdsInPost({ content }, LIB)).toEqual(['p1', 'p2'])
   })
 
-  it('treats a first-time reference as purely additive', () => {
-    expect(diffPhotoUsage([], ['a'])).toEqual({ added: ['a'], removed: [] })
+  it('finds an id-less hero by its URL, in both the object and bare-string shapes', () => {
+    expect(libraryPhotoIdsInPost({ featuredImage: { url: LIB[1].originalUrl } }, LIB)).toEqual(['p2'])
+    expect(libraryPhotoIdsInPost({ featuredImage: LIB[1].originalUrl }, LIB)).toEqual(['p2'])
   })
 
-  it('releases every photo when a post drops its images', () => {
-    expect(diffPhotoUsage(['a', 'b'], [])).toEqual({ added: [], removed: ['a', 'b'] })
+  it('keeps named ids first and does not count a photo twice', () => {
+    expect(
+      libraryPhotoIdsInPost({ featuredImage: { id: 'p1', url: LIB[0].originalUrl }, content: LIB[0].originalUrl }, LIB),
+    ).toEqual(['p1'])
+  })
+
+  it('finds nothing in a post with no library photos', () => {
+    expect(libraryPhotoIdsInPost({ content: 'no images', featuredImage: null }, LIB)).toEqual([])
+    expect(libraryPhotoIdsInPost(null, LIB)).toEqual([])
+  })
+})
+
+describe('computePhotoUsage', () => {
+  it('lists posts by slug and galleries by id, matching gallery media by id or by file', () => {
+    const usage = computePhotoUsage(
+      LIB,
+      [
+        { slug: 'hero-post', featuredImage: { id: 'p1' } },
+        { slug: 'body-post', content: LIB[0].originalUrl },
+        { slug: 'other', content: 'nothing' },
+        { content: LIB[1].originalUrl }, // no slug: cannot be named, so not counted
+      ],
+      [
+        { galleryId: 'g-by-id', photos: [{ id: 'p2' }] },
+        { galleryId: 'g-by-file', photos: [{ id: 'gallery-own-id', cloudinaryId: 'lib/two' }] },
+        { galleryId: 'g-unrelated', photos: [{ id: 'x', cloudinaryId: 'galleries/x' }] },
+        { galleryId: 'g-empty' },
+      ],
+    )
+    expect(usage.get('p1')).toEqual({ blogs: ['hero-post', 'body-post'], galleries: [] })
+    expect(usage.get('p2')).toEqual({ blogs: [], galleries: ['g-by-id', 'g-by-file'] })
+    expect(usage.get('p3')).toEqual({ blogs: [], galleries: [] })
+  })
+
+  it('does not match a gallery item to a URL-less, file-less photo by an undefined file', () => {
+    const usage = computePhotoUsage([{ id: 'p3' }], [], [{ galleryId: 'g', photos: [{ id: 'other' }] }])
+    expect(usage.get('p3')).toEqual({ blogs: [], galleries: [] })
   })
 })
 

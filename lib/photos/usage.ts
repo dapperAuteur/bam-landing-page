@@ -1,28 +1,33 @@
-// Photo-usage tracking for the central photo library.
+// Photo-usage rules for the central photo library. Pure and import-safe (no
+// mongodb import), so the admin library page can use `describePhotoUsage` in
+// the browser; the database half lives in `lib/photos/references.ts`.
 //
-// `types/photo.ts` promises that a Photo records where it is referenced
-// ("for safe deletes / reuse tracking"), and the gallery route has always kept
-// `usedIn.galleries` current. The blog half was never written: a post could
-// carry a library photo as its hero for a year and the photo still claimed it
-// was used nowhere, so deleting it destroyed Cloudinary's copy and left a
-// broken hero on a live post with no warning. This module is that missing half.
+// `types/photo.ts` promises that a Photo records where it is referenced, and
+// the gallery route has always kept `usedIn.galleries` current. The blog half
+// was never written. These rules decide which library photos a post shows, so
+// `usedIn.blogs` can be kept and rebuilt.
 //
 // Values stored in `usedIn.blogs` are post SLUGS, not ids, so the admin UI can
-// name the posts blocking a delete without a second lookup. Slugs are editable,
-// so `renamePostInPhotoUsage` keeps them honest when a post is renamed.
-//
-// The pure half (which ids a post uses, what changed, how to describe it) is
-// separated from the Mongo half so the back-compat rules are unit-tested
-// without a database.
+// name the posts without a second lookup.
 
-import { ObjectId } from 'mongodb'
-import type { Db } from 'mongodb'
-import { COLLECTIONS } from '@/lib/db/collections'
-
-/** The parts of a blog post that can reference library photos. */
+/** The parts of a blog post that can show library photos. */
 export interface PhotoReferencingPost {
   featuredImage?: unknown
   photoIds?: unknown
+  content?: unknown
+}
+
+/** A library photo, reduced to what identifies it inside a post or gallery. */
+export interface LibraryPhotoRef {
+  id: string
+  originalUrl?: string
+  cloudinaryId?: string
+}
+
+/** A gallery, reduced to the embedded media that can point at the library. */
+export interface GalleryRef {
+  galleryId: string
+  photos?: unknown
 }
 
 export interface PhotoUsage {
@@ -36,7 +41,7 @@ function isNonEmptyString(value: unknown): value is string {
 }
 
 /**
- * Every library photo id a post references, deduped, in first-seen order.
+ * Every library photo id a post names directly, deduped, in first-seen order.
  *
  * Deliberately defensive about shape. Posts predate the library in three ways
  * that all still exist in the collection, and none of them may throw here:
@@ -44,8 +49,8 @@ function isNonEmptyString(value: unknown): value is string {
  *   - a `featuredImage` that is a bare URL string from before it became an
  *     object, or an object holding only `url`/`alt` with no library `id`,
  *   - no `photoIds` array.
- * All three simply contribute nothing. Only a photo genuinely drawn from the
- * library — which is the only way an `id` gets written — is tracked.
+ * All three simply contribute nothing here; `libraryPhotoIdsInPost` catches
+ * the URL-only shapes.
  */
 export function photoIdsForPost(post: PhotoReferencingPost | null | undefined): string[] {
   if (!post) return []
@@ -67,24 +72,83 @@ export function photoIdsForPost(post: PhotoReferencingPost | null | undefined): 
   return Array.from(new Set(ids))
 }
 
-/** What changed between two reference lists. Order-insensitive. */
-export function diffPhotoUsage(
-  previous: string[],
-  next: string[],
-): { added: string[]; removed: string[] } {
-  const before = new Set(previous)
-  const after = new Set(next)
-  return {
-    added: Array.from(after).filter(id => !before.has(id)),
-    removed: Array.from(before).filter(id => !after.has(id)),
+function featuredUrl(featured: unknown): string | null {
+  if (isNonEmptyString(featured)) return featured
+  if (featured && typeof featured === 'object' && 'url' in featured) {
+    const url = (featured as { url?: unknown }).url
+    if (isNonEmptyString(url)) return url
   }
+  return null
 }
 
 /**
- * Human-readable answer to "is anything using this photo?", used by the delete
- * guard and the admin library card. Counts galleries and posts separately
- * because they break differently: a gallery is private to one client, a blog
- * post is public.
+ * Every library photo a post shows: the ids it names, plus any library photo
+ * whose `originalUrl` is its hero URL or appears in its body. The editor
+ * inserts single photos and carousels by `originalUrl` and never fills
+ * `photoIds`, so the body match is what finds inline photos.
+ *
+ * Same rules as the live check in `findPhotoReferences`, so the cached count
+ * and the delete guard agree.
+ */
+export function libraryPhotoIdsInPost(
+  post: PhotoReferencingPost | null | undefined,
+  library: LibraryPhotoRef[],
+): string[] {
+  if (!post) return []
+  const ids = photoIdsForPost(post)
+  const hero = featuredUrl(post.featuredImage)
+  const content = typeof post.content === 'string' ? post.content : ''
+
+  for (const photo of library) {
+    if (!isNonEmptyString(photo.originalUrl)) continue
+    if (photo.originalUrl === hero || content.includes(photo.originalUrl)) ids.push(photo.id)
+  }
+
+  return Array.from(new Set(ids))
+}
+
+/** True when a gallery's embedded media includes this library photo. */
+function galleryHasPhoto(gallery: GalleryRef, photo: LibraryPhotoRef): boolean {
+  if (!Array.isArray(gallery.photos)) return false
+  return gallery.photos.some(item => {
+    if (!item || typeof item !== 'object') return false
+    const { id, cloudinaryId } = item as { id?: unknown; cloudinaryId?: unknown }
+    return id === photo.id || (isNonEmptyString(photo.cloudinaryId) && cloudinaryId === photo.cloudinaryId)
+  })
+}
+
+/**
+ * Recompute `usedIn.blogs` and `usedIn.galleries` for every library photo from
+ * the posts and galleries themselves. Keyed by photo id; every photo gets an
+ * entry, so a photo nothing uses comes back with two empty lists.
+ */
+export function computePhotoUsage(
+  library: LibraryPhotoRef[],
+  posts: (PhotoReferencingPost & { slug?: unknown })[],
+  galleries: GalleryRef[],
+): Map<string, { blogs: string[]; galleries: string[] }> {
+  const usage = new Map<string, { blogs: string[]; galleries: string[] }>()
+  for (const photo of library) usage.set(photo.id, { blogs: [], galleries: [] })
+
+  for (const post of posts) {
+    if (!isNonEmptyString(post.slug)) continue
+    for (const id of libraryPhotoIdsInPost(post, library)) usage.get(id)?.blogs.push(post.slug)
+  }
+
+  for (const photo of library) {
+    const entry = usage.get(photo.id)!
+    for (const gallery of galleries) {
+      if (galleryHasPhoto(gallery, photo)) entry.galleries.push(gallery.galleryId)
+    }
+  }
+
+  return usage
+}
+
+/**
+ * Human-readable answer to "is anything using this photo?", for the admin
+ * library card. Counts galleries and posts separately because they break
+ * differently: a gallery is private to one client, a blog post is public.
  */
 export function describePhotoUsage(usedIn: PhotoUsage | null | undefined): {
   galleries: string[]
@@ -109,99 +173,4 @@ export function describePhotoUsage(usedIn: PhotoUsage | null | undefined): {
     total: blogs.length + galleries.length,
     summary: parts.length === 0 ? 'Not used anywhere' : `Used in ${parts.join(', ')}`,
   }
-}
-
-/**
- * The photos collection as STORED, limited to the fields this module touches.
- * It is deliberately not `types/photo.ts`'s `Photo`: the stored document has
- * Mongo's `_id`, while `Photo.id` is the string the API projects for clients.
- *
- * Naming the schema is also what makes `$pull: { 'usedIn.blogs': slug }`
- * typecheck. On an untyped `Collection<Document>` the driver's `PullOperator`
- * treats every key as an array field and demands an array-or-operator value,
- * so passing a bare string fails — which is the exact spot the abandoned 2025
- * photo branch reached for `as any`. With a real schema, `usedIn` is a known
- * object, the dotted path falls through to the operator's index signature, and
- * the scalar is accepted on its own merits.
- */
-export interface PhotoUsageDocument {
-  _id: ObjectId
-  usedIn: {
-    galleries: string[]
-    blogs: string[]
-    portfolio: boolean
-  }
-  updatedAt: Date
-}
-
-/** Ids that can address a document in the photos collection. */
-function toObjectIds(ids: string[]): ObjectId[] {
-  return ids.filter(id => ObjectId.isValid(id)).map(id => new ObjectId(id))
-}
-
-/**
- * Bring `usedIn.blogs` in line with what the post now references.
- *
- * Additive and subtractive in one call so removing a hero image releases the
- * photo for deletion instead of leaving a phantom reference forever. Safe to
- * call when nothing changed — it issues no writes.
- */
-export async function syncPostPhotoUsage(
-  db: Db,
-  slug: string,
-  previousIds: string[],
-  nextIds: string[],
-): Promise<void> {
-  if (!isNonEmptyString(slug)) return
-  const { added, removed } = diffPhotoUsage(previousIds, nextIds)
-  const photos = db.collection<PhotoUsageDocument>(COLLECTIONS.photos)
-  const now = new Date()
-
-  const addIds = toObjectIds(added)
-  if (addIds.length > 0) {
-    await photos.updateMany(
-      { _id: { $in: addIds } },
-      { $addToSet: { 'usedIn.blogs': slug }, $set: { updatedAt: now } },
-    )
-  }
-
-  const removeIds = toObjectIds(removed)
-  if (removeIds.length > 0) {
-    await photos.updateMany(
-      { _id: { $in: removeIds } },
-      { $pull: { 'usedIn.blogs': slug }, $set: { updatedAt: now } },
-    )
-  }
-}
-
-/** Drop a post from every photo that lists it (post deleted). */
-export async function releasePostPhotoUsage(db: Db, slug: string): Promise<void> {
-  if (!isNonEmptyString(slug)) return
-  await db.collection<PhotoUsageDocument>(COLLECTIONS.photos).updateMany(
-    { 'usedIn.blogs': slug },
-    { $pull: { 'usedIn.blogs': slug }, $set: { updatedAt: new Date() } },
-  )
-}
-
-/**
- * Follow a slug change. Usage is keyed by slug for readability, so a rename
- * would otherwise strand every photo on the old name and make the delete guard
- * cite a post that no longer exists.
- */
-export async function renamePostInPhotoUsage(
-  db: Db,
-  oldSlug: string,
-  newSlug: string,
-): Promise<void> {
-  if (!isNonEmptyString(oldSlug) || !isNonEmptyString(newSlug) || oldSlug === newSlug) return
-  const photos = db.collection<PhotoUsageDocument>(COLLECTIONS.photos)
-  const now = new Date()
-  await photos.updateMany(
-    { 'usedIn.blogs': oldSlug },
-    { $addToSet: { 'usedIn.blogs': newSlug }, $set: { updatedAt: now } },
-  )
-  await photos.updateMany(
-    { 'usedIn.blogs': oldSlug },
-    { $pull: { 'usedIn.blogs': oldSlug }, $set: { updatedAt: now } },
-  )
 }
