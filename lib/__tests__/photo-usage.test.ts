@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { computePhotoUsage, describePhotoUsage, libraryPhotoIdsInPost, photoIdsForPost } from '../photos/usage'
+import {
+  computePhotoUsage,
+  describePhotoUsage,
+  libraryPhotoIdsInPost,
+  photoIdsForPost,
+  redactPhotoUsage,
+} from '../photos/usage'
 
 describe('photoIdsForPost', () => {
   it('collects the featured image id and the inline photo ids', () => {
@@ -136,5 +142,16 @@ describe('describePhotoUsage', () => {
     expect(describePhotoUsage(undefined).total).toBe(0)
     expect(describePhotoUsage(null).summary).toBe('Not used anywhere')
     expect(describePhotoUsage({}).total).toBe(0)
+  })
+})
+
+describe('redactPhotoUsage', () => {
+  it('keeps only the portfolio flag, hiding draft slugs and client gallery ids', () => {
+    const photo = { id: 'p1', title: 'x', usedIn: { blogs: ['held-back-draft'], galleries: ['client-g'], portfolio: true } }
+    expect(redactPhotoUsage(photo)).toEqual({ id: 'p1', title: 'x', usedIn: { portfolio: true } })
+  })
+
+  it('handles a photo saved before usedIn existed', () => {
+    expect(redactPhotoUsage({ id: 'p1' })).toEqual({ id: 'p1', usedIn: { portfolio: false } })
   })
 })
