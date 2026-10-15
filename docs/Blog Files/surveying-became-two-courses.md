@@ -24,7 +24,7 @@ The federal *Manual of Surveying Instructions* puts both halves on the page. Bef
 
 I took the alternative anyway. The same brief had found that each half had enough verified material to stand alone, and the halves belong on different shelves.
 
-- **Surveying: How Land Gets Measured** (Science & Math; 17 lessons, 446 quiz questions) is the tools: pacing, Gunter's chain, the surveyor's compass, the level, and area worked out from chains, from the coordinates of the corners, and with a polar planimeter.
+- **Surveying: How Land Gets Measured** (Science & Math; 17 lessons, 448 quiz questions) is the tools: pacing, Gunter's chain, the surveyor's compass, the level, and area worked out from chains, from the coordinates of the corners, and with a polar planimeter.
 - **Reading a Land Description: The Grid, the Deed and Indiana** (Civics, also Science & Math and Money & Property; 13 lessons, 360 quiz questions) is what those tools produced: the Land Ordinance of 1785 read as a primary source, townships, ranges and aliquot parts such as SW1/4NE1/4, metes and bounds, the deed, and Indiana's own survey.
 
 The brief's warning shaped how they connect. The tools course teaches the errors that creep into a chained line, and its description says the law that grew around the old corners is in the companion course. The land-description course teaches that the corners stand anyway, and sends learners back to the tools course for the compass exercise below. Each course gives the other its reason.
@@ -62,6 +62,8 @@ Both courses are public, free and held as "Coming soon."
 The tools course waits for a licensed land surveyor, still to be named, to read its two marked lessons: what the course will not make you, with what makes a survey legal, and the federal law protecting survey marks. It also waits for me to film ten demonstrations with a chain, a compass, a level and a planimeter.
 
 The land-description course waits for the same surveyor on six lessons, with authority to change or cut them. Three of those six also wait for a Native reviewer, still to be named, with the same authority: the lessons on the Land Ordinance of 1785, the 1775 purchase from eleven Piankeshaw chiefs of land bounded in leagues along the Wabash, and how Indiana was surveyed. They teach that the grid followed treaty cessions. The Manual describes the 1804 act for the Indiana Territory as "an early example of the policy to extinguish Indian title to the public domain, followed by the extension of the surveys and settlement" (BLM, 2009, sec. 1-20(n), p. 21). A course that teaches that sentence should not be released on my reading of it alone. The course also waits for me to film a visit to a county surveyor's office.
+
+Those three lessons now carry two holds instead of one line naming both reviewers. The agent drafting these posts caught why one line was not enough: my sign-off system keeps one verdict per kind of reviewer per lesson, so the surveyor signing off would have cleared the Native reviewer's hold too. The Native read is now a separate hold that no reviewer's verdict can clear. I remove it myself, once the Native reviewer has read the lesson.
 
 Neither reviewer is named yet. Until they are, the lessons keep their markers and the courses stay held. The mechanics of a reviewer's sign-off are in [an earlier post](/blog/reviewer-name-on-what-they-read), and the same rule holds three crew courses back in [The Crew Behind the Show](/blog/the-crew-behind-the-show).
 

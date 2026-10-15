@@ -61,6 +61,12 @@ Two more. A fixed sentence about Napier's notes said Macdonald's 1889 English tr
 
 None of those would have failed a test. Each would have taught something slightly false.
 
+## Then the prompts
+
+One kind of problem got past all three stages. The checkers were told to look for an option that gives away another question's answer, and they did. Nobody was told to read the prompts that way. A review before merging found that many of them did exactly that. One question asks for the rule for multiplying; the next one's prompt used to spell out the setting: "With the left index of C over 2 on D, what do you read on D under 4 on C?" A learner working down the bank could answer one question by reading the next.
+
+I asked for a fix before merge. A pass aimed at that one problem reworded 65 prompts across four banks, and in 13 questions changed the options too, because the leak sat there. This was the last cheap moment to do it. My platform keys each learner's history to the exact wording of a prompt, so once a course is seeded, rewording a prompt resets that question's history for everyone who answered it. Before seeding, nobody had.
+
 ## What is still open
 
 Six research checks are filed, one for each hedge the course carries:

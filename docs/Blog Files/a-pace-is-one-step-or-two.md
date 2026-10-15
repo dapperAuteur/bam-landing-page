@@ -14,7 +14,7 @@ Series:  Tools That Think (2 of 4)
 
 # A Pace Is One Step or Two. My Compass Course Teaches Both.
 
-Map and Compass: Finding Your Way on Land is the first course in [Tools That Think](/blog/tools-that-think), my series on analog tools with math built into them. It has 36 lessons in eight sections and 699 quiz questions. It is written, and it is not released.
+Map and Compass: Finding Your Way on Land is the first course in [Tools That Think](/blog/tools-that-think), my series on analog tools with math built into them. It has 36 lessons in eight sections and 700 quiz questions. It is written, and it is not released.
 
 This is about the two documents it is built from, the places they disagree, and the four places near Indianapolis it tells you to practice.
 
@@ -48,20 +48,20 @@ The declination diagram is the third. The Army builds its diagram around the ang
 
 Maps age and magnetic north moves, so every figure in the course that can go stale carries its date.
 
-The Hindustan quad, which covers Morgan-Monroe State Forest, prints a declination of 4°28' west, labeled for 2019. The course's own calculation from the current World Magnetic Model gives about 4°47' west for the center of that sheet on October 14, 2026. That figure is the course's estimate, not NOAA's, so it is filed as a research check to be confirmed on NOAA's online calculator, and the lesson tells learners to use the calculator on the day they walk.
+The Hindustan quad, which covers Morgan-Monroe State Forest, prints a declination of 4°28' west, labeled for 2019. The course's own calculation from the current World Magnetic Model gives about 4°47' west for the center of that sheet on October 14, 2026. That was the course's own estimate, so it went on the list of facts to confirm. The fact-check confirmed it: NOAA's online calculator, on its current model, gives 4.78 degrees west for that sheet and that day, which is 4°47', give or take 0.37 degrees (National Centers for Environmental Information [NCEI], n.d.). The check is closed, and the lesson still tells learners to use the calculator on the day they walk.
 
 ## Four places to practice near Indianapolis
 
 I asked for real public land near home, with the rules that apply at each. Lesson 3 names four, nearest first, each on a free US Topo map, with the rules quoted from each manager's own page or map as read on October 14, 2026.
 
-- **Fort Harrison State Park,** on the Indianapolis East quad. The trail map says "For safety, please stay on marked trails," and its two nature preserves are "Closed to the public" (Indiana Department of Natural Resources [DNR], 2026). Good for reading the map against the ground, pace counts on a measured stretch and bearings to landmarks. Not for leaving the trail.
+- **Fort Harrison State Park,** on the Indianapolis East quad, though its northern edge runs off the top of the sheet. The trail map says "For safety, please stay on marked trails," and two of its four nature preserves are "Closed to the public" (Indiana Department of Natural Resources [DNR], 2026). Good for reading the map against the ground, pace counts on a measured stretch and bearings to landmarks. Not for leaving the trail.
 - **Morgan-Monroe State Forest,** on the Hindustan quad. The forest built a compass course, the Pathfinder Orienteering Trail, and lists it as closed after an EF-2 tornado hit the forest on June 18, 2026. The clear way to be there after dark is as a registered backcountry camper: "All campers must register" (DNR, n.d.).
 - **Yellowwood State Forest,** on the Belmont quad. The forest's web page and its property map disagree about camping along the Tecumseh Trail, so the lesson quotes both and tells you to ask the forest office which one governs.
 - **The Charles C. Deam Wilderness** in the Hoosier National Forest, on the Elkinsville quad.
 
 ## The one place that expects you off the trail after dark
 
-Of the four, only the Deam Wilderness has posted rules that expect a walker off the trail and out overnight. "Horse riders must stay on designated trails," and nothing like that is said of walkers. Camping is prohibited "within 200 feet of trails, trailheads, roads, water sources, rock shelters, caves, and historic structures, unless in a Forest Service designated campsite." "Group size is limited to 10 persons or less." And the page carries the warning a navigation course is built around: "Please get a map before visiting this area, as the boundaries are not clearly marked" (USDA Forest Service, n.d.).
+Of the four, only the Deam Wilderness has posted rules that expect a walker off the trail and out overnight. "Horse riders must stay on designated trails," and nothing like that is said of walkers. The national forest's general rules say it outright: "Hikers may hike anywhere except where an area is posted closed" (USDA Forest Service, n.d.-b). Camping is prohibited "within 200 feet of trails, trailheads, roads, water sources, rock shelters, caves, and historic structures, unless in a Forest Service designated campsite." "Group size is limited to 10 persons or less." And the page carries the warning a navigation course is built around: "Please get a map before visiting this area, as the boundaries are not clearly marked" (USDA Forest Service, n.d.-a).
 
 That matters because night navigation and difficult terrain were not in the first draft. The brief named them and taught neither. I brought both in, and lessons 30 and 31 point to the Deam. The night lesson keeps the Army's methods: work out every bearing in daylight, expect shorter steps and a different pace count, keep steering marks close together. It adds the civilian question first. Are you allowed to be there at all?
 
@@ -89,6 +89,10 @@ Indiana Department of Natural Resources. (2026, January). *Fort Harrison State P
 
 Indiana Department of Natural Resources. (n.d.). *Morgan-Monroe State Forest*. Retrieved October 15, 2026, from https://www.in.gov/dnr/forestry/properties/morgan-monroe-state-forest/
 
+National Centers for Environmental Information. (n.d.). *NCEI geomagnetic calculators* [Online calculator]. National Oceanic and Atmospheric Administration. Retrieved October 15, 2026, from https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml
+
 National Wildfire Coordinating Group. (2016). *Basic land navigation* (PMS 475). https://www.nwcg.gov/sites/default/files/publications/pms475.pdf
 
-USDA Forest Service. (n.d.). *Charles C. Deam Wilderness*. Hoosier National Forest. Retrieved October 15, 2026, from https://www.fs.usda.gov/r09/hoosier/recreation/charles-c-deam-wilderness
+USDA Forest Service. (n.d.-a). *Charles C. Deam Wilderness*. Hoosier National Forest. Retrieved October 15, 2026, from https://www.fs.usda.gov/r09/hoosier/recreation/charles-c-deam-wilderness
+
+USDA Forest Service. (n.d.-b). *Rules and regulations*. Hoosier National Forest. Retrieved October 15, 2026, from https://www.fs.usda.gov/r09/hoosier/about-area/rules-and-regulations

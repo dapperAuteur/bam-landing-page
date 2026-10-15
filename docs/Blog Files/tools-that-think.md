@@ -50,14 +50,14 @@ My answers changed the courses. I asked each one for a lesson on what to look fo
 
 | # | Course | Shelf | Lessons | Quiz questions | Held for |
 |---|---|---|---|---|---|
-| 01 | Map and Compass: Finding Your Way on Land | Survival | 36 | 699 | a qualified reviewer (8 lessons) and my demonstrations (17) |
+| 01 | Map and Compass: Finding Your Way on Land | Survival | 36 | 700 | a qualified reviewer (8 lessons) and my demonstrations (17) |
 | 02 | The Slide Rule | Science & Math | 25 | 605 | my demonstrations (12) |
-| 03 | Surveying: How Land Gets Measured | Science & Math | 17 | 446 | a licensed land surveyor (2) and my demonstrations (10) |
+| 03 | Surveying: How Land Gets Measured | Science & Math | 17 | 448 | a licensed land surveyor (2) and my demonstrations (10) |
 | 04 | Reading a Land Description: The Grid, the Deed and Indiana | Civics | 13 | 360 | a licensed land surveyor (6), a Native reviewer (3 of those 6) and my filmed visit to a county surveyor (1) |
 
-All four are public and free, and all four show "Coming soon" until their holds clear. Every lesson that needs someone says so at the top, in a box that begins "Before release." The courses sit on branches in the LMS repo, waiting to be bundled, and merging them still releases nothing.
+All four are public and free, and all four show "Coming soon" until their holds clear. Every lesson that needs someone says so at the top, in a box that begins "Before release." The courses are merged and seeded in the LMS now, and that released nothing: a held course stays out of the learner's catalog until its holds clear.
 
-The slide rule is the only one with no reviewer in its hold. It is mathematics and history, every worked example comes from public-domain sources or plain arithmetic, and it has already been through a full verification pass. The other three teach things where a mistake costs more. A wrong bearing or declination sign can strand a walker. A misread deed can put up a fence in the wrong place or start a dispute.
+The slide rule is the only one with no reviewer in its hold. It is mathematics and history, every worked example comes from public-domain sources or plain arithmetic, and it has been through the same full verification pass as the other three. Those three teach things where a mistake costs more. A wrong bearing or declination sign can strand a walker. A misread deed can put up a fence in the wrong place or start a dispute.
 
 ## What comes next
 
