@@ -11,7 +11,7 @@ Tags:    Security, Passkeys, WebAuthn, Authentication, Engineering Judgment, Beg
 
 # Changing My Web Address Will Break Every Passkey. There Is No Fix.
 
-I'm moving an app to a new web address. Same app, same database, same accounts — new name over the door.
+I'm moving an app to a new web address. Same app, same database, same accounts. New name over the door.
 
 When it happens, every passkey anyone has set up for it will stop working. Permanently. There is no migration, no compatibility mode, no clever workaround. Everyone with a passkey re-registers from scratch.
 
@@ -38,9 +38,9 @@ Now the important bit.
 
 When your device creates that key pair, it stamps the website's address onto it. Permanently. Baked in.
 
-Then — and this is the whole security property — your device will only ever offer that key back to **that exact address**.
+Then, and this is the whole security property, your device will only ever offer that key back to **that exact address**.
 
-That is what makes phishing impossible. If a scammer sets up a lookalike site at a nearly identical address, your device looks at the address, doesn't recognise it, and simply has nothing to offer. It doesn't warn you. It doesn't ask you to be careful. There's nothing to be careful about — the key for the real site is invisible to the fake one. Your device refuses on your behalf, before you get a chance to make a mistake.
+That is what makes phishing impossible. If a scammer sets up a lookalike site at a nearly identical address, your device looks at the address, doesn't recognize it, and simply has nothing to offer. It doesn't warn you. It doesn't ask you to be careful. There's nothing to be careful about: the key for the real site is invisible to the fake one. Your device refuses on your behalf, before you get a chance to make a mistake.
 
 Now read that again from my side.
 
@@ -72,11 +72,11 @@ Stamping with the parent means the key becomes usable by **any** address under t
 
 And my ecosystem is heading somewhere specific: I'm building products where *customers* get their own addresses under my family name. A hotel's booking site. A shop's storefront. That's the business model.
 
-Which means the moment I hand out a customer address under that parent, I have also handed that address the ability to ask for passkeys belonging to my *other* apps. A customer's site — or anyone who ever compromises one — could request a sign-in for an account on a completely different product.
+Which means the moment I hand out a customer address under that parent, I have also handed that address the ability to ask for passkeys belonging to my *other* apps. A customer's site, or anyone who ever compromises one, could request a sign-in for an account on a completely different product.
 
 I would have built a shortcut for myself and left a door open for everyone downstream of me.
 
-So the keys stay stamped to the specific app address. Today's passkeys break once. If I move again, they break again. That is the correct trade, because the alternative isn't "no pain" — it's "pain moved somewhere I can't see it, landing on someone else."
+So the keys stay stamped to the specific app address. Today's passkeys break once. If I move again, they break again. That is the correct trade, because the alternative isn't "no pain"; it's "pain moved somewhere I can't see it, landing on someone else."
 
 If I do want passkeys that work across the whole ecosystem later, the right way is to put them at the single sign-in service that all my apps already trust, rather than scattering broadly-scoped keys across every product.
 
@@ -84,7 +84,7 @@ If I do want passkeys that work across the whole ecosystem later, the right way 
 
 Same move, smaller consequence, worth knowing.
 
-When you sign in, my server gives your browser a small note — a cookie — that says "this person is signed in." Your browser hands it back on every visit so you don't re-authenticate constantly.
+When you sign in, my server gives your browser a small note (a cookie) that says "this person is signed in." Your browser hands it back on every visit so you don't re-authenticate constantly.
 
 Cookies are also address-scoped, for the same reason. A cookie issued by one address is not sent to another. Otherwise any website could read any other website's session and impersonate you everywhere.
 

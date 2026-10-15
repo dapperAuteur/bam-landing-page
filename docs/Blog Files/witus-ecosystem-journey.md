@@ -45,7 +45,7 @@ One sign-in service means one class of bug can lock people out of an app they ha
 
 Worth being precise about the blast radius, because the scary version of this sentence is not the true one. That particular bug is per-app: the identity provider stayed up, and only the product whose registry entry was missing or mismatched refused to sign anyone in. The other apps were fine. What made it bad was not width, it was that the affected app had no fallback login at all, because I had deliberately removed every other way in.
 
-I wrote that postmortem up separately, including the decision I think most teams get wrong, in [Sign-In Broke Twice in July. The Fix Was a 158-Line Script.](/blog/outage-to-invariant) I will not retell it here. What belongs in this post is the trade it represents. Nineteen apps with their own login screens would never have had that class of outage. They would have had nineteen password reset flows, nineteen session bugs, nineteen places for a security mistake to hide, and a user who could not tell that their coaching app and their invoice app knew the same person. I took the concentrated risk on purpose. The correct response to a concentrated risk is not to un-concentrate it. It is to put a guard on it.
+I wrote that postmortem up separately, including the decision I think most teams get wrong, in [Sign-In Broke Twice in July. The Fix Was a 158-Line Script.](/blog/outage-to-invariant) I will not retell it here. What belongs in this piece is the trade it represents. Nineteen apps with their own login screens would never have had that class of outage. They would have had nineteen password reset flows, nineteen session bugs, nineteen places for a security mistake to hide, and a user who could not tell that their coaching app and their invoice app knew the same person. I took the concentrated risk on purpose. The correct response to a concentrated risk is not to un-concentrate it. It is to put a guard on it.
 
 ## The pattern that repeats: rules become checks
 
@@ -69,7 +69,7 @@ Zero repositories run tests in a pre-commit hook. Zero run tests as part of the 
 
 So almost every guard I just described is only as good as me remembering to run it. The registry check that exists because sign-in broke twice is still not wired to anything automatic. The parent repository, the one that is also the identity provider every other app signs in through, has zero test files and no test runner at all. It has four excellent hand-run scripts.
 
-I am not softening that. It is the most useful paragraph in this post, because it is the one a hiring manager or a client can verify against my repositories. The fix is small and I know exactly what it is: the working CI file in the one repository that has it is about 40 lines, and copying it to the other sixteen repositories that already use the same test runner is an afternoon of work. The gap is not a mystery. It is a queue position.
+I am not softening that. It is the most useful paragraph here, because it is the one a hiring manager or a client can verify against my repositories. The fix is small and I know exactly what it is: the working CI file in the one repository that has it is about 40 lines, and copying it to the other sixteen repositories that already use the same test runner is an afternoon of work. The gap is not a mystery. It is a queue position.
 
 ## What building 21 things alone actually teaches
 

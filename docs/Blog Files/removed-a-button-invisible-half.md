@@ -6,12 +6,12 @@ Excerpt: My Spanish translation is real but unfinished, so I hid the language
          switcher. The button was the easy half. The half that actually
          mattered was a line of code nobody sees, telling Google to send
          Spanish speakers to half-English pages.
-Tags:    Internationalisation, SEO, Accessibility, Engineering Judgment, Beginners, Wanderlust
+Tags:    Internationalization, SEO, Accessibility, Engineering Judgment, Beginners, Wanderlust
 -->
 
 # I Removed One Button. The Half That Mattered Was Invisible.
 
-My app ships in English and Spanish. The Spanish is real — hand-translated by a person, because I have a rule against machine-translating anything a learner reads. But it's incomplete. As I've added features, new text has landed in English first and gone into a queue waiting for a human. The help centre, some of the creator tools, a few explanatory paragraphs.
+My app ships in English and Spanish. The Spanish is real: hand-translated by a person, because I have a rule against machine-translating anything a learner reads. But it's incomplete. As I've added features, new text has landed in English first and gone into a queue waiting for a human. The help center, some of the creator tools, a few explanatory paragraphs.
 
 So the app is in a specific state: mostly translated, visibly not finished.
 
@@ -39,11 +39,11 @@ The visible door would be shut. The invisible one would be wide open and busier.
 
 Think about who arrives through each door.
 
-Through the button: someone already on my site, in English, who chose to switch. They have context. If a paragraph is still in English they'll shrug — they can read the English page they just came from.
+Through the button: someone already on my site, in English, who chose to switch. They have context. If a paragraph is still in English they'll shrug; they can read the English page they just came from.
 
 Through search: someone who has never seen my product, searching in Spanish, landing cold on a page that is *partly in a language they may not read*. That's their entire first impression.
 
-And the audience I care most about for this — museums, cultural institutions, Spanish-speaking partners evaluating whether this is a serious product — is exactly the audience most likely to find me by searching, and least forgiving of looking unfinished.
+And the audience I care most about for this (museums, cultural institutions, Spanish-speaking partners evaluating whether this is a serious product) is exactly the audience most likely to find me by searching, and least forgiving of looking unfinished.
 
 There's a second thing that makes the invisible half worse: **I would never have noticed.** A missing button is a thing you see every time you load your own site. A search engine quietly sending people to a page you'd rather they didn't see produces no signal at all on your end. No error, no complaint, nothing in a log. It would have gone on for months and I'd have concluded Spanish speakers weren't interested.
 
@@ -76,7 +76,7 @@ Spanish still works.
 
 The distinction is: **withdrawn from promotion, not deleted.**
 
-That mattered enough to be explicit about it, because "hide Spanish" could reasonably have meant "turn Spanish off," and turning it off would break links that already exist in the world — including any a partner has already shared. Nobody who has the address loses anything. I've only stopped handing the address to people who don't.
+That mattered enough to be explicit about it, because "hide Spanish" could reasonably have meant "turn Spanish off," and turning it off would break links that already exist in the world, including any a partner has already shared. Nobody who has the address loses anything. I've only stopped handing the address to people who don't.
 
 That's a distinction worth having in general: *not promoting something* and *removing it* look similar from the inside and are completely different from the outside.
 
@@ -89,6 +89,6 @@ The thing I keep coming back to is the gap between what I asked for and what I m
 
 The button was maybe a third of the goal. Doing exactly what I said would have left me confident the job was done, with the larger part of the problem untouched and no way to notice.
 
-I don't think the lesson is "interpret instructions liberally" — that's how scope quietly triples. The lesson is narrower: **when you're asked to hide something, find every route to it, not just the one you were pointed at.** Doors, links, search engines, old bookmarks, sitemaps, anything that got cached. Then decide which ones to close, deliberately, and say which ones you left open and why.
+I don't think the lesson is "interpret instructions liberally." That's how scope quietly triples. The lesson is narrower: **when you're asked to hide something, find every route to it, not just the one you were pointed at.** Doors, links, search engines, old bookmarks, sitemaps, anything that got cached. Then decide which ones to close, deliberately, and say which ones you left open and why.
 
-Half-hidden is a genuinely bad state. It has the cost of hiding — nobody can find the feature — and none of the benefit, because the people you most wanted not to see it still walk straight in.
+Half-hidden is a genuinely bad state. It has the cost of hiding (nobody can find the feature) and none of the benefit, because the people you most wanted not to see it still walk straight in.

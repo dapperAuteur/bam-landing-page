@@ -47,7 +47,7 @@ That turns out to matter for three different people:
 
 - **The new teacher** gets a finish line, instead of an endless list.
 - **The school** can see who has actually been trained, instead of assuming.
-- **Me** — I learn which course people quit, and that tells me which part of my software is confusing. People do not file a complaint about a confusing screen. They just stop.
+- **Me**: I learn which course people quit, and that tells me which part of my software is confusing. People do not file a complaint about a confusing screen. They just stop.
 
 ## What to ask before you buy software
 

@@ -114,15 +114,15 @@ When I looked up what the papers *should* have been, the pattern was unmistakabl
 
 Off by a handful of digits, every time. The model knows the paper exists. It knows roughly where in the numbering space it lives. It cannot retrieve the identifier, so it generates one that looks right.
 
-That is a different problem from invention, and it needs a different defense. You cannot catch it by asking "does this paper exist?" — it does. You can only catch it by asking "does *this identifier* point at *that paper*?" That question requires a round trip to an authority, which is a thing software does and a language model does not.
+That is a different problem from invention, and it needs a different defense. You cannot catch it by asking "does this paper exist?" It does. You can only catch it by asking "does *this identifier* point at *that paper*?" That question requires a round trip to an authority, which is a thing software does and a language model does not.
 
 ## The correction I had to make to my own finding
 
 I published the list above internally and flagged one entry as fully fabricated: a 2021 Keller paper on habit formation that I could not find at all.
 
-Then I asked for the PDF, and it arrived. **Keller, J., Kwasnicka, D., Klaiber, P., Sichert, L., Lally, P., & Fleig, L. (2021).** *British Journal of Health Psychology, 26*(3), 807–824. PMID 33405284. Real paper, good paper, now cited in my course.
+Then I asked for the PDF, and it arrived. **Keller, J., Kwasnicka, D., Klaiber, P., Sichert, L., Lally, P., & Fleig, L. (2021).** *British Journal of Health Psychology, 26*(3), 807 to 824. PMID 33405284. Real paper, good paper, now cited in my course.
 
-My search missed it because I searched the *description* I had been given rather than the author list — and the description was wrong. It had been characterized as a paper about executive-function limits on habit formation. It is actually an 84-day randomized trial (N = 192) that found a median of **59 days** to peak automaticity, **no difference** between routine-based and time-based cues, and **repeated plan enactment** as the thing that predicted automaticity.
+My search missed it because I searched the *description* I had been given rather than the author list, and the description was wrong. It had been characterized as a paper about executive-function limits on habit formation. It is actually an 84-day randomized trial (N = 192) that found a median of **59 days** to peak automaticity, **no difference** between routine-based and time-based cues, and **repeated plan enactment** as the thing that predicted automaticity.
 
 So the verification layer caught a fabricated identifier and then produced a false negative of its own, because I let a wrong description steer a search. Both errors are now in the record. The second one is mine.
 
