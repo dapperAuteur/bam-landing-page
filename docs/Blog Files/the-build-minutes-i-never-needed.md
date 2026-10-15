@@ -39,7 +39,7 @@ Three rules went into the shared instructions every repository carries:
 2. A build machine larger than Standard is a decision, written down, with the build time that justifies it.
 3. Read the usage report before blaming a vendor. The report is one command, and it is right.
 
-The last one is the one I needed. I had a refund email drafted for a database vendor whose plan did not even allow the overage I was describing. The usage report took twelve seconds and ended that story.
+The last one is the one I needed. I had a refund email drafted for a database vendor before I had read a single invoice line. Its charges arrive through the Vercel marketplace, on a separate line the usage report does not even show, and by the time I looked every one of its installations was on the free plan. The usage report took twelve seconds and moved the story to where the money actually was.
 
 ## What it costs now
 
