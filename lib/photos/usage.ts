@@ -189,3 +189,18 @@ export function redactPhotoUsage<T extends object>(photo: T): Omit<T, 'usedIn'> 
   const usedIn = (photo as { usedIn?: PhotoUsage | null }).usedIn
   return { ...photo, usedIn: { portfolio: usedIn?.portfolio === true } }
 }
+
+/**
+ * The Cloudinary files a gallery delete may destroy: its media under its own
+ * folder, minus any a library photo owns. Library photos made from a gallery
+ * upload keep their file in that gallery's folder, and media added "from
+ * library" points outside it; neither may be deleted with the gallery.
+ */
+export function galleryFilesToDelete(photos: unknown, folder: string, libraryOwned: Set<string>): string[] {
+  if (!Array.isArray(photos)) return []
+  const files = photos
+    .map(item => (item && typeof item === 'object' ? (item as { cloudinaryId?: unknown }).cloudinaryId : undefined))
+    .filter(isNonEmptyString)
+    .filter(id => id.startsWith(`${folder}/`) && !libraryOwned.has(id))
+  return Array.from(new Set(files))
+}

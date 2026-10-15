@@ -91,6 +91,19 @@ export async function isLibraryAsset(db: Db, cloudinaryId: string): Promise<bool
 }
 
 /**
+ * Library photos whose Cloudinary file sits under this prefix. Some were made
+ * from gallery uploads and still live in that gallery's folder, so purging the
+ * folder would destroy them. Matches the prefix exactly as the purge would.
+ */
+export async function libraryFilesUnder(db: Db, prefix: string): Promise<Set<string>> {
+  const rows = await db
+    .collection<StoredPhoto>(COLLECTIONS.photos)
+    .find({ cloudinaryId: { $regex: `^${escapeRegex(prefix)}` } }, { projection: { cloudinaryId: 1 } })
+    .toArray()
+  return new Set(rows.map(r => r.cloudinaryId).filter((id): id is string => typeof id === 'string'))
+}
+
+/**
  * Drop a gallery from library photos' `usedIn.galleries`: one photo (by its
  * Cloudinary file) when it is removed from the gallery, or all of them when the
  * gallery is deleted.

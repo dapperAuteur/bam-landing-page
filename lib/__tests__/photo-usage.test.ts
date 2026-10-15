@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   computePhotoUsage,
   describePhotoUsage,
+  galleryFilesToDelete,
   libraryPhotoIdsInPost,
   photoIdsForPost,
   redactPhotoUsage,
@@ -153,5 +154,28 @@ describe('redactPhotoUsage', () => {
 
   it('handles a photo saved before usedIn existed', () => {
     expect(redactPhotoUsage({ id: 'p1' })).toEqual({ id: 'p1', usedIn: { portfolio: false } })
+  })
+})
+
+describe('galleryFilesToDelete', () => {
+  const folder = 'bam-photography/galleries/g1'
+
+  it('keeps a library photo that lives in the gallery folder and one added from the library', () => {
+    const photos = [
+      { id: 'a', cloudinaryId: `${folder}/own-1` },
+      { id: 'b', cloudinaryId: `${folder}/made-into-library` },
+      { id: 'c', cloudinaryId: 'bam-photography/library/other/added-from-library' },
+      { id: 'd', cloudinaryId: `${folder}/own-1` },
+    ]
+    expect(galleryFilesToDelete(photos, folder, new Set([`${folder}/made-into-library`]))).toEqual([`${folder}/own-1`])
+  })
+
+  it('never reaches into a sibling gallery whose id starts the same way', () => {
+    expect(galleryFilesToDelete([{ cloudinaryId: `${folder}0/x` }], folder, new Set())).toEqual([])
+  })
+
+  it('tolerates a gallery with no media', () => {
+    expect(galleryFilesToDelete(undefined, folder, new Set())).toEqual([])
+    expect(galleryFilesToDelete([null, {}, { cloudinaryId: '' }], folder, new Set())).toEqual([])
   })
 })
