@@ -36,7 +36,7 @@ One hit was wrong in a useful way. The first candidate list said my golf course 
 The candidate list came back with twenty tools and tool families, each marked as a possible course or a lesson inside one. I made four decisions the same day.
 
 1. **One series across categories,** called Tools That Think, code TOOLS. Each course lists on its own shelf: map and compass under Survival, the slide rule and the surveying tools under Science & Math, land descriptions under Civics. The series ties them together.
-2. **An order.** Map and compass first, then the slide rule, then surveying. After those: the sextant, the instruments for reading the sky (planisphere, astrolabe, sundial), compass and straightedge, weather instruments, the abacus, and precise measuring with calipers, a micrometer and a balance.
+2. **An order.** Map and compass first, then the slide rule, then surveying. The rest of the list: the abacus, the sextant, the instruments for reading the sky (planisphere, astrolabe, sundial), compass and straightedge, weather instruments, and precise measuring with calipers, a micrometer and a balance.
 3. **Small tools become lessons.** Napier's bones, printed log tables, nomograms and the pilot's E6B went into the slide rule course. The planimeter went into surveying.
 4. **I buy the tools.** Every hands-on lesson is marked P, for a demonstration I record myself. The written lesson still teaches the whole operation, so a learner without the video can follow it.
 
@@ -61,7 +61,7 @@ The slide rule is the only one with no reviewer in its hold. It is mathematics a
 
 ## What comes next
 
-An abacus brief is drafted and waiting on my answers. The tools for the first four are on my list to buy, and when they arrive, I film.
+The abacus is next. I approved its brief on October 15, and it will be the fifth course in the series. The tools for all of them are on my list to buy, and when they arrive, I film.
 
 Each course gets its own post: why the compass course is built from a 2001 Army manual instead of the current one, how the slide rule course teaches a priority dispute from the 1630s, and why the surveying course became two.
 
