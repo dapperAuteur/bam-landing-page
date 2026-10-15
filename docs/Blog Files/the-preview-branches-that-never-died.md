@@ -2,16 +2,16 @@
 Draft for the bam-landing-page blog. Paste the body into app/admin/blog and use:
 Title:   The Preview Branches That Never Died: $100 a Month for Databases Nobody Was Using
 Slug:    the-preview-branches-that-never-died
-Excerpt: Two invoices in a row carried more than $100 of Neon branch overage. I had
-         configured automatic cleanup. The branches stayed anyway, for a reason that
-         sits in the vendor's own docs. Here is why, what I built so it cannot happen
-         again across 24 repos, and the one button I now have for the leftovers.
+Excerpt: I assumed my preview branches were being cleaned up because I had turned on
+         the setting. They were not, for a reason that sits in the vendor's own docs.
+         Here is why, what I built so it cannot happen again across 24 repos, the one
+         button I now have for the leftovers, and the lesson about reading the trigger.
 Tags:    Infrastructure Costs, Vercel, Neon, Preview Deployments, Solo Engineering, Ecosystem Rules
 -->
 
 # The Preview Branches That Never Died: $100 a Month for Databases Nobody Was Using
 
-Two invoices in a row carried more than $100 of extra usage for Neon database branches. I had set up automatic cleanup when I installed the integration. The branches stayed anyway. This post is the autopsy, the fix, and the rule that came out of it.
+Two invoices in a row came in over $100, and I was sure I knew why: Neon database branches from preview deployments that an automatic cleanup setting should have removed. The branches had indeed stayed. The bill, it turned out, was mostly something else (that story is the next post). This one is about the branches: why the cleanup never ran, the fix, and the rule that came out of it.
 
 ## What a preview branch is, and why it has a price
 
@@ -31,7 +31,7 @@ The setting I had configured was not wrong. It was doing exactly what the docume
 
 Before fixing anything I counted. A short script against the Vercel API listed every preview deployment in the account: 242 of them across 26 projects. Most were days old, created by a wave of branch pushes earlier that week. Two were from 2022. Each one had, or had once had, a Neon branch behind it.
 
-The Supabase side of the ecosystem (three products share one Supabase project) had zero branches, so that bill was not the culprit. MongoDB Atlas, used by two products, creates a cluster, a database user and an IP entry once per integration, nothing per preview (MongoDB, n.d.). The cost was Neon, and only Neon.
+The Supabase side of the ecosystem (three products share one Supabase project) had zero branches. MongoDB Atlas, used by two products, creates a cluster, a database user and an IP entry once per integration, nothing per preview (MongoDB, n.d.). And when I finally read the usage report line by line, every Neon installation was on the Free plan, which does not sell extra branches at all. The stale branches were real and worth removing, because Free plans have a ten-branch limit per project and a preview that cannot get a branch fails. But they were not the invoice. The invoice was build minutes, and that gets its own post.
 
 ## The fix, in three layers
 
@@ -47,9 +47,9 @@ A rule prevents the next pile. It does not remove the current one. So the hub pr
 
 The page is small. Two design decisions behind it are not. First, the tools that can charge me money for things I forgot now share one screen, and that screen says "none" when the account is clean. Second, every Neon project gets its own API key, scoped to that project alone, on Neon's advice. A key that leaks from one repository or from the hub reaches one database, not twenty.
 
-## The refund
+## The refund I almost asked for
 
-I have asked for a credit for the two months of overage. The argument is not that the vendor did something wrong. It is that a feature called automatic cleanup, configured as instructed, left every branch in place for a reason the setup flow never mentioned. Whether the credit comes or not, the branches are gone and the rule is in.
+I had a refund email drafted before I read the invoice lines. Its argument was decent: a feature called automatic cleanup, configured as instructed, left every branch in place for a reason the setup flow never mentioned. The email is still in my notes, unsent, because the overage it asked about was not on the invoice. Read the invoice before the vendor reads your email.
 
 ## What I would tell past me
 
