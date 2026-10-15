@@ -90,8 +90,9 @@ The baseline was worse than either earlier guard: 547 of 1,018 banks over the li
 | Balance batch 1 | 16 | 42 | 78 | 5 | 531 |
 | Balance batch 2 | 16 | 98 | 114 | 11 | 511 |
 | Balance batch 3 | 16 | 362 | 393 | 29 | 455 |
+| Balance batch 4 | 16 | 702 | 814 | 45 | 395 |
 
-81 files remain on the list. It is a long campaign.
+65 files remain on the list. It is a long campaign.
 
 Batch 1 also showed what small files cost: about a million subagent tokens for 42 questions, because every file carries a fixed reading cost no matter how few of its questions need work.
 
