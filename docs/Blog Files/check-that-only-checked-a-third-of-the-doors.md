@@ -61,7 +61,7 @@ What that means concretely: a delete goes through cleanly, with no complaint fro
 
 Nothing goes wrong at the moment of the delete. That is the whole trouble.
 
-The failure shows up later: a grey rectangle where a panorama should be, a category with no icon, a scene that won't load. And it shows up detached from its cause, weeks after the click that caused it. Nobody remembers deleting anything. The evidence looks like the database has gone bad on its own.
+The failure shows up later: a gray rectangle where a panorama should be, a category with no icon, a scene that won't load. And it shows up detached from its cause, weeks after the click that caused it. Nobody remembers deleting anything. The evidence looks like the database has gone bad on its own.
 
 So the symptom reads as "data corruption," which sends you hunting for a storage fault or a bad migration. It does not look like *a guard that didn't fire*, because a guard that doesn't fire leaves no trace anywhere. Its whole job was to have prevented the thing you're now standing in.
 

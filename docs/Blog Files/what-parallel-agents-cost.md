@@ -39,9 +39,9 @@ This has happened twice, and nearly a third time. Merging a bundle, one side of 
 
 Resolve it the obvious way, keep both sides, and the file parses. It compiles. It passes lint. Four entries have vanished into an array literal that swallowed them.
 
-That happened once before anyone noticed, and it was found only because the counting had become a habit. From the merge task for the bundle where it nearly happened again:
+That happened once before anyone noticed, and it was found only because the counting had become a habit. From the merge task for the bundle where it nearly happened again, in its note on `research-checks.ts`:
 
-> `research-checks.ts` — each side ended with an unclosed `where: [` array, and the shared tail after the marker closed only one of them. This is the same shape that truncated four entries in an earlier bundle. Resolved by closing the first side explicitly; entry count verified as 49+6+5+11=71 afterwards.
+> Each side ended with an unclosed `where: [` array, and the shared tail after the marker closed only one of them. This is the same shape that truncated four entries in an earlier bundle. Resolved by closing the first side explicitly; entry count verified as 49+6+5+11=71 afterwards.
 
 **The practice: after resolving a conflict in an array-of-literals file, count the elements and check the arithmetic.** Not "does it compile." Compiling is what makes this one dangerous. `49+6+5+11=71` written in a merge note looks like paranoia until the first time it comes out at 67.
 
@@ -114,6 +114,6 @@ The test suite is 984 passing and 74 skipped across 90 files. The skips are data
 
 ## If you take one thing
 
-Every failure in this post was silent, and the four practices that catch them are all the same practice wearing different clothes: **count the thing afterwards.** Count the entries after a merge. Count the fields after a resolution. Count the bytes on disk while an agent is running. Count how many of your agents died today.
+Every one of these failures was silent, and the four practices that catch them are all the same practice wearing different clothes: **count the thing afterwards.** Count the entries after a merge. Count the fields after a resolution. Count the bytes on disk while an agent is running. Count how many of your agents died today.
 
 Parallel agents remove the person who would have noticed. Nothing replaces that person except arithmetic you ran on purpose.

@@ -86,7 +86,7 @@ The whole point of that block is the middle of it: build the list of what was re
 
 The program knows. It knew the moment it did the check. Throwing that away and replacing it with a number is a small act of vandalism that costs the user real minutes.
 
-The rule I'd generalise: **if your system knows a specific thing and reports a count instead, you have deliberately made the message worse.** Counts are for dashboards. People fixing a problem need names.
+The rule I'd generalize: **if your system knows a specific thing and reports a count instead, you have deliberately made the message worse.** Counts are for dashboards. People fixing a problem need names.
 
 ## The bit I want to be honest about
 

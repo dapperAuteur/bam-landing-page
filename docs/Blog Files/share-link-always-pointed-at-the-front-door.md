@@ -35,7 +35,7 @@ The page containing a tour is put together on my server before it reaches you. T
 
 At that moment, the only scene that exists as a fact is the tour's starting scene. You haven't moved. You haven't even seen it yet.
 
-So the quick link was built into the page like a line printed in a theatre programme. The programme is accurate when it's printed, and it goes on saying the same thing all evening no matter what happens on stage. Walking around the tour changed the stage. It could not change the programme.
+So the quick link was built into the page like a line printed in a theater program. The program is accurate when it's printed, and it goes on saying the same thing all evening no matter what happens on stage. Walking around the tour changed the stage. It could not change the program.
 
 The fix is to stop printing the link and start writing it as you leave: whatever scene you are currently looking at is the scene the link points to.
 
@@ -53,7 +53,7 @@ In ordinary software you solve "two things need to agree on a fact" by putting t
 
 Here there is no such parent. The thing containing both of them is a printed page. It doesn't hold state; it doesn't run; it can't be told anything.
 
-So the viewer and the button are like two shops in the same mall with no shared back office. They're twenty metres apart. Neither can walk into the other. The building's management is asleep.
+So the viewer and the button are like two shops in the same mall with no shared back office. They're twenty meters apart. Neither can walk into the other. The building's management is asleep.
 
 What you do in that situation is use the mall's public address system. The viewer, every time you move, announces to the page: **now showing the courtyard**. It doesn't know or care who's listening. The share button listens for those announcements, and each time it hears one, it rewrites its link.
 

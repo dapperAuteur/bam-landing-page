@@ -25,11 +25,11 @@ It only accepted video.
 
 Not by accident, but by explicit check. If you handed the code an audio file and a transcript, it declined. Videos only. Somebody had decided that, and the somebody was me, and I can reconstruct the reasoning exactly, because it's tidy and it's wrong.
 
-I'd modelled a text alternative as **the words that were said**. That's what a transcript is: speech, written down. From there the logic runs cleanly. Room tone has no speech. No speech means no transcript. No transcript means the field doesn't apply, so let's not offer it and clutter the interface.
+I'd modeled a text alternative as **the words that were said**. That's what a transcript is: speech, written down. From there the logic runs cleanly. Room tone has no speech. No speech means no transcript. No transcript means the field doesn't apply, so let's not offer it and clutter the interface.
 
 Every step follows. The conclusion is that a deaf visitor gets nothing.
 
-This is my favourite category of mistake, in a grim way: internally consistent, locally sensible, and it produces a product where the accessibility feature is unavailable precisely on the content that needed it most. Speech, at least, has captions and context and lip reading and a dozen partial routes in. Ambient sound has exactly one route, and I'd closed it.
+This is my favorite category of mistake, in a grim way: internally consistent, locally sensible, and it produces a product where the accessibility feature is unavailable precisely on the content that needed it most. Speech, at least, has captions and context and lip reading and a dozen partial routes in. Ambient sound has exactly one route, and I'd closed it.
 
 ## Why a transcript would have been useless anyway
 
@@ -47,7 +47,7 @@ So the field I actually added stores a **description**, not a transcript:
 
 Eight words. Not a technical annotation, not a list of frequencies: a plain-language account of what a hearing visitor is receiving. Somebody who reads that is now standing in the same place as somebody who hears it. Not identically. Close enough that the room has a character.
 
-The naming matters more than it looks. If the field were labelled "transcript," creators would try to transcribe, find nothing to transcribe, and leave it blank; the blankness would look like completion. Labelled "description," the prompt is answerable, and a creator who was actually standing there can answer it in a sentence.
+The naming matters more than it looks. If the field were labeled "transcript," creators would try to transcribe, find nothing to transcribe, and leave it blank; the blankness would look like completion. Labeled "description," the prompt is answerable, and a creator who was actually standing there can answer it in a sentence.
 
 Which is also why nothing generates these automatically. I don't put machine-written text in front of learners as a matter of policy, but here the rule earns itself twice over: the entire value of the sentence is that a person with the microphone in their hand knew it was a courtyard, knew the traffic was distant, and knew the birds were in *that* courtyard rather than somewhere on the recording. That knowledge is what's being passed on. A guess about it is worse than silence, because it reads with the same confidence and can't be told apart.
 

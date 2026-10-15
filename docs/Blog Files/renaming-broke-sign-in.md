@@ -40,7 +40,7 @@ My product registry, one file listing every app in the ecosystem, had a field on
 oidcSlug: "wanderlearn"
 ```
 
-I was changing the product's name, its web address, its display colour. This was in the same block. I changed it too.
+I was changing the product's name, its web address, its display color. This was in the same block. I changed it too.
 
 It looks like a name. It is not a name. Two things are *derived* from it:
 

@@ -3,7 +3,7 @@ Draft for the bam-landing-page blog. Paste the body into app/admin/blog and use:
 Title:   I Had Three Designs and the Tools to A/B Test Them. I Picked One Instead.
 Slug:    not-ab-testing-my-brand
 Excerpt: Splitting traffic three ways sounds rigorous. At my traffic, with a
-         colour change, it's a test that can never conclude, and it makes
+         color change, it's a test that can never conclude, and it makes
          every screenshot and partner deck hedge on which brand you'd see.
          The arithmetic, and what to test instead.
 Tags:    Experimentation, A/B Testing, Statistics, Product Decisions, Beginners
@@ -33,7 +33,7 @@ The number of people you need depends on how big the real difference is. A huge 
 
 ## Two numbers that made my answer obvious
 
-**How big is the effect?** I'm changing colours. Not the offer, not the price, not the headline: the palette. That's a small-effect change. Real, probably, but small.
+**How big is the effect?** I'm changing colors. Not the offer, not the price, not the headline: the palette. That's a small-effect change. Real, probably, but small.
 
 **How much traffic do I have?** I'm pre-launch. Not "modest." Not much at all.
 
@@ -69,7 +69,7 @@ Then I did three things that keep the option open:
 
 ## The bit I'd underline
 
-There's a version of rigour that's really just deferral. "Let's test it" can mean *I want evidence*, and it can mean *I don't want to be the one who decided*. Those feel identical from the inside.
+There's a version of rigor that's really just deferral. "Let's test it" can mean *I want evidence*, and it can mean *I don't want to be the one who decided*. Those feel identical from the inside.
 
 The test that can't reach significance is the worst of both. You paid for the process, you carry the cost of indecision, and at the end you still choose on taste, except now several months later, with the design work tripled.
 
@@ -81,10 +81,10 @@ Not nothing. Just not this.
 
 The rule is effect size. At small samples you can only detect large differences, so test things that produce large differences:
 
-- **Headline copy.** "Every lesson starts by standing inside a real place" against something concrete and specific. Wording moves behaviour far more than palette does.
+- **Headline copy.** "Every lesson starts by standing inside a real place" against something concrete and specific. Wording moves behavior far more than palette does.
 - **What the call to action says.** "Explore courses" versus "Step inside the museum." Naming the actual experience, versus naming a category.
-- **Whether the hero shows a still image or moving 360° footage.** That's a different *experience*, not a different colour.
+- **Whether the hero shows a still image or moving 360° footage.** That's a different *experience*, not a different color.
 
 All of those are cheap to build, and all of them can produce differences big enough to see through the noise of a small audience.
 
-The general shape: at low traffic, test things that might change behaviour a lot. Save the fine-tuning for when you have the crowd to measure it. Testing a subtle change with a small sample isn't rigour. It's a coin flip with extra steps and a spreadsheet.
+The general shape: at low traffic, test things that might change behavior a lot. Save the fine-tuning for when you have the crowd to measure it. Testing a subtle change with a small sample isn't rigor. It's a coin flip with extra steps and a spreadsheet.
