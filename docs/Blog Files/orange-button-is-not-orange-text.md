@@ -27,7 +27,7 @@ It fails accessibility. Not marginally. Clearly.
 
 Here's the concept, and it's arithmetic, not taste. **Contrast ratio** measures how different two colors are in brightness. Not hue, but brightness. It runs from 1:1 (identical, invisible) to 21:1 (pure black on pure white).
 
-The international accessibility standard sets thresholds:
+The international accessibility standard, WCAG 2.2 (World Wide Web Consortium [W3C], 2024), sets thresholds:
 
 - Normal text needs **4.5:1** against its background.
 - Large text and interface parts need **3:1**.
@@ -123,3 +123,7 @@ They cannot tell me tangerine and indigo belong together, or that a travel-docum
 Accessibility checks are a floor, not a review. Passing them means you haven't excluded anyone through a measurable, mechanical failure. That's a real and important thing to guarantee. It is not the same as the thing being good, and the fact that a tool says "50 passed" in green is seductive in a way that's worth naming.
 
 The floor is arithmetic. Everything above it is still judgment.
+
+## References
+
+World Wide Web Consortium. (2024). *Web content accessibility guidelines (WCAG) 2.2* (W3C Recommendation). https://www.w3.org/TR/WCAG22/
