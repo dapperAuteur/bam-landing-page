@@ -45,7 +45,7 @@ The Supabase side of the ecosystem (three products share one Supabase project) h
 
 A rule prevents the next pile. It does not remove the current one. So the hub product got an owner page: it lists every Vercel preview deployment by project and every Neon branch named `preview/*`, and one button, behind a typed confirmation, deletes all of them. The same code runs as a command-line script. It never lists production deployments, and it never touches a default or protected branch, because the library it calls cannot ask for them.
 
-The page is small. The design decision behind it is not: the tools that can charge me money for things I forgot now share one screen, and that screen says "none" when the account is clean.
+The page is small. Two design decisions behind it are not. First, the tools that can charge me money for things I forgot now share one screen, and that screen says "none" when the account is clean. Second, every Neon project gets its own API key, scoped to that project alone, on Neon's advice. A key that leaks from one repository or from the hub reaches one database, not twenty.
 
 ## The refund
 
