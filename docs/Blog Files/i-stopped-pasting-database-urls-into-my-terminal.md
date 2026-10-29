@@ -13,7 +13,7 @@ Tags:    Python, Django, GitHub Actions, Neon, Learning in Public, Invest.WitUS
 
 # I Stopped Pasting Database URLs Into My Terminal
 
-[Chapter 10 of the Invest.WitUS tutorial](/blog/three-views-of-the-same-plan) ended with a chore: after the merge, run the migration in the same sitting, because until then every account page answers 500. Invest.WitUS is the Django app I am building to learn Python, and every chapter that added a table has ended the same way. Today I took that chore off my laptop.
+[Chapter 10 of the Invest.WitUS tutorial](/blog/three-views-of-the-same-plan) ended with a chore: after the merge, run the migration in the same sitting, because until then every account page answers 500. Invest.WitUS is the Django app I am building to learn Python, and every chapter that added a table has ended the same way. So I took that chore off my laptop.
 
 ## How I was migrating
 
@@ -25,7 +25,7 @@ The recipe that worked: open the Neon console, copy the direct connection string
 
 ## What runs now
 
-The invest-witus repository has a GitHub Actions workflow, on the branch `feat/migrate-on-merge`, named "Migrate production database". It runs on every push to `main` that changes a file in a `migrations` folder, and it has a Run workflow button for running it without a merge. The job runs two commands:
+The invest-witus repository now has a GitHub Actions workflow, built on the branch `feat/migrate-on-merge`, named "Migrate production database". It runs on every push to `main` that changes a file in a `migrations` folder, and it has a Run workflow button for running it without a merge. The job runs two commands:
 
 ```sh
 uv run python manage.py migrate --database direct --noinput
