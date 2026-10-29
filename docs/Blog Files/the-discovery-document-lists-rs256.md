@@ -49,6 +49,10 @@ The client is on exactly when `WITUS_OIDC_CLIENT_SECRET` is set. Without it, the
 
 An OIDC client that trusts the discovery list of algorithms fails at the callback. The list is what the spec requires the provider to say; the key set is what the provider can do. Read the key set, pin the algorithm to it, and treat anything fetched from the network as data the attacker might also control.
 
+## What this cost
+
+Building chapter 07 took about 13 credits of Claude usage. Writing this post took about 2.0 more: one helper wrote the posts for chapters 04 to 07 for 7.9 credits, and I split that evenly across the four. About 15 credits in all, roughly $15. A credit here is 1 dollar of API list price, which is not what my subscription bills. Counted from the helpers' session transcripts. Not counted: the main session that coordinated, reviewed and fixed the work, and my own time.
+
 ## References
 
 OpenID Foundation. (2023, December 15). *OpenID Connect Discovery 1.0 incorporating errata set 2*. https://openid.net/specs/openid-connect-discovery-1_0.html

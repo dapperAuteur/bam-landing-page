@@ -47,6 +47,10 @@ Django's documentation says that changing `AUTH_USER_MODEL` "after you've create
 
 The decision is in the decisions log with the warning written next to it. That is the habit I want from this tutorial: when Django says a thing is hard to undo, decide it before the database exists, and write down why.
 
+## What this cost
+
+Building chapter 05 took about 11 credits of Claude usage. Writing this post took about 2.0 more: one helper wrote the posts for chapters 04 to 07 for 7.9 credits, and I split that evenly across the four. About 13 credits in all, roughly $13. A credit here is 1 dollar of API list price, which is not what my subscription bills. Counted from the helpers' session transcripts. Not counted: the main session that coordinated, reviewed and fixed the work, and my own time.
+
 ## References
 
 Django Software Foundation. (n.d.-a). *Customizing authentication in Django*. Django documentation (Version 5.2). Retrieved October 28, 2026, from https://docs.djangoproject.com/en/5.2/topics/auth/customizing/
