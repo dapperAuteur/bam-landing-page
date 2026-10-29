@@ -58,6 +58,10 @@ Read the vendor's actual variable list, not the docs' example names. The only th
 
 And a fallback that works is more dangerous than a guard that refuses. The two refusals cost me two redeploys and taught me something each time. The SQLite fallback cost nothing, said nothing, and would have lost the first signup.
 
+## What this cost
+
+Building chapter 06 took about 22 credits of Claude usage, and the small 06a follow-up that added Vercel Web Analytics about 5.9 more. Writing this post took about 2.0 more: one helper wrote the posts for chapters 04 to 07 for 7.9 credits, and I split that evenly across the four. About 30 credits in all, roughly $30. A credit here is 1 dollar of API list price, which is not what my subscription bills. Counted from the helpers' session transcripts. Not counted: the main session that coordinated, reviewed and fixed the work, and my own time.
+
 ## References
 
 Neon. (n.d.). *Connecting with the Vercel-Managed Integration*. Neon documentation. Retrieved October 28, 2026, from https://neon.com/docs/guides/vercel-managed-integration

@@ -49,6 +49,10 @@ B has no order queue; there is no broker until chapter 11. A's confirm is the lo
 
 After the merge comes the migration, in the same sitting: between them every account page answers 500, because it asks the new table for the account's plan. Chapter 11 brings the paper broker.
 
+## What this cost
+
+Building chapter 10 took about 14 credits of Claude usage. Writing this post took about 2.1 more: two helpers wrote the posts for chapters 08 to 10 and the migration post, 8.2 credits between them because the first stopped at a usage limit and the second finished the job, and I split that evenly across the four. About 16 credits in all, roughly $16. A credit here is 1 dollar of API list price, which is not what my subscription bills. Counted from the helpers' session transcripts. Not counted: the main session that coordinated, reviewed and fixed the work, and my own time.
+
 ## References
 
 Django Software Foundation. (n.d.-a). *Constraints reference*. Django documentation (Version 5.2). Retrieved October 28, 2026, from https://docs.djangoproject.com/en/5.2/ref/models/constraints/

@@ -47,3 +47,7 @@ The two pieces copied word for word have dashes in them, and this project's writ
 ## The lesson
 
 A tutorial that pastes code by hand lies within a week. Not because the author is careless, but because the code keeps moving after the paste and nothing points back at the text. The generator costs one script and one habit: write `{{file:path}}` and let the script do the pasting. The prose still needs reading. The code no longer does.
+
+## What this cost
+
+Building chapter 04 took about 11 credits of Claude usage. Writing this post took about 2.0 more: one helper wrote the posts for chapters 04 to 07 for 7.9 credits, and I split that evenly across the four. About 13 credits in all, roughly $13. A credit here is 1 dollar of API list price, which is not what my subscription bills. Counted from the helpers' session transcripts. Not counted: the main session that coordinated, reviewed and fixed the work, and my own time.

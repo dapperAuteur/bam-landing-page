@@ -51,6 +51,10 @@ The recipe became one line. Copy the direct connection string from the Neon cons
 
 Chapter 09 adds the watch list to the same pull through a function this chapter left returning nothing.
 
+## What this cost
+
+Building chapter 08 took about 17 credits of Claude usage. Writing this post took about 2.1 more: two helpers wrote the posts for chapters 08 to 10 and the migration post, 8.2 credits between them because the first stopped at a usage limit and the second finished the job, and I split that evenly across the four. About 19 credits in all, roughly $19. A credit here is 1 dollar of API list price, which is not what my subscription bills. Counted from the helpers' session transcripts. Not counted: the main session that coordinated, reviewed and fixed the work, and my own time.
+
 ## References
 
 Tiingo. (n.d.-a). *End-of-day (EOD) stock price API documentation*. Retrieved October 28, 2026, from https://www.tiingo.com/documentation/end-of-day
