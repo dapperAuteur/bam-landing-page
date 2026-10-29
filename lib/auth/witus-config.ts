@@ -42,19 +42,20 @@ export const witusSilentSsoEndpoint: string | null = witusSsoConfigured
   : null
 
 /**
- * Where sign-out ends the SHARED WitUS session, with `client_id` already attached.
+ * Where "Sign out of WitUS everywhere" ends the SHARED WitUS session (BAM, 2026-10-29, witus
+ * task 128 option (b); plain "Sign out" is local-only), with `client_id` already attached.
  *
  * `client_id` IS REQUIRED, not optional: better-auth's endsession endpoint rejects a
  * `post_logout_redirect_uri` with `invalid_request` unless the request carries either a
  * verifiable `id_token_hint` or an explicit `client_id`, and we have no id_token
- * client-side. It is baked in HERE, on the server, because the sign-out button is a client
+ * client-side. It is baked in HERE, on the server, because the everywhere control is a client
  * component and must not be handed the raw env. (`client_id` is not a secret — it travels
  * in every authorize URL the browser navigates to — but it is also not readable from a
  * client bundle, which is the actual constraint.)
  *
  * The `post_logout_redirect_uri` itself is NOT baked in here: it is derived from
  * `window.location.origin` at click time, because this site serves on two registered hosts
- * (www + apex) and each must send its own. See components/auth/SignOutButton.tsx.
+ * (www + apex) and each must send its own. See `endSessionRedirectUrl` in lib/auth/witus-sso.ts.
  */
 export const witusEndSessionUrl: string | null = (() => {
   const clientId = process.env.WITUS_OIDC_CLIENT_ID

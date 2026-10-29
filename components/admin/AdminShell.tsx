@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 // import { useAuth } from './../../contexts/AuthContext'
 import { useSession } from 'next-auth/react'
-import SignOutButton from '@/components/auth/SignOutButton'
+import SignOutButton, { SignOutEverywhereButton } from '@/components/auth/SignOutButton'
 
 
 export default function AdminShell({
@@ -13,9 +13,10 @@ export default function AdminShell({
 }: {
   children: React.ReactNode
   /**
-   * Server-resolved IdP endsession URL, threaded down from app/admin/layout.tsx. `null` when
-   * this deploy is not a configured WitUS OIDC client, which makes Logout purely local --
-   * exactly today's behaviour.
+   * Server-resolved IdP endsession URL, threaded down from app/admin/layout.tsx, for the
+   * "Sign out of WitUS everywhere" control. `null` when this deploy is not a configured WitUS
+   * OIDC client, which hides that control. Plain "Sign out" is always local (BAM, 2026-10-29,
+   * witus task 128 option (b)).
    */
   witusEndSessionUrl?: string | null
 }) {
@@ -126,10 +127,18 @@ export default function AdminShell({
                   Welcome, Admin
                 </span>
                 <SignOutButton
-                  endSessionUrl={witusEndSessionUrl}
                   callbackUrl="/"
                   className="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700 disabled:opacity-60"
                 />
+                {witusEndSessionUrl ? (
+                  <div className="flex max-w-xs flex-col items-start gap-1">
+                    <SignOutEverywhereButton
+                      endSessionUrl={witusEndSessionUrl}
+                      className="border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-xs hover:bg-gray-100 disabled:opacity-60"
+                      helpClassName="text-xs text-gray-600"
+                    />
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

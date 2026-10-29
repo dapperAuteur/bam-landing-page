@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useSession } from 'next-auth/react'
-import SignOutButton from '@/components/auth/SignOutButton'
+import SignOutButton, { SignOutEverywhereButton } from '@/components/auth/SignOutButton'
 import { Linkedin, Github, ChevronDown } from 'lucide-react'
 
 type NavItem = { href: string; label: string }
@@ -96,9 +96,10 @@ export default function Navigation({
   witusEndSessionUrl = null,
 }: {
   /**
-   * Server-resolved IdP endsession URL (app/layout.tsx -> PublicLayout -> here). When set,
-   * Logout ends the shared WitUS session AFTER destroying the local one, so signing out here
-   * signs you out of every WitUS app (BAM, 2026-08-30). `null` = today's local-only sign-out.
+   * Server-resolved IdP endsession URL (app/layout.tsx -> PublicLayout -> here). When set, a
+   * second "Sign out of WitUS everywhere" control appears next to "Sign out" and ends the
+   * shared WitUS session AFTER destroying the local one. Plain "Sign out" is always local
+   * (BAM, 2026-10-29, witus task 128 option (b)). `null` hides the everywhere control.
    */
   witusEndSessionUrl?: string | null
 } = {}) {
@@ -162,7 +163,7 @@ export default function Navigation({
                   Admin
                   <ChevronDown className="w-4 h-4" aria-hidden="true" />
                 </button>
-                <div className="absolute right-0 mt-1 w-52 rounded-md border border-gray-200 bg-white shadow-lg py-1 z-50 hidden group-hover:block group-focus-within:block">
+                <div className="absolute right-0 mt-1 w-64 rounded-md border border-gray-200 bg-white shadow-lg py-1 z-50 hidden group-hover:block group-focus-within:block">
                   <p className="px-4 py-1.5 text-xs text-gray-400 truncate">Signed in as {session?.user?.name}</p>
                   {ADMIN.map(item => (
                     <Link key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
@@ -170,9 +171,14 @@ export default function Navigation({
                     </Link>
                   ))}
                   <SignOutButton
-                    endSessionUrl={witusEndSessionUrl}
                     onSignedOut={close}
                     className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 border-t border-gray-100 mt-1 disabled:opacity-60"
+                  />
+                  <SignOutEverywhereButton
+                    endSessionUrl={witusEndSessionUrl}
+                    onSignedOut={close}
+                    className="block w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 disabled:opacity-60"
+                    helpClassName="px-4 pb-2 text-xs text-gray-600"
                   />
                 </div>
               </div>
@@ -226,9 +232,14 @@ export default function Navigation({
                   </p>
                   <MobileGroup heading="Admin" items={ADMIN} onNavigate={close} />
                   <SignOutButton
-                    endSessionUrl={witusEndSessionUrl}
                     onSignedOut={close}
                     className="block w-full text-left py-2 pl-1 text-red-600 hover:text-red-800 disabled:opacity-60"
+                  />
+                  <SignOutEverywhereButton
+                    endSessionUrl={witusEndSessionUrl}
+                    onSignedOut={close}
+                    className="block w-full text-left py-2 pl-1 text-sm text-gray-700 hover:text-gray-900 disabled:opacity-60"
+                    helpClassName="pl-1 pb-2 text-xs text-gray-600"
                   />
                 </>
               ) : (

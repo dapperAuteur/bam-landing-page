@@ -11,8 +11,9 @@ import { witusEndSessionUrl } from '@/lib/auth/witus-config'
  * reading it gets `undefined` (Next only inlines `NEXT_PUBLIC_*` into the browser bundle).
  * Same pattern app/layout.tsx already uses for the PostHog key.
  *
- * `null` when this deploy is not a configured WitUS OIDC client, which keeps Logout purely
- * local — exactly today's behaviour. The admin gate is untouched by any of this: it is still
+ * `null` when this deploy is not a configured WitUS OIDC client, which hides the "Sign out
+ * of WitUS everywhere" control. Plain "Sign out" is always local (BAM, 2026-10-29, witus task
+ * 128 option (b)). The admin gate is untouched by any of this: it is still
  * `session.user?.role !== 'admin'` in the shell, backed by the middleware's
  * `token.role === 'admin'` check in lib/auth/authorize.ts.
  */

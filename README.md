@@ -121,9 +121,13 @@ Two behaviours come with it:
   error, no spinner, no layout shift. Safari ITP and Firefox Total Cookie Protection block the
   third-party cookie and correctly answer nothing. The name is display copy and never a
   credential — clicking runs the real OIDC code flow.
-- **Global sign-out** — Logout destroys the local session **first**, then hands off to the
-  IdP's endsession endpoint, so signing out here signs you out of every WitUS app. The order is
-  the safety property: if the IdP is unreachable, you are still signed out here.
+- **Sign out, or sign out of WitUS everywhere** (BAM, 2026-10-29, witus task 128 option (b)) —
+  **Sign out** ends only this site's session; the WitUS session and every other WitUS app stay
+  signed in. A second, secondary control, **Sign out of WitUS everywhere** (nav Admin menu,
+  mobile menu, admin bar), also ends the shared WitUS session; its help text says other WitUS
+  apps stay signed in until you sign out of them. It destroys the local session **first**, then
+  hands off to the IdP's endsession endpoint. The order is the safety property: if the IdP is
+  unreachable, you are still signed out here.
 
 Implementation: [`lib/auth/witus-sso.ts`](./lib/auth/witus-sso.ts) (pure helpers, unit-tested),
 [`lib/auth/witus-config.ts`](./lib/auth/witus-config.ts) (server-resolved URLs),

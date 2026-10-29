@@ -11,7 +11,7 @@ export default function PublicLayout({
   witusEndSessionUrl = null,
 }: {
   children: React.ReactNode
-  /** Server-resolved IdP endsession URL, threaded from app/layout.tsx to the nav's Logout. */
+  /** Server-resolved IdP endsession URL, threaded from app/layout.tsx to the nav's "Sign out of WitUS everywhere". */
   witusEndSessionUrl?: string | null
 }) {
   const pathname = usePathname()

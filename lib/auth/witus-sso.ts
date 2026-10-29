@@ -131,10 +131,10 @@ function splitDiscoveryUrl(
  * The IdP's RP-initiated logout endpoint: `<basePath>/oauth2/endsession`, which is the
  * `end_session_endpoint` the discovery document advertises.
  *
- * BAM chose GLOBAL sign-out on 2026-08-30: signing out of one WitUS app signs you out of all
- * of them. Ending only the local session would leave the IdP session alive, and with
- * "Continue as ..." live that reads as a broken logout — sign out, come back, and the button
- * offers to sign you straight back in.
+ * Used ONLY by the separate "Sign out of WitUS everywhere" control (BAM, 2026-10-29, witus
+ * task 128 option (b)). Plain "Sign out" ends this site's session alone and never comes here;
+ * the 2026-08-30 behaviour, where the one button always ended the WitUS session too, surprised
+ * BAM because every other app kept its own session.
  */
 export function endSessionEndpointFromDiscovery(
   discoveryUrl: string | null | undefined
@@ -210,4 +210,64 @@ export function ssoErrorMessage(error: string | null | undefined): string | null
   }
   if (error === 'CredentialsSignin') return null
   return 'Signing in with WitUS did not complete. Try again, or use your email and password below.'
+}
+
+// ── Sign-out (BAM, 2026-10-29, witus task 128 option (b)) ─────────────────────────────────
+
+/** Exact accessible names and help text. Pinned by lib/__tests__/witus-sso.test.ts. */
+export const SIGN_OUT_LABEL = 'Sign out'
+export const SIGN_OUT_EVERYWHERE_LABEL = 'Sign out of WitUS everywhere'
+export const SIGN_OUT_EVERYWHERE_HELP =
+  'Also signs you out of WitUS. Other WitUS apps you are signed in to stay signed in until you sign out of them.'
+export const SIGNING_OUT_LABEL = 'Signing out…'
+
+/**
+ * The full IdP logout URL for "Sign out of WitUS everywhere".
+ *
+ * `endSessionUrl` is the server-resolved `.../oauth2/endsession?client_id=...` from
+ * lib/auth/witus-config.ts, so we append with `&`, not `?`.
+ *
+ * The trailing slash is REQUIRED. better-auth exact-matches `post_logout_redirect_uri` against
+ * the client's registered redirectUrls, and gemini/witus registers `origin + "/"`. Drop the
+ * slash and the IdP returns invalid_request.
+ *
+ * `origin` is `window.location.origin` AT CLICK TIME, not baked in on the server: this site
+ * serves on two registered hosts (https://www.brandanthonymcdonald.com and the apex, which
+ * 30x's to www), and BOTH are registered post-logout targets. Sending whichever host actually
+ * served the page is correct for either one; hardcoding one would 400 whenever the other
+ * served the page.
+ */
+export function endSessionRedirectUrl(endSessionUrl: string, origin: string): string {
+  return `${endSessionUrl}&post_logout_redirect_uri=${encodeURIComponent(`${origin}/`)}`
+}
+
+/** Side effects the everywhere flow needs, injected so tests can observe their order. */
+export type SignOutEffects = {
+  /** Ends this site's NextAuth session WITHOUT navigating (`signOut({ redirect: false })`). */
+  endLocalSession: () => Promise<unknown>
+  /** A full navigation (`window.location.assign` in the browser). */
+  navigate: (url: string) => void
+}
+
+/**
+ * "Sign out of WitUS everywhere": ends this site's session, then hands the browser to the
+ * IdP's endsession endpoint, which ends the WitUS session and returns to `<origin>/`.
+ *
+ * ORDER IS THE SAFETY PROPERTY. The LOCAL session is destroyed FIRST, then we hand off. If the
+ * IdP is unreachable, refuses the request, or the redirect never completes, the person is
+ * still signed out HERE. Handing off first would turn any IdP failure into "I clicked sign
+ * out and I am still signed in". Errors from the local step are swallowed deliberately: a
+ * failure there must never trap someone in a session they asked to leave.
+ */
+export async function signOutEverywhere(
+  endSessionUrl: string,
+  origin: string,
+  effects: SignOutEffects
+): Promise<void> {
+  try {
+    await effects.endLocalSession()
+  } catch {
+    // Fall through to the hand-off.
+  }
+  effects.navigate(endSessionRedirectUrl(endSessionUrl, origin))
 }

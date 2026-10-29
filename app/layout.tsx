@@ -91,9 +91,11 @@ export default function RootLayout({
           />
           {/* `witusEndSessionUrl` is read HERE, in the Server Component, for the same
               reason as the PostHog key above: a client component cannot see a non-
-              NEXT_PUBLIC env var. It reaches the nav's Logout button, which uses it to end
-              the shared WitUS session after destroying the local one. `null` when this
-              deploy is not a configured OIDC client, which keeps sign-out purely local. */}
+              NEXT_PUBLIC env var. It reaches the nav's "Sign out of WitUS everywhere"
+              control, which ends the shared WitUS session after destroying the local one.
+              Plain "Sign out" never uses it (BAM, 2026-10-29, witus task 128 option (b)).
+              `null` when this deploy is not a configured OIDC client, which hides that
+              control. */}
           <PublicLayout witusEndSessionUrl={witusEndSessionUrl}>
             {children}
           </PublicLayout>
