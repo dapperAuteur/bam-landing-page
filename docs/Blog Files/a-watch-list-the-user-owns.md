@@ -18,11 +18,11 @@ Chapter 09 of the Invest.WitUS tutorial is the watch list: symbols the signed-in
 
 A symbol is user text, so it gets one rule at the boundary. Trim, upper-case, then letters, digits, a dot and a hyphen only, one to twelve characters. The dot and the hyphen are for share classes, which vendors spell both ways. Twelve is longer than any US ticker and short enough that a pasted sentence is refused rather than stored. A mutual fund ticker, five letters ending in X, fits.
 
-The rule is one function that returns the symbol as it will be stored or raises with the reason. Three callers use it: a validator on the model field, so the admin's form refuses with a message beside the box; the form on the owner's page, which parses the box; and the model's `save()`, so a caller that skipped both gets an error, not a row. A bad symbol is refused everywhere and stored nowhere. The column stays twenty characters wide, so a join never truncates. The rule belongs to the boundary, not to the database.
+The rule is one function that returns the symbol as it will be stored or raises with the reason. Three callers use it: a validator on the model field, so the admin's form refuses with a message beside the box; the form on the owner's page, which parses the box; and the model's `save()`, so a caller that skipped both gets an error, not a row. A bad symbol is refused everywhere and stored nowhere. The column stays twenty characters wide, so a join never truncates; the rule lives at the boundary, not in the database.
 
 ## Add many, and report
 
-The box takes one symbol or many, separated by commas or spaces. A refused token beside a valid one does not block the valid one. The valid ones are added, and the page reports three things: what was added, what was already on the list, and what was refused with the reason. Only a submission in which nothing is valid is a form error, beside the box, with the same reasons. A typo costs one line of the report, never the whole submission, and nothing a person types can reach the database or raise past the view.
+The box takes one symbol or many, separated by commas or spaces. A refused token beside a valid one does not block the valid one. The valid ones are added, and the page reports what was added, what was already on the list, and what was refused with the reason. Only a submission in which nothing is valid is a form error, beside the box, with the same reasons. A typo costs one line of the report, never the whole submission, and nothing a person types can reach the database or raise past the view.
 
 The add is one `get_or_create` per symbol. A symbol is on an account's list once, by constraint, and `get_or_create` is the add that agrees with the constraint: it reports "already there" instead of failing, it survives two submissions racing, and it runs `save()`, so the rule runs once more.
 
@@ -32,7 +32,7 @@ Each row's remove control is a form with one button whose accessible name is "Re
 
 ## Plain POST, a redirect, and messages
 
-The roadmap had proposed django-htmx partials for this chapter. A watch list of a dozen rows does not need a partial update. The add and the remove are a POST, a redirect and a page, and the report rides on Django's messages framework, which "allows you to temporarily store messages in one request and retrieve them for display in a subsequent request (usually the next one)" (Django Software Foundation, n.d.). The base template prints the messages once, inside `<main>`, on whatever page the redirect lands on, and prints nothing when there are none, which is every public page.
+The roadmap had proposed django-htmx partials here. A dozen rows do not need a partial update. The add and the remove are a POST, a redirect and a page, and the report rides on Django's messages framework, which "allows you to temporarily store messages in one request and retrieve them for display in a subsequent request (usually the next one)" (Django Software Foundation, n.d.). The base template prints the messages once, inside `<main>`, on whatever page the redirect lands on, and prints nothing when there are none, which is every public page.
 
 One line of the documentation is in the chapter: "Even if you know there is only one message, you should still iterate over the `messages` sequence, because otherwise the message storage will not be cleared for the next request" (Django Software Foundation, n.d.). A package and a script tag would have been the chapter's largest listing for nothing a test could check.
 
@@ -40,9 +40,9 @@ The two views answer three questions in order. `login_required` is the outer dec
 
 ## The pull picks them up
 
-The function chapter 08 left empty now returns every symbol on any account's list, and the pull unions it with the held symbols as it already did. Nothing about the budget, the pause or the rate limit changed: a watched symbol is one more request inside the same fifty. A watched symbol the vendor does not know reads "no price yet", which is the spec's clear message instead of a zero. A watched symbol is never valued; there are no shares to multiply.
+The function chapter 08 left empty now returns every symbol on any account's list, and the pull unions it with the held symbols as it already did. Nothing about the budget, the pause or the rate limit changed: a watched symbol is one more request inside the same fifty. An unknown watched symbol reads "no price yet", the spec's clear message instead of a zero. A watched symbol is never valued; there are no shares to multiply.
 
-On my laptop the pull reads sample CSV files that end on September 30, 2026, so every watched row came back with a close, a date and the word "stale". That word is the point of showing the date. A number without its day is a number you cannot judge.
+On my laptop the pull reads sample CSV files ending September 30, 2026, so every watched row showed a close, a date and the word "stale". That word is the point of showing the date. A number without its day is a number you cannot judge.
 
 The symbols I follow stay out of every file in the repository; the tests use placeholders. Chapter 10 brings the method engine onto the web, with the watch list as one of its inputs.
 
