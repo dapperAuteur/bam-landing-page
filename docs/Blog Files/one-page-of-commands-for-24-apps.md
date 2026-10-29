@@ -13,7 +13,7 @@ Tags:    Developer Experience, Operations, Secrets, WitUS, AI Agents
 
 The WitUS ecosystem is 24 repos that share one sign-in, one feedback inbox, one social outbox, and one set of rules. Task after task needs the same kind of answer: what makes this value, and which project does it go on? The answer kept being "ask Claude," and Claude would read three repos to work it out again. I was paying for the same research over and over.
 
-So there is now one reference page, kept in the witus repo, that lists every command I run across the ecosystem and every environment variable it creates. Here is what is on it and why each piece is there.
+So there is now one reference page, kept with the witus project, that lists every command I run across the ecosystem and every environment variable it creates. Here is what is on it and why each piece is there.
 
 ## The rule at the top: two homes
 
@@ -74,4 +74,4 @@ A command I run twice a year is one I have to rediscover. Written down once, it 
 
 ## What this cost
 
-Writing this post took about COST2_CREDITS credits of Claude usage, roughly COST2_DOLLARS, counted from the writing helper's session transcript. That helper also wrote the disk-space post, so its total is split evenly between the two. The commands reference itself was built up over earlier sessions and is not counted. A credit here is 1 dollar of API list price, which is not what my subscription bills. My own time is not in it either.
+Writing this post took about 1 credit of Claude usage, roughly $1, counted from the writing helper's session transcript. That helper also wrote the disk-space post, so its total is split evenly between the two. The commands reference itself was built up over earlier sessions and is not counted. A credit here is 1 dollar of API list price, which is not what my subscription bills. My own time is not in it either.

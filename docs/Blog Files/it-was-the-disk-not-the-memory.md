@@ -44,7 +44,7 @@ With room to look, the rest showed up:
 
 - **Parallel agents multiply disk use, not only token use.** Three helpers is three installs. I had been counting the bill and not the drive.
 - **A worktree is cheap to make and expensive to forget.** The one making it is the one that knows when it is done.
-- **The cleanup belongs in the brief.** Every helper brief now says: remove your worktree when your branch is pushed.
+- **The cleanup belongs in the brief.** From now on, every helper brief says: remove your worktree when your branch is pushed.
 - **Check clean and pushed before deleting.** Two commands. Skipping them is how you delete someone's afternoon.
 - **Write the commands down.** They now live in the ecosystem commands reference, so the next full disk is a lookup, not a research project.
 
@@ -78,7 +78,7 @@ Chrome's cache I clear from its settings, cached images and files only. The Play
 
 ## What this cost
 
-The cleanup itself was done by the main session that was running the three helpers, and that session is not counted here. Writing this post took about COST1_CREDITS credits of Claude usage, roughly COST1_DOLLARS, counted from the writing helper's session transcript. That helper also wrote the companion post on the commands reference, so its total is split evenly between the two. A credit here is 1 dollar of API list price, which is not what my subscription bills. My own time is not in it either.
+The cleanup itself was done by the main session that was running the three helpers, and that session is not counted here. Writing this post took about 1 credit of Claude usage, roughly $1, counted from the writing helper's session transcript. That helper also wrote the companion post on the commands reference, so its total is split evenly between the two. A credit here is 1 dollar of API list price, which is not what my subscription bills. My own time is not in it either.
 
 ## References
 
