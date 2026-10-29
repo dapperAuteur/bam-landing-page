@@ -46,6 +46,10 @@ On my laptop the pull reads sample CSV files ending September 30, 2026, so every
 
 The symbols I follow stay out of every file in the repository; the tests use placeholders. Chapter 10 brings the method engine onto the web, with the watch list as one of its inputs.
 
+## What this cost
+
+Building chapter 09 took about 10 credits of Claude usage. Writing this post took about 2.1 more: two helpers wrote the posts for chapters 08 to 10 and the migration post, 8.2 credits between them because the first stopped at a usage limit and the second finished the job, and I split that evenly across the four. About 12 credits in all, roughly $12. A credit here is 1 dollar of API list price, which is not what my subscription bills. Counted from the helpers' session transcripts. Not counted: the main session that coordinated, reviewed and fixed the work, and my own time.
+
 ## References
 
 Django Software Foundation. (n.d.). *The messages framework*. Django documentation (Version 5.2). Retrieved October 28, 2026, from https://docs.djangoproject.com/en/5.2/ref/contrib/messages/

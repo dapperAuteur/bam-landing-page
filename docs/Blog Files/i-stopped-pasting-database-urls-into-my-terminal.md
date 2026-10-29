@@ -58,11 +58,15 @@ For an app with one user, a minute of 500s on a page nobody has opened yet is fi
 
 Why not migrate inside the Vercel build and close the gap? Because the chapter 06 decision still holds: the schema change is its own step. It just runs on GitHub now instead of my laptop. A redeploy or a rollback in Vercel does not push to `main`, so it never touches the database.
 
-## What it costs
+## What the workflow costs
 
 GitHub Free includes 12 USD a month of Actions usage for private repositories, and a standard Linux 2-core runner draws 0.006 USD a minute from it (GitHub, n.d.-a). That is about 2,000 Linux minutes. This job takes about a minute, a few times a month. In practice it costs nothing, and the same page says that without a payment method on file, usage past the included amount is blocked rather than billed (GitHub, n.d.-a).
 
 The hand recipe stays in the runbook as the fallback. I would rather not need it.
+
+## What this post cost
+
+The workflow had no separate build helper. It was written in the main session that runs the whole project, and that session is not counted here. Writing this post took about 2.1 credits of Claude usage, roughly $2: two helpers wrote the posts for chapters 08 to 10 and the migration post, 8.2 credits between them because the first stopped at a usage limit and the second finished the job, and I split that evenly across the four. A credit here is 1 dollar of API list price, which is not what my subscription bills. My own time is not in it either. Counted from the helpers' session transcripts.
 
 ## References
 

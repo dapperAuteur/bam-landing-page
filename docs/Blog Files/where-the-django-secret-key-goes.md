@@ -59,6 +59,10 @@ The task named the dashboard, the menu, the field and the environments. It still
 
 I asked for a post about every step of this build, and this is why. The message was good and the task was mostly good. I still sat with a random string and no idea what to do with it, and that confusion is the useful part. The second time I set this variable I will not be confused, which means the person who can describe the gap honestly exists for about one afternoon. After that I will say the task was clear, because for me it will be.
 
+## What this cost
+
+This step had no separate build helper. The work happened in the main session that runs the whole project, and that session is not counted here. Writing this post took about 5.0 credits of Claude usage, roughly $5, counted from the writing helper's session transcript. A credit here is 1 dollar of API list price, which is not what my subscription bills. My own time is not in it either.
+
 ## References
 
 Django Software Foundation. (n.d.-a). *Settings*. Django documentation (Version 6.1). Retrieved October 28, 2026, from https://docs.djangoproject.com/en/6.1/ref/settings/#secret-key
