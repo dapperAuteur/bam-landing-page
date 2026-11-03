@@ -44,7 +44,7 @@ A no does three things. It ends this app's session. It deletes the account row t
 
 ## Why adults only, for now
 
-The product is video of people moving, and later, coaches looking at that video. For children, that is regulated data. The federal children's privacy rule defines a child as "an individual under the age of 13," and it lists among personal information "a photograph, video, or audio file where such file contains a child's image or voice" and biometric identifiers including "gait patterns" (Children's Online Privacy Protection Rule, 2025). A clip of a child clearing a hurdle is a video of that child, and the landmarks the app measures describe how that child moves.
+The product is video of people moving, and later, coaches looking at that video. For children, that is regulated data. The federal children's privacy rule defines a child as "an individual under the age of 13," and it lists among personal information "a photograph, video, or audio file where such file contains a child's image or voice" and biometric identifiers including "gait patterns" (Children's Online Privacy Protection Rule, n.d.). A clip of a child clearing a hurdle is a video of that child, and the landmarks the app measures describe how that child moves.
 
 The line in this app is 18, which is stricter than that rule's 13. A release for athletes under 18 needs more than consent forms: guardian consent, a guardian who can see every coach's note, and a written plan for when something goes wrong. None of that is built. Until it is, nobody under 18 uses the app or appears in its test clips, and a minors' release happens only if I decide to plan it.
 
@@ -77,4 +77,4 @@ What I would carry to any app that adds sign in:
 
 Better Auth. (n.d.). *Generic OAuth*. Better Auth documentation. Retrieved November 2, 2026, from https://www.better-auth.com/docs/plugins/generic-oauth
 
-Children's Online Privacy Protection Rule, 16 C.F.R. § 312.2 (2025). Retrieved November 2, 2026, from https://www.law.cornell.edu/cfr/text/16/312.2
+Children's Online Privacy Protection Rule, 16 C.F.R. § 312.2 (n.d.). Retrieved November 2, 2026, from https://www.law.cornell.edu/cfr/text/16/312.2
